@@ -443,7 +443,7 @@ Section Proof_of_Lemma5.
     Section closedness.
       Variable M : Ensemble Ord.
       Hypothesis HM : Inhabited M.
-      Hypothesis CM : countable M.
+      Hypothesis CM : Countable M.
       Hypothesis IM : Included  M (Cr alpha).
 
 

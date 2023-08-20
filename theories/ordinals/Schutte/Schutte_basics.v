@@ -104,11 +104,11 @@ A subset X of Ord is bounded iff X is countable *)
 Axiom AX2 :
   forall X: Ensemble Ord,
     (exists a,  (forall y, In X y -> y < a)) ->
-    countable X.
+    Countable X.
 
 Axiom AX3 :
   forall X : Ensemble Ord,
-    countable X ->
+    Countable X ->
     exists a,  forall y, In X y -> y < a.
 
 (* end snippet AX23 *)
@@ -205,7 +205,7 @@ Definition progressive (P : Ord -> Prop) : Prop :=
 (* begin snippet ClosedDef *)
 
 Definition Closed (B : Ensemble Ord) : Prop :=
-  forall M, Included M B -> Inhabited M -> countable M ->
+  forall M, Included M B -> Inhabited M -> Countable M ->
                             In B (|_| M).
 
 (* end snippet ClosedDef *)
@@ -214,7 +214,7 @@ Definition  continuous (f:Ord->Ord)(A B : Ensemble Ord) : Prop :=
   fun_codomain A B f /\
   Closed A /\
   (forall U, Included U A -> Inhabited U ->
-             countable U -> |_| (image U f) = f (|_| U)).
+             Countable U -> |_| (image U f) = f (|_| U)).
 
 
 (** *  Basic properties
@@ -223,7 +223,7 @@ Definition  continuous (f:Ord->Ord)(A B : Ensemble Ord) : Prop :=
 
 
 Lemma Unbounded_not_countable (X: Ensemble Ord) :
-    Unbounded X -> not (countable X).
+    Unbounded X -> not (Countable X).
 Proof.
   intros  H  H1; case (AX3 H1); intros x Hx.
   destruct (H x) as [x0 [H0 H2]].
@@ -231,7 +231,7 @@ Proof.
 Qed.
 
 Lemma countable_not_Unbounded : forall X,
-    countable  X -> not (Unbounded X).
+    Countable  X -> not (Unbounded X).
 Proof.
   red;intros; apply Unbounded_not_countable with X;auto.
 Qed.
@@ -372,7 +372,7 @@ Qed.
 (** ** Global properties *)
 
 
-Theorem Non_denum : ~ countable ordinal.
+Theorem Non_denum : ~ Countable ordinal.
 Proof.
   red; intro H; case (AX3  H); auto.
   intros x H0; case (@lt_irrefl x);apply H0; split.
@@ -389,13 +389,13 @@ Qed.
 Theorem unbounded : forall alpha,  exists beta,  alpha < beta.
 Proof.
   intros alpha ; pose (X0 := fun z =>  z < alpha).
-  assert (countable X0).
+  assert (Countable X0).
   { apply AX2.
     unfold X0, Included, In; intuition.
     now exists alpha.
   }
   pose (X:= Add X0 alpha).
-  assert (countable X).
+  assert (Countable X).
   {  apply countable_union2.
      auto.
      apply countable_singleton.
@@ -615,7 +615,7 @@ Qed.
 
 (**  ** Building limits *)
 
-Lemma sup_exists : forall X, countable  X ->
+Lemma sup_exists : forall X, Countable  X ->
                              ex (sup_spec  X).
 Proof.
   intros X H; case (AX3 H); auto.
@@ -636,7 +636,7 @@ Proof.
 Qed.
 
 Lemma sup_unicity : forall X l l',
-                      (countable  X /\ forall x, X x -> ordinal x) ->
+                      (Countable  X /\ forall x, X x -> ordinal x) ->
                       sup_spec X l -> sup_spec X l' -> l = l'.
 Proof.
   intros X l l' _ H H0; apply le_antisym.
@@ -646,7 +646,7 @@ Proof.
   case (H5 l H);auto with schutte.
 Qed.
 
-Lemma sup_spec_unicity (X:Ensemble Ord) (HX : countable X) :
+Lemma sup_spec_unicity (X:Ensemble Ord) (HX : Countable X) :
   exists! u, sup_spec X u.
 Proof.
   destruct (sup_exists  HX).
@@ -658,14 +658,14 @@ Proof.
 Qed.
 
 
-Lemma sup_ok1 (X: Ensemble Ord)(HX : countable X) :
+Lemma sup_ok1 (X: Ensemble Ord)(HX : Countable X) :
   sup_spec X (sup X).
 Proof.
   unfold sup, the;  apply iota_spec;  now apply sup_spec_unicity.
 Qed.
 
 Lemma sup_upper_bound (X : Ensemble Ord) (alpha : Ord):
-  countable X ->  In X alpha -> alpha <= |_|  X.
+  Countable X ->  In X alpha -> alpha <= |_|  X.
 Proof.
   intros  H  H1;  generalize (sup_ok1   H).
   intro H2;  destruct H2 as [H2 [H3 H4]].
@@ -674,7 +674,7 @@ Qed.
 
 
 Lemma sup_least_upper_bound (X : Ensemble Ord) (alpha : Ord) :
-  countable X -> (forall y, In X y -> y <= alpha) -> sup  X <= alpha.
+  Countable X -> (forall y, In X y -> y <= alpha) -> sup  X <= alpha.
 Proof.
    intros  H H0;  specialize (sup_ok1   H) as H1.
     destruct H1 as [H1 [H2 H3]].
@@ -685,7 +685,7 @@ Qed.
 Lemma sup_of_leq (alpha : Ord) :
     alpha = |_| (fun x : Ord =>  x <= alpha).
 Proof.
- assert (DD :countable (fun x : Ord =>  x <= alpha)).
+ assert (DD :Countable (fun x : Ord =>  x <= alpha)).
   {
     apply AX2.
     -   exists (succ alpha);
@@ -698,8 +698,8 @@ Qed.
 
 
 Lemma sup_mono (X Y : Ensemble Ord) :
-    countable X ->
-    countable Y ->
+    Countable X ->
+    Countable Y ->
     (forall x, In X x -> exists y, In Y y /\ x <= y) ->
 |_| X <= |_| Y.
 Proof.
@@ -711,7 +711,7 @@ Proof.
 Qed.
 
 Lemma sup_eq_intro (X Y : Ensemble Ord):
-  countable X -> countable Y ->
+  Countable X -> Countable Y ->
   Included X Y -> Included Y X ->
 |_| X = |_| Y.
 Proof.
@@ -722,7 +722,7 @@ Qed.
 
 
 Lemma lt_sup_exists_leq (X: Ensemble Ord) :
-  countable X ->
+  Countable X ->
   forall y, y < sup X ->
             exists x, In X x /\ y <= x.
 Proof.
@@ -748,7 +748,7 @@ Proof.
 Qed.
 
 Lemma lt_sup_exists_lt (X : Ensemble Ord) :
-  countable X ->
+  Countable X ->
   forall y,  y < sup X -> exists x, In X x /\ y < x.
 Proof.
   intros  H y H0;
@@ -924,7 +924,7 @@ Lemma lt_omega_finite (alpha : Ord) :
 Proof.
   intro H0; unfold omega_limit in H0.
   generalize (lt_sup_exists_leq (X:=(seq_range finite))  ).
-  intros;  assert (countable (seq_range finite)) by
+  intros;  assert (Countable (seq_range finite)) by
     apply seq_range_countable.
   generalize (H H1);clear H;intros.
   generalize (H _ H0);clear H;intros.
@@ -981,7 +981,7 @@ Qed.
 
 (** ** About members *)
 
-Lemma countable_members (alpha : Ord): countable (members alpha).
+Lemma countable_members (alpha : Ord): Countable (members alpha).
 Proof.
  apply AX2;   now exists alpha.
 Qed.
@@ -1060,7 +1060,7 @@ Qed.
 
 
 Lemma Not_Unbounded_countable (X : Ensemble Ord) :
-  ~ Unbounded X ->   countable X.
+  ~ Unbounded X ->   Countable X.
 Proof.
   intros;eapply AX2;eauto.
   case (Not_Unbounded_bounded H);auto.
@@ -1068,7 +1068,7 @@ Proof.
 Qed.
 
 Lemma not_countable_unbounded (X : Ensemble Ord):
-    ~ countable X -> Unbounded X.
+    ~ Countable X -> Unbounded X.
 Proof.
   intros H;  apply NNPP; intro H0.
   apply H,  Not_Unbounded_countable;auto.

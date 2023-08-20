@@ -13,7 +13,7 @@ Schutte's definitions.
 
 *)
 
-
+From ZornsLemma Require Import CountableTypes.
 From hydras Require Export Schutte_basics.
 Import Ensembles  Well_Orders  Countable  PartialFun.
 Import Classical  MoreEpsilonIota  Epsilon.
@@ -118,7 +118,7 @@ Qed.
 
 
 Lemma countable_segment_proper : forall A : Ensemble Ord,
-           segment A -> countable A -> proper_segment A.
+           segment A -> Countable A -> proper_segment A.
 Proof.
  intros A H H0; split;[auto|idtac].
  intro H1; generalize (Extensionality_Ensembles _ _ H1).
@@ -463,14 +463,14 @@ Section building_ordering_function_1.
 
 
 
- Remark Bbeta_denum : countable (proper_segment_of B beta).
+ Remark Bbeta_denum : Countable (proper_segment_of B beta).
  Proof.
   apply AX2; exists beta;  destruct 1;tauto.
  Qed.
 
  #[local] Hint Resolve of_beta': schutte.
 
-Remark A_denum : countable _A.
+Remark A_denum : Countable _A.
 Proof.
  eapply countable_bij_funR.
  - eapply Ordering_bijection;   eauto with schutte.
@@ -839,7 +839,7 @@ Section Th13_5.
  Variable M : Ensemble Ord.
  Hypothesis inc : Included M B.
  Hypothesis ne : Inhabited M.
- Hypothesis den : countable M.
+ Hypothesis den : Countable M.
 
  Let U := fun u => In A u /\ In M ( f u).
 
@@ -866,7 +866,7 @@ Qed.
  Remark Inc_U_A : Included U A.
  Proof. now destruct 1. Qed.
 
- Remark den_U : countable U.
+ Remark den_U : Countable U.
  eapply countable_bij_funR with Ord M f;auto.
  apply restrict.
  Qed.
@@ -945,12 +945,12 @@ Section verso.
  Section U_fixed.
  Variable U : Ensemble Ord.
  Hypothesis U_non_empty : Inhabited U.
- Hypothesis U_den : countable U.
+ Hypothesis U_den : Countable U.
  Hypothesis U_inc_A : Included U A.
 
  (* apply Virgile's technique ? *)
 
- Remark R1_aux : countable (image U f).
+ Remark R1_aux : Countable (image U f).
  Proof.
  apply countable_bij_fun with Ord U f.
  - case (Ordering_bijection f_ord); intros H H0 H1;  split.
@@ -1142,13 +1142,13 @@ Lemma ordering_unbounded_unbounded :
 Proof with auto with schutte.
   intros A B f  H0;split.
   - intro; apply not_countable_unbounded.
-    intro H2;  assert (H3 : countable B).
+    intro H2;  assert (H3 : Countable B).
     {  apply countable_bij_fun with Ord A  f ...
        apply Ordering_bijection;auto.
     }
     case (countable_not_Unbounded  H3);auto.
   - intro H1;  apply not_countable_unbounded ...
-    intro H2;  assert (H3 : countable A).
+    intro H2;  assert (H3 : Countable A).
     { apply countable_bij_funR with Ord   B  f;auto.
       apply Ordering_bijection;auto.
     }

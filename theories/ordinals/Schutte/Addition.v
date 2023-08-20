@@ -1,5 +1,6 @@
 
 From Coq Require Import Arith  Logic.Epsilon  Ensembles.
+From ZornsLemma Require Import CountableTypes.
 From hydras Require Export Schutte_basics  Ordering_Functions
      PartialFun  Countable  MoreEpsilonIota.
 Set Implicit Arguments.
@@ -255,7 +256,7 @@ Qed.
 
 Lemma alpha_plus_sup (alpha : Ord) (A : Ensemble Ord) :
     Inhabited A ->
-    countable A ->
+    Countable A ->
     alpha + |_| A = |_| (image A (plus alpha)).
 Proof.
  intros  H0 H1 ;  generalize (@normal_plus_alpha alpha ).

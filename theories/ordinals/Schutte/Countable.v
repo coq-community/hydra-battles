@@ -17,7 +17,6 @@ Set Implicit Arguments.
 
 (** A is countable if there exists an injection from [A] to
   [Full_set nat]. *)
-Notation countable := ZornsLemma.CountableTypes.Countable.
 
 Section Countable.
 
@@ -37,7 +36,7 @@ Section Countable.
     Definition rel_enumerates (R : GRelation nat U) := rel_surjection Full_set A R.
 
     Theorem countable_surj :
-      countable A <-> exists R, rel_enumerates R.
+      Countable A <-> exists R, rel_enumerates R.
     Proof.
       split.
       - intros [f Hf].
@@ -116,7 +115,7 @@ Section Countable.
     Variable x : U.
 
     Lemma countable_singleton :
-      countable (Singleton x).
+      Countable (Singleton x).
     Proof.
       exists (fun _ => 0%nat).
       intros [y0 H0] [y1 H1] _.
@@ -134,7 +133,7 @@ Section Countable.
       image Full_set f.
 
     Lemma seq_range_countable :
-      forall f, countable (seq_range f).
+      forall f, Countable (seq_range f).
     Proof.
       intros f.
       unfold seq_range.
@@ -157,7 +156,7 @@ Section Countable.
     Hypothesis g_bij : fun_bijection A B g.
 
     Lemma countable_bij_fun :
-      countable A -> countable B.
+      Countable A -> Countable B.
     Proof.
       intros H.
       apply surj_countable
@@ -167,7 +166,7 @@ Section Countable.
     Qed.
 
     Lemma countable_bij_funR :
-      countable B -> countable A.
+      Countable B -> Countable A.
     Proof.
       intros H.
       apply inj_countable
@@ -181,7 +180,7 @@ Section Countable.
 End Countable.
 
 Lemma countable_image : forall (U V:Type)(DA : Ensemble U)(f:U->V),
-    countable DA -> countable (image DA f).
+    Countable DA -> Countable (image DA f).
 Proof.
   intros.
   rewrite image_as_Im.

@@ -16,6 +16,7 @@ In fact,  #<math> &omega; <sup> &alpha; </sup> </math># , written  [phi0 alpha] 
 
 (* begin hide *)
 From Coq Require Import Arith  Logic.Epsilon  Ensembles  Lia.
+From ZornsLemma Require Import CountableTypes.
 From hydras Require Export Countable  Schutte_basics
      Ordering_Functions.
 Import  PartialFun  MoreEpsilonIota .
@@ -355,7 +356,7 @@ Section AP_closed.
   Variable M : Ensemble Ord.
   Hypothesis OM : Included M AP.
   Hypothesis inhM : Inhabited M.
-  Hypothesis denM : countable M.
+  Hypothesis denM : Countable M.
 
   Remark supM_gt0 : zero < |_| M.
   Proof.
@@ -557,7 +558,7 @@ Qed.
 
 Lemma phi0_sup : forall U: Ensemble Ord,
     Inhabited U ->
-    countable U ->
+    Countable U ->
     phi0 (|_| U) = |_| (image U phi0). (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
@@ -699,11 +700,11 @@ Qed.
 Lemma epsilon0_fxp : phi0 epsilon0 = epsilon0.
 Proof.
   unfold epsilon0, omega_limit; rewrite phi0_sup.
-  assert (D1: countable (image (seq_range omega_tower) phi0)).
+  assert (D1: Countable (image (seq_range omega_tower) phi0)).
   { apply countable_image.
     apply seq_range_countable.
   }
-  assert (D2: countable (seq_range omega_tower)).
+  assert (D2: Countable (seq_range omega_tower)).
   { apply Countable.seq_range_countable. }
   -  apply le_antisym.
      +  apply sup_mono; trivial.
