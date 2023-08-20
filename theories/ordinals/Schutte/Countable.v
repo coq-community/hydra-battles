@@ -110,23 +110,6 @@ Section Countable.
 
   Variable U : Type.
 
-  Section Countable_singleton.
-
-    Variable x : U.
-
-    Lemma countable_singleton :
-      Countable (Singleton x).
-    Proof.
-      exists (fun _ => 0%nat).
-      intros [y0 H0] [y1 H1] _.
-      inversion H0; subst.
-      inversion H1; subst.
-      destruct (proof_irrelevance _ H0 H1).
-      reflexivity.
-    Qed.
-
-  End Countable_singleton.
-
   Section Countable_seq_range.
 
     Definition seq_range (f : nat -> U) : Ensemble U :=
