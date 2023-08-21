@@ -65,7 +65,7 @@ Definition codeLNTFunction (f : LNTFunction) : nat :=
   | Plus_ => 0
   | Times_ => 1
   | Succ_ => 2
-  | Zero => 3
+  | Zero_ => 3
   end.
 
 Definition codeLNTRelation (R : LNTRelation) : nat :=

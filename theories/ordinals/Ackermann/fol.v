@@ -798,7 +798,7 @@ Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
 Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
   (x at level 0, y at level 0, at level 200, right associativity) : fol_scope. 
 
-Notation "t = u" := (@equal _ t u): fol_scope.
+Notation "t = u" := (@equal _ t u): fol_scope. 
 Notation "t <> u" := (~ t = u)%fol : fol_scope.
 
 (* end snippet folScope1 *)
@@ -823,7 +823,7 @@ Notation exH' v A := (~ (forallH v (~ A)))%fol.
 End FolNotations.
 (* end snippet folScope2 *)
 
-Import FolNotations. 
+Import FolNotations.
 Check (v#5)%fol.
 
 

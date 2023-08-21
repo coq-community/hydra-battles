@@ -66,9 +66,9 @@ Definition codeSysPrfCorrect3 :=
  
 Definition G := let (a,_) := FixPointLNN (notH codeSysPf) 0 in a.
 
-Lemma freeVarG : forall v : nat, ~ In v (freeVarF LNN G).
+Lemma freeVarG : closed G. 
 Proof.
-  unfold G.
+  unfold closed, G.
   destruct (FixPointLNN (notH codeSysPf) 0) as [x [H1 H2]].
   unfold not in |- *; intros.
   destruct (H2 v) as [H0 H3]; rename H3 into foo; rename H0 into H3.
@@ -277,7 +277,7 @@ Theorem Goedel'sIncompleteness1st :
  wConsistent T ->
  exists f : Formula,
    ~ SysPrf T f /\
-   ~ SysPrf T (notH f) /\ (forall v : nat, ~ In v (freeVarF LNN f)).
+   ~ SysPrf T (notH f) /\ closed f.
 Proof.
   intros H; exists G; pose freeVarG.
   pose FirstIncompletenessA.
@@ -290,3 +290,8 @@ Proof.
 Qed.
 
 End Goedel's_1st_Incompleteness.
+
+Import FolNotations NNnotations. 
+
+About Goedel'sIncompleteness1st.
+
