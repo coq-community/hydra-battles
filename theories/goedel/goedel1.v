@@ -15,6 +15,7 @@ From hydras Require Import Compat815.
 
 From LibHyps Require Export LibHyps.
 From hydras Require Export MoreLibHyps NewNotations.
+Import NNnotations.
 
 Section Goedel's_1st_Incompleteness.
 
@@ -273,11 +274,10 @@ Proof.
       * apply H0; assumption.
 Qed.
 
+
 Theorem Goedel'sIncompleteness1st :
  wConsistent T ->
- exists f : Formula,
-   ~ SysPrf T f /\
-   ~ SysPrf T (notH f) /\ closed f.
+ exists f : Formula, independent T f /\ closed f.
 Proof.
   intros H; exists G; pose freeVarG.
   pose FirstIncompletenessA.
@@ -286,12 +286,10 @@ Proof.
   { intro H0; destruct (wCon2Con T H) as [x H1]. 
     apply H1; apply H0.
   }
-  tauto.
+  repeat split; tauto.
 Qed.
 
 End Goedel's_1st_Incompleteness.
 
-Import FolNotations NNnotations. 
 
-About Goedel'sIncompleteness1st.
 

@@ -113,4 +113,13 @@ Definition Inconsistent (T : System) := forall f : Formula, SysPrf T f.
 
 Definition Consistent (T : System) := exists f : Formula, ~ SysPrf T f.
 
+Definition independent T f := ~ SysPrf T f /\ ~ SysPrf T (~ f)%fol.
+
+
 End ProofH.
+
+Arguments independent {L} _ _.
+
+Notation undecidable := (independent) (only parsing).
+
+
