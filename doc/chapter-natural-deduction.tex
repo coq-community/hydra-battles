@@ -2,47 +2,240 @@
 
 
 %%%%%%%%%%%%%% New chapter 
-\subsection{Contexts as sets}
+\section{Contexts as sets}
+
+Let us look again at the proof scripts shown in~\vref{proof:PrfEx2} and \vref{proof:PrfEx3}.
+\begin{itemize}
+\item The statement of \texttt{PrfEx2} contains a sequence
+of hypotheses with two occurrences of \texttt{A}. Moreover, the order in which the 4 hypotheses are listed is determined by the type of the constructor \texttt{MP}  (please look at
+Figure~\vref{fig:prf-def}). It would be better to replace this
+precise list of hypotheses with ``any list whose elements
+belong to the set $\{A, A \arrow B; A \arrow B \arrow C\}$''.
+
+\item In the proof of \texttt{PrfEx3} the \coq user would certainly ask ``How do we apply implication's introduction rule?''.
+\end{itemize}
+
+The answer to both questions in~\cite{Goedel}  is the definition of a proof system, derived from \texttt{Prf}, which considers
+\emph{sets of hypotheses} (called \emph{systems} in ~\cite{Goedel}) instead of
+\emph{list of hypotheses}, thus making abstraction of
+the repetition and order of appearance of hypotheses in the context.
+
+The new system is simply defined as below (for  a given language $L$)\,\footnote{In some shown snippets, arguments like $L$ may be or not be implicit (depending on the section they are extracted from). Please look at the \coq source.}.
+
+
+\inputsnippets{folProof/SysPrfDef}
+
+In a few words, proving a statement \texttt{SysPrf \_ $T$ $A$} 
+is proving the existence of a proof-tree of type \texttt{Prf \textit{Hyp}  $A$}, where \textit{Hyp} is a list of hypotheses all elements of which belong to $T$.
+
+
+\subsubsection{Notations}
+
+In the text, we may use the abbreviation $T \sdash A$ for
+(\texttt{SysPrf $L$ $T$ $A$}) and
+$\sdash A$ for
+(\texttt{SysPrf $L$ Empty\_set $A$}) 
+
+
+
+We may also omit obvious braces in some set expressions:
+
+
+\begin{itemize}
+
+\item $T,U$ for $T \cup U$,
+\item $A, B, C$ for $\{A, B, C\}$,
+\item $T, A,\dots B$ for $T \cup\{A \dots B\}$
+\item \emph{etc.}
+\end{itemize}
+
+
+
+
+\begin{remark}
+  The type \texttt{SysPrf} has sort \texttt{Prop}, which prevent us from
+extracting the underlying proof tree and its fringe from a proof of $T\sdash f$. We only know that such a proof exists, but cannot get it automatically through a \coq function.
+\end{remark}
+
+
+\index{ackermann}{Projects}
+
+\begin{project}
+It would be nice (\emph{e.g.} for a better understanding of the proof of the deduction theorem) to be able to compute the  proof-tree built
+by the proof of the deduction lemma. 
+On a fresh branch of the project, please change the definition of
+\texttt{SysPrf} and fix the errors this change could cause in the rest of the files. 
+\emph{If ensuring compatibility with all the \texttt{Goedel} project is too long and/or difficult, you may just make the changes in separate modules with an ``informative'' \texttt{SysPrf} and limit the compatibility study  to the contents of basic modules like
+\texttt{Deduction}, \texttt{folLogic}, etc.
+Perhaps you will have to consider other implementation of finite sets of formulas (\emph{e.g.} lists).
+}
+
+\end{project}
+
+
+
+
+
+\subsubsection{Example}
+
+
+In the following script, we use \texttt{PrfEx2}
+as a witness for proving a set-based version of the 
+original proof term, namely $A; A \arrow B; A \arrow B \arrow C \sdash C$.
+
+
+
+\inputsnippets{FolExamples/SysPrfEx2}
+
 
 \begin{exercise}
 
-Prove the following lemma:
-\inputsnippets{FolExamples/MPdiag}
+Prove the following lemma (without the handy lemmas from
+\href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic} and their corollaries!).
+
+\inputsnippets{FolExamples/MPSys}
 
 \end{exercise}
 
+\subsection{Using properties of sets}
 
+The following three lemmas, from 
+\href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic} are direct consequences of \texttt{SysPrf}'s definition. 
+
+\inputsnippets{folLogic/Axm}
+
+\inputsnippets{folLogic/SysExtend}
+
+The \emph{rule of implication elimination} is derived from \texttt{Prf}'s 
+\emph{modus ponens} \texttt{MP}.  Since all elements of the fringe 
+\texttt{x} [resp. \texttt{x1}] of the proof tree \texttt{px} [resp. \texttt{px1}] belong to T, so are the elements of the fringe \texttt{x++x1} of
+(\texttt{MP \dots{}  px px1}).
+
+\inputsnippets{folLogic/impE}
+
+\section{The Deduction theorem}
+
+The deduction theorem (proved in \href{../theories/html/hydras.Ackermann.Deduction.html}{Ackermann.Deduction} is a handy 
+tool for proving a proposition $f\arrow g$ by pushing 
+the hypothesis $f$ into the context (it corresponds roughly to 
+the implication introduction rule in \coq).
+
+
+\inputsnippets{Deduction/deductionThm}
+
+\subsection{Sketch of proof}
+
+We advise the reader to replay this proof on h.er.is computer
+ in order to better understand its structure, which we will only comment briefly.
+
+Let us assume the hypothesis \texttt{H: $T, g \sdash f$},
+meaning that there exists some list $F$ whose elements 
+belong to $T \cup \{g\}$, and a proof-tree $t$ of type
+$F \vdash h$.
+
+The heart of the proof is an induction on $t$ proving 
+$F \cap T \sdash (g\arrow f)$ \footnote{Please forgive the implicit coercion from lists to sets!}. 
+
+Please note that the case $S=\texttt{nil}$ is common to 
+many constructors of \texttt{Prf}, thus the proof script starts
+with a study of this particular case, simply applied 11 times in the rest of the proof. 
+
+ 
 \section{Derived rules and natural deduction}
 
 
  The library 
- \href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic} contains many derived rules which allow the user to build proofs in a natural deduction style (with introduction and elimination rules).
+ \href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic},
+\href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic2} and
+\href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic3} contain many derived rules which allow the user to build proofs in a natural deduction style (with introduction and elimination rules).
 
-\subsection{Example}
+We present here only a few examples of these rules, the reader
+may consult these libraries with \texttt{Search} or by looking 
+at the \texttt{coqdoc} generated files. A meta-exercise would be to re-prove a few of these lemmas and/or build an example of application.
 
-For instance, let us prove Peirce's rule.
- (in  ~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples} ).
+%\subsection{Applications of the Deduction Theorem}
 
-\subsubsection{Prelude}
+The \emph{rule of implication introduction} is a trivial application of the deduction theorem.
 
-%\inputsnippets{folPeirce/prelude}
+\inputsnippets{folLogic/impI}
+
+The following lemma (corresponding to the \texttt{CP} constructor of type \texttt{Prf}) is proven with the help of \texttt{impE}, \texttt{impI}, 
+\texttt{sysWeaken} and \texttt{CP}.  
+
+\inputsnippets{folLogic/contradiction}
+
+We let the reader consult the proof of the following lemmas, or, much better, re-prove them as exercises.
+
+\inputsnippets{folLogic/nnE}
+
+\inputsnippets{ folLogic/nnI}
+
+\inputsnippets{folLogic/cp1}
+
+\inputsnippets{folLogic/cp2}
+
+\subsection{Rules for derived connectives and quantifiers}
+
+Let us keep in mind that the derived connectives: \texttt{orH}, \texttt{andH}, etc. and the existential quantifier \texttt{existH}  are defined
+in terms of \texttt{impH}, \texttt{notH}, \texttt{forallH}.
+By unfolding these definitions, we prove easily a few natural deduction rules for the derived symbols. 
+For instance, the law of excluded middle for $f$: $ T\sdash \sim f \vee f$
+for any $T$,  is just an abbreviation of $T \sdash \sim\sim{}f \arrow f$.
 
 
-\subsection{Proof of Peirce's law}
+\inputsnippets{folLogic/noMiddle}
 
+\begin{remark}
+  The lines marked ``optional'' are just here in order to
+temporarily deactivate the notation which print any formula 
+of the form $\sim{}\!A \arrow B$ as \texttt{$A$ \disj' $B$}.
+ These three lines can be safely removed.
+\end{remark}
+
+\inputsnippets{folLogic/orI1}
+
+\inputsnippets{folLogic/orE}
+
+\inputsnippets{folLogic/orSys}
+
+\inputsnippets{folLogic/andI}
+
+%\inputsnippets{folLogic/andE1, folLogic/andE2}
+
+Here are a few examples of looking for rules using \coq's \texttt{Search} command:
+
+\inputsnippets{FolExamples/SearchSysPrf}
+
+
+
+\subsection{Example: proof of Peirce's law}
+
+For instance, let us prove Peirce's rule, \emph{i.e.}
+$\sdash ((A \arrow B) \arrow A) \arrow A$ for any formulas $A$ and $B$.
+
+ The proof in \coq is available in  ~\href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples}.
 
 \inputsnippets{FolExamples/PeirceProof}
 
-Let us try to do an implication introduction.
+Let us start with  an implication introduction. The judgement to prove becomes  $(A \arrow B) \arrow A \sdash A$.
 
 \inputsnippets{FolExamples/step1}
 
-Now, we may use the law of excluded middle with the formula $P$. The only non-trivial case is about $\sim P$.
+Now, we may eliminate the disjunction 
+in the instance $\sim A \vee A$ of the law of excluded middle.
+The only non-trivial case is about $\sim A$.
+
+\vspace{4pt}
+
+Next goal is $(A \arrow B) \arrow A \sdash \sim\!A \arrow A$.
+Please keep in mind  that our current notation system interprets
+$\sim\!A \arrow A$ as a disjunction!
+
 
 \inputsnippets{FolExamples/step2}
 
-The rest of the proof is composed of basic proof steps, 
-and bookkeeping steps (about \texttt{Ensembles.In}).
+The rest of the proof is composed of basic proof steps.
+
 
 \inputsnippets{FolExamples/step3, FolExamples/step4}
 

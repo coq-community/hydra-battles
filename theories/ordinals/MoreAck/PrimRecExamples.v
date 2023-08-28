@@ -209,7 +209,7 @@ Proof. reflexivity. Qed.
 
 (** * First proofs of isPR statements 
       
-  The module [Alt] presents proofs of lemma alreday proven in [primRec.v]
+  The module [Alt] presents proofs of lemmas already proven in [primRec.v]
   We just hope that such a redundancy will help the reader to get familiar 
   with the various patterns allowed by that library.
 

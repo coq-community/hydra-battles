@@ -15,15 +15,25 @@ From hydras Require Import Compat815.
 
 From LibHyps Require Export LibHyps.
 From hydras Require Export MoreLibHyps NewNotations.
+Import NNnotations.
 
+Definition codeFormula := 
+  codeFormula LNN codeLNTFunction codeLNNRelation.
+
+(* cf Gilles' paper ? *)
+Notation reflection f := (natToTerm (codeFormula f)).
+  
 Section Goedel's_1st_Incompleteness.
-
-Definition codeFormula := codeFormula LNN codeLNTFunction codeLNNRelation.
 
 Variable T : System.
 
 Hypothesis extendsNN : Included _ NN T.
 
+(*
+ There exists a formula repT 
+  -  with only a free variable v0
+  -  which means "v0 is a term which reflects some axiom of T"
+*)
 Variable repT : Formula.
 Variable v0 : nat.
 Hypothesis
@@ -32,13 +42,13 @@ Hypothesis
   expressT1 :
     forall f : Formula,
     mem _ T f ->
-    SysPrf T (substF LNN repT v0 (natToTerm (codeFormula f))).
+    SysPrf T (substF LNN repT v0 (reflection f)).
 Hypothesis
   expressT2 :
     forall f : Formula,
     ~ mem _ T f ->
     SysPrf T
-      (notH (substF LNN repT v0 (natToTerm (codeFormula f)))).
+      (notH (substF LNN repT v0 (reflection f))).
 
 Definition codeSysPrf :=
   codeSysPrf LNN codeLNTFunction codeLNNRelation codeArityLNTF codeArityLNNR
@@ -66,9 +76,9 @@ Definition codeSysPrfCorrect3 :=
  
 Definition G := let (a,_) := FixPointLNN (notH codeSysPf) 0 in a.
 
-Lemma freeVarG : forall v : nat, ~ In v (freeVarF LNN G).
+Lemma freeVarG : closed G. 
 Proof.
-  unfold G.
+  unfold closed, G.
   destruct (FixPointLNN (notH codeSysPf) 0) as [x [H1 H2]].
   unfold not in |- *; intros.
   destruct (H2 v) as [H0 H3]; rename H3 into foo; rename H0 into H3.
@@ -100,13 +110,9 @@ Proof.
          (substF LNN (notH codeSysPf) 0
             (codeNatToTerm.natToTermLNN
                (code.codeFormula LNN codeLNTFunction codeLNNRelation x)))).
-    + apply cp2.
-      apply iffE1.
-      apply sysExtend with NN.
-      * assumption.
-      * apply H1.
-    + rewrite (subFormulaNot LNN); apply nnI.
-      apply codeSysPfCorrect; assumption.
+    + apply cp2, iffE1; apply sysExtend with NN; auto. 
+    + rewrite (subFormulaNot LNN); apply nnI; 
+      now apply codeSysPfCorrect. 
 Qed.
 
 (*I don't believe I can prove
@@ -273,11 +279,10 @@ Proof.
       * apply H0; assumption.
 Qed.
 
+
 Theorem Goedel'sIncompleteness1st :
  wConsistent T ->
- exists f : Formula,
-   ~ SysPrf T f /\
-   ~ SysPrf T (notH f) /\ (forall v : nat, ~ In v (freeVarF LNN f)).
+ exists f : Formula, independent T f /\ closed f.
 Proof.
   intros H; exists G; pose freeVarG.
   pose FirstIncompletenessA.
@@ -286,7 +291,10 @@ Proof.
   { intro H0; destruct (wCon2Con T H) as [x H1]. 
     apply H1; apply H0.
   }
-  tauto.
+  repeat split; tauto.
 Qed.
 
 End Goedel's_1st_Incompleteness.
+
+About Goedel'sIncompleteness1st.
+

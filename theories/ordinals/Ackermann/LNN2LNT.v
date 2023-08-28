@@ -12,7 +12,8 @@ From Coq Require Import Ensembles List Arith.
 
 Require Import misc ListExt folProp folProof Languages  subAll  subProp.
 Require Import folLogic3  folReplace LNN LNT  codeNatToTerm  NewNotations.
-Import FolNotations NNnotations.
+
+Import FolNotations  NNnotations.
 
 #[local] Arguments apply _ _ _ : clear implicits.
 (* end hide *)

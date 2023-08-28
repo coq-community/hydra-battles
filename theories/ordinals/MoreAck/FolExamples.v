@@ -2,7 +2,8 @@
 
 From Coq Require Import Arith Lists.List.
 
-Require Import fol folProp folProof  Languages folLogic subAll Deduction.
+Require Import fol folProp folProof  Languages folLogic 
+  folLogic2 folLogic3 subAll Deduction.
 Require Import primRec.
 Import ListNotations. 
 Import FolNotations. 
@@ -14,6 +15,38 @@ Import FolNotations.
 #[local] Arguments atomic _ _ _ : clear implicits. 
 #[local] Arguments apply _ _ _ : clear implicits. 
 
+
+(* begin snippet FormulaRect *)
+About Term_Terms_rec_full.
+About Formula_rect.
+(* end snippet FormulaRect *)
+
+(* begin snippet DepthRec:: unfold no-in *)
+About Formula_depth_rec.
+(* end snippet DepthRec *)
+
+(** depth-order vs structural order *)
+
+Section depth_rec_demo. 
+Variable L: Language.
+Variable P: fol.Formula L -> Prop. 
+Variable a: fol.Formula L. 
+Goal P a. 
+  eapply  Formula_depth_rec_rec with (depth L a); [| apply le_n].
+  (* begin snippet depthRecDemo:: unfold no-in *)
+ clear a; intros a Ha.
+  (* end snippet depthRecDemo *)
+Abort.
+Goal P a. 
+ (* begin snippet depthRecDemo2:: unfold no-in *)
+ apply Formula_depth_ind2.
+ (* end snippet depthRecDemo2 *)
+Abort. 
+
+
+
+
+End depth_rec_demo. 
 Import Ensembles. 
 
 Lemma In_add1 {T:Type}(a:T)(S: Ensemble T):
@@ -36,12 +69,10 @@ Proof. trivial. Qed.
 
 (** A small variation on MP (without appending contexts) *)
 
-(* begin snippet MPDiag:: no-out *)
-Lemma MPdiag L (G: System L) (A B: Formula L) : 
-  SysPrf L G (A -> B)%fol ->
-  SysPrf L G A ->
-  SysPrf L G B.
-(* end snippet MPDiag *)
+(* begin snippet MPSys:: no-out *)
+Lemma MPSys L (G: System L) (A B: Formula L) : 
+  SysPrf L G (A -> B)%fol -> SysPrf L G A -> SysPrf L G B.
+(* end snippet MPSys *)
 Proof.
   destruct 1 as [x [HAB Hx]]. 
   destruct 1 as [y [HA Hy]]. 
@@ -461,6 +492,9 @@ Proof. (* .no-out *)
 Qed. 
 
 (* end snippet PrfEx11 *)
+
+
+
 (* A weak version of ProofEx3 using the deduction principle *)
 
 Lemma ded1:  forall (A: Formula L), (SysPrf L (Empty_set _) A) -> 
@@ -499,10 +533,49 @@ Import Ensembles.
 
 #[local] Hint Resolve In_add1 In_add2: sets. 
 
+Fixpoint Adds {A:Type}(X: Ensemble A)(l: list A) :=
+  match l with
+    nil => X
+  | x::l => Add (Adds X l) x
+  end.
+
+(* begin snippet SysPrfEx2 *)
+Example SysPrfEx2 : SysPrf L 
+                      (fun x => List.In x [A; A->B; A -> B -> C]%fol)
+                      C. (* .no-out *)
+Proof.  (* .no-out *)
+  exists  [A -> B -> C; A; A -> B; A]%fol, PrfEx2; unfold mem, In. 
+ (* ... *)
+(* end snippet SysPrfEx2 *)
+   inversion 1;  subst; [red; eauto with datatypes| ]. 
+   inversion H0; subst; [red; eauto with datatypes| ]. 
+   inversion H1; subst; [red; eauto with datatypes| ]. 
+   inversion H2; subst; [red; eauto with datatypes| ]. 
+   inversion H3. 
+ Qed. 
+
+(* begin snippet SearchSysPrf *)
+
+Search SysPrf (?A /\ ?B)%fol notH.
+
+Search (SysPrf ?L ?T (?A /\ ?B)%fol -> SysPrf ?L ?T ?B).
+
+Search (SysPrf _ _ (~ ~ _)%fol).
+
+Search SysPrf (?a = ?b )%fol substF.
+
+Search SysPrf (exH ?v, _)%fol (allH ?v, _)%fol.
+(* end snippet SearchSysPrf *)
+
+
 (* begin snippet PeirceProof:: no-out *)
+Section PeirceProof.
+Arguments Add {U}.
+Arguments Empty_set {U}.
+
 Definition Peirce : Formula L := (((A -> B) -> A) -> A)%fol.
 
-Lemma peirce : SysPrf  L (Empty_set _)  Peirce. 
+Lemma peirce : SysPrf  L Empty_set Peirce. 
 Proof with auto with sets. 
 (* end snippet PeirceProof *)
 
@@ -511,21 +584,18 @@ Proof with auto with sets.
 (* end snippet step1 *)
 
 (* begin snippet step2 *)
-  eapply orE with (notH A) A%fol; 
+  eapply orE with (~A)%fol A%fol;
        [apply noMiddle | | apply impRefl].
 (* end snippet step2 *)
 (* begin snippet step3 *)
-   apply impI; eapply impE with (A -> B)%fol. 
+   apply impI; eapply impE with (A -> B)%fol.
 (* end snippet step3 *)
 (* begin snippet step4:: no-out *)
-    - apply Axm ...
-    - apply impI; apply contradiction with A; apply Axm ...
+  - apply Axm ... 
+  - apply impI; apply contradiction with A; apply Axm ...
 Qed.
+End PeirceProof.
 (* end snippet step4 *)
-
-  
-
-
   
 Section Drinkers_theorem. 
 
@@ -599,9 +669,9 @@ Proof.
 
 End Drinkers_theorem. 
 
-
-
 End Toy.
+
+(* TODO : move to a specific file *)
 
 (* Examples with LNN *)
 
@@ -642,34 +712,3 @@ Example f3 := (orH  (equal  (var 0) (apply LNN Zero_ Tnil))
 (* end snippet f1Example *)
 
 
-(* begin snippet FormulaRect *)
-About Term_Terms_rec_full.
-About Formula_rect.
-(* end snippet FormulaRect *)
-
-(* begin snippet DepthRec:: unfold no-in *)
-About Formula_depth_rec.
-(* end snippet DepthRec *)
-
-(** depth-order vs structural order *)
-
-Section depth_rec_demo. 
-Variable L: Language.
-Variable P: fol.Formula L -> Prop. 
-Variable a: fol.Formula L. 
-Goal P a. 
-  eapply  Formula_depth_rec_rec with (depth L a); [| apply le_n].
-  (* begin snippet depthRecDemo:: unfold no-in *)
- clear a; intros a Ha.
-  (* end snippet depthRecDemo *)
-Abort.
-Goal P a. 
- (* begin snippet depthRecDemo2:: unfold no-in *)
- apply Formula_depth_ind2.
- (* end snippet depthRecDemo2 *)
-Abort. 
-
-
-
-
-End depth_rec_demo. 

@@ -21,17 +21,27 @@ Let Terms := Terms L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 
+Let list_incl (X: Ensemble Formula) (l: list Formula) :=
+    forall x, List.In x l -> mem _ X x.
+
+(* to remove *)
+Lemma SysPrf_rephrase X F : SysPrf X F <->  exists s (_ : Prf s F), list_incl X s. 
+split; intro; assumption. 
+Qed.
+
+
+(* begin snippet deductionThm:: no-out *)
 Theorem DeductionTheorem :
   forall (T : System) (f g : Formula) 
          (prf : SysPrf (Ensembles.Add _ T g) f),
     SysPrf T (g -> f)%fol.
+(* end snippet deductionThm *)
 Proof.
   intros T; assert
     (EasyCase :
        forall (g z : Formula),
          Prf nil z ->
-         SysPrf (fun x : fol.Formula L => In x nil /\ 
-                                            mem (fol.Formula L) T x)
+         SysPrf (fun x : Formula => In x nil /\ mem _ T x)
                 (g -> z)%fol).
   { intros g z H.
     set (A1 := IMP1 L z g) in *.
@@ -40,9 +50,9 @@ Proof.
     exists A2.
     intros g0 H0; elim H0.
   }
-  intros f g [F [H HF]].
+  intros f g [F [t HF]].
   assert (H0: SysPrf (fun x => In x F /\ mem _ T x) (g -> f)%fol).
-  { induction  H
+  { induction  t
       as
         [A
         | Axm1 Axm2 A  B  H1  HrecH1  H0  HrecH0

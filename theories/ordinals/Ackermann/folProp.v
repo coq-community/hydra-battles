@@ -52,6 +52,11 @@ Definition ClosedSystem (T : fol.System L) :=
     mem _ T f -> ~ In v (freeVarF f).
 
 (* begin snippet closeDef *)
+(* added by PC *)
+Definition closed (a : fol.Formula L):=
+  forall v: nat, ~ In v (freeVarF a).
+
+
 Fixpoint closeList (l: list nat)(a : fol.Formula L) :=
  match l with
    nil => a
@@ -881,6 +886,9 @@ Definition Sentence (f:Formula) :=
    (forall v : nat, ~ In v (freeVarF f)).
 
 End Fol_Properties.
+
+Arguments closed {L} _.
+
 
 (** compatibility with older names *)
 

@@ -1,30 +1,37 @@
 \chapter{General presentation (draft)}
 
 \section{Introduction}
+This part contains comments, examples  and exercises about Russel O'Connor's work on G\"{o}del's first incompleteness theorem  \cite{Godel1986-GDECW}.
+O'Connor's work was published in 2005~\cite{OConnor05}, and released as a user-contribution of the \coq proof assistant.
+This work is now maintained by Coq community~\cite{CoqCommunity} volunteers and split into two projects: Goedel~\cite{Goedel} and Hydra-battles~\cite{HydraBattles}.
 
+The main reference to this work is  Russel O'Connor's article~\cite{OConnor05}, which we strongly encourage the reader to 
+consult regularly. 
 
 It was the first computer verified proof 
-the essential incompleteness of arithmetic.
+the essential incompleteness\footnote{Todo: explain ``essential''} of Peano arithmetic.
 The main reference to this work is  Russel O'Connor's article~\cite{OConnor05}, which we strongly encourage the reader to 
 consult regularly. 
 
 Several reasons --- enumerated below --- led us to maintain and document this work in the framework of 
 Coq community~\cite{CoqCommunity}.
 
-
+\begin{todo}
+  Cite~\cite{Dowek2023}.
+\end{todo}
 
  \begin{itemize}
  \item Historical interest on G\"{o}del's proof and its mechanizations, as shown by the numerous litterature on this topic
    (for instance \cite{smullyan1992godel, Hofstadter1999Godel, GoedelCassou}).
  
    
-  \item O'Connor's proof was written at the end of \coq V7, then rewritten at the beginning of \coq V8. Since then, \coq and its ecosystem evolved a lot (new styles, tactics, documentation tools).
+  \item O'Connor's proof was written at the end of \coq V7, then rewritten at the beginning of \coq V8. Since then, \coq and its ecosystem evolved a lot (new styles, tactics, documentation tools, etc.).
           We think this evolution should benefit
           to the original proof-scripts and make their understanding easier.
 
-        \item Finally, let us quote  Efim Zelmanov in~\cite{mathproof}
+        \item Finally, let us quote  Efim Zelmanov.
              \begin{quote}
-      The purpose of a proof is \emph{understanding}.
+      ``The purpose of a proof is \emph{understanding}'' ~\cite{mathproof}
        
     \end{quote}
     We hope that underlying some points of the proof will
@@ -33,7 +40,7 @@ Coq community~\cite{CoqCommunity}.
         \end{itemize}
 
      
-        For technical reasons --- mainly in order to make easier the installation and use of its sub-libraries, we split the project
+        For technical reasons --- mainly in order to make simpler the installation and use of its sub-libraries, we split the project
 into two main parts: Goedel~\cite{Goedel} and Hydra-battles~\cite{HydraBattles}.
 
 
@@ -43,12 +50,6 @@ Some changes are made to the aforementionned libraries, mainly because of the re
 \emph{\color{red!80}These maintenance and documentation 
 jobs have just started, and will probably be long to complete. Help is welcome!}
 
-This part contains comments, examples  and exercises about Russel O'Connor's work on G\"{o}del's first incompleteness theorem  \cite{Godel1986-GDECW}.
-O'Connor's work was published in 2005~\cite{OConnor05}, and released as a user-contribution of the \coq proof assistant.
-This work is now maintained by Coq community~\cite{CoqCommunity} volunteers and split into two projects: Goedel~\cite{Goedel} and Hydra-battles~\cite{HydraBattles}.
-
-The main reference to this work is  Russel O'Connor's article~\cite{OConnor05}, which we strongly encourage the reader to 
-consult regularly. 
 
 
 
@@ -62,10 +63,126 @@ All Russel O'Connor's files have been stored in two directories, in order to sim
 \texttt{CoqPrime} package.
 \item  \texttt{theories/ordinals/Ackermann/} : all the rest:
  definition of primitive recursive functions, first-order  logic,
-Peano Arithmetics, G\"{o}del's encoding.
+Peano Arithmetic, G\"{o}del's encoding.
 \item Some additions we made: examples, exercices, new notations, etc.,  are stored in a specific directory \texttt{theories/ordinal/MoreAck/}.
 \end{itemize}
 
+\subsection{The \texttt{Ackermann} sub-directory}
+
+The following main topics are studied in  \texttt{theories/ordinals/Ackermann/}: 
+The following list presents the main modules 
+in a dependance-compatible order.
+
+\begin{description}
+
+ \item[Primitive Recursive Functions]
+  \mbox{}
+  
+ This topic is discussed in Chapter~\vref{chapter:primrec}.
+  
+  \begin{itemize}
+\item
+\href{../theories/html/hydras.Ackermann.extEqualNat.html}{Ackermann.extEqualNat}
+  \item 
+  \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}
+ \item 
+  \href{../theories/html/hydras.Ackermann.cPair.html}{Ackermann.cPair}
+
+\item 
+  \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}  
+ \item 
+  \href{../theories/html/hydras.MoreAck.Ack.html}{MoreAck.Ack}  
+ 
+\item
+  \href{../theories/html/hydras.MoreAck.AckNotPR.html}{MoreAck.AckNotPR}  
+
+Ackermann function is not primitive recursive
+
+  \end{itemize}
+
+
+  
+  
+\item[First Order Logic]
+  \mbox{}
+  
+This part presents \coq definitions and basic properties of first-order languages and proofs.
+
+  \begin{itemize}
+  \item \href{../theories/html/hydras.Ackermann.fol.html}{Ackermann.fol}
+ \item \href{../theories/html/hydras.Ackermann.folProp.html}{Ackermann.folProp}
+\item \href{../theories/html/hydras.Ackermann.folProof.html}{Ackermann.folProof}
+\item \href{../theories/html/hydras.Ackermann.model.html}{Ackermann.model}
+\item \href{../theories/html/hydras.Ackermann.code.html}{Ackermann.code}
+ \item 
+  \href{../theories/html/hydras.Ackermann.prLogic.html}{Ackermann.prLogic} 
+
+\item \href{../theories/html/hydras.Ackermann.codeList.html}{Ackermann.codeList}
+\item \href{../theories/html/hydras.Ackermann.codeFreeVar.html}{Ackermann.codeFreeVar}
+
+\item \href{../theories/html/hydras.Ackermann.checkPrf.html}{Ackermann.checkPrf}
+\item \href{../theories/html/hydras.Ackermann.wellFormed.html}{Ackermann.wellFormed}
+\item \href{../theories/html/hydras.Ackermann.codeSubTerm.html}{Ackermann.codeSubTerm}
+\item \href{../theories/html/hydras.Ackermann.codeSubFormula.html}{Ackermann.codeSubFormula}
+
+
+  \end{itemize}
+
+\item[Natural Deduction]
+ \mbox{}
+Thanks to the \emph{Deduction Theorem}, we prove many 
+lemmas about provability in first-order-logic, many of them can be considered as natural deduction rules.
+
+\begin{itemize}
+\item \href{../theories/html/hydras.Ackermann.Deduction.html}{Ackermann.Deduction}
+\item \href{../theories/html/hydras.Ackermann.folLogic.html}{Ackermann.folLogic}
+\item \href{../theories/html/hydras.Ackermann.folLogic2.html}{Ackermann.folLogic2}
+\item \href{../theories/html/hydras.Ackermann.folLogic3.html}{Ackermann.folLogic3}
+\item \href{../theories/html/hydras.Ackermann.folReplace.html}{Ackermann.folReplace}
+\item \href{../theories/html/hydras.Ackermann.subProp.html}{Ackermann.subProp}
+\item \href{../theories/html/hydras.Ackermann.subAll.html}{Ackermann.subAll}
+ \item  \href{../theories/html/hydras.MoreAck.FolExamples.html}{MoreAck.FolExamples}
+\end{itemize}
+
+\item [Languages of Arithmetic]
+\mbox{}
+
+\begin{itemize}
+\item \href{../theories/html/hydras.Ackermann.Languages.html}{Ackermann.Languages}
+\item \href{../theories/html/hydras.Ackermann.LNN.html}{Ackermann.LNN}
+\item \href{../theories/html/hydras.Ackermann.LNT.html}{Ackermann.LNT}
+\item \href{../theories/html/hydras.Ackermann.NN.html}{Ackermann.NN} Axioms for Natural Numbers and basic properties.
+\item \href{../theories/html/hydras.Ackermann.NNtheory.html}{Ackermann.NNtheory}
+\item \href{../theories/html/hydras.Ackermann.PA.html}{Ackermann.PA} Peano Arithmetic: axioms  and first properties.
+\item \href{../theories/html/hydras.Ackermann.LNN2LNT.html}{Ackermann.LNN2LNT}
+\item \href{../theories/html/hydras.Ackermann.NN2PA.html}{Ackermann.NN2PA}
+
+\item \href{../theories/html/hydras.Ackermann.PAtheory.html}{Ackermann.PAtheory}
+\item \href{../theories/html/hydras.Ackermann.PAconsistent.html}{Ackermann.PAconsistent}
+
+\item \href{../theories/html/hydras.Ackermann.codePA.html}{Ackermann.codePA}
+
+\item \href{../theories/html/hydras.Ackermann.codeNatToTerm.html}{Ackermann.codeNat2Term}
+\item \href{../theories/html/hydras.Ackermann.wConsistent.html}{Ackermann.wConsistent}
+\item \href{../theories/html/hydras.Ackermann.expressible.html}{Ackermann.expressible}
+
+\item \href{../theories/html/hydras.MoreAck.LNN_Examples.html}{MoreAck.LNN\_Examples}
+\end{itemize}
+
+\item[Modules dependent on \texttt{CoqPrime}]
+
+\mbox{}
+
+  \begin{itemize}
+  \item \href{../theories/html/Goedel.PRrepresentable.html}{Goedel.PRrepresentable}
+ \item \href{../theories/html/Goedel.fixPoint.html}{Goedel.fixPoint}
+ \item \href{../theories/html/Goedel.codeSysPrf.html}{Goedel.codeSysPrf}
+ \item \href{../theories/html/Goedel.rosser.html}{Goedel.rosser}
+ \item \href{../theories/html/Goedel.goedel1.html}{Goedel.goedel1}
+ \item \href{../theories/html/Goedel.rosserPA.html}{Goedel.rosserPA}
+ \item \href{../theories/html/Goedel.goedel2.html}{Goedel.goedel2}
+  \end{itemize}
+\end{description}
 
 \begin{todo}
 Add information on recent developments on formal 

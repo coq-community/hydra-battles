@@ -108,9 +108,9 @@ Compute (Plus Zero  Zero)%fol.
 Compute (depth _ f1, depth _ f2).
 (* end snippet depthCompute *)
 (* begin snippet freeVarExamples *)
-Compute  freeVarFormula _ f3.
+Compute  freeVarF _ f3.
 
-Compute List.nodup Nat.eq_dec (freeVarFormula _ f3).
+Compute List.nodup Nat.eq_dec (freeVarF _ f3).
 
 Compute close _ f3.
 

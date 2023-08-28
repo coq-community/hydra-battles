@@ -11,6 +11,7 @@ Require Import prLogic  Compat815.
 From LibHyps Require Export LibHyps.
 From hydras Require Export MoreLibHyps NewNotations.
 Import LispAbbreviations. 
+Import FolNotations.
 
 (* begin snippet context1 *)
 Section Check_Proof.
@@ -61,7 +62,7 @@ Let wellFormedFormula := wellFormedFormula codeArityF codeArityR.
 Let Prf := Prf L.
 
 (** The wellFormedness requirement isn't really neccesary,
-because and proof that used ``extra symbols'' could be
+because any proof that used ``extra symbols'' could be
 turned into a proof that only used symbols from the
 axioms and the conclusion.
 
@@ -114,11 +115,11 @@ Definition checkPrfMP (p recs : nat) :=
     (wellFormedFormula (car (cdr (cdr (cdr p)))) *
      (charFunction 2 Nat.eqb (car (car (cdr (cdr p))))
         (codeImp (car (cdr (cdr (cdr p)))) (car p)) *
-      (codeNth (p - S (car (cdr (cdr p)))) recs *
+      (codeNth (p - S (caddr p)) recs *
        codeNth (p - S (cdddr p)) recs)))
     (S
        (codeApp
-          (pred (codeNth (p - S (car (cdr (cdr p)))) recs))
+          (pred (codeNth (p - S (caddr p)) recs))
           (pred (codeNth (p - S (cdr (cdr (cdr p)))) recs))))
     0.
 
@@ -1186,10 +1187,8 @@ Qed.
 Definition checkPrfEQ2 (p recs : nat) :=
   charFunction 2 Nat.eqb (cdr (cdr p)) 0 *
     charFunction 2 Nat.eqb
-      (codeFormula L codeF codeR
-         (impH (equal (var 0) (var 1))
-            (equal (var 1) (var 0)))) 
-      (car p).
+      (codeFormula L codeF codeR (v#0 = v#1 -> v#1 = v#0)%fol) (car p).
+
 
 Lemma checkPrfEQ2IsPR : isPR 2 checkPrfEQ2.
 Proof.
@@ -1200,9 +1199,7 @@ Definition checkPrfEQ3 (p recs : nat) :=
   charFunction 2 Nat.eqb (cdr (cdr p)) 0 *
     charFunction 2 Nat.eqb
       (codeFormula L codeF codeR
-         (impH (equal (var 0) (var 1))
-            (impH (equal (var 1) (var 2))
-               (equal (var 0) (var 2))))) 
+         (v#0 = v#1 -> v#1 = v#2 -> v#0 = v#2)%fol)
       (car p).
 
 Lemma checkPrfEQ3IsPR : isPR 2 checkPrfEQ3.
@@ -3279,9 +3276,7 @@ Proof.
                       rewrite
                         (nat_eqb_false
                            (codeFormula L codeF codeR
-                              (impH (equal (var 0) (var 1))
-                                 (equal (var 1) (var 0))))).
-                      
+                              (v#0 = v#1 -> v#1 = v#0)%fol)).
                       rewrite Nat.mul_comm.
                       reflexivity.
                       rewrite cPairProjections1.
@@ -3653,3 +3648,19 @@ Simpl in H0.
 Qed.
 
 End Check_Proof.
+
+
+About codePrf. 
+(*
+codePrf :
+forall L : Language,
+(Functions L -> nat) ->
+(Relations L -> nat) ->
+forall (Z : Formulas L) (f : Formula L), Prf L Z f -> nat
+
+codePrf L Z ...  Z f (pi : Ptf L Z f) :  number associated with pi
+*)
+
+
+
+Search codePrf.
