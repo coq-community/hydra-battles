@@ -516,3 +516,5 @@ Lemma codeIffCorrect :
 Proof. intros; reflexivity. Qed.
 
 End Code_Term_Formula_Proof.
+
+About codeFormula.

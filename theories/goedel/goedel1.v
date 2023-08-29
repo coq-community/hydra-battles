@@ -5,8 +5,7 @@ From hydras.Ackermann Require Import folProp.
 From hydras.Ackermann Require Import folProof.
 From hydras.Ackermann Require Import subProp.
 From hydras.Ackermann Require Import ListExt.
-From Goedel Require Import fixPoint.
-From Goedel Require Import codeSysPrf.
+From Goedel Require Import fixPoint codeSysPrf.
 From hydras.Ackermann Require Import wConsistent.
 From hydras.Ackermann Require Import NN.
 From hydras.Ackermann Require Import code.
@@ -15,13 +14,15 @@ From hydras Require Import Compat815.
 
 From LibHyps Require Export LibHyps.
 From hydras Require Export MoreLibHyps NewNotations.
+
 Import NNnotations.
 
-Definition codeFormula := 
+(* TO do: remove this kind of redefinition *)
+Definition codeFNN := 
   codeFormula LNN codeLNTFunction codeLNNRelation.
 
 (* cf Gilles' paper ? *)
-Notation reflection f := (natToTerm (codeFormula f)).
+Notation reflection f := (natToTerm (codeFNN f)).
   
 Section Goedel's_1st_Incompleteness.
 
@@ -33,22 +34,26 @@ Hypothesis extendsNN : Included _ NN T.
  There exists a formula repT 
   -  with only a free variable v0
   -  which means "v0 is a term which reflects some axiom of T"
+
+   (see also codeSysPrf.v)
 *)
 Variable repT : Formula.
 Variable v0 : nat.
 Hypothesis
   freeVarRepT : forall v : nat, In v (freeVarF LNN repT) -> v = v0.
+
 Hypothesis
   expressT1 :
-    forall f : Formula,
-    mem _ T f ->
+    forall f : Formula, mem _ T f ->
     SysPrf T (substF LNN repT v0 (reflection f)).
+
 Hypothesis
   expressT2 :
-    forall f : Formula,
-    ~ mem _ T f ->
-    SysPrf T
-      (notH (substF LNN repT v0 (reflection f))).
+    forall f : Formula, ~ mem _ T f ->
+    SysPrf T (~ (substF LNN repT v0 (reflection f)))%nn.
+
+
+
 
 Definition codeSysPrf :=
   codeSysPrf LNN codeLNTFunction codeLNNRelation codeArityLNTF codeArityLNNR
@@ -57,6 +62,9 @@ Definition codeSysPrf :=
 Definition codeSysPf :=
   codeSysPf LNN codeLNTFunction codeLNNRelation codeArityLNTF codeArityLNNR
     codeArityLNTFIsPR codeArityLNNRIsPR repT v0.
+
+Definition G := let (a,_) := FixPointLNN (notH codeSysPf) 0 in a.
+
 
 Definition codeSysPfCorrect :=
   codeSysPfCorrect LNN codeLNTFunction codeLNNRelation codeArityLNTF
@@ -74,7 +82,7 @@ Definition codeSysPrfCorrect3 :=
     codeArityLNTFIsCorrect2 codeArityLNNRIsPR codeArityLNNRIsCorrect1
     codeArityLNNRIsCorrect2 codeLNTFunctionInj codeLNNRelationInj T extendsNN.
  
-Definition G := let (a,_) := FixPointLNN (notH codeSysPf) 0 in a.
+
 
 Lemma freeVarG : closed G. 
 Proof.
@@ -109,7 +117,7 @@ Proof.
       (notH
          (substF LNN (notH codeSysPf) 0
             (codeNatToTerm.natToTermLNN
-               (code.codeFormula LNN codeLNTFunction codeLNNRelation x)))).
+               (codeFNN x)))).
     + apply cp2, iffE1; apply sysExtend with NN; auto. 
     + rewrite (subFormulaNot LNN); apply nnI; 
       now apply codeSysPfCorrect. 
@@ -162,7 +170,7 @@ Proof.
     destruct 
       (eq_nat_dec
          (checkPrf LNN codeLNTFunction codeLNNRelation codeArityLNTF codeArityLNNR
-            (codeFormula x) x0) 0) as [e |n ].
+            (codeFNN x) x0) 0) as [e |n ].
     + apply H4.
       rewrite (subFormulaNot LNN).
       unfold codeSysPrf, codeX in |- *.
@@ -171,9 +179,9 @@ Proof.
       assert (H6:
         (checkPrf LNN codeLNTFunction codeLNNRelation
            codeArityLNTF codeArityLNNR
-           (codeFormula x)
+           (codeFNN x)
            (codePrf LNN codeLNTFunction codeLNNRelation A x p) =
-           S (cPair.codeList (map codeFormula A)))).
+           S (cPair.codeList (map codeFNN A)))).
       {
         apply
           (checkPrfCorrect1 LNN codeLNTFunction codeLNNRelation codeArityLNTF
@@ -184,7 +192,7 @@ Proof.
     + assert (H5:
                (checkPrf LNN codeLNTFunction codeLNNRelation
                   codeArityLNTF codeArityLNNR
-                  (codeFormula x) x0 <> 0))
+                  (codeFNN x) x0 <> 0))
         by  assumption.
       clear n; decompose record
         (checkPrfCorrect2 LNN codeLNTFunction codeLNNRelation codeArityLNTF

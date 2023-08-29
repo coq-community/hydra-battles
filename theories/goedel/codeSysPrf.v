@@ -25,9 +25,8 @@ From hydras.Ackermann Require Import wellFormed.
 From hydras.Ackermann Require Import prLogic.
 
 From hydras Require Import Compat815.
-Import LNN NN.
-Import NNnotations. 
 
+(* begin hide *)
 Ltac SimplFreeVar :=
   repeat
    match goal with
@@ -96,6 +95,7 @@ Ltac SimplFreeVar :=
    | H:(In _ (freeVarT ?X9 (var ?X9 _))) |- _ =>
        simpl in H; decompose sum H; clear H
    end.
+(* end hide *)
 
 Section code_SysPrf.
 
@@ -122,12 +122,18 @@ Hypothesis
 Hypothesis codeFInj : forall f g : Functions L, codeF f = codeF g -> f = g.
 Hypothesis codeRInj : forall R S : Relations L, codeR R = codeR S -> R = S.
 
+
+Import LNN NN.
+Import NNnotations. 
+
 Section LNN.
 
 Variable T : System.
 Hypothesis TextendsNN : Included _ NN T.
+
 Variable U : fol.System L.
-Variable fU : Formula.
+Variable fU : Formula. (* LNN *)
+
 Variable v0 : nat.
 Hypothesis freeVarfU : forall v : nat, In v (freeVarF LNN fU) -> v = v0.
 Hypothesis
