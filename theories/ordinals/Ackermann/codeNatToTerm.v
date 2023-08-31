@@ -17,9 +17,26 @@ Fixpoint codeNatToTerm (n: nat) : nat :=
   0 => cPair 4 0
 | S p => cPair 3 (S (cPair (codeNatToTerm p) 0))
 end. 
+About codeTerm. 
+About Lcode.
+
+#[global] Instance LcodeLNN : Lcode LNN codeLNTFunction codeLNNRelation.
+Proof.
+  split.
+  - apply codeLNTFunctionInj.
+  - apply codeLNNRelationInj.   
+Defined.  
+
+
+#[global] Instance LcodeLNT : Lcode LNT codeLNTFunction codeLNTRelation.
+Proof.
+  split.
+  - apply codeLNTFunctionInj.
+  - apply codeLNTRelationInj.   
+Defined.  
 
 Lemma codeNatToTermCorrectLNN n :
- codeNatToTerm n = codeTerm LNN codeLNTFunction (natToTermLNN n).
+ codeNatToTerm n = codeTerm LcodeLNN (natToTermLNN n).
 Proof.
   induction n as [| n Hrecn].
   - reflexivity.
@@ -27,7 +44,7 @@ Proof.
 Qed.
 
 Lemma codeNatToTermCorrectLNT n :
- codeNatToTerm n = codeTerm LNT codeLNTFunction (natToTermLNT n).
+ codeNatToTerm n = codeTerm  LcodeLNT (natToTermLNT n).
 Proof.
   induction n as [| n Hrecn].
   - reflexivity.
