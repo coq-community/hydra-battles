@@ -183,7 +183,7 @@ _ _ _ _ _ _ _ _ freeVarRepT _ H6).
         (checkPrf LNN LcodeLNN
            codeArityLNTF codeArityLNNR
            (codeFNN x)
-           (codePrf LNN LcodeLNN  A x p) =
+           (codePrf LcodeLNN  A x p) =
            S (cPair.codeList (map codeFNN A)))).
       {
         apply
@@ -207,7 +207,7 @@ _ _ _ _ _ _ _ _ freeVarRepT _ H6).
        
         - apply H7.
       }
-      cut (codePrf LNN LcodeLNN x2 x1 x3 = x0).
+      cut (codePrf LcodeLNN x2 x1 x3 = x0).
       * generalize x3.  rewrite H6; intros x4 H9.
         clear H6 H8 x3 H7 x1.
         assert

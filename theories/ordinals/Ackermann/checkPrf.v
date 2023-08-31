@@ -3660,6 +3660,10 @@ End Check_Proof.
 
 
 About codePrf. 
+Arguments codePrf {L cf cr} cl _. 
+
+
+
 (*
 codePrf :
 forall L : Language,

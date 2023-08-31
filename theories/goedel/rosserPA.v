@@ -211,7 +211,7 @@ Definition codeSysPrfCorrect3 :=
     codeArityLNTRIsCorrect2  T'
     extendsNN.
   
-Definition codePrf := codePrf LNT LcodeLNT.
+Definition codePrf := codePrf LcodeLNT.
 
 Definition codeSysPrfNot :=
   codeSysPrfNot LNT LcodeLNT codeArityLNTF
@@ -1055,7 +1055,7 @@ Proof.
                           { eapply codeFormulaInj.
                             assumption.
                           } 
-                          cut (code.codePrf LNT LcodeLNT x3 x2 x4 = n).
+                          cut (code.codePrf LcodeLNT x3 x2 x4 = n).
                           ---- generalize x4; clear H6 x4; rewrite H4.
                                intros x4 H6; apply T'prf2Tprf.
                                apply codeSysPrfNCorrect2.
