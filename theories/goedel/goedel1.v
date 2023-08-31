@@ -14,12 +14,12 @@ From hydras Require Import Compat815.
 
 From LibHyps Require Export LibHyps.
 From hydras Require Export MoreLibHyps NewNotations.
-
-Import NNnotations.
+Locate LcodeLNN.
+Import NNnotations codeNatToTerm.
 
 (* TO do: remove this kind of redefinition *)
 Definition codeFNN := 
-  codeFormula LNN codeLNTFunction codeLNNRelation.
+  codeFormula LcodeLNN .
 
 (* cf Gilles' paper ? *)
 Notation reflection f := (natToTerm (codeFNN f)).
@@ -56,31 +56,31 @@ Hypothesis
 
 
 Definition codeSysPrf :=
-  codeSysPrf LNN codeLNTFunction codeLNNRelation codeArityLNTF codeArityLNNR
+  codeSysPrf LNN LcodeLNN codeArityLNTF codeArityLNNR
     codeArityLNTFIsPR codeArityLNNRIsPR repT v0.
 
 Definition codeSysPf :=
-  codeSysPf LNN codeLNTFunction codeLNNRelation codeArityLNTF codeArityLNNR
+  codeSysPf LNN LcodeLNN codeArityLNTF codeArityLNNR
     codeArityLNTFIsPR codeArityLNNRIsPR repT v0.
 
 Definition G := let (a,_) := FixPointLNN (notH codeSysPf) 0 in a.
 
 
 Definition codeSysPfCorrect :=
-  codeSysPfCorrect LNN codeLNTFunction codeLNNRelation codeArityLNTF
+  codeSysPfCorrect LNN LcodeLNN codeArityLNTF
     codeArityLNNR codeArityLNTFIsPR codeArityLNTFIsCorrect1 codeArityLNNRIsPR
     codeArityLNNRIsCorrect1 T extendsNN T repT v0 freeVarRepT expressT1.
 
 Definition codeSysPrfCorrect2 :=
-  codeSysPrfCorrect2 LNN codeLNTFunction codeLNNRelation codeArityLNTF
+  codeSysPrfCorrect2 LNN LcodeLNN codeArityLNTF
     codeArityLNNR codeArityLNTFIsPR codeArityLNTFIsCorrect1 codeArityLNNRIsPR
     codeArityLNNRIsCorrect1 T extendsNN T repT v0 freeVarRepT expressT2.
 
 Definition codeSysPrfCorrect3 :=
-  codeSysPrfCorrect3 LNN codeLNTFunction codeLNNRelation codeArityLNTF
+  codeSysPrfCorrect3 LNN LcodeLNN codeArityLNTF
     codeArityLNNR codeArityLNTFIsPR codeArityLNTFIsCorrect1
     codeArityLNTFIsCorrect2 codeArityLNNRIsPR codeArityLNNRIsCorrect1
-    codeArityLNNRIsCorrect2 codeLNTFunctionInj codeLNNRelationInj T extendsNN.
+    codeArityLNNRIsCorrect2  T extendsNN.
  
 
 
@@ -93,7 +93,7 @@ Proof.
   absurd (v = 0).
   -  eapply in_remove_neq; apply H3; assumption.
   - eapply
-      (freeVarCodeSysPf LNN codeLNTFunction codeLNNRelation codeArityLNTF
+      (freeVarCodeSysPf LNN LcodeLNN codeArityLNTF
          codeArityLNNR codeArityLNTFIsPR codeArityLNNRIsPR). 
     + apply freeVarRepT.
     + assert
@@ -139,7 +139,7 @@ Proof.
   }
   unfold G; destruct (FixPointLNN (notH codeSysPf) 0) as [x [H1 H2]].
   unfold not in |- *; intros H0.
-  set (codeX := code.codeFormula LNN codeLNTFunction codeLNNRelation x) in *.
+  set (codeX := code.codeFormula LcodeLNN  x) in *.
   unfold wConsistent in H.
   set (y := 
      notH
@@ -161,7 +161,10 @@ Proof.
         * elim (Compat815.le_not_lt (S (S n)) 1).
           assert (H6: In (S (S n)) (freeVarF LNN codeSysPrf)).
           { eapply in_remove; apply H5. }
-          apply (freeVarCodeSysPrf _ _ _ _ _ _ _ _ _ freeVarRepT _ H6).
+About freeVarCodeSysPrf.
+       
+apply ( freeVarCodeSysPrf
+_ _ _ _ _ _ _ _ freeVarRepT _ H6).
           apply Compat815.lt_n_S; apply Nat.lt_0_succ.
     - elim (closedNatToTerm _ _ H5).
   }
@@ -169,7 +172,7 @@ Proof.
   - unfold y in H4.
     destruct 
       (eq_nat_dec
-         (checkPrf LNN codeLNTFunction codeLNNRelation codeArityLNTF codeArityLNNR
+         (checkPrf LNN LcodeLNN  codeArityLNTF codeArityLNNR
             (codeFNN x) x0) 0) as [e |n ].
     + apply H4.
       rewrite (subFormulaNot LNN).
@@ -177,37 +180,34 @@ Proof.
       apply codeSysPrfCorrect3.
       unfold not in |- *; intros A p H5.
       assert (H6:
-        (checkPrf LNN codeLNTFunction codeLNNRelation
+        (checkPrf LNN LcodeLNN
            codeArityLNTF codeArityLNNR
            (codeFNN x)
-           (codePrf LNN codeLNTFunction codeLNNRelation A x p) =
+           (codePrf LNN LcodeLNN  A x p) =
            S (cPair.codeList (map codeFNN A)))).
       {
         apply
-          (checkPrfCorrect1 LNN codeLNTFunction codeLNNRelation codeArityLNTF
+          (checkPrfCorrect1 LNN LcodeLNN codeArityLNTF
              codeArityLNNR codeArityLNTFIsCorrect1
              codeArityLNNRIsCorrect1 A x p).
       }
       rewrite <- H5 in H6; rewrite H6 in e; discriminate e.
     + assert (H5:
-               (checkPrf LNN codeLNTFunction codeLNNRelation
-                  codeArityLNTF codeArityLNNR
+               (checkPrf LNN LcodeLNN codeArityLNTF codeArityLNNR
                   (codeFNN x) x0 <> 0))
         by  assumption.
       clear n; decompose record
-        (checkPrfCorrect2 LNN codeLNTFunction codeLNNRelation codeArityLNTF
+        (checkPrfCorrect2 LNN LcodeLNN codeArityLNTF
            codeArityLNNR codeArityLNTFIsCorrect1 codeArityLNTFIsCorrect2
-           codeArityLNNRIsCorrect1 codeArityLNNRIsCorrect2 codeLNTFunctionInj
-           codeLNNRelationInj _ _ H5) /r;
+           codeArityLNNRIsCorrect1 codeArityLNNRIsCorrect2  _ _ H5) /r;
         intros x1 H7 x2 x3 H8.
 
       assert (H6: x1 = x).
       { eapply codeFormulaInj.
-        - apply codeLNTFunctionInj.
-        - apply codeLNNRelationInj.
+       
         - apply H7.
       }
-      cut (codePrf LNN codeLNTFunction codeLNNRelation x2 x1 x3 = x0).
+      cut (codePrf LNN LcodeLNN x2 x1 x3 = x0).
       * generalize x3.  rewrite H6; intros x4 H9.
         clear H6 H8 x3 H7 x1.
         assert

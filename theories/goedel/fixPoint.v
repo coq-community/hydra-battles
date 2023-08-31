@@ -35,9 +35,14 @@ Proof.
   - apply codeSubFormulaIsPR.
 Qed.
 
+#[global] Instance codeNN : Lcode LNN codeLNTFunction codeLNNRelation.
+split. 
+apply codeLNTFunctionInj.
+apply codeLNNRelationInj.
+Defined. 
 Section LNN_FixPoint.
 
-Let codeFormula := codeFormula LNN codeLNTFunction codeLNNRelation.
+Let codeFormula := codeFormula codeNN.
 
 Lemma FixPointLNN :
  forall (A : Formula) (v : nat),
@@ -293,7 +298,7 @@ From hydras.Ackermann Require Import NN2PA.
 
 Section LNT_FixPoint.
 
-Let codeFormula := codeFormula LNT codeLNTFunction codeLNTRelation.
+Let codeFormula := codeFormula LcodeLNT.
 
 Lemma FixPointLNT  (A : Formula) (v : nat):
   {B : Formula |
