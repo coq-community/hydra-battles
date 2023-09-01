@@ -1826,7 +1826,7 @@ Qed.
 
 (* begin snippet checkPrfCorrect1:: no-out *)
 Lemma checkPrfCorrect1 (l : list Formula) (f : Formula) (p : Prf l f):
- checkPrf (codeFormula cL f) (codePrf L cL l f p) 
+ checkPrf (codeFormula cL f) (codePrf cL l f p) 
  =  S (codeList (map (codeFormula cL) l)).
 (* end snippet checkPrfCorrect1 *)
 Proof.
@@ -1957,9 +1957,9 @@ Proof.
                 (cPair 1
                    (cPair (codeFormula cL A0)
                       (codeFormula cL B)))
-                (codePrf L cL  Axm1 (impH  A0 B) p1))
+                (codePrf cL  Axm1 (impH  A0 B) p1))
              (cPair (codeFormula cL A0) 
-                (codePrf L cL  Axm2 A0 p0)))
+                (codePrf cL  Axm2 A0 p0)))
       in *.
     unfold A at 1 in |- *.
     repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
@@ -2274,7 +2274,7 @@ Lemma checkPrfCorrect2 (n m : nat):
  exists f : Formula,
    codeFormula cL f = n /\
    (exists l : list Formula,
-      (exists p : Prf l f, codePrf L cL l f p = m)).
+      (exists p : Prf l f, codePrf cL l f p = m)).
 (* end snippet checkPrfCorrect2:: no-out *)
 Proof.
   revert n m;
@@ -2292,7 +2292,7 @@ Proof.
           (exists l : list Formula,
               (exists p : Prf l f,
                   cPair (codeFormula cL f) 
-                    (codePrf L cL l f p) =
+                    (codePrf cL l f p) =
                     n))).
   { 
     intro m; induction m as [| m Hrecm].
@@ -2598,7 +2598,7 @@ Proof.
                } 
                cut
                  (cPair (codeFormula cL x1) 
-                    (codePrf L cL x3 x1 x4) =
+                    (codePrf cL x3 x1 x4) =
                     car (cdr (cdr n))).
                { generalize x4; clear H13 x4; rewrite H15.
                  intros x4 H13; exists (MP L x3 x5 x2 x x4 x6).
@@ -2692,7 +2692,7 @@ Proof.
                   rewrite <- H9 in H0.
                   assert
                     (H10: checkPrf (codeFormula cL x) 
-                            (codePrf L cL  x0 x x1) =
+                            (codePrf cL  x0 x x1) =
                             S (codeList (map (codeFormula cL) x0)))
                     by apply checkPrfCorrect1.
                   unfold checkPrf in H10.
@@ -2717,7 +2717,7 @@ Proof.
                   rewrite cPairProjections1 in H6.
                   cut
                     (cPair (codeFormula cL x) 
-                       (codePrf L cL x0 x x1) =
+                       (codePrf cL x0 x x1) =
                        cdr (cdr (cdr n))).
                   { generalize x1.
                     clear H10 H0 x1 H9.
@@ -3642,7 +3642,7 @@ unfold codeR.
         (exists l : list Formula,
             (exists p : Prf l f,
                 cPair (codeFormula cL  f) 
-                  (codePrf L cL l f p) =
+                  (codePrf cL l f p) =
                     cPair n m))).
   { eapply H.
     apply Nat.lt_succ_diag_r.

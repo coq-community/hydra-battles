@@ -25,8 +25,6 @@ Variable L : Language.
 
  Definition codeR {cf : Functions L -> nat} {cr : Relations L -> nat}     (c: Lcode cf cr) := cr.
 
-Arguments codeFInj {cF cR} _.
-
 Let Formula := Formula L.
 Let Formulas := Formulas L.
 Let System := System L.
@@ -34,6 +32,7 @@ Let Term := Term L.
 Let Terms := Terms L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.
+
 Generalizable All Variables.
 Section codeTermFormDef.
 
@@ -533,9 +532,8 @@ End codeTermFormDef.
 
 End Code_Term_Formula_Proof.
 
-About codeTerm. 
+
 Arguments codeTerm {L} {cf cr} cl _. 
-About codeTerms. 
 Arguments codeTerms {L} {cf cr} cl _ _. 
-About codeFormula.
 Arguments codeFormula {L} {cf cr} cl _. 
+Arguments codePrf {L} {cf cr} cl _ _ _. 
