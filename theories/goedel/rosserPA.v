@@ -313,7 +313,7 @@ Proof.
              as [H6 | H6].
            ++ rewrite <- H1 in H0; eauto.
            ++ assert (H7: B = x0).
-              { eapply (codePrfInjAxm LNT) with (p := q) (q := x1).
+              { eapply (codePrfInjAxm LNT).
                
                 - transitivity n.
                   + unfold codePrf in H6.
