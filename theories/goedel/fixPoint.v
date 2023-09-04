@@ -35,14 +35,15 @@ Proof.
   - apply codeSubFormulaIsPR.
 Qed.
 
-#[global] Instance codeNN : Lcode LNN codeLNTFunction codeLNNRelation.
+(* #[global] Instance codeNN : Lcode LNN codeLNTFunction codeLNNRelation.
 split. 
 apply codeLNTFunctionInj.
 apply codeLNNRelationInj.
-Defined. 
+Defined.  *)
+
 Section LNN_FixPoint.
 
-Let codeFormula := codeFormula (cl:=codeNN).
+Let codeFormula := codeFormula (cl:=LcodeLNN).
 
 Lemma FixPointLNN :
  forall (A : Formula) (v : nat),

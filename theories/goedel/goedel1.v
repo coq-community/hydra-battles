@@ -14,12 +14,12 @@ From hydras Require Import Compat815.
 
 From LibHyps Require Export LibHyps.
 From hydras Require Export MoreLibHyps NewNotations.
-Locate LcodeLNN.
+
 Import NNnotations codeNatToTerm.
 
+
 (* TO do: remove this kind of redefinition *)
-Definition codeFNN := 
-  codeFormula (cl:=LcodeLNN) .
+Definition codeFNN := codeFormula (cl:=LcodeLNN) .
 
 (* cf Gilles' paper ? *)
 Notation reflection f := (natToTerm (codeFNN f)).
@@ -163,8 +163,7 @@ Proof.
           { eapply in_remove; apply H5. }
 About freeVarCodeSysPrf.
        
-apply ( freeVarCodeSysPrf
-_ _ _ _ _ _ _ _ freeVarRepT _ H6).
+apply ( freeVarCodeSysPrf _ _ _ _ _ _ _ _ freeVarRepT _ H6).
           apply Compat815.lt_n_S; apply Nat.lt_0_succ.
     - elim (closedNatToTerm _ _ H5).
   }
@@ -179,12 +178,11 @@ _ _ _ _ _ _ _ _ freeVarRepT _ H6).
       unfold codeSysPrf, codeX in |- *.
       apply codeSysPrfCorrect3.
       unfold not in |- *; intros A p H5.
-Set Printing All. 
       assert (H6:
         (checkPrf LNN LcodeLNN
            codeArityLNTF codeArityLNNR
            (codeFNN x)
-           (codePrf (cl := LcodeLNN )  A x p) =
+           (codePrf A x p) =
            S (cPair.codeList (map codeFNN A)))).
       {
         apply
@@ -208,7 +206,7 @@ Set Printing All.
        
         - apply H7.
       }
-      cut (codePrf (cl:= LcodeLNN) x2 x1 x3 = x0).
+      cut (codePrf x2 x1 x3 = x0).
       * generalize x3.  rewrite H6; intros x4 H9.
         clear H6 H8 x3 H7 x1.
         assert
