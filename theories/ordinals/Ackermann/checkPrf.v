@@ -1153,7 +1153,7 @@ Qed.
 Definition checkPrfEQ1 (p recs : nat) :=
   charFunction 2 Nat.eqb (cdr (cdr p)) 0 *
   charFunction 2 Nat.eqb
-    (codeFormula cL (equal (var 0) (var 0)))
+    (codeFormula (equal (var 0) (var 0)))
     (car p).
 
 Lemma checkPrfEQnIsPR (n: nat):
@@ -1190,7 +1190,7 @@ Qed.
 Definition checkPrfEQ2 (p recs : nat) :=
   charFunction 2 Nat.eqb (cdr (cdr p)) 0 *
     charFunction 2 Nat.eqb
-      (codeFormula cL  (v#0 = v#1 -> v#1 = v#0)%fol) (car p).
+      (codeFormula  (v#0 = v#1 -> v#1 = v#0)%fol) (car p).
 
 
 
@@ -1202,7 +1202,7 @@ Qed.
 Definition checkPrfEQ3 (p recs : nat) :=
   charFunction 2 Nat.eqb (cdr (cdr p)) 0 *
     charFunction 2 Nat.eqb
-      (codeFormula cL 
+      (codeFormula  
          (v#0 = v#1 -> v#1 = v#2 -> v#0 = v#2)%fol)
       (car p).
 
@@ -1329,8 +1329,8 @@ Proof.
 Qed.
 
 Lemma codeNVarsCorrect (n: nat) :
- codeNVars1 n = codeTerms cL  n (fst (nVars L n)) /\
- codeNVars2 n = codeTerms cL n (snd (nVars L n)).
+ codeNVars1 n = codeTerms (fst (nVars L n)) /\
+ codeNVars2 n = codeTerms (snd (nVars L n)).
 Proof.
   split.
   - induction n as [| n Hrecn].
@@ -1826,8 +1826,8 @@ Qed.
 
 (* begin snippet checkPrfCorrect1:: no-out *)
 Lemma checkPrfCorrect1 (l : list Formula) (f : Formula) (p : Prf l f):
- checkPrf (codeFormula cL f) (codePrf cL l f p) 
- =  S (codeList (map (codeFormula cL) l)).
+ checkPrf (codeFormula f) (codePrf l f p) 
+ =  S (codeList (map codeFormula l)).
 (* end snippet checkPrfCorrect1 *)
 Proof.
   unfold checkPrf;
@@ -1955,11 +1955,11 @@ Proof.
            cPair
              (cPair
                 (cPair 1
-                   (cPair (codeFormula cL A0)
-                      (codeFormula cL B)))
-                (codePrf cL  Axm1 (impH  A0 B) p1))
-             (cPair (codeFormula cL A0) 
-                (codePrf cL  Axm2 A0 p0)))
+                   (cPair (codeFormula A0)
+                      (codeFormula  B)))
+                (codePrf Axm1 (impH  A0 B) p1))
+             (cPair (codeFormula  A0) 
+                (codePrf  Axm2 A0 p0)))
       in *.
     unfold A at 1 in |- *.
     repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
@@ -1972,9 +1972,9 @@ Proof.
         rewrite Hrecp0.
         replace
           (cPair 1
-             (cPair (codeFormula cL A0) 
-                (codeFormula cL  B)))
-          with (codeFormula cL (impH A0 B)); 
+             (cPair (codeFormula A0) 
+                (codeFormula B)))
+          with (codeFormula (impH A0 B)); 
           [ idtac | reflexivity ].
         rewrite Hrecp1.
         rewrite
@@ -1982,12 +1982,12 @@ Proof.
              codeArityFIsCorrect1 
              codeArityR codeArityRIsCorrect1).
         simpl in |- *.
-        replace (map (codeFormula cL) (Axm1 ++ Axm2)) 
+        replace (map (codeFormula) (Axm1 ++ Axm2)) 
           with
-          (map (codeFormula cL) Axm1 ++
-             map (codeFormula cL) Axm2).
+          (map (codeFormula ) Axm1 ++
+             map (codeFormula ) Axm2).
         { rewrite codeAppCorrect; reflexivity. }
-        generalize (codeFormula cL); intro n.
+        generalize (codeFormula ); intro n.
         clear p1 A Hrecp1 Hrecp0 C.
         induction Axm1 as [| a Axm1 HrecAxm1].
         -- reflexivity.
@@ -2014,8 +2014,8 @@ Proof.
       * replace
           (charFunction 2 Nat.eqb 
              (cPair 3
-                (cPair v (codeFormula cL A0)))
-             (cPair 3 (cPair v (codeFormula cL A0)))) 
+                (cPair v (codeFormula A0)))
+             (cPair 3 (cPair v (codeFormula A0)))) 
           with 1.
         { simpl; reflexivity. }
         simpl in |- *.
@@ -2077,8 +2077,7 @@ Proof.
     now rewrite Nat.eqb_refl.
   - set (C :=
            cPair 0
-             (cPair (codeTerm cL (var 0))
-                (codeTerm cL (var 0))))
+             (cPair (codeTerm (var 0)) (codeTerm (var 0))))
       in *.
     unfold A at 1 in |- *.
     (* Was working in V7.3 but starts converting for very long in v8...
@@ -2112,21 +2111,26 @@ Repeat First [Rewrite cPairProjections1|Rewrite cPairProjections2].
            cPair 1
              (cPair
                 (cPair 0
-                   (cPair (codeTerm cL (var 0))
-                      (codeTerm cL (var 1))))
+                   (cPair (codeTerm (var 0))
+                      (codeTerm (var 1))))
                 (cPair 0
-                   (cPair (codeTerm cL  (var 1))
-                      (codeTerm cL (var 0)))))) in *.
+                   (cPair (codeTerm (var 1))
+                      (codeTerm (var 0)))))) in *.
     unfold A at 1 in |- *.
     cut (car (cdr (cPair C (cPair 10 0))) = 10).
     + generalize (car (cdr (cPair C (cPair 10 0)))).
       intros n H; rewrite H.
       simpl in |- *.
       unfold checkPrfEQ2 in |- *.
-      replace
-        (codeFormula cL 
+     
+      About codeFormula.
+Check (codeFormula 
            (impH  (equal (var 0) (var 1))
-              (equal (var 1) (var 0)))) with C;
+              (equal (var 1) (var 0)))).
+replace
+        (codeFormula (cl:= cL)
+           (impH  (equal (var 0) (var 1))
+              (equal (var 1) (var 0)))) with C ;
         [ idtac | reflexivity ].
       generalize C; intros C0.
       rewrite (cPairProjections2 C0 (cPair 10 0)).
@@ -2141,16 +2145,16 @@ Repeat First [Rewrite cPairProjections1|Rewrite cPairProjections2].
            cPair 1
              (cPair
                 (cPair 0
-                   (cPair (codeTerm cL (var 0))
-                      (codeTerm cL (var 1))))
+                   (cPair (codeTerm (var 0))
+                      (codeTerm (var 1))))
                 (cPair 1
                    (cPair
                       (cPair 0
-                         (cPair (codeTerm cL (var 1))
-                            (codeTerm cL (var 2))))
+                         (cPair (codeTerm (var 1))
+                            (codeTerm (var 2))))
                       (cPair 0
-                         (cPair (codeTerm cL (var 0))
-                            (codeTerm cL (var 2)))))))) 
+                         (cPair (codeTerm  (var 0))
+                            (codeTerm (var 2)))))))) 
       in *.
     unfold A at 1 in |- *.
     cut (car (cdr (cPair C (cPair 11 0))) = 11).
@@ -2158,7 +2162,7 @@ Repeat First [Rewrite cPairProjections1|Rewrite cPairProjections2].
       intros n H; rewrite H; simpl. 
       unfold checkPrfEQ3 in |- *.
       replace
-        (codeFormula cL 
+        (codeFormula (cl:=cL) 
            (impH (equal (var 0) (var 1))
               (impH (equal (var 1) (var 2))
                  (equal (var 0) (var 2))))) 
@@ -2191,7 +2195,7 @@ Repeat First [Rewrite cPairProjections1|Rewrite cPairProjections2].
                (codeNVars2 
                   (pred (S (arityR L  R))))))) 
       with
-      (codeFormula cL (AxmEq4 L R)).
+      (codeFormula (AxmEq4 L R)).
     unfold charFunction in |- *.
      repeat rewrite Nat.eqb_refl.
       reflexivity. 
@@ -2208,11 +2212,11 @@ Repeat First [Rewrite cPairProjections1|Rewrite cPairProjections2].
     replace
       (codeIff
          (cPair (S (S (S (S (cr R)))))
-            (codeTerms cL (arityR L R) a))
+            (codeTerms a))
          (cPair (S (S (S (S (cr R)))))
-            (codeTerms cL (arityR L R) b)))
+            (codeTerms  b)))
         with
-        (codeFormula cL 
+        (codeFormula  
            (iffH (atomic R a) (atomic R b))).
     + generalize (arityR L R).
       intros n; induction n as [| n Hrecn].
@@ -2239,7 +2243,7 @@ Repeat First [Rewrite cPairProjections1|Rewrite cPairProjections2].
                (cPair (S (cf f))
                   (codeNVars2 
                      (pred (S (arityF L f)))))))) 
-      with  (codeFormula cL  (AxmEq5 L f)).
+      with  (codeFormula  (AxmEq5 L f)).
     + unfold charFunction, codeF in |- *; repeat rewrite Nat.eqb_refl. 
   reflexivity.
     + unfold AxmEq5 in |- *; clear A; simpl. 
@@ -2252,13 +2256,11 @@ Repeat First [Rewrite cPairProjections1|Rewrite cPairProjections2].
           (cPair 0
              (cPair
                 (cPair (S (cf f))
-                   (codeTerms cL 
-                      (arityF L f) a))
+                   (codeTerms a))
                     (cPair (S (cf f))
-                       (codeTerms cL 
-                          (arityF L f) b)))) 
+                       (codeTerms  b)))) 
         with
- (codeFormula cL 
+ (codeFormula 
     (equal (apply f a) (apply f b))).
       * generalize (arityF L f).
         intros n;induction n as [| n Hrecn].
@@ -2272,9 +2274,9 @@ Qed.
 Lemma checkPrfCorrect2 (n m : nat):
  checkPrf n m <> 0 ->
  exists f : Formula,
-   codeFormula cL f = n /\
+   codeFormula f = n /\
    (exists l : list Formula,
-      (exists p : Prf l f, codePrf cL l f p = m)).
+      (exists p : Prf l f, codePrf l f p = m)).
 (* end snippet checkPrfCorrect2:: no-out *)
 Proof.
   revert n m;
@@ -2291,8 +2293,8 @@ Proof.
         exists f : Formula,
           (exists l : list Formula,
               (exists p : Prf l f,
-                  cPair (codeFormula cL f) 
-                    (codePrf cL l f p) =
+                  cPair (codeFormula f) 
+                    (codePrf l f p) =
                     n))).
   { 
     intro m; induction m as [| m Hrecm].
@@ -2454,7 +2456,7 @@ Proof.
                  rewrite cPairProjections2 in H0 ].
              rewrite <- H3 in H0.
              induction (eq_nat_dec (cdr (cdr n)) 
-                          (codeFormula cL x)) as [a | ?].
+                          (codeFormula x)) as [a | ?].
              ++ exists (x :: nil).
                 exists (AXM L x).
                 rewrite H3.
@@ -2597,8 +2599,8 @@ Proof.
                  assumption.
                } 
                cut
-                 (cPair (codeFormula cL x1) 
-                    (codePrf cL x3 x1 x4) =
+                 (cPair (codeFormula  x1) 
+                    (codePrf x3 x1 x4) =
                     car (cdr (cdr n))).
                { generalize x4; clear H13 x4; rewrite H15.
                  intros x4 H13; exists (MP L x3 x5 x2 x x4 x6).
@@ -2608,9 +2610,9 @@ Proof.
                  rewrite <- H2.
                  replace
                    (cPair 1
-                      (cPair (codeFormula cL x2) 
-                         (codeFormula cL x)))
-                   with (codeFormula cL x1).
+                      (cPair (codeFormula x2) 
+                         (codeFormula x)))
+                   with (codeFormula x1).
                  { rewrite H14;  rewrite H15; rewrite H13.
                    rewrite cPairProjections; reflexivity.
                  } 
@@ -2656,7 +2658,7 @@ Proof.
                     apply H3.
                   } 
                   assert
-                    (H6: codeFormula cL f = 
+                    (H6: codeFormula f = 
                            car (cdr (cdr (cdr n)))).
                   { eapply cPairInj2. 
                     eapply cPairInj2.
@@ -2691,9 +2693,9 @@ Proof.
                   rewrite <- H5 in H0.
                   rewrite <- H9 in H0.
                   assert
-                    (H10: checkPrf (codeFormula cL x) 
-                            (codePrf cL  x0 x x1) =
-                            S (codeList (map (codeFormula cL) x0)))
+                    (H10: checkPrf (codeFormula x) 
+                            (codePrf x0 x x1) =
+                            S (codeList (map (codeFormula) x0)))
                     by apply checkPrfCorrect1.
                   unfold checkPrf in H10.
                   rewrite
@@ -2708,7 +2710,7 @@ Proof.
                   induction (In_dec eq_nat_dec n1 (freeVarListFormula L x0)).
                   rewrite (Nat.mul_comm 
                              (S (codeList 
-                                   (map (codeFormula cL) x0)))) 
+                                   (map (codeFormula) x0)))) 
                     in H0.
                   rewrite Nat.mul_comm in H0.
                   simpl in H0.
@@ -2716,8 +2718,8 @@ Proof.
                   rewrite <- H9 in H6.
                   rewrite cPairProjections1 in H6.
                   cut
-                    (cPair (codeFormula cL x) 
-                       (codePrf cL x0 x x1) =
+                    (cPair (codeFormula x) 
+                       (codePrf x0 x x1) =
                        cdr (cdr (cdr n))).
                   { generalize x1.
                     clear H10 H0 x1 H9.
@@ -2755,7 +2757,7 @@ Proof.
                                  (cPair 1
                                     (cPair (cdr (cdr (cdr n)))
                                        (car (cdr (cdr n)))))))
-                           (codeFormula cL x)).
+                           (codeFormula x)).
                       destruct x as [t t0| r t| f f0| f| n1 f]; simpl in a;
                         try
                           match goal with
@@ -2765,7 +2767,7 @@ Proof.
                                                           apply H ]
                           end.
                       assert (H4: car (cdr (cdr n)) = 
-                                    codeFormula cL f).
+                                    codeFormula f).
                       { eapply cPairInj1.
                         eapply cPairInj2.
                         apply a.
@@ -2774,7 +2776,7 @@ Proof.
                         (H5: cPair 1
                            (cPair (cdr (cdr (cdr n)))
                               (car (cdr (cdr n)))) = 
-                           codeFormula cL  f0).
+                           codeFormula f0).
                       { eapply cPairInj2.
                         eapply cPairInj2.
                         apply a.
@@ -2789,13 +2791,12 @@ Proof.
                               [ intro I; discriminate I | eapply cPairInj1; 
                                                           apply H ]
                           end.
-                      assert (H6:cdr (cdr (cdr n)) = 
-                                   codeFormula cL f0).
+                      assert (H6:cdr (cdr (cdr n)) = codeFormula f0).
                       { eapply cPairInj1; eapply cPairInj2.
                         apply H5.
                       }
                       assert (H7: car (cdr (cdr n)) = 
-                                    codeFormula cL f1).
+                                    codeFormula f1).
                       { eapply cPairInj2.
                         eapply cPairInj2.
                         apply H5.
@@ -2848,7 +2849,7 @@ Proof.
                                        (cPair 1
                                           (cPair (car (cdr (cdr n)))
                                              (cdr (cdr (cdr (cdr n))))))))))
-                           (codeFormula cL f)).
+                           (codeFormula f)).
                       repeat
                         match goal with
                         | H:(cPair ?X1 (cPair ?X2 ?X3) = 
@@ -2858,7 +2859,7 @@ Proof.
                             | assert (X3 = X5);
                               [ eapply cPairInj2; eapply cPairInj2; apply H | clear H ] ]
                         | H:(cPair ?X1 (cPair _ _) = 
-                               codeFormula cL ?X2) |- _ =>
+                               codeFormula ?X2) |- _ =>
                             destruct X2;
                             simpl in H;
                             try
@@ -2924,7 +2925,7 @@ Proof.
                                  (cPair 1
                                     (cPair (cdr (cdr (cdr n)))
                                        (car (cdr (cdr n)))))))
-                           (codeFormula cL f)).
+                           (codeFormula f)).
                       repeat
                         match goal with
                         | H:(cPair 1 (cPair ?X2 ?X3) = 
@@ -2938,7 +2939,7 @@ Proof.
                             assert (X2 = X4); 
                             [ eapply cPairInj2; apply H | clear H ]
                         | H:(cPair ?X1 _ = 
-                               codeFormula cL  ?X2) |- _ =>
+                               codeFormula ?X2) |- _ =>
                             destruct X2;
                             simpl in H;
                             try
@@ -2991,7 +2992,7 @@ Proof.
                                  (codeSubFormula (car (cdr (cdr n)))
                                     (car (cdr (cdr (cdr n))))
                                     (cdr (cdr (cdr (cdr n)))))))
-                           (codeFormula cL f)).
+                           (codeFormula f)).
                       repeat
                         match goal with
                         | H:(cPair 1 (cPair ?X2 ?X3) = cPair 1 (cPair ?X4 ?X5)) |- _ =>
@@ -3007,7 +3008,7 @@ Proof.
                             | assert (X3 = X5);
                               [ eapply cPairInj2; eapply cPairInj2; apply H | 
                                 clear H ] ]
-                        | H:(cPair ?X1 _ = codeFormula cL ?X2) 
+                        | H:(cPair ?X1 _ = codeFormula ?X2) 
                           |- _ =>
                             destruct X2;
                             simpl in H;
@@ -3069,7 +3070,7 @@ Proof.
                                  (cPair 3
                                     (cPair (cdr (cdr (cdr n)))
                                        (car (cdr (cdr n)))))))
-                           (codeFormula cL f)).
+                           (codeFormula f)).
                       repeat
                         match goal with
                         | H:(cPair 1 (cPair ?X2 ?X3) = 
@@ -3086,7 +3087,7 @@ Proof.
                             | assert (X3 = X5);
                               [ eapply cPairInj2; eapply cPairInj2; apply H |
                                 clear H ] ]
-                        | H:(cPair ?X1 _ = codeFormula cL ?X2)
+                        | H:(cPair ?X1 _ = codeFormula ?X2)
                           |- _ =>
                             destruct X2;
                             simpl in H;
@@ -3150,7 +3151,7 @@ Proof.
                                        (cPair 3
                                           (cPair (cdr (cdr (cdr (cdr n))))
                                              (car (cdr (cdr (cdr n))))))))))
-                           (codeFormula cL  f)).
+                           (codeFormula f)).
                       repeat
                         match goal with
                         | H:(cPair 1 (cPair ?X2 ?X3) = 
@@ -3168,7 +3169,7 @@ Proof.
                               [ eapply cPairInj2; eapply cPairInj2; apply H | 
                                 clear H ] ]
                         | H:(cPair ?X1 _ = 
-                               codeFormula cL ?X2) |- _ =>
+                               codeFormula ?X2) |- _ =>
                             destruct X2;
                             simpl in H;
                             try
@@ -3218,9 +3219,9 @@ Proof.
                       rewrite <- H3 in H0.
                       induction
                         (eq_nat_dec
-                           (codeFormula cL 
+                           (codeFormula 
                               (equal (var 0) (var 0)))
-                           (codeFormula cL x)).
+                           (codeFormula x)).
                       rewrite H3.
                       replace x with (@equal L (var 0) 
                                         (var 0)).
@@ -3242,7 +3243,7 @@ Proof.
                       unfold charFunction in |- *.
                       rewrite
                         (nat_eqb_false
-                           (codeFormula cL
+                           (codeFormula 
                               (equal (var 0) (var 0)))).
                   
                       rewrite Nat.mul_comm.
@@ -3257,11 +3258,11 @@ Proof.
                       rewrite <- H3 in H0.
                       induction
                         (eq_nat_dec
-                           (codeFormula cL 
+                           (codeFormula 
                               (impH (equal (var 0) 
                                              (var 1))
                                  (equal (var 1) (var 0))))
-                           (codeFormula cL x)).
+                           (codeFormula x)).
                       rewrite H3.
                       replace x with
                         (@impH L (equal (var 0) (var 1))
@@ -3284,7 +3285,7 @@ Proof.
                       unfold charFunction in |- *.
                       rewrite
                         (nat_eqb_false
-                           (codeFormula cL
+                           (codeFormula 
                               (v#0 = v#1 -> v#1 = v#0)%fol)).
                       rewrite Nat.mul_comm.
                       reflexivity.
@@ -3308,11 +3309,11 @@ Simpl in H0.
                       rewrite <- H3 in H0.
                       induction
                         (eq_nat_dec
-                           (codeFormula cL 
+                           (codeFormula 
                               (impH (equal (var 0) (var 1))
                                  (impH (equal (var 1) (var 2))
                                     (equal (var 0) (var 2)))))
-                           (codeFormula cL  x)).
+                           (codeFormula x)).
                       rewrite H3.
                       replace x with
                         (@impH L (equal (var 0) (var 1))
@@ -3337,7 +3338,7 @@ Simpl in H0.
                       unfold charFunction in |- *.
                       rewrite
                         (nat_eqb_false
-                           (codeFormula cL 
+                           (codeFormula 
                               (impH (equal (var 0) 
                                              (var 1))
                                  (impH (equal (var 1) 
@@ -3374,18 +3375,18 @@ Simpl in H0.
                       assert
                         (codeIff
                            (cPair (S (S (S (S (cr x0)))))
-                              (codeTerms cL 
-                                 (arityR L x0)
+                              (codeTerms 
+                                 
                                  (fst (nVars L (arityR L x0)))))
                                (cPair (S (S (S (S (cr x0)))))
-                              (codeTerms cL  (arityR  L x0)
+                              (codeTerms 
                                  (snd (nVars L (arityR L x0))))) =
                            codeIff
-                             (codeFormula cL 
+                             (codeFormula 
                                 (atomic x0 (fst 
                                               (nVars L 
                                                  (arityR L x0)))))
-                             (codeFormula cL 
+                             (codeFormula 
                                 (atomic x0 (snd 
                                               (nVars L 
                                                  (arityR L x0)))))).
@@ -3402,9 +3403,9 @@ Simpl in H0.
                       cut
                         ((if Nat.eqb
                                (codeAxmEqHelp (arityR L x0)
-                                  (codeFormula cL 
+                                  (codeFormula 
                                      (iffH (atomic x0 a) (atomic x0 b))))
-                               (codeFormula cL x)
+                               (codeFormula x)
                           then 1
                           else 0) + 0 <> 0).
                       { 
@@ -3414,8 +3415,8 @@ Simpl in H0.
                         clear a b.
                         cut
                           (codeAxmEqHelp (arityR L x0)
-                             (codeFormula cL f) = 
-                             codeFormula cL x).
+                             (codeFormula f) = 
+                             codeFormula x).
                         { generalize x.
                           clear H5.
                           induction (arityR L x0); 
@@ -3439,7 +3440,7 @@ Simpl in H0.
                                   [ eapply cPairInj2; eapply cPairInj2; 
                                     apply H | clear H ] ]
                             | H:(cPair ?X1 _ = 
-                                   codeFormula cL ?X2) |- _ =>
+                                   codeFormula ?X2) |- _ =>
                                 destruct X2;
                                 simpl in H;
                                 try
@@ -3461,22 +3462,22 @@ Simpl in H0.
                           elim O_S with (cf f0).
                           apply cPairInj1 with 
                             (S (n1 + n1)) 
-                            (codeTerms cL (arityF L f0) t).
+                            (codeTerms t).
                           apply H7.
                           apply cPairInj2 with 0 0.
                           apply H0.
                           elim O_S with (cf f0).
                           apply cPairInj1 with 
                             (n1 + n1) 
-                            (codeTerms cL  (arityF L f0) t).
+                            (codeTerms t).
                           apply H0.
                           assumption.
                         } 
                         induction
                           (eq_nat_dec
                              (codeAxmEqHelp (arityR L x0)
-                                (codeFormula cL f))
-                             (codeFormula cL x)).
+                                (codeFormula f))
+                             (codeFormula x)).
                         assumption.
                         elim H5.
                         rewrite nat_eqb_false.
@@ -3518,16 +3519,14 @@ unfold codeR.
                         (cPair 0
                            (cPair
                               (cPair (S (cf x0))
-                                 (codeTerms cL 
-                                    (arityF L x0)
+                                 (codeTerms 
                                     (fst (nVars L 
                                             (arityF L x0)))))
                               (cPair (S (cf x0))
-                                 (codeTerms cL 
-                                    (arityF L x0)
+                                 (codeTerms 
                                     (snd (nVars L 
                                             (arityF L x0)))))) =
-                           codeFormula cL 
+                           codeFormula 
                              (equal (apply x0 
                                        (fst (nVars L (arityF L x0))))
                                 (apply x0 (snd (nVars L (arityF L x0)))))).
@@ -3543,9 +3542,9 @@ unfold codeR.
                       cut
                         ((if Nat.eqb
                                (codeAxmEqHelp (arityF L x0)
-                                  (codeFormula cL 
+                                  (codeFormula 
                                      (equal (apply x0 a) (apply x0 b))))
-                               (codeFormula cL x)
+                               (codeFormula x)
                           then 1 else 0) + 0 <> 0).
                      { generalize (equal (apply x0 a) (apply x0 b)).
                       intros.
@@ -3553,8 +3552,8 @@ unfold codeR.
                       clear a b.
                       cut
                         (codeAxmEqHelp (arityF L x0)
-                           (codeFormula cL  f) = 
-                           codeFormula cL x).
+                           (codeFormula f) = 
+                           codeFormula x).
                       generalize x.
                       clear H5.
                       induction (arityF L x0); 
@@ -3578,7 +3577,7 @@ unfold codeR.
                               [ eapply cPairInj2; eapply cPairInj2; apply H | 
                                 clear H ] ]
                         | H:(cPair ?X1 _ = 
-                               codeFormula cL  ?X2) |- _ =>
+                               codeFormula ?X2) |- _ =>
                             destruct X2;
                             simpl in H;
                             try
@@ -3601,8 +3600,7 @@ unfold codeR.
                       apply
                         cPairInj1
                         with (S (n1 + n1)) 
-                             (codeTerms cL 
-                                (arityF L f0) t).
+                             (codeTerms t).
                       apply H7.
                       apply cPairInj2 with 0 0.
                       apply H0.
@@ -3610,14 +3608,14 @@ unfold codeR.
                       apply
                         cPairInj1
                         with (n1 + n1) 
-                             (codeTerms cL  (arityF L f0) t).
+                             (codeTerms  t).
                       apply H0.
                       assumption.
                       induction
                         (eq_nat_dec
                            (codeAxmEqHelp (arityF L x0)
-                              (codeFormula cL  f)) 
-                           (codeFormula cL  x)).
+                              (codeFormula f)) 
+                           (codeFormula x)).
                       assumption.
                       elim H5.
                       rewrite nat_eqb_false.
@@ -3641,8 +3639,8 @@ unfold codeR.
     (H1: exists f : Formula,
         (exists l : list Formula,
             (exists p : Prf l f,
-                cPair (codeFormula cL  f) 
-                  (codePrf cL l f p) =
+                cPair (codeFormula  f) 
+                  (codePrf l f p) =
                     cPair n m))).
   { eapply H.
     apply Nat.lt_succ_diag_r.
@@ -3660,7 +3658,7 @@ End Check_Proof.
 
 
 About codePrf. 
-Arguments codePrf {L cf cr} cl _. 
+Arguments codePrf {L cf cr cl} _. 
 
 
 

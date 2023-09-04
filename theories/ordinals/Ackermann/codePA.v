@@ -24,7 +24,7 @@ Variable codeR : Relations L -> nat.
 
 
 Let Formula := Formula L .
-Let codeFormula := codeFormula cL.  
+Let codeFormula := codeFormula (cl:=cL).  
 
 Definition codeCloseList : nat -> nat -> nat :=
   evalStrongRec 1
@@ -138,8 +138,8 @@ Require Import codeSubFormula.
 
 Section Code_PA.
 
-Let codeTerm := codeTerm LcodeLNT.  
-Let codeFormula := codeFormula LcodeLNT.
+Let codeTerm := codeTerm (cl :=LcodeLNT).  
+Let codeFormula := codeFormula (cl:=LcodeLNT).
 Let codeFormulaInj := codeFormulaInj LNT LcodeLNT.  
 
 Definition codeOpen : nat -> nat :=
@@ -316,20 +316,20 @@ Proof.
           (codeClose
              (codeImp
                 (codeSubFormula
-                   (code.codeFormula LcodeLNT  x) x0
+                   (code.codeFormula  x) x0
                    (codeTerm Zero))
                 (codeImp
                    (codeForall x0
                       (codeImp
-                         (code.codeFormula LcodeLNT  x)
+                         (code.codeFormula x)
                          (codeSubFormula
-                            (code.codeFormula LcodeLNT x)
+                            (code.codeFormula  x)
                             x0 (codeTerm (Succ (var x0))))))
                    (codeForall x0
-                      (code.codeFormula LcodeLNT  x)))))
+                      (code.codeFormula  x)))))
           with
           (codeClose
-             (code.codeFormula LcodeLNT
+             (code.codeFormula 
                 (impH (substF LNT x x0 Zero)
                    (impH
                       (forallH x0

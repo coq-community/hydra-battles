@@ -533,7 +533,7 @@ End codeTermFormDef.
 End Code_Term_Formula_Proof.
 
 
-Arguments codeTerm {L} {cf cr} cl _. 
-Arguments codeTerms {L} {cf cr} cl _ _. 
-Arguments codeFormula {L} {cf cr} cl _. 
-Arguments codePrf {L} {cf cr} cl _ _ _. 
+Arguments codeTerm {L} {cf cr cl} _. 
+Arguments codeTerms {L} {cf cr cl n} _. 
+Arguments codeFormula {L} {cf cr cl} _. 
+Arguments codePrf {L} {cf cr cl} _ _ _. 

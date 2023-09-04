@@ -40,12 +40,12 @@ Definition codeFreeVarTerms (t : nat) : nat :=
   cdr (codeFreeVarTermTerms t).
 
 Lemma codeFreeVarTermCorrect (t: Term) :
- codeFreeVarTerm (codeTerm cL t) = codeList (freeVarT L t).
+ codeFreeVarTerm (codeTerm t) = codeList (freeVarT L t).
 Proof.
  elim t using  Term_Terms_ind
   with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-           codeFreeVarTerms (codeTerms cL n ts) =
+           codeFreeVarTerms (codeTerms ts) =
            codeList (freeVarTs L n ts)); intros.
  - simpl; unfold codeTerm, codeFreeVarTerm, codeFreeVarTermTerms,
      evalStrongRec in |- *.
@@ -53,8 +53,8 @@ Proof.
    simpl; reflexivity.
  - unfold freeVarT; fold (freeVarTs L (arityF L f) t0).
    rewrite <- H; clear H.
-   unfold codeTerm; fold (codeTerms cL (arityF L f) t0).
-   generalize (codeTerms cL  (arityF L f) t0).
+   unfold codeTerm; fold (codeTerms  t0).
+   generalize (codeTerms t0).
    intros n; unfold codeFreeVarTerm, codeFreeVarTermTerms.
    set
      (g := fun t1 recs : nat =>
@@ -85,8 +85,8 @@ Proof.
      fold (freeVarTs L n t1); rewrite <- codeAppCorrect.
    rewrite <- H; rewrite <- H0; clear H H0.
    unfold codeTerms.
-   fold (codeTerm cL t0); fold (codeTerms cL  n t1).
-   generalize (codeTerm cL t0) (codeTerms cL n t1).
+   fold (codeTerm t0); fold (codeTerms  t1).
+   generalize (codeTerm t0) (codeTerms  t1).
    clear t0 t1.
    intros n0 n1; unfold codeFreeVarTerms at 1 in |- *.
    unfold codeFreeVarTermTerms in |- *.
@@ -122,7 +122,7 @@ Proof.
 Qed.
 
 Lemma codeFreeVarTermsCorrect (n : nat) (ts : Terms n):
- codeFreeVarTerms (codeTerms cL  n ts) = codeList (freeVarTs L n ts).
+ codeFreeVarTerms (codeTerms ts) = codeList (freeVarTs L n ts).
 Proof.
   induction ts as [| n t ts Hrects].
   - simpl; unfold codeTerms, codeFreeVarTerms, codeFreeVarTermTerms.
@@ -133,8 +133,8 @@ Proof.
     rewrite <- codeAppCorrect.
     rewrite <- Hrects.
     rewrite <- codeFreeVarTermCorrect; clear Hrects.
-    unfold codeTerms; fold (codeTerm cL t); fold (codeTerms cL n ts).
-    generalize (codeTerm cL t) (codeTerms cL n ts).
+    unfold codeTerms; fold (codeTerm t); fold (codeTerms ts).
+    generalize (codeTerm t) (codeTerms ts).
     clear t ts.
     intros n0 n1;
       unfold codeFreeVarTerms at 1; unfold codeFreeVarTermTerms.
@@ -304,7 +304,7 @@ Definition codeFreeVarFormula : nat -> nat :=
           (codeFreeVarTerm (cddr f)))).
 
 Lemma codeFreeVarFormulaCorrect (f : Formula) :
-  codeFreeVarFormula (codeFormula cL f) =
+  codeFreeVarFormula (codeFormula f) =
     codeList (freeVarF L f).
 Proof.
   set
@@ -325,13 +325,13 @@ Proof.
     in *.
   induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf].
   - simpl; rewrite <- codeAppCorrect; repeat rewrite <- codeFreeVarTermCorrect.
-    generalize (codeTerm cL t) (codeTerm cL t0).
+    generalize (codeTerm t) (codeTerm t0).
     clear t t0; intros n n0. 
     unfold codeFreeVarFormula, evalStrongRec; simpl.
     repeat rewrite cPairProjections1 || rewrite cPairProjections2.
     simpl; reflexivity.
   - simpl; rewrite <- codeFreeVarTermsCorrect.
-    generalize (codeTerms cL (arityR L r) t).
+    generalize (codeTerms t).
     clear t.
     intros n; unfold codeFreeVarFormula, evalStrongRec.
     unfold evalStrongRecHelp, evalComposeFunc, evalOneParamList, 
@@ -353,15 +353,14 @@ Proof.
     rewrite
       (evalStrongRecHelp1 g
          (cPair 1
-            (cPair (codeFormula cL f1) 
-               (codeFormula cL f0)))
-         (codeFormula cL f1)).
+            (cPair (codeFormula f1) (codeFormula f0)))
+         (codeFormula f1)).
     + rewrite
         (evalStrongRecHelp1 g
            (cPair 1
-              (cPair (codeFormula cL f1)
-                 (codeFormula cL f0)))
-           (codeFormula cL f0)).
+              (cPair (codeFormula f1)
+                 (codeFormula f0)))
+           (codeFormula f0)).
       * simpl; unfold evalStrongRec, evalComposeFunc, evalOneParamList.
         simpl; repeat rewrite cPairProjections1 || rewrite cPairProjections2.
         reflexivity.
@@ -376,7 +375,7 @@ Proof.
         -- apply le_n.
         -- apply cPairLe1.
   - simpl; rewrite <- Hrecf; clear Hrecf.
-    generalize (codeFormula cL f).
+    generalize (codeFormula f).
     clear f.
     intros n; unfold codeFreeVarFormula at 1; fold g.
     unfold evalStrongRec, evalComposeFunc, evalOneParamList.
@@ -388,7 +387,7 @@ Proof.
     simpl; reflexivity.
     apply cPairLt2; simpl. 
   - simpl; rewrite <- codeListRemoveCorrect.
-    rewrite <- Hrecf; generalize (codeFormula cL f).
+    rewrite <- Hrecf; generalize (codeFormula f).
     clear Hrecf f; intros n0.
     unfold codeFreeVarFormula at 1; fold g; unfold evalStrongRec.
     unfold evalComposeFunc, evalOneParamList, evalList.
@@ -582,7 +581,7 @@ Definition codeFreeVarListFormula : nat -> nat :=
           (codeNth (l - S (cdr (pred l))) recs)) 0).
 
 Lemma codeFreeVarListFormulaCorrect (l : list Formula):
- codeFreeVarListFormula (codeList (map (codeFormula cL) l)) =
+ codeFreeVarListFormula (codeList (map (codeFormula) l)) =
  codeList (freeVarListFormula L l).
 Proof.
   unfold codeFreeVarListFormula;

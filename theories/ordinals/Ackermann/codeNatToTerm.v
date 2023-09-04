@@ -36,7 +36,7 @@ Proof.
 Defined.  
 
 Lemma codeNatToTermCorrectLNN n :
- codeNatToTerm n = codeTerm LcodeLNN (natToTermLNN n).
+ codeNatToTerm n = codeTerm (natToTermLNN n).
 Proof.
   induction n as [| n Hrecn].
   - reflexivity.
@@ -44,7 +44,7 @@ Proof.
 Qed.
 
 Lemma codeNatToTermCorrectLNT n :
- codeNatToTerm n = codeTerm  LcodeLNT (natToTermLNT n).
+ codeNatToTerm n = codeTerm  (natToTermLNT n).
 Proof.
   induction n as [| n Hrecn].
   - reflexivity.

@@ -22,7 +22,7 @@ From hydras Require Import Compat815.
 
 Section Rosser's_Incompleteness.
 
-Definition codeFormula := codeFormula LcodeLNN.
+Definition codeFormula := codeFormula (cl:=LcodeLNN).
 
 Variable T : System.
 
@@ -65,7 +65,7 @@ Definition codeSysPrfCorrect3 :=
     codeArityLNNRIsCorrect2  T extendsNN.
 
   
-Definition codePrf := codePrf LcodeLNN.
+Definition codePrf := codePrf (cl:=LcodeLNN).
 
 Definition codeSysPrfNot :=
   codeSysPrfNot LNN LcodeLNN codeArityLNTF
@@ -494,7 +494,7 @@ Proof.
                      { eapply codeFormulaInj.
                        -  assumption.
                      } 
-                     cut (code.codePrf LcodeLNN  x3 x2 x4 = n).
+                     cut (code.codePrf x3 x2 x4 = n).
                      +++ generalize x4; clear H6 x4; rewrite H4.
                          intros x4 H6; apply codeSysPrfNCorrect2.
                          eapply H3.
@@ -517,14 +517,14 @@ Proof.
           contradiction
           with
           (substF LNN A 0
-             (natToTermLNN (code.codeFormula  LcodeLNN x))).
+             (natToTermLNN (code.codeFormula  x))).
         -- unfold A; rewrite (subFormulaForall LNN).
            induction (eq_nat_dec 1 0) as [a | b].
            ++ discriminate a.
            ++ induction
                (In_dec eq_nat_dec 1
                   (freeVarT LNN
-                     (natToTermLNN (code.codeFormula LcodeLNN  x)))) as [a | b0].
+                     (natToTermLNN (code.codeFormula x)))) as [a | b0].
               ** elim (closedNatToTerm _ _ a).
               ** clear b0 b.
                  set
@@ -587,16 +587,14 @@ Proof.
                                (In_dec eq_nat_dec 2
                                   (freeVarT LNN
                                      (natToTermLNN 
-                                        (code.codeFormula LcodeLNN 
-                                            x)))).
+                                        (code.codeFormula x)))).
                              elim (closedNatToTerm _ _ a).
                              clear b0 b.
                              rewrite (subFormulaAnd LNN).
                              replace
                                (substF LNN (LT (var 2) (var 1)) 0
                                   (natToTermLNN 
-                                     (code.codeFormula LcodeLNN 
-                                         x)))
+                                     (code.codeFormula x)))
                                with
                                (LT (var 2) (var 1)).
                              apply orE with

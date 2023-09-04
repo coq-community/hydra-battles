@@ -19,7 +19,7 @@ Import NNnotations codeNatToTerm.
 
 (* TO do: remove this kind of redefinition *)
 Definition codeFNN := 
-  codeFormula LcodeLNN .
+  codeFormula (cl:=LcodeLNN) .
 
 (* cf Gilles' paper ? *)
 Notation reflection f := (natToTerm (codeFNN f)).
@@ -139,7 +139,7 @@ Proof.
   }
   unfold G; destruct (FixPointLNN (notH codeSysPf) 0) as [x [H1 H2]].
   unfold not in |- *; intros H0.
-  set (codeX := code.codeFormula LcodeLNN  x) in *.
+  set (codeX := code.codeFormula   x) in *.
   unfold wConsistent in H.
   set (y := 
      notH
@@ -179,11 +179,12 @@ _ _ _ _ _ _ _ _ freeVarRepT _ H6).
       unfold codeSysPrf, codeX in |- *.
       apply codeSysPrfCorrect3.
       unfold not in |- *; intros A p H5.
+Set Printing All. 
       assert (H6:
         (checkPrf LNN LcodeLNN
            codeArityLNTF codeArityLNNR
            (codeFNN x)
-           (codePrf LcodeLNN  A x p) =
+           (codePrf (cl := LcodeLNN )  A x p) =
            S (cPair.codeList (map codeFNN A)))).
       {
         apply
@@ -207,7 +208,7 @@ _ _ _ _ _ _ _ _ freeVarRepT _ H6).
        
         - apply H7.
       }
-      cut (codePrf LcodeLNN x2 x1 x3 = x0).
+      cut (codePrf (cl:= LcodeLNN) x2 x1 x3 = x0).
       * generalize x3.  rewrite H6; intros x4 H9.
         clear H6 H8 x3 H7 x1.
         assert

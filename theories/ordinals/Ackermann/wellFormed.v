@@ -45,12 +45,12 @@ Definition wellFormedTerms (ts : nat) : nat :=
   cPairPi2 (wellFormedTermTerms ts).
 
 Lemma lengthTerms :
- forall (n : nat) (ts : Terms n), codeLength (codeTerms cL  n ts) = n.
+ forall (n : nat) (ts : Terms n), codeLength (codeTerms ts) = n.
 Proof.
   intros n ts; induction ts as [| n t ts Hrects].
   - reflexivity.
-  - replace (codeTerms cL (S n) (Tcons t ts)) with
-      (S (cPair (codeTerm  cL t) (codeTerms cL n ts)));
+  - replace (codeTerms  (Tcons t ts)) with
+      (S (cPair (codeTerm t) (codeTerms  ts)));
       [ idtac | reflexivity ].
     unfold codeLength, evalStrongRec, evalComposeFunc, evalOneParamList, evalList.
     set
@@ -63,7 +63,7 @@ Proof.
       rewrite evalStrongRecHelp1.
     + simpl; rewrite cPairProjections1,  cPairProjections2.
       now f_equal. 
-    + generalize (cPair (codeTerm  cL t) (codeTerms cL  n ts)).
+    + generalize (cPair (codeTerm  t) (codeTerms ts)).
       simpl; intros n0; apply Nat.lt_succ_r.
       apply Nat.le_trans with (cPair (cPairPi1 n0) (cPairPi2 n0)).
       * apply cPairLe2.
@@ -71,7 +71,7 @@ Proof.
 Qed.
 
 Lemma wellFormedTermCorrect1 :
-  forall t : Term, wellFormedTerm (codeTerm cL  t) = 1.
+  forall t : Term, wellFormedTerm (codeTerm t) = 1.
 Proof.
   intros t; 
     set
@@ -87,15 +87,15 @@ Proof.
                    cPairPi2 (codeNth (t - S (cPairPi2 (pred t))) recs)) 1)). 
   elim t using  Term_Terms_ind  with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-             wellFormedTerms (codeTerms cL n ts) = 1); 
+             wellFormedTerms (codeTerms ts) = 1); 
     simpl.
   -  intro n; unfold codeTerm, wellFormedTerm, wellFormedTermTerms.
      fold A; unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList.
      rewrite computeEvalStrongRecHelp.
      unfold compose2, evalComposeFunc, evalOneParamList, evalList; simpl;
        unfold A at 1;  repeat rewrite cPairProjections1; simpl; reflexivity.
-  - intros f t0 H; replace (codeTerm cL  (apply f t0)) with
-      (cPair (S (cf f)) (codeTerms cL _ t0)); [ idtac | reflexivity ].
+  - intros f t0 H; replace (codeTerm (apply f t0)) with
+      (cPair (S (cf f)) (codeTerms t0)); [ idtac | reflexivity ].
     unfold wellFormedTerm, wellFormedTermTerms; fold A.
     unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList;
       rewrite computeEvalStrongRecHelp.
@@ -117,8 +117,8 @@ Proof.
     rewrite computeEvalStrongRecHelp.
     unfold compose2, evalComposeFunc, evalOneParamList, evalList; simpl;
       unfold A at 1; rewrite cPairProjections1; rewrite cPairProjections2.
-    replace (codeTerms cL (S n) (Tcons t0 t1)) with
-      (S (cPair (codeTerm cL  t0) (codeTerms cL  n t1)));
+    replace (codeTerms (Tcons t0 t1)) with
+      (S (cPair (codeTerm t0) (codeTerms t1)));
       [ idtac | reflexivity ].
     repeat rewrite evalStrongRecHelp1.
     + simpl; rewrite cPairProjections1.
@@ -136,7 +136,7 @@ Proof.
 Qed.
 
 Lemma wellFormedTermsCorrect1 (n : nat) (ts : Terms n):
-  wellFormedTerms (codeTerms cL n ts) = 1.
+  wellFormedTerms (codeTerms ts) = 1.
 Proof.
   set
     (A :=
@@ -160,13 +160,13 @@ Proof.
       rewrite computeEvalStrongRecHelp;
       unfold compose2, evalComposeFunc, evalOneParamList, evalList; simpl.
     unfold A at 1; rewrite cPairProjections1,  cPairProjections2.
-    replace (codeTerms cL  (S n) (Tcons t ts)) with
-      (S (cPair (codeTerm cL t) (codeTerms cL  n ts)));
+    replace (codeTerms (Tcons t ts)) with
+      (S (cPair (codeTerm t) (codeTerms ts)));
       [ idtac | reflexivity ].
     repeat rewrite evalStrongRecHelp1.  
     + simpl; rewrite cPairProjections1, cPairProjections2.
-      replace (cPairPi1 (evalStrongRec 0 A (codeTerm cL  t))) with
-        (wellFormedTerm (codeTerm cL  t)).
+      replace (cPairPi1 (evalStrongRec 0 A (codeTerm t))) with
+        (wellFormedTerm (codeTerm t)).
       * rewrite (wellFormedTermCorrect1 t).
         unfold wellFormedTerms, wellFormedTermTerms in Hrects.
         unfold A; now rewrite Hrects.
@@ -191,16 +191,16 @@ Qed.
 
 Remark wellFormedTermTermsCorrect2 :
  forall n : nat,
- (wellFormedTerm n <> 0 -> exists t : Term, codeTerm cL  t = n) /\
+ (wellFormedTerm n <> 0 -> exists t : Term, codeTerm t = n) /\
  (wellFormedTerms n <> 0 ->
-  exists m : nat, (exists ts : Terms m, codeTerms cL m ts = n)).
+  exists m : nat, (exists ts : Terms m, codeTerms ts = n)).
 Proof.
   assert
     (H: forall m n : nat,
         n < m ->
-        (wellFormedTerm n <> 0 -> exists t : Term, codeTerm cL t = n) /\
+        (wellFormedTerm n <> 0 -> exists t : Term, codeTerm t = n) /\
           (wellFormedTerms n <> 0 ->
-           exists m : nat, (exists ts : Terms m, codeTerms cL m ts = n))).
+           exists m : nat, (exists ts : Terms m, codeTerms ts = n))).
   { intro m; induction m as [| m Hrecm].
     - intros n H; inversion H.
     - intros n H; assert (H': n <= m) by lia.
@@ -252,7 +252,7 @@ Proof.
                    injection a; clear a.
                    intro H9; rewrite <- H5 in H9.
                    rewrite lengthTerms in H9.
-                   cut (codeTerms cL x x0 = cPairPi2 n).
+                   cut (codeTerms x0 = cPairPi2 n).
                    --- clear H5; generalize x0; clear x0.
                        rewrite <- H9.
                        intros x0 H5.
@@ -311,7 +311,7 @@ Qed.
 
 Lemma wellFormedTermCorrect2 :
   forall n : nat,
-    wellFormedTerm n <> 0 -> exists t : Term, codeTerm cL t = n.
+    wellFormedTerm n <> 0 -> exists t : Term, codeTerm t = n.
 Proof.
   intro n; eapply proj1; apply wellFormedTermTermsCorrect2.
 Qed.
@@ -319,7 +319,7 @@ Qed.
 Lemma wellFormedTermsCorrect2 :
   forall n : nat,
     wellFormedTerms n <> 0 ->
-    exists m : nat, (exists ts : Terms m, codeTerms cL  m ts = n).
+    exists m : nat, (exists ts : Terms m, codeTerms ts = n).
 Proof.
   intro n; eapply proj2; apply wellFormedTermTermsCorrect2.
 Qed.
@@ -501,7 +501,7 @@ Definition wellFormedFormula : nat -> nat :=
         wellFormedTerm (cPairPi2 (cPairPi2 f)))).
 
 Lemma wellFormedFormulaCorrect1 :
- forall f : Formula, wellFormedFormula  (codeFormula cL  f) = 1.
+ forall f : Formula, wellFormedFormula  (codeFormula f) = 1.
 Proof.
   intros f;
     set
@@ -533,17 +533,17 @@ induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf]; intros;
 rewrite codeArityRIsCorrect1. 
     rewrite lengthTerms.
     rewrite Nat.eqb_refl; reflexivity.
-  - rewrite evalStrongRecHelp1 with (m := codeFormula cL  f0).
-    + rewrite evalStrongRecHelp1 with (m := codeFormula cL f1).
+  - rewrite evalStrongRecHelp1 with (m := codeFormula f0).
+    + rewrite evalStrongRecHelp1 with (m := codeFormula f1).
       * simpl; now rewrite Hrecf1, Hrecf0.
       * eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
         apply cPairLe1.
     + eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
       apply cPairLe2.
-  - rewrite evalStrongRecHelp1 with (m := codeFormula cL f).
+  - rewrite evalStrongRecHelp1 with (m := codeFormula f).
     + simpl; assumption.
     + apply cPairLt2.
-  - rewrite evalStrongRecHelp1 with (m := codeFormula cL f).
+  - rewrite evalStrongRecHelp1 with (m := codeFormula f).
     + simpl; assumption.
     + eapply Nat.le_lt_trans; [ idtac | apply cPairLt2 ].
       apply cPairLe2.
@@ -552,13 +552,13 @@ Qed.
 Lemma wellFormedFormulaCorrect2 :
   forall n : nat,
     wellFormedFormula n <> 0 ->
-    exists f : Formula, codeFormula cL f = n.
+    exists f : Formula, codeFormula f = n.
 Proof.
   assert
     (H: forall m n : nat,
         n < m ->
         wellFormedFormula n <> 0 ->
-        exists f : Formula, codeFormula cL f = n).
+        exists f : Formula, codeFormula f = n).
   { intro m; induction m as [| m Hrecm].
     - intros n H; lia.
     - intros n H; assert (H': n <= m) by lia.
@@ -683,7 +683,7 @@ Proof.
                    intros H6; induction (wellFormedTermsCorrect2 _ H5) as [x0 [x1 H7]].
                    rewrite <- H7 in H6.
                    rewrite lengthTerms in H6.
-                   cut (codeTerms cL x0 x1 = cPairPi2 n).
+                   cut (codeTerms x1 = cPairPi2 n).
                    --- generalize x1; clear H7 x1.
                        rewrite <- H6.
                        intros x1 H7; exists (atomic x x1).  simpl.   rewrite H7. Locate codeR. unfold codeR. rewrite H3. assumption. 

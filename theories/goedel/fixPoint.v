@@ -42,7 +42,7 @@ apply codeLNNRelationInj.
 Defined. 
 Section LNN_FixPoint.
 
-Let codeFormula := codeFormula codeNN.
+Let codeFormula := codeFormula (cl:=codeNN).
 
 Lemma FixPointLNN :
  forall (A : Formula) (v : nat),
@@ -298,7 +298,7 @@ From hydras.Ackermann Require Import NN2PA.
 
 Section LNT_FixPoint.
 
-Let codeFormula := codeFormula LcodeLNT.
+Let codeFormula := codeFormula (cl:=LcodeLNT).
 
 Lemma FixPointLNT  (A : Formula) (v : nat):
   {B : Formula |

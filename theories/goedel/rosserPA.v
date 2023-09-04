@@ -21,7 +21,7 @@ From hydras Require Import Compat815.
 
 Section Rosser's_Incompleteness.
 
-  Definition codeFormula := codeFormula LcodeLNT.
+  Definition codeFormula := codeFormula (cl:=LcodeLNT).
 
   Variable T : System.
   Definition T' : fol.System LNN :=
@@ -211,7 +211,7 @@ Definition codeSysPrfCorrect3 :=
     codeArityLNTRIsCorrect2  T'
     extendsNN.
   
-Definition codePrf := codePrf LcodeLNT.
+Definition codePrf := codePrf (cl:=LcodeLNT).
 
 Definition codeSysPrfNot :=
   codeSysPrfNot LNT LcodeLNT codeArityLNTF
@@ -1055,7 +1055,7 @@ Proof.
                           { eapply codeFormulaInj.
                             assumption.
                           } 
-                          cut (code.codePrf LcodeLNT x3 x2 x4 = n).
+                          cut (code.codePrf (cl:=LcodeLNT) x3 x2 x4 = n).
                           ---- generalize x4; clear H6 x4; rewrite H4.
                                intros x4 H6; apply T'prf2Tprf.
                                apply codeSysPrfNCorrect2.
@@ -1077,7 +1077,7 @@ Proof.
       * apply contradiction with
           (substF LNT (LNN2LNT_formula A) 0
              (natToTermLNT 
-                (code.codeFormula LcodeLNT x))).
+                (code.codeFormula (cl:=LcodeLNT) x))).
         -- unfold A; replace
                        (LNN2LNT_formula
                           (forallH  1
@@ -1102,7 +1102,7 @@ Proof.
               ** induction 
                   (In_dec eq_nat_dec 1
                      (freeVarT LNT
-                        (natToTermLNT (code.codeFormula LcodeLNT 
+                        (natToTermLNT (code.codeFormula (cl:=LcodeLNT) 
                                           x)))).
         --- elim (closedNatToTerm _ _ a).
         --- clear b0 b; 
@@ -1205,7 +1205,7 @@ Proof.
                      induction
                        (In_dec eq_nat_dec 2
                           (freeVarT LNT
-                             (natToTermLNT (code.codeFormula LcodeLNT 
+                             (natToTermLNT (code.codeFormula (cl:=LcodeLNT)
                                                x))))
                        as [a | b0].
                      elim (closedNatToTerm _ _ a).
@@ -1214,7 +1214,7 @@ Proof.
                        (impH 
                           (substF LNT (LNN2LNT_formula codeSysPrf) 0
                              (natToTermLNT
-                                (code.codeFormula LcodeLNT  x)))
+                                (code.codeFormula (cl:=LcodeLNT)  x)))
                           (existH 2
                              (andH
                                 (LNN2LNT_formula (LNN.LT (var 2) 
@@ -1224,7 +1224,7 @@ Proof.
                                       (substF LNN 
                                          codeSysPrfNot 1 (var 2))) 0
                                    (natToTermLNT
-                                      (code.codeFormula LcodeLNT 
+                                      (code.codeFormula (cl:=LcodeLNT) 
                                           x)))))).
                      repeat simple apply sysWeaken.
                      apply iffE1.
@@ -1238,7 +1238,7 @@ Proof.
                           (substF LNN (LNN.LT (var 2) 
                                                     (var 1)) 0
                              (natToTermLNN
-                                (code.codeFormula LcodeLNT  x)))).
+                                (code.codeFormula (cl:=LcodeLNT)  x)))).
                      rewrite <- LNN2LNT_iff.
                      apply NN2PA.
                      apply (folLogic.iffRefl LNN).
