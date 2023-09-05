@@ -136,7 +136,7 @@ Variable U : fol.System L.
 Variable fU : Formula. (* LNN *)
 
 Variable v0 : nat.
-Hypothesis freeVarfU : forall v : nat, In v (freeVarF LNN fU) -> v = v0. Search Lcode.
+Hypothesis freeVarfU : forall v : nat, In v (freeVarF LNN fU) -> v = v0. 
 Hypothesis
   expressU1 :
     forall f : fol.Formula L,

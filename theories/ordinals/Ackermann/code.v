@@ -21,9 +21,9 @@ Variable L : Language.
      }.
   End LcodeDef. 
 
- Definition codeF {cf : Functions L -> nat} {cr : Relations L -> nat}     (c: Lcode cf cr) := cf.
+ Definition codeF {cf : Functions L -> nat} {cr : Relations L -> nat} (c: Lcode cf cr) := cf.
 
- Definition codeR {cf : Functions L -> nat} {cr : Relations L -> nat}     (c: Lcode cf cr) := cr.
+ Definition codeR {cf : Functions L -> nat} {cr : Relations L -> nat} (c: Lcode cf cr) := cr.
 
 Let Formula := Formula L.
 Let Formulas := Formulas L.

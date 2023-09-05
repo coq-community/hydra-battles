@@ -2122,12 +2122,7 @@ Repeat First [Rewrite cPairProjections1|Rewrite cPairProjections2].
       intros n H; rewrite H.
       simpl in |- *.
       unfold checkPrfEQ2 in |- *.
-     
-      About codeFormula.
-Check (codeFormula 
-           (impH  (equal (var 0) (var 1))
-              (equal (var 1) (var 0)))).
-replace
+     replace
         (codeFormula (cl:= cL)
            (impH  (equal (var 0) (var 1))
               (equal (var 1) (var 0)))) with C ;
@@ -3656,20 +3651,10 @@ Qed.
 
 End Check_Proof.
 
-
-About codePrf. 
 Arguments codePrf {L cf cr cl} _. 
 
 
 
-(*
-codePrf :
-forall L : Language,
-(Functions L -> nat) ->
-(Relations L -> nat) ->
-forall (Z : Formulas L) (f : Formula L), Prf L Z f -> nat
 
-codePrf L Z ...  Z f (pi : Ptf L Z f) :  number associated with pi
-*)
 
 

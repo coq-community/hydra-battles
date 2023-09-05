@@ -161,7 +161,6 @@ Proof.
         * elim (Compat815.le_not_lt (S (S n)) 1).
           assert (H6: In (S (S n)) (freeVarF LNN codeSysPrf)).
           { eapply in_remove; apply H5. }
-About freeVarCodeSysPrf.
        
 apply ( freeVarCodeSysPrf _ _ _ _ _ _ _ _ freeVarRepT _ H6).
           apply Compat815.lt_n_S; apply Nat.lt_0_succ.
@@ -303,5 +302,4 @@ Qed.
 
 End Goedel's_1st_Incompleteness.
 
-About Goedel'sIncompleteness1st.
 

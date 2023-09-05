@@ -17,8 +17,6 @@ Fixpoint codeNatToTerm (n: nat) : nat :=
   0 => cPair 4 0
 | S p => cPair 3 (S (cPair (codeNatToTerm p) 0))
 end. 
-About codeTerm. 
-About Lcode.
 
 #[global] Instance LcodeLNN : Lcode LNN codeLNTFunction codeLNNRelation.
 Proof.

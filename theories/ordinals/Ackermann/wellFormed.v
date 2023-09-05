@@ -529,8 +529,7 @@ induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf]; intros;
  repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
   - simpl; repeat rewrite wellFormedTermCorrect1; reflexivity.
   - simpl; rewrite wellFormedTermsCorrect1.
-    About codeArityRIsCorrect1.
-rewrite codeArityRIsCorrect1. 
+    rewrite codeArityRIsCorrect1. 
     rewrite lengthTerms.
     rewrite Nat.eqb_refl; reflexivity.
   - rewrite evalStrongRecHelp1 with (m := codeFormula f0).
@@ -686,7 +685,8 @@ Proof.
                    cut (codeTerms x1 = cPairPi2 n).
                    --- generalize x1; clear H7 x1.
                        rewrite <- H6.
-                       intros x1 H7; exists (atomic x x1).  simpl.   rewrite H7. Locate codeR. unfold codeR. rewrite H3. assumption. 
+                       intros x1 H7; exists (atomic x x1).
+                       simpl;rewrite H7; unfold codeR; rewrite H3; assumption. 
                    --- assumption.
                 ** rewrite nat_eqb_false.
                    intros H2; simpl in H2; elim H2.
