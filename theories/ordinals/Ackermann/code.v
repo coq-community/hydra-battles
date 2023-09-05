@@ -10,14 +10,20 @@ Require Import fol folProof cPair.
 Section Code_Term_Formula_Proof.
 
 Variable L : Language.
-Variable codeF : Functions L -> nat.
-Variable codeR : Relations L -> nat.
+ Section LcodeDef. 
+   Variable cF : Functions L -> nat.
+   Variable cR : Relations L -> nat.
+   Class Lcode : Prop :=
+     {  codeFInj : 
+       forall f g : Functions L, cF f = cF g -> f = g; 
+       codeRInj :
+       forall R S : Relations L, cR R = cR S -> R = S
+     }.
+  End LcodeDef. 
 
-Hypothesis codeFInj : 
-  forall f g : Functions L, codeF f = codeF g -> f = g.
+ Definition codeF {cf : Functions L -> nat} {cr : Relations L -> nat} (c: Lcode cf cr) := cf.
 
-Hypothesis codeRInj :
-  forall R S : Relations L, codeR R = codeR S -> R = S.
+ Definition codeR {cf : Functions L -> nat} {cr : Relations L -> nat} (c: Lcode cf cr) := cr.
 
 Let Formula := Formula L.
 Let Formulas := Formulas L.
@@ -27,10 +33,14 @@ Let Terms := Terms L.
 Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 
+Generalizable All Variables.
+Section codeTermFormDef.
+
+  Context `(cl : Lcode cf cr).
 Fixpoint codeTerm (t : Term) : nat :=
   match t with
   | var n => cPair 0 n
-  | apply f ts => cPair (S (codeF f)) (codeTerms _ ts)
+  | apply f ts => cPair (S (codeF cl f)) (codeTerms _ ts)
   end
  
  with codeTerms (n : nat) (ts : Terms n) {struct ts} : nat :=
@@ -49,17 +59,17 @@ Proof.
   - (* variables *) intros n s H; destruct s.
     + simpl in H; apply cPairInj2 in H; now subst. 
     + simpl in H.
-      assert (H0: 0 = S (codeF f)) by (eapply cPairInj1; apply H). 
+      assert (H0: 0 = S (codeF cl f)) by (eapply cPairInj1; apply H). 
       discriminate H0.
   - (* applications *) intros f t0 H s H0; destruct s.
     + simpl in H0.
-      assert (H1: S (codeF f) = 0) by (eapply cPairInj1; apply H0).
+      assert (H1: S (codeF cl f) = 0) by (eapply cPairInj1; apply H0).
       discriminate H1.
     + simpl in H0; assert (H1: f = f0). 
-       { apply codeFInj, eq_add_S; eapply cPairInj1; apply H0. }
+       { eapply codeFInj. apply cl. apply eq_add_S; eapply cPairInj1; apply H0. }
        cut
-         (cPair (S (codeF f)) (codeTerms (arityF L f) t0) =
-            cPair (S (codeF f0)) 
+         (cPair (S (codeF cl f)) (codeTerms (arityF L f) t0) =
+            cPair (S (codeF cl f0)) 
               (codeTerms (arityF L f0) t1)).
        * generalize t1; rewrite <- H1; clear H1 H0 t1.
          intros t1 H0; rewrite (H t1).
@@ -98,13 +108,14 @@ Proof.
       apply eq_add_S, H. 
 Qed.
 
+
 Fixpoint codeFormula (f : Formula) : nat :=
   match f with
   | equal t1 t2 => cPair 0 (cPair (codeTerm t1) (codeTerm t2))
   | impH f1 f2 => cPair 1 (cPair (codeFormula f1) (codeFormula f2))
   | notH f1 => cPair 2 (codeFormula f1)
   | forallH n f1 => cPair 3 (cPair n (codeFormula f1))
-  | atomic R ts => cPair (4 + codeR R) (codeTerms _ ts)
+  | atomic R ts => cPair (4 + codeR cl R) (codeTerms _ ts)
   end.
 
 
@@ -138,14 +149,15 @@ Proof.
       eapply cPairInj2.
       apply H.
   - (* atomic formulas *) assert (r = r0).
-    { apply codeRInj.
+    { eapply codeRInj. 
+      apply cl.
       do 4 apply eq_add_S.
       eapply cPairInj1.
       apply H.
     } 
-    cut  (cPair (S (S (S (S (codeR r)))))
+    cut  (cPair (S (S (S (S (codeR cl r)))))
             (codeTerms (arityR L r) t) =
-            cPair (S (S (S (S (codeR r0)))))
+            cPair (S (S (S (S (codeR cl r0)))))
               (codeTerms (arityR L r0) t0)).
     + generalize t0; rewrite <- H0; clear H0 H t0.
       intros t0 H; rewrite (codeTermsInj _ t t0).
@@ -198,8 +210,8 @@ Fixpoint codePrf (Z : Formulas) (f : Formula) (prf : Prf Z f) {struct prf} :
   | EQ1 => cPair 9 0
   | EQ2 => cPair 10 0
   | EQ3 => cPair 11 0
-  | EQ4 r => cPair 12 (codeR r)
-  | EQ5 f => cPair 13 (codeF f)
+  | EQ4 r => cPair 12 (codeR cl r)
+  | EQ5 f => cPair 13 (codeF cl f)
   end.
 
 Lemma codePrfInjAxm :
@@ -515,4 +527,13 @@ Lemma codeIffCorrect :
  codeIff (codeFormula a) (codeFormula b) = codeFormula (iffH a b).
 Proof. intros; reflexivity. Qed.
 
+End codeTermFormDef.
+
+
 End Code_Term_Formula_Proof.
+
+
+Arguments codeTerm {L} {cf cr cl} _. 
+Arguments codeTerms {L} {cf cr cl n} _. 
+Arguments codeFormula {L} {cf cr cl} _. 
+Arguments codePrf {L} {cf cr cl} _ _ _. 

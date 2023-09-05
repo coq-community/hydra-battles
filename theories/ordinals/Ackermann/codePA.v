@@ -8,18 +8,23 @@ From Coq Require Import Ensembles List Arith Lia.
 From Coq Require Vector.
 
 Require Import primRec  cPair folProp code  codeList  codeFreeVar  
-extEqualNat prLogic  Compat815.
+extEqualNat prLogic  Compat815 codeNatToTerm.
 
 Import LispAbbreviations. 
 
 Section close.
-
+Generalizable All Variables. 
 Variable L : Language.
+Context `(cL: Lcode L cf cr).
+
+(*Variable L : Language.
 Variable codeF : Functions L -> nat.
 Variable codeR : Relations L -> nat.
+*)
 
-Let Formula := Formula L.
-Let codeFormula := codeFormula L codeF codeR.
+
+Let Formula := Formula L .
+Let codeFormula := codeFormula (cl:=cL).  
 
 Definition codeCloseList : nat -> nat -> nat :=
   evalStrongRec 1
@@ -133,11 +138,9 @@ Require Import codeSubFormula.
 
 Section Code_PA.
 
-Let codeTerm := codeTerm LNT codeLNTFunction.
-Let codeFormula := codeFormula LNT codeLNTFunction codeLNTRelation.
-Let codeFormulaInj :=
-  codeFormulaInj LNT codeLNTFunction codeLNTRelation codeLNTFunctionInj
-    codeLNTRelationInj.
+Let codeTerm := codeTerm (cl :=LcodeLNT).  
+Let codeFormula := codeFormula (cl:=LcodeLNT).
+Let codeFormulaInj := codeFormulaInj LNT LcodeLNT.  
 
 Definition codeOpen : nat -> nat :=
   evalStrongRec 0
@@ -313,24 +316,20 @@ Proof.
           (codeClose
              (codeImp
                 (codeSubFormula
-                   (code.codeFormula LNT codeLNTFunction 
-                      codeLNTRelation x) x0
+                   (code.codeFormula  x) x0
                    (codeTerm Zero))
                 (codeImp
                    (codeForall x0
                       (codeImp
-                         (code.codeFormula LNT codeLNTFunction 
-                            codeLNTRelation x)
+                         (code.codeFormula x)
                          (codeSubFormula
-                            (code.codeFormula LNT 
-                               codeLNTFunction codeLNTRelation x)
+                            (code.codeFormula  x)
                             x0 (codeTerm (Succ (var x0))))))
                    (codeForall x0
-                      (code.codeFormula LNT codeLNTFunction 
-                         codeLNTRelation x)))))
+                      (code.codeFormula  x)))))
           with
           (codeClose
-             (code.codeFormula LNT codeLNTFunction codeLNTRelation
+             (code.codeFormula 
                 (impH (substF LNT x x0 Zero)
                    (impH
                       (forallH x0

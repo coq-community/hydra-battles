@@ -5,7 +5,7 @@
 (** TO do : reorganize Alectryon snippets *)
 
 From Coq Require Import Arith List.
-Require Import fol primRec.
+Require Import fol primRec code.
 
 (**  * Language of Number Theory: [LNT] *)
 
@@ -85,6 +85,13 @@ Proof.
   intros R S H;
     destruct R; destruct S; reflexivity || discriminate H.
 Qed.
+
+(*#[global] Instance codeNT : Lcode  LNT codeLNTFunction codeLNTRelation. 
+split. 
+  apply codeLNTFunctionInj.
+  apply codeLNTRelationInj.
+Defined. 
+*)
 
 Definition codeArityLNTR (r : nat) := 0.
 

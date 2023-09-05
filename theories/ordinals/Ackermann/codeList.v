@@ -239,7 +239,7 @@ Proof.
         (codeNth A (evalStrongRecHelp 1 f n a)).
       * destruct  (Nat.eq_dec a a0). 
         -- congruence. 
-        -- simpl. f_equal. f_equal. Search evalStrongRecHelp codeNth. rewrite <- Hrecl. 
+        -- simpl. f_equal. f_equal.  rewrite <- Hrecl. 
            rewrite cPairProjections2 in H. 
            rewrite <- H. unfold A. 
            simpl. now rewrite cPairProjections2. 

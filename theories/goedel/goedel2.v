@@ -21,7 +21,7 @@ Require Import expressible.
 *)
 From hydras.Ackermann Require Import checkPrf.
 From hydras.Ackermann Require Import codeNatToTerm.
-From Goedel Require Import rosserPA.
+Require Import rosserPA.
 
 Section Goedel's_2nd_Incompleteness.
 
@@ -46,7 +46,7 @@ Section Goedel's_2nd_Incompleteness.
         (notH (substF LNT repT v0 (natToTerm (codeFormula f)))).
 
   Definition codeSysPf := 
-    (codeSysPf LNT codeLNTFunction codeLNTRelation codeArityLNTF codeArityLNTR
+    (codeSysPf LNT LcodeLNT codeArityLNTF codeArityLNTR
        codeArityLNTFIsPR codeArityLNTRIsPR (LNT2LNN_formula repT) v0).
 
 
@@ -68,7 +68,7 @@ Section Goedel's_2nd_Incompleteness.
     Definition freeVarRepT' := freeVarRepT' repT v0 freeVarRepT.
 
     Definition codeSysPfCorrect :=
-      codeSysPfCorrect LNT codeLNTFunction codeLNTRelation codeArityLNTF
+      codeSysPfCorrect LNT LcodeLNT codeArityLNTF
         codeArityLNTR codeArityLNTFIsPR codeArityLNTFIsCorrect1
         codeArityLNTRIsPR
         codeArityLNTRIsCorrect1 T' extendsNN T (LNT2LNN_formula repT) v0

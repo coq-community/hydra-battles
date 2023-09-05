@@ -11,8 +11,9 @@ Require Import NewNotations.
 
 Section Code_Substitute_Term.
 
+Generalizable All Variables. 
 Variable L : Language.
-Variable codeF : Functions L -> nat.
+Context `(cL : Lcode L cf cr).
 
 Let Formula := Formula L.
 Let Formulas := Formulas L.
@@ -40,8 +41,8 @@ Definition codeSubTerms (t s v : nat) : nat :=
 
 Lemma codeSubTermCorrect :
   forall (t : Term) (v : nat) (s : Term),
-    codeSubTerm (codeTerm L codeF t) v (codeTerm L codeF s) =
-      codeTerm L codeF (substT L t v s).
+    codeSubTerm (codeTerm t) v (codeTerm s) =
+      codeTerm (substT L t v s).
 Proof.
   set
     (g :=
@@ -58,9 +59,9 @@ Proof.
   intros t v s; elim t using  Term_Terms_ind
     with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-             codeSubTerms (codeTerms L codeF n ts) v (codeTerm L codeF s) =
-               codeTerms L codeF n (substTs L n ts v s)).
-    - intro n; simpl; replace (codeTerm L codeF (var n)) with (cPair 0 n).
+             codeSubTerms (codeTerms ts) v (codeTerm s) =
+               codeTerms (substTs L n ts v s)).
+    - intro n; simpl; replace (codeTerm (var n)) with (cPair 0 n).
       + unfold codeSubTerm, codeSubTermTerms, evalStrongRec; simpl.
         repeat rewrite cPairProjections1 || rewrite cPairProjections2.
         simpl; induction (eq_nat_dec v n) as [a | b].
@@ -71,16 +72,14 @@ Proof.
       + reflexivity.
     - intros f t0 H; simpl;
         transitivity
-          (cPair (S (codeF f))
-             (codeTerms L codeF (arityF L f)
-                (substTs L (arityF L f) t0 v s))).
+          (cPair (S (cf f))
+             (codeTerms (substTs L (arityF L f) t0 v s))).
       + rewrite <- H; 
-          replace (codeTerm L codeF (apply f t0)) 
+          replace (codeTerm (apply f t0)) 
           with
-          (cPair (S (codeF f)) 
-             (codeTerms L codeF (arityF L f) t0)).
-        * generalize (codeF f) 
-            (codeTerms L codeF (arityF L f) t0).
+          (cPair (S (cf f))  (codeTerms  t0)).
+        * generalize (cf f) 
+            (codeTerms  t0).
           clear H t0 f; intros n n0; unfold codeSubTerm, codeSubTermTerms.
           fold g; unfold evalStrongRec, evalComposeFunc, evalOneParamList.
           unfold evalList; rewrite computeEvalStrongRecHelp.
@@ -108,13 +107,13 @@ Proof.
       reflexivity.
     - intros n t0 H t1 H0 ; simpl.
       transitivity
-        (S (cPair (codeTerm L codeF (substT L t0 v s))
-              (codeTerms L codeF n (substTs L n t1 v s)))).
+        (S (cPair (codeTerm (substT L t0 v s))
+              (codeTerms (substTs L n t1 v s)))).
       + rewrite <- H, <-  H0.
-        replace (codeTerms L codeF (S n) (Tcons t0 t1)) 
+        replace (codeTerms  (Tcons t0 t1)) 
           with
-          (S (cPair (codeTerm L codeF t0) (codeTerms L codeF n t1))).
-        * generalize (codeTerm L codeF t0) (codeTerms L codeF n t1).
+          (S (cPair (codeTerm t0) (codeTerms t1))).
+        * generalize (codeTerm t0) (codeTerms t1).
           clear H0 t1 H t0 n; intros n n0.
           unfold codeSubTerms at 1; unfold codeSubTermTerms; fold g.
           unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList.
@@ -157,8 +156,8 @@ Qed.
 
 Lemma codeSubTermsCorrect :
   forall (n : nat) (ts : Terms n) (v : nat) (s : Term),
-    codeSubTerms (codeTerms L codeF n ts) v (codeTerm L codeF s) =
-      codeTerms L codeF n (substTs L n ts v s).
+    codeSubTerms (codeTerms ts) v (codeTerm s) =
+      codeTerms  (substTs L n ts v s).
 Proof.
   set
     (g :=
@@ -176,12 +175,12 @@ Proof.
     simpl; repeat rewrite cPairProjections1 || rewrite cPairProjections2.
     reflexivity.
   - simpl; transitivity
-             (S (cPair (codeTerm L codeF (substT L t v s))
-                   (codeTerms L codeF n (substTs L n ts v s)))).
+             (S (cPair (codeTerm (substT L t v s))
+                   (codeTerms  (substTs L n ts v s)))).
     + rewrite <- Hrects, <- codeSubTermCorrect.
-      replace (codeTerms L codeF (S n) (Tcons t ts)) with
-        (S (cPair (codeTerm L codeF t) (codeTerms L codeF n ts))).
-      * generalize (codeTerm L codeF t) (codeTerms L codeF n ts).
+      replace (codeTerms (Tcons t ts)) with
+        (S (cPair (codeTerm t) (codeTerms ts))).
+      * generalize (codeTerm t) (codeTerms ts).
         clear Hrects ts t n; intros n n0.
         unfold codeSubTerms at 1; unfold codeSubTermTerms; fold g.
         unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList.

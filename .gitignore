@@ -38,6 +38,7 @@ alectryon-html/
 .envrc
 /theories/ordinals/*/*.tex
 /theories/ordinals/*/*.pdf
+/theories/goedel/*.pdf
 /theories/gaia/*.tex
 /theories/gaia/*.pdf
 /doc/JFLA2022/Slides/*.png
