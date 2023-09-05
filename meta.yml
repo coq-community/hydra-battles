@@ -166,6 +166,11 @@ dependencies:
     version: '{= "dev"}'
   description: |-
     [CoqPrime](https://github.com/thery/coqprime)
+- opam:
+    name: coq-zorns-lemma
+    version: '{>= "10.2.0"}'
+  description: |-
+    [zorns lemma](https://github.com/coq-community/topology)
 
 namespace: hydras
 
