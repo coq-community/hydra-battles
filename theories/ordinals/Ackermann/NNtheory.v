@@ -97,7 +97,7 @@ Qed.
 
 Lemma boundedLT  (m : nat) (a : Formula) (x : nat):
   (forall n : nat,
-      n < m -> SysPrf NN (substF LNN a x (natToTerm n))) ->
+      n < m -> SysPrf NN (substF a x (natToTerm n))) ->
   SysPrf NN (v#x < natToTerm m -> a)%nn.
 Proof.
   revert m a x; simple induction m; intros.
@@ -114,7 +114,7 @@ Proof.
       apply Nat.lt_lt_succ_r; auto.
     + apply sysWeaken, impI.
       rewrite <- (subFormulaId LNN a x).
-      apply impE with (substF LNN a x (natToTerm n)).
+      apply impE with (substF a x (natToTerm n)).
       * apply (subWithEquals LNN).
         apply eqSym.
         apply Axm; right; constructor.
@@ -134,12 +134,12 @@ Lemma nnPlusNotNeeded (n:nat) :
       * apply sysWeaken, nn7. 
     + rewrite <- (subFormulaId LNN (v#1 < Succ Zero)%nn 1).
       apply impE with 
-        (substF LNN (v#1 < Succ Zero)%nn 1 Zero).
+        (substF (v#1 < Succ Zero)%nn 1 Zero).
       * apply (subWithEquals LNN).
         apply eqSym.
         apply Axm; right; constructor.
       * apply sysWeaken;
-          replace (substF LNN (v#1 < Succ Zero)%nn 1 Zero) 
+          replace (substF (v#1 < Succ Zero)%nn 1 Zero) 
           with
           (natToTerm 0 < natToTerm 1)%nn.
       -- apply natLT; auto.
@@ -153,7 +153,7 @@ Lemma nnPlusNotNeeded (n:nat) :
         -- apply boundedLT.
            intros n0 H. 
            replace
-             (substF LNN (v#1 < (Succ (Succ (natToTerm n))))%nn
+             (substF (v#1 < (Succ (Succ (natToTerm n))))%nn
                 1 (natToTerm n0)) 
              with (natToTerm n0 < natToTerm (S (S n)))%nn.
            { apply natLT; now apply Nat.lt_lt_succ_r. }
@@ -168,12 +168,12 @@ Lemma nnPlusNotNeeded (n:nat) :
         (subFormulaId LNN 
            (v#1 <  (Succ (Succ (natToTerm n))))%nn 1).
       apply impE with
-        (substF LNN (v#1 < Succ (Succ (natToTerm n)))%nn 1
+        (substF (v#1 < Succ (Succ (natToTerm n)))%nn 1
            (Succ (natToTerm n))).
       * apply (subWithEquals LNN), eqSym, Axm; right; constructor. 
       * apply sysWeaken.
         replace
-          (substF LNN 
+          (substF 
              (v# 1 < Succ (Succ (natToTerm n)))%nn 1
              (Succ (natToTerm n))) 
           with (natToTerm (S n) <  natToTerm (S (S n)))%nn.

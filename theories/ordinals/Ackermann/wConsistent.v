@@ -9,7 +9,7 @@ Definition wConsistent (T : System) :=
   forall (f : Formula) (v : nat),
   (forall x : nat, In x (freeVarF LNN f) -> v = x) ->
   SysPrf T (existH v (notH f)) ->
-  exists n : nat, ~ SysPrf T (substF LNN f v (natToTerm n)).
+  exists n : nat, ~ SysPrf T (substF f v (natToTerm n)).
 
 Lemma wCon2Con : forall T : System, wConsistent T -> Consistent LNN T.
 Proof.
@@ -22,7 +22,7 @@ Proof.
         In x (freeVarF LNN (v#0 <> v#0)%nn) -> 0 = x)
     by (intros x H1; simpl in H1; repeat induction H1; auto).
   destruct  (H _ _ H1 H0) as [x H2]; 
-    now exists (substF LNN (v#0 <> v#0)%nn 0
+    now exists (substF (v#0 <> v#0)%nn 0
                   (natToTerm x)).
 Qed.
 
@@ -31,7 +31,7 @@ Definition wInconsistent (T : System) :=
     (exists v : nat,
        (forall x : nat, In x (freeVarF LNN f) -> v = x) /\
        SysPrf T (existH v (notH f)) /\
-       (forall n : nat, SysPrf T (substF LNN f v (natToTerm n)))).
+       (forall n : nat, SysPrf T (substF f v (natToTerm n)))).
 
 Lemma notCon2wNotCon :
  forall T : System, Inconsistent LNN T -> wInconsistent T.

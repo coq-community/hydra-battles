@@ -267,7 +267,7 @@ Proof.
 Qed.
 
 Lemma forallE  (T : System) (f : Formula) (v : nat) (t : Term):
- SysPrf T (allH v, f)%fol -> SysPrf T (substF L f v t).
+ SysPrf T (allH v, f)%fol -> SysPrf T (substF f v t).
 Proof.
   intro H; apply impE with (forallH v f); [| exact H]. 
    - exists (nil (A:=Formula)), (FA1 L f v t); contradiction.
@@ -280,10 +280,10 @@ Proof.
 Qed.
 
 Lemma existI (T : System) (f : Formula) (v : nat) (t : Term):
-  SysPrf T (substF L f v t) -> SysPrf T (exH v, f)%fol.
+  SysPrf T (substF f v t) -> SysPrf T (exH v, f)%fol.
 Proof.
   intros H; unfold existH, fol.existH in |- *;
-  apply impE with (~ ~ (substF L f v t))%fol.
+  apply impE with (~ ~ (substF f v t))%fol.
   - apply cp2, impI; rewrite <- (subFormulaNot L).
     apply forallE, Axm; right; constructor.
   - now apply nnI.

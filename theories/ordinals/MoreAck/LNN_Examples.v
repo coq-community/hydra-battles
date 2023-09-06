@@ -118,7 +118,7 @@ Compute freeVarFormula _ f3.
 
 Compute freeVarFormula _ (close _ f4).
 
-Compute substF LNN f4 0 (natToTerm 0).
+Compute substF f4 0 (natToTerm 0).
 (* end snippet freeVarExamples *)
 
 Locate LT.
@@ -143,7 +143,7 @@ Compute FA1 LNN  (v#0 = v#0)%nn 0 Zero%nn.
 
 Compute FA1 LNN  (v#0 = v#0)%nn 0 Zero%nn. 
 
-Compute substF LNN (v#0 = v#0)%nn 0 Zero.
+Compute substF  (v#0 = v#0)%nn 0 Zero.
 
 Goal Prf LNN nil
          (forallH 0 (v#0 = v#0))%nn  -> 

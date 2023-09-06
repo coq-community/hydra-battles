@@ -45,12 +45,12 @@ Hypothesis
 Hypothesis
   expressT1 :
     forall f : Formula, mem _ T f ->
-    SysPrf T (substF LNN repT v0 (reflection f)).
+    SysPrf T (substF repT v0 (reflection f)).
 
 Hypothesis
   expressT2 :
     forall f : Formula, ~ mem _ T f ->
-    SysPrf T (~ (substF LNN repT v0 (reflection f)))%nn.
+    SysPrf T (~ (substF repT v0 (reflection f)))%nn.
 
 
 
@@ -115,7 +115,7 @@ Proof.
   - apply impE
       with
       (notH
-         (substF LNN (notH codeSysPf) 0
+         (substF (notH codeSysPf) 0
             (codeNatToTerm.natToTermLNN
                (codeFNN x)))).
     + apply cp2, iffE1; apply sysExtend with NN; auto. 
@@ -143,14 +143,14 @@ Proof.
   unfold wConsistent in H.
   set (y := 
      notH
-       (substF LNN codeSysPrf 0 (codeNatToTerm.natToTermLNN codeX)))
+       (substF  codeSysPrf 0 (codeNatToTerm.natToTermLNN codeX)))
     in *.
   assert (forall x : nat, In x (freeVarF LNN y) -> 1 = x).
   { intros x0 H3; unfold y in H3.
     assert (H4:
       (In x0
          (freeVarF LNN
-            (substF LNN codeSysPrf 0
+            (substF codeSysPrf 0
                (codeNatToTerm.natToTermLNN codeX))))) by apply H3.
     destruct (freeVarSubFormula3 _ _ _ _ _ H4) as [H5 | H5]. 
     - destruct x0 as [| n].
@@ -252,7 +252,7 @@ apply ( freeVarCodeSysPrf _ _ _ _ _ _ _ _ freeVarRepT _ H6).
   - apply impE
       with
       (notH
-         (substF LNN (notH codeSysPf) 0
+         (substF (notH codeSysPf) 0
             (codeNatToTerm.natToTermLNN codeX))).
     + unfold codeSysPf, codeSysPrf.codeSysPf, y in |- *.
       fold codeSysPrf in |- *.
@@ -260,7 +260,7 @@ apply ( freeVarCodeSysPrf _ _ _ _ _ _ _ _ freeVarRepT _ H6).
       apply
         impTrans
         with
-        (substF LNN (existH 1 codeSysPrf) 0
+        (substF (existH 1 codeSysPrf) 0
            (codeNatToTerm.natToTermLNN codeX)).
       * apply impI; apply nnE; apply Axm; right; constructor.
       * apply sysExtend with NN.

@@ -417,7 +417,7 @@ Lemma subSubAllFormula :
   forall (T : fol.System L) (f : fol.Formula L) (m : nat -> fol.Term L)
          (v : nat) (s : fol.Term L),
     folProof.SysPrf L T
-      (iffH (substF L (subAllFormula f m) v s)
+      (iffH (substF (subAllFormula f m) v s)
          (subAllFormula f (fun n : nat => substT L (m n) v s))).
 Proof.
   intros T f.  revert T. 
@@ -501,7 +501,7 @@ Proof.
             ++ apply H3; simpl; apply in_in_remove; auto.
        *  apply (iffTrans L) with
            (forallH x
-              (substF L
+              (substF 
                  (subAllFormula a
                     (fun v1 : nat =>
                        match eq_nat_dec v1 v with
@@ -606,7 +606,7 @@ Proof.
                                 *** reflexivity.
             ++ apply (iffTrans L) with
                  (forallH nv2
-                    (substF L
+                    (substF 
                        (subAllFormula a
                           (fun v1 : nat =>
                              match eq_nat_dec v1 v with
@@ -737,7 +737,7 @@ Proof.
         with (forallH n (subAllFormula f (fun x : nat => var x))).
       * apply (iffTrans L) with
           (forallH nv
-             (substF L (subAllFormula f (fun x : nat => var x)) n
+             (substF (subAllFormula f (fun x : nat => var x)) n
                 (var nv))).
         -- replace
             (subAllFormula f
@@ -861,7 +861,7 @@ Proof.
       (iffTrans L)
       with
       (forallH (newVar nv3)
-         (substF L
+         (substF 
             (subAllFormula f
                (fun v : nat =>
                   match eq_nat_dec v n with
@@ -1038,7 +1038,7 @@ Proof.
            ++ apply H2.
         -- apply (impE L) with
              (closeFrom m n
-                (substF L
+                (substF 
                    (subAllFormula f
                       (fun x : nat =>
                          match le_lt_dec n x with
@@ -1049,7 +1049,7 @@ Proof.
               cut
                 (folProof.SysPrf L (Empty_set (fol.Formula L))
                    (impH 
-                      (substF L
+                      (substF 
                          (subAllFormula f
                             (fun x : nat =>
                                match le_lt_dec n x with
@@ -1063,7 +1063,7 @@ Proof.
                             | right _ => var (m + x)
                             end)))).
               ** generalize
-                  (substF L
+                  (substF 
                      (subAllFormula f
                         (fun x : nat =>
                            match le_lt_dec n x with
@@ -1134,8 +1134,8 @@ Proof.
                  m < s ->
                  s + r <= p ->
                  folProof.SysPrf L (Empty_set (fol.Formula L))
-                   (impH  (substF L (closeFrom s r f) m (var p))
-                      (closeFrom s r (substF L f m (var p))))).
+                   (impH  (substF (closeFrom s r f) m (var p))
+                      (closeFrom s r (substF f m (var p))))).
                { clear H0 H H1 m T f n Hrecn.
                  intros f s n.
                  induction n as [| n Hrecn]; simpl.  
@@ -1155,7 +1155,7 @@ Proof.
                          induction H2 as [x H2| x H2]; [ induction H2 | induction H2 ].
                        -- now elim (in_remove_neq _ _ _ _ _ H1).
                        -- apply impE 
-                            with (substF L (closeFrom s n f) m (var p)).
+                            with (substF (closeFrom s n f) m (var p)).
                           ++ apply sysWeaken.
                              ** apply Hrecn.
                                 --- auto.
@@ -1165,7 +1165,7 @@ Proof.
                              apply Axm; right; constructor.
                }           
                apply (impE L) with
-                 (substF L
+                 (substF 
                     (closeFrom m n
                        (subAllFormula f
                           (fun x : nat =>
@@ -1234,7 +1234,7 @@ Proof.
       intros m0 H1; rewrite <- plus_n_O.
       destruct (le_lt_dec m m0); reflexivity. 
   - intros m map f T H H0; apply  (impE L)  with
-      (substF L
+      (substF 
          (subAllFormula f
             (fun x : nat =>
                match le_lt_dec m x with
@@ -1499,7 +1499,7 @@ End subAllCloseFrom.
 Lemma subToSubAll (T : fol.System L) (A : fol.Formula L) (v : nat)
   (s : fol.Term L):
  folProof.SysPrf L T
-   (iffH (substF L A v s)
+   (iffH (substF A v s)
       (subAllFormula A
          (fun x : nat =>
           match eq_nat_dec v x with
@@ -1508,7 +1508,7 @@ Lemma subToSubAll (T : fol.System L) (A : fol.Formula L) (v : nat)
           end))).
 Proof.
   apply (iffTrans L) with
-    (substF L (subAllFormula A (fun x : nat => var x)) v s).
+    (substF (subAllFormula A (fun x : nat => var x)) v s).
   apply sysExtend with (Empty_set (fol.Formula L)).
   - intros x H; contradiction H.
   - apply (reduceSub L).
@@ -1534,7 +1534,7 @@ Lemma subAllSubFormula :
   forall (T : fol.System L) (A : fol.Formula L) (v : nat) 
          (s : fol.Term L) (map : nat -> fol.Term L),
     folProof.SysPrf L T
-      (iffH (subAllFormula (substF L A v s) map)
+      (iffH (subAllFormula (substF A v s) map)
          (subAllFormula A
             (fun x : nat =>
                match eq_nat_dec v x with

@@ -55,7 +55,7 @@ Qed.
 Lemma nn1 (a : Term) : SysPrf NN (Succ a <> Zero)%nn.
 Proof.
   change (Succ a <> Zero)%nn with
-    (substF LNN (Succ(v#0) <> Zero)%nn 0 a).
+    (substF  (Succ(v#0) <> Zero)%nn 0 a).
   - apply forallE, Axm; repeat (try right; constructor) || left.
 Qed.
 
@@ -80,7 +80,7 @@ Qed.
 Lemma nn3 (a : Term): SysPrf NN (a + Zero = a)%nn.
 Proof.
   change  (a + Zero = a)%nn with
-    (substF LNN (v#0 + Zero = v#0)%nn 0 a).
+    (substF (v#0 + Zero = v#0)%nn 0 a).
   - apply forallE; apply Axm; repeat (try right; constructor) || left.
 Qed.
 
@@ -105,7 +105,7 @@ Qed.
 Lemma nn5 ( a : Term) : SysPrf NN (a * Zero = Zero)%nn.
 Proof.
   change (a * Zero = Zero)%nn with
-    (substF LNN (v#0 * Zero = Zero)%nn 0 a).
+    (substF (v#0 * Zero = Zero)%nn 0 a).
   - apply forallE, Axm; repeat (try right; constructor) || left.
 Qed.
 
@@ -132,7 +132,7 @@ Qed.
 Lemma nn7 (a : Term): SysPrf NN (~ (a <Zero))%nn.
 Proof.
   change (~ (a <Zero))%nn with
-    (substF LNN (~ v#0 < Zero)%nn 0 a).
+    (substF (~ v#0 < Zero)%nn 0 a).
   - apply forallE, Axm; repeat (try right; constructor) || left.
 Qed.
 

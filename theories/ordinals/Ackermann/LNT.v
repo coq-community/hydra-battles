@@ -221,7 +221,7 @@ Lemma forallI (T : System) (f : Formula) (v : nat):
 Proof. apply (forallI LNT). Qed.
 
 Lemma forallE (T : System) (f : Formula) (v : nat) (t : Term) :
- SysPrf T (allH v, f)%nt -> SysPrf T (substF LNT f v t).
+ SysPrf T (allH v, f)%nt -> SysPrf T (substF f v t).
 Proof. apply (forallE LNT). Qed.
 
 Lemma forallSimp (T : System) (f : Formula) (v : nat):
@@ -229,7 +229,7 @@ Lemma forallSimp (T : System) (f : Formula) (v : nat):
 Proof. apply (forallSimp LNT). Qed.
 
 Lemma existI (T : System) (f : Formula) (v : nat) (t : Term):
- SysPrf T (substF LNT f v t) -> SysPrf T (exH v, f)%nt.
+ SysPrf T (substF f v t) -> SysPrf T (exH v, f)%nt.
 Proof. apply (existI LNT). Qed.
 
 Lemma existE (T : System) (f g : Formula) (v : nat):
