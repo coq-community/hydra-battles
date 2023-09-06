@@ -280,7 +280,7 @@ Qed.
 (* end snippet ltDepth1 *)
 
 
-Compute substF L F5 0 (f a).
+Compute substF  F5 0 (f a).
 
 
 
@@ -306,9 +306,9 @@ Compute substT L (h v#1 (h (f v#1) (f v#2)))%fol 1 (h a b)%fol.
 Section OnSubstF.
 (* begin snippet substExample1 *)
   Let F : Formula L := (exH 2, v#1 <> f v#2)%fol.
-  Compute substF L F 1 (f v#2)%fol. 
+  Compute substF  F 1 (f v#2)%fol. 
   
-  Compute substF L (close L F -> F)%fol 1 (h v#2 v#3)%fol.
+  Compute substF  (close L F -> F)%fol 1 (h v#2 v#3)%fol.
 (* end snippet substExample1 *)
 
 End OnSubstF.  
@@ -408,7 +408,7 @@ About PrfEx4.
 (* begin snippet PrfEx5:: no-out *)
 Example PrfEx5 : Prf L [] ((allH 1 2, R v#1 v#2) -> allH 2, R a v#2)%fol. 
 Proof. 
-  change (allH 2, R a v#2)%fol with (substF L (allH 2, R v#1 v#2)%fol 1 a).
+  change (allH 2, R a v#2)%fol with (substF (allH 2, R v#1 v#2)%fol 1 a).
   eapply FA1. 
 Qed. 
 (* end snippet PrfEx5 *)
@@ -612,7 +612,7 @@ Proof.
       + now destruct n. 
     - apply nnE; 
         assert (H:(~ ~ (P (v#i)))%fol = (* clumsy *)
-                  (substF _ (~ ~ (P (v#i))) i (v#i))%fol). 
+                  (substF (~ ~ (P (v#i))) i (v#i))%fol). 
       { cbn; destruct (Nat.eq_dec i) as [_ | n].
         auto. 
         now destruct n. 

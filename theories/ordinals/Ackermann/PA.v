@@ -26,8 +26,8 @@ Definition PA5 := (allH 0, v#0 * Zero = Zero)%nt.
 Definition PA6 := (allH 1 0, v#0 * Succ v#1 = v#0 * v#1 + v#0)%nt.
 
 Definition PA7 (f : Formula) (v : nat) : Formula :=
-   let f_0 := substF LNT f v Zero%nt in
-   let f_Sv := substF LNT f v (Succ v#v)%nt in
+   let f_0 := substF f v Zero%nt in
+   let f_Sv := substF f v (Succ v#v)%nt in
    close _  (f_0 -> (allH v, f -> f_Sv) -> allH v, f)%nt.
 
 Definition InductionSchema (f : Formula) : Prop :=
@@ -71,8 +71,8 @@ Proof.
                    (H: forall y : Formula,
                        (decidable 
                           (exists (f : Formula) (v : nat),
-                              (substF LNT f v Zero ->
-                               (allH v, f -> substF LNT f v (Succ v#v)) -> 
+                              (substF  f v Zero ->
+                               (allH v, f -> substF f v (Succ v#v)) -> 
                                allH v, f)%nt 
                               = y))).
                  { intros y;
@@ -88,7 +88,7 @@ Proof.
                    destruct f1 as [t t0| r t| f1 f2| f1| n0 f1];
                      try (right; unfold not in |- *; intros; 
                           decompose record H; discriminate).
-                   destruct (formula_eqdec LNT LNT_eqdec (substF LNT f1 n0 Zero) f) 
+                   destruct (formula_eqdec LNT LNT_eqdec (substF f1 n0 Zero) f) 
                      as [a | b].
                    - rewrite <- a; clear a f.
                      destruct f0 as [t t0| r t| f f0| f| n1 f];
@@ -98,7 +98,7 @@ Proof.
                      + rewrite <- a; clear a f.
                        induction
                          (formula_eqdec LNT LNT_eqdec
-                            (substF LNT f1 n0 (Succ (v#n0))%nt) f0).
+                            (substF f1 n0 (Succ (v#n0))%nt) f0).
                        * rewrite <- a; clear a f0.
                          induction (eq_nat_dec n n0) as [a | b].
                          -- rewrite a; left.
@@ -134,8 +134,8 @@ Proof.
                  induction
                    (List.nodup eq_nat_dec
                       (freeVarF LNT
-                        (substF LNT x0 x1 Zero ->
-                          (allH x1, x0 -> substF LNT x0 x1 (Succ (v#x1))) ->
+                        (substF x0 x1 Zero ->
+                          (allH x1, x0 -> substF x0 x1 (Succ (v#x1))) ->
                           allH x1, x0)%nt)).
                   simpl; reflexivity.
                  simpl; assumption.
@@ -146,22 +146,22 @@ Proof.
                      replace
                        (open
                           (close LNT
-                             (substF LNT x0 x1 Zero ->
+                             (substF x0 x1 Zero ->
                               (allH x1, x0 -> 
-                                        substF LNT x0 x1 (Succ v#x1)) -> 
+                                        substF x0 x1 (Succ v#x1)) -> 
                               allH x1, x0)%nt))
                        with
-                       (substF LNT x0 x1 Zero ->
+                       (substF x0 x1 Zero ->
                         (allH x1, x0 -> 
-                                  substF LNT x0 x1 (Succ v#x1)) -> 
+                                  substF x0 x1 (Succ v#x1)) -> 
                         allH x1, x0)%nt;
                        [reflexivity |]. 
                      unfold close in |- *.
                      induction
                        (List.nodup eq_nat_dec
                           (freeVarF LNT
-                             (substF LNT x0 x1 Zero ->
-                              (allH x1, x0 -> substF LNT x0 x1 (Succ (v#x1))) ->
+                             (substF x0 x1 Zero ->
+                              (allH x1, x0 -> substF x0 x1 (Succ (v#x1))) ->
                               (allH x1, x0)))%nt).
                      simpl; reflexivity.
                      simpl; auto.
@@ -198,7 +198,7 @@ Qed.
 
 Lemma pa1 (a : Term):  SysPrf PA (Succ a <> Zero)%nt.
 Proof.
-  replace (Succ a <> Zero)%nt with  (substF LNT (Succ v#0 <> Zero)%nt 0 a).
+  replace (Succ a <> Zero)%nt with  (substF (Succ v#0 <> Zero)%nt 0 a).
   - apply forallE, Axm; repeat (try right; constructor) || left.
   - reflexivity.
 Qed.
@@ -228,7 +228,7 @@ Qed.
 
 Lemma pa3 (a : Term): SysPrf PA (a + Zero = a)%nt.
 Proof.
-  replace (a + Zero = a)%nt with  (substF LNT (v#0 + Zero = v#0)%nt 0 a).
+  replace (a + Zero = a)%nt with  (substF  (v#0 + Zero = v#0)%nt 0 a).
   - apply forallE, Axm; repeat (try right; constructor) || left.
   - reflexivity.
 Qed.
@@ -261,7 +261,7 @@ Qed.
 Lemma pa5 (a : Term): SysPrf PA (a * Zero = Zero)%nt.
 Proof.
   replace (a * Zero = Zero)%nt with
-    (substF LNT (v#0 * Zero = Zero)%nt 0 a).
+    (substF (v#0 * Zero = Zero)%nt 0 a).
   - apply forallE.
     apply Axm; repeat (try right; constructor) || left.
   - reflexivity.
@@ -293,8 +293,8 @@ Proof.
 Qed.
 
 Lemma induct (f : Formula) (v : nat):
-  let f_0 := substF LNT f v Zero
-  in let f_Sv := substF LNT f v (Succ (v#v))%nt
+  let f_0 := substF f v Zero
+  in let f_Sv := substF f v (Succ (v#v))%nt
      in  SysPrf PA f_0 ->
          SysPrf PA (allH v, f -> f_Sv)%nt
          -> SysPrf PA (allH v, f)%nt.

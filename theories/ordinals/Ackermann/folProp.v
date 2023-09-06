@@ -889,11 +889,12 @@ End Fol_Properties.
 
 Arguments closed {L} _.
 
+#[global] Arguments substF {L} _ _.
 
 (** compatibility with older names *)
 
 #[deprecated(note="use substF")]
- Notation substituteFormula := substF (only parsing).
+ Notation substituteFormula := substF  (only parsing).
 (* to do *)
 
 #[deprecated(note="use substT")]

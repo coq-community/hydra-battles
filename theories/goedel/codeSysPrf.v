@@ -77,7 +77,7 @@ Ltac SimplFreeVar :=
        assert (In X3 (freeVarF X9 X1)); [ apply H | clear H ]
    | H:(In _ (_ ++ _)) |- _ =>
        induction (in_app_or _ _ _ H); clear H
-   | H:(In _ (freeVarF ?X9 (substF ?X9 ?X1 ?X2 ?X3))) |- _
+   | H:(In _ (freeVarF ?X9 (substF ?X1 ?X2 ?X3))) |- _
    =>
        induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
    | H:(In _ (freeVarF ?X9 (LT ?X1 ?X2))) |- _ =>
@@ -142,20 +142,20 @@ Hypothesis
     forall f : fol.Formula L,
     mem _ U f ->
     SysPrf T
-      (substF LNN fU v0 (natToTerm (codeFormula f))).
+      (substF fU v0 (natToTerm (codeFormula f))).
 Hypothesis
   expressU2 :
     forall f : fol.Formula L,
     ~ mem _ U f ->
     SysPrf T
-      (notH (substF LNN fU v0 (natToTerm (codeFormula f)))).
+      (notH (substF fU v0 (natToTerm (codeFormula f)))).
 
 Definition codeSysPrf : Formula :=
   let nv := newVar (2 :: 1 :: 0 :: v0 :: nil) in
   existH nv
     (andH
-       (substF LNN
-          (substF LNN
+       (substF 
+          (substF 
              (primRecFormula 2
                 (proj1_sig
                    (checkPrfIsPR L cL  codeArityF codeArityR
@@ -164,19 +164,19 @@ Definition codeSysPrf : Formula :=
        (forallH (S nv)
           (impH (LT (var (S nv)) (var nv))
              (orH
-                (substF LNN
-                   (substF LNN
-                      (substF LNN
+                (substF 
+                   (substF 
+                      (substF 
                          (primRecFormula 2 (proj1_sig codeInIsPR)) 2
                          (var (S nv))) 1 (var nv)) 0 Zero)
-                (substF LNN fU v0 (var (S nv))))))).
+                (substF  fU v0 (var (S nv))))))).
 
 Lemma codeSysPrfCorrect1 :
  forall (f : fol.Formula L) (A : list (fol.Formula L)) (p : Prf L A f),
  (forall g : fol.Formula L, In g A -> mem _ U g) ->
  SysPrf T
-   (substF LNN
-      (substF LNN codeSysPrf 0
+   (substF 
+      (substF codeSysPrf 0
          (natToTerm (codeFormula f))) 1
       (natToTerm (codePrf A f p))).
 Proof.
@@ -227,9 +227,9 @@ Proof.
              apply
                impE
                with
-               (substF LNN
-                  (substF LNN
-                     (substF LNN (substF LNN B 0 (Succ (var nv)))
+               (substF 
+                  (substF 
+                     (substF (substF  B 0 (Succ (var nv)))
                         2 (natToTerm (codeFormula f))) 1
                      (natToTerm (codePrf A f p))) nv
                   (natToTerm (codeList (map (codeFormula) A)))).
@@ -238,16 +238,16 @@ Proof.
                      apply (subFormulaTrans LNN).
                  intros H4;
                  assert
-                   (H5: In 0 (freeVarF LNN (substF LNN B 0 (Succ (var nv)))))
+                   (H5: In 0 (freeVarF LNN (substF B 0 (Succ (var nv)))))
                   by eapply in_remove, H4.
                  induction (freeVarSubFormula3 _ _ _ _ _ H5).
                  +++ elim (in_remove_neq _ _ _ _ _ H6); reflexivity.
                  +++ simpl in H6; decompose sum H6; auto.
              --- apply impE with
-                 (substF LNN
-                    (substF LNN
-                       (substF LNN
-                          (substF LNN B 2
+                 (substF 
+                    (substF 
+                       (substF 
+                          (substF B 2
                              (natToTerm (codeFormula f))) 1
                           (natToTerm (codePrf A f p))) 0 
                        (Succ (var nv))) nv
@@ -257,9 +257,9 @@ Proof.
                      apply
                        iffTrans
                        with
-                       (substF LNN
-                          (substF LNN
-                             (substF LNN B 2
+                       (substF 
+                          (substF 
+                             (substF B 2
                                 (natToTerm (codeFormula f))) 0 
                              (Succ (var nv))) 1 (natToTerm (codePrf A f p))).
                      *** repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
@@ -297,8 +297,8 @@ Proof.
                      apply
                        impE
                        with
-                       (substF LNN
-                          (substF LNN
+                       (substF 
+                          (substF 
                              (equal (var 0)
                                 (natToTerm
                                    (checkPrf L cL codeArityF codeArityR
@@ -364,9 +364,9 @@ Proof.
                                    **** clear b b0.
                                         repeat rewrite (subFormulaImp LNN).
                                         replace
-                                          (substF LNN
-                                             (substF LNN
-                                                (substF LNN (LT (var (S nv)) (var nv)) 0
+                                          (substF 
+                                             (substF 
+                                                (substF (LT (var (S nv)) (var nv)) 0
                                                    (natToTerm (codeFormula f))) 1
                                                 (natToTerm (codePrf A f p))) nv
                                              (natToTerm
@@ -380,7 +380,7 @@ Proof.
                                              list_rec (fun _ => Formula) (equal Zero Zero)
                                                (fun (a : fol.Formula L) _ (rec : Formula) =>
                                                   andH
-                                                    (substF LNN fU v0 
+                                                    (substF fU v0 
                                                        (natToTerm 
                                                           (codeFormula a)))
                                                     rec) A) in *.
@@ -447,7 +447,7 @@ Proof.
                                         induction (In_dec eq_nat_dec n
                                                      (map (codeFormula ) A)).
                                         apply orI2.
-                                        apply impE with (substF LNN fU v0 
+                                        apply impE with (substF fU v0 
                                                            (natToTerm n)).
                                         apply iffE2.
                                         apply sysWeaken.
@@ -462,10 +462,10 @@ Proof.
                                         apply
                                           iffTrans
                                           with
-                                          (substF LNN
-                                             (substF LNN
-                                                (substF LNN
-                                                   (substF LNN fU v0 (var (S nv))) 1
+                                          (substF 
+                                             (substF 
+                                                (substF 
+                                                   (substF fU v0 (var (S nv))) 1
                                                    (natToTerm (codePrf A f p))) nv
                                                 (natToTerm (codeList 
                                                               (map (codeFormula)
@@ -484,8 +484,8 @@ Proof.
                                         apply
                                           iffTrans
                                           with
-                                          (substF LNN
-                                             (substF LNN (substF LNN fU v0 (var (S nv))) nv
+                                          (substF 
+                                             (substF (substF fU v0 (var (S nv))) nv
                                                 (natToTerm (codeList (map codeFormula A)))) 
                                              (S nv) (natToTerm n)).
                                         repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
@@ -500,7 +500,7 @@ Proof.
                                         apply
                                           iffTrans
                                           with
-                                          (substF LNN (substF LNN fU v0 (var (S nv))) 
+                                          (substF  (substF fU v0 (var (S nv))) 
                                              (S nv) (natToTerm n)).
                                         repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
                                         apply (subFormulaNil LNN).
@@ -543,7 +543,7 @@ Proof.
                                           (list_rec (fun _ => Formula) (equal Zero Zero)
                                              (fun (a : fol.Formula L) (_ : list (fol.Formula L)) (rec : Formula) =>
                                                 andH
-                                                  (substF LNN fU v0
+                                                  (substF fU v0
                                                      (natToTerm (codeFormula a))) rec) A).
                                         apply sysWeaken.
                                         apply impI.
@@ -563,9 +563,9 @@ Proof.
                                         apply
                                           impE
                                           with
-                                          (substF LNN
-                                             (substF LNN 
-                                                (substF LNN J 2 (natToTerm n)) 1
+                                          (substF 
+                                             (substF 
+                                                (substF J 2 (natToTerm n)) 1
                                                 (natToTerm (codeList 
                                                               (map 
                                                                  (codeFormula) 
@@ -574,12 +574,12 @@ Proof.
                                         apply
                                           iffTrans
                                           with
-                                          (substF LNN
-                                             (substF LNN
-                                                (substF LNN
-                                                   (substF LNN
-                                                      (substF LNN
-                                                         (substF LNN J 2 (var (S nv))) 1 
+                                          (substF
+                                             (substF
+                                                (substF
+                                                   (substF
+                                                      (substF
+                                                         (substF J 2 (var (S nv))) 1 
                                                          (var nv)) 0 Zero) 1
                                                    (natToTerm (codePrf A f p))) nv
                                                 (natToTerm (codeList 
@@ -597,10 +597,10 @@ Proof.
                                         apply
                                           iffTrans
                                           with
-                                          (substF LNN
-                                             (substF LNN
-                                                (substF LNN
-                                                   (substF LNN (substF LNN J 2 (var (S nv)))
+                                          (substF 
+                                             (substF
+                                                (substF 
+                                                   (substF  (substF  J 2 (var (S nv)))
                                                       1 (var nv)) 0 Zero) nv
                                                 (natToTerm (codeList (map (codeFormula) A)))) 
                                              (S nv) (natToTerm n)).
@@ -611,8 +611,8 @@ Proof.
                                         assert
                                           (H14: In 1
                                              (freeVarF LNN
-                                                (substF LNN 
-                                                   (substF LNN J 2 (var (S nv))) 1
+                                                (substF
+                                                   (substF J 2 (var (S nv))) 1
                                                    (var nv))))
                                         by eapply in_remove, H13.
                                         induction (freeVarSubFormula3 _ _ _ _ _ H14).
@@ -625,10 +625,10 @@ Proof.
                                         apply
                                           iffTrans
                                           with
-                                          (substF LNN
-                                             (substF LNN
-                                                (substF LNN
-                                                   (substF LNN (substF LNN J 2 (var (S nv)))
+                                          (substF
+                                             (substF
+                                                (substF
+                                                   (substF (substF J 2 (var (S nv)))
                                                       1 (var nv)) nv
                                                    (natToTerm (codeList (map (codeFormula) A)))) 0
                                                 Zero) (S nv) (natToTerm n)).
@@ -640,16 +640,16 @@ Proof.
                                         apply
                                           iffTrans
                                           with
-                                          (substF LNN
-                                             (substF LNN
-                                                (substF LNN (substF LNN J 2 (var (S nv))) 1
+                                          (substF 
+                                             (substF 
+                                                (substF (substF J 2 (var (S nv))) 1
                                                    (natToTerm (codeList (map (codeFormula) A)))) 0
                                                 Zero) (S nv) (natToTerm n)).
                                         repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
                                         apply (subFormulaTrans LNN).
                                         intros H12;
                                         assert (H13: In nv (freeVarF LNN 
-                                                         (substF LNN J 2
+                                                         (substF J 2
                                                             (var (S nv)))))
                                         by eapply in_remove, H12.
 
@@ -672,9 +672,9 @@ Proof.
                                         apply
                                           iffTrans
                                           with
-                                          (substF LNN
-                                             (substF LNN
-                                                (substF LNN (substF LNN J 2 (var (S nv))) 1
+                                          (substF
+                                             (substF
+                                                (substF (substF J 2 (var (S nv))) 1
                                                    (natToTerm (codeList (map (codeFormula) A))))
                                                 (S nv) (natToTerm n)) 0 Zero).
                                         apply (subFormulaExch LNN).
@@ -684,9 +684,9 @@ Proof.
                                         apply
                                           iffTrans
                                           with
-                                          (substF LNN
-                                             (substF LNN
-                                                (substF LNN (substF LNN J 2 (var (S nv)))
+                                          (substF
+                                             (substF
+                                                (substF (substF J 2 (var (S nv)))
                                                    (S nv) (natToTerm n)) 1
                                                 (natToTerm (codeList (map (codeFormula) A)))) 0 Zero).
                                         repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
@@ -711,7 +711,7 @@ Proof.
                                         apply
                                           impE
                                           with
-                                          (substF LNN
+                                          (substF 
                                              (equal (var 0)
                                                 (natToTerm
                                                    (codeIn n (codeList (map (codeFormula) A))))) 0
@@ -745,7 +745,7 @@ Proof.
                                         auto.
                                         assert
                                           (H7: forall (t1 t2 s : Term) (v : nat),
-                                              substF LNN (LT t1 t2) v s =
+                                              substF (LT t1 t2) v s =
                                                 LT (substT LNN t1 v s) 
                                                   (substT LNN t2 v s)) 
                                         by reflexivity.
@@ -766,8 +766,8 @@ Lemma codeSysPrfCorrect2 :
     forall p : Prf L A f,
       SysPrf T
         (notH
-           (substF LNN
-              (substF LNN codeSysPrf 0
+           (substF 
+              (substF  codeSysPrf 0
                  (natToTerm (codeFormula f))) 1
               (natToTerm (codePrf A f p)))).
 Proof.
@@ -830,16 +830,16 @@ Proof.
                 (natToTerm
                    (checkPrf L cL codeArityF codeArityR
                       (codeFormula f) n)))
-             (substF LNN
-                (substF LNN
+             (substF
+                (substF 
                    (forallH (S nv)
                       (impH (LT (var (S nv)) (var nv))
                          (orH
-                            (substF LNN
-                               (substF LNN
-                                  (substF LNN J 2 (var (S nv))) 1
+                            (substF
+                               (substF
+                                  (substF J 2 (var (S nv))) 1
                                   (var nv)) 0 Zero)
-                            (substF LNN fU v0 (var (S nv)))))) 0
+                            (substF  fU v0 (var (S nv)))))) 0
                    (natToTerm (codeFormula f))) 1 
                 (natToTerm n))))).
   apply sysExtend with NN.
@@ -852,23 +852,23 @@ Proof.
   apply
     iffTrans
     with
-    (substF LNN
-       (substF LNN
-          (substF LNN F 2
+    (substF 
+       (substF 
+          (substF F 2
              (natToTerm (codeFormula f))) 1 
           (natToTerm n)) 0 (Succ (var nv))).
   apply
     iffTrans
     with
-    (substF LNN
-       (substF LNN (substF LNN F 0 (Succ (var nv))) 2
+    (substF
+       (substF (substF F 0 (Succ (var nv))) 2
           (natToTerm (codeFormula f))) 1 
        (natToTerm n)).
   repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
   apply (subFormulaTrans LNN).
   unfold not in |- *; intros.
   assert
-    (H5 : In 0 (freeVarF LNN (substF LNN F 0 (Succ (var nv)))))
+    (H5 : In 0 (freeVarF LNN (substF  F 0 (Succ (var nv)))))
    by eapply in_remove, H4.
   induction (freeVarSubFormula3 _ _ _ _ _ H5).
   elim (in_remove_neq _ _ _ _ _ H6).
@@ -879,9 +879,9 @@ Proof.
   apply
     iffTrans
     with
-    (substF LNN
-       (substF LNN
-          (substF LNN F 2
+    (substF
+       (substF
+          (substF  F 2
              (natToTerm (codeFormula f))) 0 
           (Succ (var nv))) 1 (natToTerm n)).
   repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
@@ -910,7 +910,7 @@ Proof.
   apply
     iffTrans
     with
-    (substF LNN
+    (substF 
        (equal (var 0)
           (natToTerm
              (checkPrf L cL codeArityF codeArityR
@@ -931,7 +931,7 @@ Proof.
     impE
     with
     (notH
-       (substF LNN fU v0 (natToTerm (codeFormula x)))).
+       (substF fU v0 (natToTerm (codeFormula x)))).
   apply sysExtend with NN.
   assumption.
   apply impI.
@@ -941,7 +941,7 @@ Proof.
           In v
           (freeVarF LNN
              (notH
-                (substF LNN fU v0
+                (substF fU v0
                    (natToTerm (codeFormula x)))))).
   { unfold not in |- *; intros.
     induction (freeVarSubFormula3 _ _ _ _ _ H4).
@@ -959,7 +959,7 @@ Proof.
           In_freeVarSys LNN v
           (Ensembles.Add (fol.Formula LNN) NN
              (notH
-                (substF LNN fU v0
+                (substF fU v0
                    (natToTerm (codeFormula x)))))).
   { unfold not in |- *; intros.
   induction H7 as (x0, H7); induction H7 as (H7, H8).
@@ -989,34 +989,34 @@ Proof.
   rewrite <-
     (subFormulaId LNN
        (notH
-          (substF LNN
-             (substF LNN
+          (substF
+             (substF
                 (forallH (S nv)
                    (impH (LT (var (S nv)) (var nv))
                       (orH
-                         (substF LNN
-                            (substF LNN
-                               (substF LNN J 2 (var (S nv))) 1
+                         (substF
+                            (substF
+                               (substF J 2 (var (S nv))) 1
                                (var nv)) 0 Zero)
-                         (substF LNN fU v0 (var (S nv)))))) 0
+                         (substF fU v0 (var (S nv)))))) 0
                 (natToTerm (codeFormula f))) 1
              (natToTerm (codePrf A f p)))) nv)
   .
   apply
     impE
     with
-    (substF LNN
+    (substF
        (notH
-          (substF LNN
-             (substF LNN
+          (substF
+             (substF
                 (forallH (S nv)
                    (impH (LT (var (S nv)) (var nv))
                       (orH
-                         (substF LNN
-                            (substF LNN
-                               (substF LNN J 2 (var (S nv))) 1
+                         (substF
+                            (substF
+                               (substF J 2 (var (S nv))) 1
                                (var nv)) 0 Zero)
-                         (substF LNN fU v0 (var (S nv)))))) 0
+                         (substF fU v0 (var (S nv)))))) 0
                 (natToTerm (codeFormula f))) 1
              (natToTerm (codePrf A f p)))) nv
        (natToTerm (codeList (map (codeFormula) A)))).
@@ -1081,7 +1081,7 @@ Proof.
   apply andI.
   assert
     (H11: forall (t1 t2 s : Term) (v : nat),
-        substF LNN (t1 < t2)%nn v s = (substT LNN t1 v s < substT LNN t2 v s)%nn)
+        substF (t1 < t2)%nn v s = (substT LNN t1 v s < substT LNN t2 v s)%nn)
         by reflexivity.
   repeat rewrite H11.
   repeat rewrite (subTermVar1 LNN) || rewrite (subTermVar2 LNN);
@@ -1121,9 +1121,9 @@ Proof.
     impE
     with
     (notH
-       (substF LNN
-          (substF LNN
-             (substF LNN J 2
+       (substF
+          (substF
+             (substF J 2
                 (natToTerm (codeFormula x))) 1
              (natToTerm (codeList (map (codeFormula) A)))) 0
           Zero)).
@@ -1132,12 +1132,12 @@ Proof.
   apply
     iffTrans
     with
-    (substF LNN
-       (substF LNN
-          (substF LNN
-             (substF LNN
-                (substF LNN
-                   (substF LNN J 2 (var (S nv))) 1 
+    (substF
+       (substF 
+          (substF 
+             (substF 
+                (substF 
+                   (substF  J 2 (var (S nv))) 1 
                    (var nv)) 0 Zero) 1
              (natToTerm (codePrf A f p))) nv
           (natToTerm (codeList (map (codeFormula) A)))) 
@@ -1152,12 +1152,12 @@ Proof.
   apply
     iffTrans
     with
-    (substF LNN
-       (substF LNN
-          (substF LNN
-             (substF LNN
-                (substF LNN
-                   (substF LNN J 2 (var (S nv))) 1 
+    (substF 
+       (substF 
+          (substF 
+             (substF 
+                (substF 
+                   (substF  J 2 (var (S nv))) 1 
                    (var nv)) 1 (natToTerm (codePrf A f p))) 0
              Zero) nv
           (natToTerm (codeList (map (codeFormula) A)))) 
@@ -1170,10 +1170,10 @@ Proof.
   apply
     iffTrans
     with
-    (substF LNN
-       (substF LNN
-          (substF LNN
-             (substF LNN (substF LNN J 2 (var (S nv)))
+    (substF 
+       (substF 
+          (substF 
+             (substF  (substF  J 2 (var (S nv)))
                 1 (var nv)) 0 Zero) nv
           (natToTerm (codeList (map (codeFormula) A)))) 
        (S nv) (natToTerm (codeFormula x))).
@@ -1189,10 +1189,10 @@ Proof.
   apply
     iffTrans
     with
-    (substF LNN
-       (substF LNN
-          (substF LNN
-             (substF LNN (substF LNN J 2 (var (S nv)))
+    (substF 
+       (substF 
+          (substF 
+             (substF  (substF  J 2 (var (S nv)))
                 1 (var nv)) nv
              (natToTerm (codeList (map (codeFormula) A)))) 0
           Zero) (S nv) (natToTerm (codeFormula x))).
@@ -1204,15 +1204,15 @@ Proof.
   apply
     iffTrans
     with
-    (substF LNN
-       (substF LNN
-          (substF LNN (substF LNN J 2 (var (S nv))) 1
+    (substF 
+       (substF 
+          (substF  (substF  J 2 (var (S nv))) 1
              (natToTerm (codeList (map (codeFormula) A)))) 0
           Zero) (S nv) (natToTerm (codeFormula x))).
   repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
   apply (subFormulaTrans LNN).
   unfold not in |- *; intros.
-  assert (H14: In nv (freeVarF LNN (substF LNN J 2 (var (S nv)))))
+  assert (H14: In nv (freeVarF LNN (substF  J 2 (var (S nv)))))
     by eapply in_remove, H13.
   induction (freeVarSubFormula3 _ _ _ _ _ H14).
   apply (Compat815.le_not_lt nv 2).
@@ -1231,9 +1231,9 @@ Proof.
   apply
     iffTrans
     with
-    (substF LNN
-       (substF LNN
-          (substF LNN (substF LNN J 2 (var (S nv))) 1
+    (substF 
+       (substF 
+          (substF  (substF  J 2 (var (S nv))) 1
              (natToTerm (codeList (map (codeFormula) A))))
           (S nv) (natToTerm (codeFormula x))) 0 Zero).
   repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
@@ -1244,9 +1244,9 @@ Proof.
   apply
     iffTrans
     with
-    (substF LNN
-       (substF LNN
-          (substF LNN (substF LNN J 2 (var (S nv)))
+    (substF 
+       (substF 
+          (substF  (substF  J 2 (var (S nv)))
              (S nv) (natToTerm (codeFormula x))) 1
           (natToTerm (codeList (map (codeFormula) A)))) 0 Zero).
   repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
@@ -1273,7 +1273,7 @@ Proof.
     impE
     with
     (notH
-       (substF LNN
+       (substF 
           (equal (var 0)
              (natToTerm
                 (codeIn (codeFormula x)
@@ -1311,7 +1311,7 @@ Proof.
     impE
     with
     (notH
-       (substF LNN fU v0 (natToTerm (codeFormula x)))).
+       (substF  fU v0 (natToTerm (codeFormula x)))).
   apply sysWeaken.
   apply cp2.
   apply iffE1.
@@ -1329,9 +1329,9 @@ Proof.
   apply
     iffTrans
     with
-    (substF LNN
-       (substF LNN
-          (substF LNN (substF LNN fU v0 (var (S nv))) 1
+    (substF 
+       (substF 
+          (substF  (substF  fU v0 (var (S nv))) 1
              (natToTerm (codePrf A f p))) nv
           (natToTerm (codeList (map (codeFormula) A)))) 
        (S nv) (natToTerm (codeFormula x))).
@@ -1347,8 +1347,8 @@ Proof.
   apply
     iffTrans
     with
-    (substF LNN
-       (substF LNN (substF LNN fU v0 (var (S nv))) nv
+    (substF 
+       (substF  (substF  fU v0 (var (S nv))) nv
           (natToTerm (codeList (map (codeFormula) A)))) 
        (S nv) (natToTerm (codeFormula x))).
   repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
@@ -1363,7 +1363,7 @@ Proof.
   apply
     iffTrans
     with
-    (substF LNN (substF LNN fU v0 (var (S nv))) 
+    (substF  (substF  fU v0 (var (S nv))) 
        (S nv) (natToTerm (codeFormula x))).
   repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
   apply (subFormulaNil LNN).
@@ -1389,8 +1389,8 @@ Lemma codeSysPrfCorrect3 :
         n <> codePrf A f p) ->
     SysPrf T
       (notH
-         (substF LNN
-            (substF LNN codeSysPrf 0
+         (substF 
+            (substF  codeSysPrf 0
                (natToTerm (codeFormula f))) 1 
             (natToTerm n))).
 Proof.
@@ -1450,9 +1450,9 @@ Proof.
         impE
         with
         (notH
-           (substF LNN
-              (substF LNN
-                 (substF LNN F 2
+           (substF 
+              (substF 
+                 (substF  F 2
                     (natToTerm (codeFormula f))) 1 
                  (natToTerm n)) 0 (Succ (var nv)))).
       apply cp2.
@@ -1460,15 +1460,15 @@ Proof.
       apply
         iffTrans
         with
-        (substF LNN
-           (substF LNN (substF LNN F 0 (Succ (var nv))) 2
+        (substF 
+           (substF  (substF  F 0 (Succ (var nv))) 2
               (natToTerm (codeFormula f))) 1 
            (natToTerm n)).
       repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
       apply (subFormulaTrans LNN).
       intros H4.
       assert
-        (H5: In 0 (freeVarF LNN (substF LNN F 0 (Succ (var nv)))))
+        (H5: In 0 (freeVarF LNN (substF  F 0 (Succ (var nv)))))
         by (eapply in_remove, H4).
       induction (freeVarSubFormula3 _ _ _ _ _ H5).
       elim (in_remove_neq _ _ _ _ _ H6).
@@ -1479,9 +1479,9 @@ Proof.
       apply
         iffTrans
         with
-        (substF LNN
-           (substF LNN
-              (substF LNN F 2
+        (substF 
+           (substF 
+              (substF  F 2
                  (natToTerm (codeFormula f))) 0 
               (Succ (var nv))) 1 (natToTerm n)).
       repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
@@ -1513,7 +1513,7 @@ Proof.
         impE
         with
         (notH
-           (substF LNN
+           (substF 
               (equal (var 0)
                  (natToTerm
                     (checkPrf L cL codeArityF codeArityR
@@ -1581,7 +1581,7 @@ Proof.
         assert (In X3 (freeVarF LNN X1)); [ apply H | clear H ]
     | H:(In _ (_ ++ _)) |- _ =>
         induction (in_app_or _ _ _ H); clear H
-    | H:(In _ (freeVarF LNN (substF LNN ?X1 ?X2 ?X3))) |- _ =>
+    | H:(In _ (freeVarF LNN (substF ?X1 ?X2 ?X3))) |- _ =>
         induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
     | H:(In _ (freeVarF LNN (LT ?X1 ?X2))) |- _ =>
         rewrite freeVarLT in H
@@ -1640,7 +1640,7 @@ Lemma codeSysPfCorrect :
  forall f : fol.Formula L,
  folProof.SysPrf L U f ->
  SysPrf T
-   (substF LNN codeSysPf 0
+   (substF codeSysPf 0
       (natToTerm (codeFormula f))).
 Proof.
   intros f [x [x0 H]]; unfold codeSysPf; rewrite (subFormulaExist LNN).
@@ -1656,9 +1656,9 @@ Qed.
 
 Definition codeSysPrfNot :=
   existH 2
-    (andH (substF LNN codeSysPrf 0 (var 2))
-       (substF LNN
-          (substF LNN (primRecFormula 1 (proj1_sig codeNotIsPR)) 0
+    (andH (substF codeSysPrf 0 (var 2))
+       (substF 
+          (substF  (primRecFormula 1 (proj1_sig codeNotIsPR)) 0
              (var 2)) 1 (var 0))).
 
 Lemma freeVarCodeSysPrfN :
@@ -1677,8 +1677,8 @@ Lemma codeSysPrfNCorrect1 :
   forall (f : fol.Formula L) (A : fol.Formulas L) (p : Prf L A (notH f)),
     (forall g : fol.Formula L, In g A -> mem _ U g) ->
     SysPrf T
-      (substF LNN
-         (substF LNN codeSysPrfNot 0
+      (substF 
+         (substF  codeSysPrfNot 0
             (natToTerm (codeFormula f))) 1
          (natToTerm (codePrf A (notH f) p))).
 Proof.
@@ -1703,8 +1703,8 @@ Proof.
            apply
              impE
              with
-             (substF LNN
-                (substF LNN codeSysPrf 0
+             (substF 
+                (substF  codeSysPrf 0
                    (natToTerm (codeFormula (notH f)))) 1
                 (natToTerm (codePrf A (notH f) p))).
            apply sysExtend with NN.
@@ -1713,8 +1713,8 @@ Proof.
            apply
              iffTrans
              with
-             (substF LNN
-                (substF LNN (substF LNN codeSysPrf 0 (var 2)) 1
+             (substF 
+                (substF  (substF  codeSysPrf 0 (var 2)) 1
                    (natToTerm (codePrf A (notH f) p))) 2
                 (natToTerm (codeFormula (notH f)))).
            repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
@@ -1729,8 +1729,8 @@ Proof.
            apply
              iffTrans
              with
-             (substF LNN
-                (substF LNN (substF LNN codeSysPrf 0 (var 2)) 2
+             (substF 
+                (substF  (substF  codeSysPrf 0 (var 2)) 2
                    (natToTerm (codeFormula (notH f)))) 1
                 (natToTerm (codePrf A (notH  f) p))).
            apply (subFormulaExch LNN).
@@ -1756,23 +1756,23 @@ Proof.
            apply
              impE
              with
-             (substF LNN
-                (substF LNN B 1 (natToTerm (codeFormula f)))
+             (substF 
+                (substF  B 1 (natToTerm (codeFormula f)))
                 0 (natToTerm (codeFormula (notH f)))).
            apply iffE2.
            apply
              iffTrans
              with
-             (substF LNN
-                (substF LNN
-                   (substF LNN (substF LNN B 0 (var 2)) 1
+             (substF 
+                (substF 
+                   (substF  (substF  B 0 (var 2)) 1
                       (natToTerm (codeFormula f))) 1
                    (natToTerm (codePrf A (notH f) p))) 2
                 (natToTerm (codeFormula (notH f)))).
            repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
            apply (subFormulaTrans LNN).
            unfold not in |- *; intros.
-           assert (H1: In 0 (freeVarF LNN (substF LNN B 0 (var 2))))
+           assert (H1: In 0 (freeVarF LNN (substF  B 0 (var 2))))
              by eapply in_remove, H0.
            induction (freeVarSubFormula3 _ _ _ _ _ H1).
            elim (in_remove_neq _ _ _ _ _ H2).
@@ -1783,8 +1783,8 @@ Proof.
            apply
              iffTrans
              with
-             (substF LNN
-                (substF LNN (substF LNN B 0 (var 2)) 1
+             (substF 
+                (substF  (substF  B 0 (var 2)) 1
                    (natToTerm (codeFormula f))) 2
                 (natToTerm (codeFormula (notH f)))).
            repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
@@ -1797,9 +1797,9 @@ Proof.
            apply
              iffTrans
              with
-             (substF LNN
-                (substF LNN
-                   (substF LNN B 1
+             (substF 
+                (substF 
+                   (substF  B 1
                       (natToTerm (codeFormula f))) 0 
                    (var 2)) 2 (natToTerm (codeFormula  (notH f)))).
            repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
@@ -1815,7 +1815,7 @@ Proof.
            assert
              (H1: In 2
                     (freeVarF LNN
-                       (substF LNN B 1 (natToTerm (codeFormula f))))) 
+                       (substF  B 1 (natToTerm (codeFormula f))))) 
              by eapply in_remove, H0.
            induction (freeVarSubFormula3 _ _ _ _ _ H1).
            induction rep as (H3, H4).
@@ -1831,7 +1831,7 @@ Proof.
            apply
              impE
              with
-             (substF LNN
+             (substF 
                 (equal (var 0) (natToTerm (codeNot (codeFormula f)))) 0
                 (natToTerm (codeFormula (notH f)))).
            apply iffE2.
@@ -1851,8 +1851,8 @@ Lemma codeSysPrfNCorrect2 :
     forall p : Prf L A (notH f),
       SysPrf T
         (notH
-           (substF LNN
-              (substF LNN codeSysPrfNot 0
+           (substF 
+              (substF  codeSysPrfNot 0
                  (natToTerm (codeFormula f))) 1
               (natToTerm (codePrf A (notH f) p)))). 
 Proof.
@@ -1879,8 +1879,8 @@ Proof.
     impE
     with
     (notH
-       (substF LNN
-          (substF LNN codeSysPrf 0
+       (substF 
+          (substF  codeSysPrf 0
              (natToTerm (codeFormula (notH f)))) 1
           (natToTerm (codePrf A (notH f) p)))).
   apply sysExtend with NN.
@@ -1907,18 +1907,18 @@ Proof.
   apply
     impTrans
     with
-    (substF LNN
-       (substF LNN (primRecFormula 1 (proj1_sig codeNotIsPR)) 1
+    (substF 
+       (substF  (primRecFormula 1 (proj1_sig codeNotIsPR)) 1
           (natToTerm (codeFormula f))) 0 
        (var 2)).
   apply sysWeaken.
   apply
     impTrans
     with
-    (substF LNN
-       (substF LNN
-          (substF LNN
-             (substF LNN
+    (substF 
+       (substF 
+          (substF 
+             (substF 
                 (primRecFormula 1 (proj1_sig codeNotIsPR)) 0 
                 (var 2)) 1 (var 0)) 0
           (natToTerm (codeFormula f))) 1
@@ -1930,9 +1930,9 @@ Proof.
   apply
     iffTrans
     with
-    (substF LNN
-       (substF LNN
-          (substF LNN (primRecFormula 1 (proj1_sig codeNotIsPR)) 0
+    (substF 
+       (substF 
+          (substF  (primRecFormula 1 (proj1_sig codeNotIsPR)) 0
              (var 2)) 1 (natToTerm (codeFormula f))) 1
        (natToTerm (codePrf A (notH f) p))).
   repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
@@ -1942,8 +1942,8 @@ Proof.
   apply
     iffTrans
     with
-    (substF LNN
-       (substF LNN (primRecFormula 1 (proj1_sig codeNotIsPR)) 0
+    (substF 
+       (substF  (primRecFormula 1 (proj1_sig codeNotIsPR)) 0
           (var 2)) 1 (natToTerm (codeFormula f))).
   apply (subFormulaNil LNN).
   unfold not in |- *; intros; SimplFreeVar.
@@ -1960,7 +1960,7 @@ Proof.
   apply
     impTrans
     with
-    (substF LNN
+    (substF 
        (equal (var 0) (natToTerm (codeNot (codeFormula f)))) 0
        (var 2)).
   apply iffE1.
@@ -1975,19 +1975,19 @@ Proof.
   rewrite <-
     (subFormulaId LNN
        (notH
-          (substF LNN
-             (substF LNN (substF LNN codeSysPrf 0 (var 2))
+          (substF 
+             (substF  (substF  codeSysPrf 0 (var 2))
                 0 (natToTerm (codeFormula f))) 1
              (natToTerm (codePrf A (notH f) p)))) 2)
   .
   apply
     impE
     with
-    (substF LNN
+    (substF 
        (notH
-          (substF LNN
-             (substF LNN
-                (substF LNN codeSysPrf 0 (var 2)) 0
+          (substF 
+             (substF 
+                (substF  codeSysPrf 0 (var 2)) 0
                 (natToTerm (codeFormula f))) 1
              (natToTerm (codePrf A (notH f) p)))) 2
        (natToTerm (codeFormula (notH f)))).
@@ -2000,8 +2000,8 @@ Proof.
     impE
     with
     (notH 
-       (substF LNN
-          (substF LNN codeSysPrf 0
+       (substF 
+          (substF  codeSysPrf 0
              (natToTerm (codeFormula (notH f)))) 1
           (natToTerm (codePrf A (notH f) p)))).
   apply cp2.
@@ -2010,8 +2010,8 @@ Proof.
   apply
     iffTrans
     with
-    (substF LNN
-       (substF LNN (substF LNN codeSysPrf 0 (var 2)) 1
+    (substF 
+       (substF  (substF  codeSysPrf 0 (var 2)) 1
           (natToTerm (codePrf A (notH f) p))) 2
        (natToTerm (codeFormula  (notH f)))).
   repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
@@ -2021,8 +2021,8 @@ Proof.
   apply
     iffTrans
     with
-    (substF LNN
-       (substF LNN (substF LNN codeSysPrf 0 (var 2)) 2
+    (substF 
+       (substF  (substF  codeSysPrf 0 (var 2)) 2
           (natToTerm (codeFormula (notH f)))) 1
        (natToTerm (codePrf A (notH f) p))).
   apply (subFormulaExch LNN).
@@ -2047,8 +2047,8 @@ Lemma codeSysPrfNCorrect3 :
   n <> codePrf A (notH f) p) ->
  SysPrf T
    (notH
-      (substF LNN
-         (substF LNN codeSysPrfNot 0
+      (substF 
+         (substF  codeSysPrfNot 0
             (natToTerm (codeFormula f))) 1 
          (natToTerm n))).
 Proof.
@@ -2071,8 +2071,8 @@ Proof.
              impE
              with
              (notH
-                (substF LNN
-                   (substF LNN codeSysPrf 0
+                (substF 
+                   (substF  codeSysPrf 0
                       (natToTerm (codeFormula (notH f)))) 1
                    (natToTerm n))).
            apply sysExtend with NN.
@@ -2097,18 +2097,18 @@ Proof.
            apply
              impTrans
              with
-             (substF LNN
-                (substF LNN (primRecFormula 1 (proj1_sig codeNotIsPR)) 1
+             (substF 
+                (substF  (primRecFormula 1 (proj1_sig codeNotIsPR)) 1
                    (natToTerm (codeFormula f))) 0 
                 (var 2)).
            apply sysWeaken.
            apply
              impTrans
              with
-             (substF LNN
-                (substF LNN
-                   (substF LNN
-                      (substF LNN
+             (substF 
+                (substF 
+                   (substF 
+                      (substF 
                          (primRecFormula 1 (proj1_sig codeNotIsPR)) 0 
                          (var 2)) 1 (var 0)) 0
                    (natToTerm (codeFormula f))) 1 
@@ -2120,9 +2120,9 @@ Proof.
            apply
              iffTrans
              with
-             (substF LNN
-                (substF LNN
-                   (substF LNN (primRecFormula 1 (proj1_sig codeNotIsPR)) 0
+             (substF 
+                (substF 
+                   (substF  (primRecFormula 1 (proj1_sig codeNotIsPR)) 0
                       (var 2)) 1 (natToTerm (codeFormula f))) 1
                 (natToTerm n)).
            repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
@@ -2132,8 +2132,8 @@ Proof.
            apply
              iffTrans
              with
-             (substF LNN
-                (substF LNN (primRecFormula 1 (proj1_sig codeNotIsPR)) 0
+             (substF 
+                (substF  (primRecFormula 1 (proj1_sig codeNotIsPR)) 0
                    (var 2)) 1 (natToTerm (codeFormula f))).
            apply (subFormulaNil LNN).
            unfold not in |- *; intros; SimplFreeVar.
@@ -2150,7 +2150,7 @@ Proof.
            apply
              impTrans
              with
-             (substF LNN
+             (substF 
                 (equal (var 0) (natToTerm (codeNot (codeFormula f)))) 0
                 (var 2)).
            apply iffE1.
@@ -2165,18 +2165,18 @@ Proof.
            rewrite <-
              (subFormulaId LNN
                 (notH
-                   (substF LNN
-                      (substF LNN (substF LNN codeSysPrf 0 (var 2))
+                   (substF 
+                      (substF  (substF  codeSysPrf 0 (var 2))
                          0 (natToTerm (codeFormula f))) 1 
                       (natToTerm n))) 2).
            apply
              impE
              with
-             (substF LNN
+             (substF 
                 (notH
-                   (substF LNN
-                      (substF LNN
-                         (substF LNN codeSysPrf 0 (var 2)) 0
+                   (substF 
+                      (substF 
+                         (substF  codeSysPrf 0 (var 2)) 0
                          (natToTerm (codeFormula f))) 1 
                       (natToTerm n))) 2
                 (natToTerm (codeFormula (notH f)))).
@@ -2189,8 +2189,8 @@ Proof.
              impE
              with
              (notH 
-                (substF LNN
-                   (substF LNN codeSysPrf 0
+                (substF 
+                   (substF  codeSysPrf 0
                       (natToTerm (codeFormula (notH f)))) 1
                    (natToTerm n))).
            apply cp2.
@@ -2199,8 +2199,8 @@ Proof.
            apply
              iffTrans
              with
-             (substF LNN
-                (substF LNN (substF LNN codeSysPrf 0 (var 2)) 1
+             (substF 
+                (substF  (substF  codeSysPrf 0 (var 2)) 1
                    (natToTerm n)) 2
                 (natToTerm (codeFormula (notH f)))).
            repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
@@ -2210,8 +2210,8 @@ Proof.
            apply
              iffTrans
              with
-             (substF LNN
-                (substF LNN (substF LNN codeSysPrf 0 (var 2)) 2
+             (substF 
+                (substF  (substF  codeSysPrf 0 (var 2)) 2
                    (natToTerm (codeFormula (notH f)))) 1
                 (natToTerm n)).
            apply (subFormulaExch LNN).

@@ -32,7 +32,7 @@ Fixpoint RepresentableHalf1 (n : nat) :
       fun (f : naryFunc (S m)) (A : Formula) =>
       forall a : nat,
       RepresentableHalf1 m (f a)
-        (substF LNN A (S m) (natToTerm a))
+        (substF A (S m) (natToTerm a))
   end.
 
 Fixpoint RepresentableHalf2 (n : nat) : naryFunc n -> Formula -> Prop :=
@@ -44,7 +44,7 @@ Fixpoint RepresentableHalf2 (n : nat) : naryFunc n -> Formula -> Prop :=
       fun (f : naryFunc (S m)) (A : Formula) =>
       forall a : nat,
       RepresentableHalf2 m (f a)
-        (substF LNN A (S m) (natToTerm a))
+        (substF A (S m) (natToTerm a))
   end.
 
 Lemma RepresentableHalf1Alternate :
@@ -57,7 +57,7 @@ Proof.
      now apply impTrans with B.
   - simpl in H0 |- *.
     intros a; 
-      apply Hrecn with (substF LNN B (S n) (natToTerm a)).
+      apply Hrecn with (substF B (S n) (natToTerm a)).
     + rewrite <- (subFormulaImp LNN).
       apply forallE, forallI. 
       * apply closedT.
@@ -74,7 +74,7 @@ Proof.
   - simpl in H0 |- *.
     apply impTrans with A; [assumption| apply H].
    - simpl in H0 |- *; intro a. 
-     apply Hrecn with (substF LNN A (S n) (natToTerm a)).
+     apply Hrecn with (substF A (S n) (natToTerm a)).
      + rewrite <- (subFormulaImp LNN); apply forallE.
        apply forallI.  
        * apply closedT.
@@ -91,7 +91,7 @@ Fixpoint RepresentableHelp (n : nat) : naryFunc n -> Formula -> Prop :=
       fun (f : naryFunc (S m)) (A : Formula) =>
       forall a : nat,
       RepresentableHelp m (f a) 
-        (substF LNN A (S m) (natToTerm a))
+        (substF A (S m) (natToTerm a))
   end.
 
 Lemma RepresentableHalfHelp :
@@ -119,7 +119,7 @@ Proof.
     +  now apply iffSym.
     + auto.
   - simpl in H0 |- *; intro a.
-    apply Hrecn with (substF LNN A (S n) (natToTerm a)).
+    apply Hrecn with (substF A (S n) (natToTerm a)).
     + rewrite <- (subFormulaIff LNN).
       apply forallE, forallI. 
       * apply closedT.
@@ -152,7 +152,7 @@ Fixpoint ExpressibleHelp (n : nat) : naryRel n -> Formula -> Prop :=
       fun (R : naryRel (S m)) (A : Formula) =>
       forall a : nat,
       ExpressibleHelp m (R a)
-        (substF LNN A (S m) (natToTerm a))
+        (substF A (S m) (natToTerm a))
   end.
 
 Definition Expressible (n : nat) (R : naryRel n) (A : Formula) : Prop :=
@@ -179,7 +179,7 @@ Proof.
   - simpl in H0 |- *. 
   intros a;
     apply (Hrecn (R a)) with 
-    (substF LNN A (S n) (natToTerm a)).
+    (substF A (S n) (natToTerm a)).
   + rewrite <- (subFormulaIff LNN).
     apply forallE.
     apply forallI.
@@ -193,7 +193,7 @@ Hypothesis nn1: SysPrf T (natToTerm 1 <> natToTerm 0)%nn.
 Lemma Representable2Expressible :
  forall (n : nat) (R : naryRel n) (A : Formula),
  Representable n (charFunction n R) A ->
- Expressible n R (substF LNN A 0 (natToTerm 1)).
+ Expressible n R (substF A 0 (natToTerm 1)).
 Proof.
   intros n R A [H H0]; split.
   - intros v H1; induction (freeVarSubFormula3 _ _ _ _ _ H1).
@@ -212,7 +212,7 @@ Proof.
         induction R.
         * simpl in H.
           apply impE with
-            (substF LNN (v#0 = Succ Zero)%nn  0 (Succ Zero)).
+            (substF (v#0 = Succ Zero)%nn  0 (Succ Zero)).
           -- apply iffE2.
             rewrite <- (subFormulaIff LNN).
             apply forallE.
@@ -224,7 +224,7 @@ Proof.
              apply eqRefl.
         * simpl in H.
           apply  impE with
-            (~ (substF LNN (v#0 = Zero) 0 (Succ Zero)))%nn.
+            (~ (substF (v#0 = Zero) 0 (Succ Zero)))%nn.
           -- apply cp2.
              apply iffE1.
              rewrite <- (subFormulaIff LNN).
@@ -240,8 +240,8 @@ Proof.
       + simpl in H |- *.
         intros a; 
           apply expressibleAlternate with
-          (substF LNN 
-             (substF LNN A (S n) (natToTerm a)) 0
+          (substF  
+             (substF A (S n) (natToTerm a)) 0
              (Succ Zero)).
         * apply (subFormulaExch LNN).
           -- discriminate.

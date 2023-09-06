@@ -3031,7 +3031,7 @@ Proof.
                            codeArityFIsCorrect2 _ H4).
                       rewrite <- H8 in H5.
                       rewrite codeSubFormulaCorrect in H5.
-                      replace f2 with (substF L f1 n1 x).
+                      replace f2 with (substF f1 n1 x).
                       exists (FA1 L f1 n1 x).
                       simpl in |- *.
                       rewrite <- H7.
