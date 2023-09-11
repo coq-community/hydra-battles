@@ -14,7 +14,7 @@ From Equations Require Import Equations.
 Import RelationClasses Relations.
 
 #[global] Instance Olt : WellFounded E0lt := E0lt_wf.
-#[global] Hint Resolve Olt : E0.
+#[export] Hint Resolve Olt : E0.
 
 (** Using Coq-Equations for building a function which satisfies 
     [Large_sets.L_spec] *)
@@ -68,7 +68,7 @@ Proof.
 Qed.
 
 
-Hint Rewrite L_zero_eqn L_succ_eqn : L_rw.
+#[export] Hint Rewrite L_zero_eqn L_succ_eqn : L_rw.
 
 (* begin snippet Paraphrasesc:: no-out *)
 Lemma L_lim_eqn alpha i :
