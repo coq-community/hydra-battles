@@ -94,7 +94,7 @@ Proof.
   - apply Succ_Succb.
 Qed.
 
-Hint Rewrite H'_eq1  H'_eq2 : H'_rw.
+#[export] Hint Rewrite H'_eq1  H'_eq2 : H'_rw.
 
 Ltac lim_rw alpha := (assert (E0limit  alpha) by auto with E0);
                      rewrite (H'_eq3 alpha); auto with E0.

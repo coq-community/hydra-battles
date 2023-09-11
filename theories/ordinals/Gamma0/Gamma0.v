@@ -1096,7 +1096,7 @@ Module  Gamma0_prec <: Precedence.
     intros s; destruct s; simpl; trivial.
   Qed.
 
-  Lemma prec_transitive : transitive A prec.
+  Lemma prec_transitive : transitive prec.
   Proof.
     intros s1 s2 s3; destruct s1; destruct s2; destruct s3;
       simpl; intros; trivial; contradiction.

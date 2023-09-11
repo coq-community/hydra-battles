@@ -1,9 +1,10 @@
 
 From Coq Require Import Arith  Logic.Epsilon  Ensembles.
+From ZornsLemma Require Import CountableTypes.
 From hydras Require Export Schutte_basics  Ordering_Functions
      PartialFun  Countable  MoreEpsilonIota.
 Set Implicit Arguments.
-Require Export STDPP_compat. 
+Require Export STDPP_compat.
 
 (** * Definitions *)
 
@@ -19,7 +20,7 @@ Infix "+"  := plus : schutte_scope.
 
 (** returns [alpha * (S n)]
 *)
-                       
+
 (* begin snippet multFin *)
 
 Fixpoint mult_Sn (alpha:Ord)(n:nat){struct n} :Ord :=
@@ -38,7 +39,7 @@ Infix "*" := mult_fin_r : schutte_scope.
 
 (* end snippet multFin *)
 
-(** * Proofs, proofs, proofs 
+(** * Proofs, proofs, proofs
 *)
 
 
@@ -60,17 +61,17 @@ Proof.
   intros;apply segment_unbounded.
   - pattern  (the_ordering_segment (ge alpha)); apply iota_ind.
     +  generalize  (ordering_segment_ex_unique (ge alpha));
-         intros. destruct  H. 
+         intros. destruct  H.
        destruct H.
        exists x; split;auto.
     +  destruct 1;eapply ordering_function_seg;eauto.
-  -     generalize 
-          (ordering_unbounded_unbounded 
-             (A:=the_ordering_segment (ge alpha)) 
-             (B:=ge alpha) 
+  -     generalize
+          (ordering_unbounded_unbounded
+             (A:=the_ordering_segment (ge alpha))
+             (B:=ge alpha)
              (f:=plus alpha));  intros H.
         apply H.
-        unfold plus; intros;  apply ord_ok. 
+        unfold plus; intros;  apply ord_ok.
         apply Unbounded_ge;auto.
 Qed.
 
@@ -86,7 +87,7 @@ Qed.
 (* begin snippet plusElim:: no-out  *)
 Lemma plus_elim (alpha : Ord) :
   forall P : (Ord->Ord)->Prop,
-    (forall f: Ord->Ord, 
+    (forall f: Ord->Ord,
         ordering_function f ordinal (ge alpha)-> P f) ->
     P (plus alpha).
 Proof.
@@ -94,11 +95,11 @@ Proof.
 Qed.
 (* end snippet plusElim *)
 
-Lemma normal_plus_alpha (alpha : Ord) : 
+Lemma normal_plus_alpha (alpha : Ord) :
   normal (plus alpha) (ge alpha).
 Proof.
  unfold plus;pattern (ord (ge alpha)).
- unfold ord, some;apply epsilon_ind. 
+ unfold ord, some;apply epsilon_ind.
  -  rewrite ge_o_segment; trivial.
    +  exists (plus alpha);apply (plus_ordering alpha); auto.
 -  intros a H0; rewrite ge_o_segment in H0; trivial.
@@ -106,10 +107,10 @@ Proof.
    apply Th_13_5_2; trivial.
 +   intros M H1 H2 H3;  destruct H2; apply le_trans with x;auto.
        *  specialize (H1 _ H);  apply H1.
-       *  apply sup_upper_bound;auto. 
+       *  apply sup_upper_bound;auto.
 Qed.
 
-(** ** Basic properties of addition 
+(** ** Basic properties of addition
  *)
 
 (* begin snippet alphaPlusZero *)
@@ -133,7 +134,7 @@ Remark ge_zero : (ge zero : Ensemble Ord) = ordinal.
 Proof with eauto with schutte.
   apply Extensionality_Ensembles.
   split.
-   +  red; split.  
+   +  red; split.
    + unfold ge ...
 Qed.
 
@@ -151,7 +152,7 @@ Proof with auto with schutte.
  }
  rewrite ge_zero in H0.
  generalize (ordering_function_unicity H0 H1); destruct 1.
- apply H2; split. 
+ apply H2; split.
 Qed.
 (*||*)
 
@@ -174,7 +175,7 @@ Proof.
 Qed.
 (*||*)
 
-Lemma plus_mono_r (alpha beta gamma : Ord) : 
+Lemma plus_mono_r (alpha beta gamma : Ord) :
   beta < gamma -> alpha + beta < alpha + gamma. (* .no-out *)
 (*||*) (*| .. coq:: none |*)
 Proof.
@@ -191,35 +192,35 @@ Proof with trivial.
  intros plus_alpha Hp;
    assert (H1 :plus_alpha beta < plus_alpha (succ beta)).
  {  eapply ordering_function_mono.
-    apply Hp. 
+    apply Hp.
     split.
     split.
     apply lt_succ; auto.
  }
  generalize (@lt_succ_le (plus_alpha  beta) (plus_alpha  (succ beta))).
  intros H2.
- generalize (H2 H1);  intro H5; case (le_disj H5) ; auto. 
+ generalize (H2 H1);  intro H5; case (le_disj H5) ; auto.
  intro H6;case Hp;intros H H3 H4 H7.
  case (H4 (succ (plus_alpha beta))).
  -  red; apply le_trans with (plus_alpha  beta).
    +  generalize (H beta );  unfold In,  ge.
       intro H9; apply H3. split.
-   +  right; apply lt_succ. 
+   +  right; apply lt_succ.
  -  intros x [Hx Ex].  absurd ( beta < x /\ x < succ beta).
     + intro H8; decompose [and] H8;clear H8.
       assert (H8: succ beta <= x) by (apply lt_succ_le; eauto with schutte).
       case (@lt_irrefl (succ beta)).
       eapply le_lt_trans. apply H8. assumption.
     +  split.
-   *  eapply ordering_function_monoR. apply Hp. 
+   *  eapply ordering_function_monoR. apply Hp.
       split.
-      assumption. 
+      assumption.
       rewrite Ex.  auto with schutte.
    *  rewrite <- Ex in H6; eapply ordering_function_monoR.
-      apply Hp. 
+      apply Hp.
       assumption.
       split.
-      assumption. 
+      assumption.
 Qed.
 (*||*)
 
@@ -229,7 +230,7 @@ Lemma plus_mono_r_weak (alpha beta gamma : Ord) :
   beta <= gamma -> alpha + beta <= alpha + gamma.
 Proof.
   intros  H;  case (le_disj H).
- - intros; subst gamma; auto with schutte.    
+ - intros; subst gamma; auto with schutte.
  - right;  apply plus_mono_r;auto.
 Qed.
 
@@ -247,15 +248,15 @@ Qed.
 
 
 Lemma succ_is_plus_1 alpha :  succ alpha = alpha + 1.
-Proof. 
+Proof.
    rewrite  <- alpha_plus_zero  at 1; change (F 1) with (succ zero).
    rewrite   plus_of_succ;   now repeat rewrite alpha_plus_zero.
-Qed. 
+Qed.
 
 
 Lemma alpha_plus_sup (alpha : Ord) (A : Ensemble Ord) :
-    Inhabited _ A ->
-    countable A ->
+    Inhabited A ->
+    Countable A ->
     alpha + |_| A = |_| (image A (plus alpha)).
 Proof.
  intros  H0 H1 ;  generalize (@normal_plus_alpha alpha ).
@@ -270,7 +271,7 @@ Lemma plus_limit (alpha beta : Ord)
 Proof.
  intros H ; generalize (is_limit_sup_members H);intro e.
  generalize (@normal_plus_alpha alpha ); intro H2.
- pattern beta at 1;rewrite e; destruct H2 as [H0 [H1 [H2 H3]]].  
+ pattern beta at 1;rewrite e; destruct H2 as [H0 [H1 [H2 H3]]].
  rewrite <- H3;auto.
  -  red;split.
  - case H. exists zero.
@@ -284,7 +285,7 @@ Qed.
 
 
 Lemma plus_FF : forall i j, F (i + j) = F i + F j.
-Proof. 
+Proof.
  induction i.
  -  simpl.
      intros;rewrite zero_plus_alpha;auto with schutte.
@@ -306,23 +307,23 @@ Proof.
  -  apply le_antisym; auto with schutte.
   +    unfold omega_limit;  apply sup_mono;auto with schutte.
    *   apply Ordering_Functions.R1 with ordinal (ge (F 1)).
-       apply plus_ordering.  
+       apply plus_ordering.
        apply    countable_members;auto with schutte.
-       red; split. 
-   *      intros x [a [H1 H2]]. 
+       red; split.
+   *      intros x [a [H1 H2]].
           red in H1; case (@lt_omega_finite _  H1).
           intros n e; exists (F (S n)).
           subst x; split;auto with schutte.
           exists (S n); trivial.
           subst a. split;auto.
-        subst a. left;  now rewrite <- plus_FF . 
+        subst a. left;  now rewrite <- plus_FF .
   + unfold omega_limit; apply sup_mono.
   *    apply seq_range_countable; auto with schutte.
   *  simpl; auto with schutte.
      apply Ordering_Functions.R1 with ordinal (ge (succ zero)).
      apply plus_ordering; auto with schutte.
      apply countable_members; auto with schutte.
-     red; split. 
+     red; split.
   *  intros x [x0 [_ Hx]]; subst x.
      exists (F (S x0));split;auto with schutte.
      exists (F x0);split;auto with schutte.
@@ -345,7 +346,7 @@ Qed.
 
 Section proof_of_associativity.
   Variables alpha beta : Ord.
-  
+
   Lemma plus_assoc1 (gamma : Ord) :
     alpha + beta <= alpha + (beta + gamma) .
   Proof.
@@ -404,7 +405,7 @@ Section proof_of_associativity.
   Lemma plus_assoc3 (gamma : Ord) :
     f_alpha_beta  gamma =  g_alpha_beta gamma.
   Proof.
-    case of_u; intros H0 H1; apply H1. 
+    case of_u; intros H0 H1; apply H1.
     split.
   Qed.
 
@@ -425,7 +426,7 @@ Proof.
 Qed.
 
 Lemma one_plus_infinite (alpha : Ord) :
-  omega <= alpha ->  1 + alpha = alpha. 
+  omega <= alpha ->  1 + alpha = alpha.
 Proof.
  intros  H.
  generalize (minus_exists H); intros [gamma e];  subst alpha .
@@ -442,8 +443,8 @@ Proof.
  - simpl; intros;rewrite zero_plus_alpha;trivial.
  -  intros; simpl; replace (succ (F n)) with (F 1 + F n).
     + rewrite <- plus_assoc.
-      rewrite IHn. 
-      * apply one_plus_infinite; assumption. 
+      rewrite IHn.
+      * apply one_plus_infinite; assumption.
       * assumption.
   + now   rewrite <- plus_FF.
 Qed.
@@ -468,14 +469,14 @@ Proof.
  apply le_plus_r.
 Qed.
 
-Lemma plus_mono_bi : forall alpha beta gamma delta, 
+Lemma plus_mono_bi : forall alpha beta gamma delta,
                         alpha <= gamma ->
-                        beta < delta -> 
+                        beta < delta ->
                         alpha + beta < gamma + delta.
 Proof.
  intros alpha beta gamma delta H H0; apply le_lt_trans with (gamma+beta).
  now apply plus_mono_weak_l.
- now apply plus_mono_r. 
+ now apply plus_mono_r.
 Qed.
 
 Lemma mult_fin_r_one : forall n, (F 1) * S n = F (S n).
@@ -486,16 +487,16 @@ Lemma mult_fin_r_one : forall n, (F 1) * S n = F (S n).
       rewrite alpha_plus_zero;auto with schutte.
  Qed.
 
- 
-Lemma mult_fin_r_mono : forall alpha beta , alpha < beta -> 
+
+Lemma mult_fin_r_mono : forall alpha beta , alpha < beta ->
    forall n,  alpha * S n <  beta * S n.
 Proof.
- induction n; simpl; [assumption|].  
+ induction n; simpl; [assumption|].
  apply plus_mono_bi; [ right; assumption | assumption].
 Qed.
- 
-Lemma le_a_mult_Sn_a : forall alpha n, ordinal alpha -> 
-                                       alpha <= alpha * S n.                           
+
+Lemma le_a_mult_Sn_a : forall alpha n, ordinal alpha ->
+                                       alpha <= alpha * S n.
 Proof.
  intros alpha n H;  case n.
  -  simpl;auto with schutte.
@@ -515,7 +516,7 @@ Proof with auto with schutte.
 Qed.
 
 Lemma mult_Sn_mono3 : forall alpha, zero < alpha ->
-                         forall n p, (n < p)%nat -> alpha * S n + alpha 
+                         forall n p, (n < p)%nat -> alpha * S n + alpha
                                                     <=  alpha * S p.
 Proof with auto with schutte.
  intros a Ha; induction 1 .
@@ -523,10 +524,3 @@ Proof with auto with schutte.
  - simpl; apply plus_mono_weak_l.
    apply lt_le; apply  mult_Sn_mono2 ...
 Qed.
-
-
-
-
-  
- 
-  
