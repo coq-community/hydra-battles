@@ -1,5 +1,5 @@
 { lib, mkCoqDerivation, coq, version ? null
-, coqprime, equations, gaia, LibHyps, mathcomp-ssreflect, mathcomp-algebra, mathcomp-zify, paramcoq
+, coqprime, equations, gaia, LibHyps, mathcomp-ssreflect, mathcomp-algebra, mathcomp-zify, paramcoq, zorns-lemma
 , python3Packages, serapi, texlive, withMovies ? true, withTex ? true }:
 
 with lib; mkCoqDerivation rec {
@@ -51,6 +51,7 @@ with lib; mkCoqDerivation rec {
     mathcomp-algebra
     mathcomp-zify
     paramcoq
+    zorns-lemma
   ];
 
   meta = {
