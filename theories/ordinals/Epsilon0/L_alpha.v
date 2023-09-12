@@ -68,7 +68,7 @@ Proof.
 Qed.
 
 
-Hint Rewrite L_zero_eqn L_succ_eqn : L_rw.
+#[export] Hint Rewrite L_zero_eqn L_succ_eqn : L_rw.
 
 (* begin snippet Paraphrasesc:: no-out *)
 Lemma L_lim_eqn alpha i :

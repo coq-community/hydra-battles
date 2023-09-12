@@ -1039,7 +1039,7 @@ Proof.
   destruct k; apply E0_eq_intro; reflexivity. 
 Qed.
 
-Hint Rewrite Canon_Omega : E0_rw.
+#[global] Hint Rewrite Canon_Omega : E0_rw.
 
 Lemma CanonSSn (i:nat) :
   forall alpha n  , alpha <> E0zero ->
