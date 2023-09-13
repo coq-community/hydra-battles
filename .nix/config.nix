@@ -45,6 +45,10 @@
     coqPackages.gaia-hydras.override.version = ../.;
     coqPackages.goedel.override.version = ../.;
     coqPackages.coqprime.override.version = "master";
+    coqPackages.zorns-lemma.override.version = builtins.fetchurl {
+      url = "https://github.com/coq-community/topology/archive/v10.2.0.tar.gz";
+      sha256 = "1h8fyaafkc0k7i4y9j1zn5rx55pk7n2n105clfzrwl66ws19j7aj";
+    };
 
     ## In some cases, light overrides are not available/enough
     ## in which case you can use either

@@ -1,18 +1,19 @@
 (* Pierre Casteran, LaBRI,  University of  Bordeaux *)
 
-(** 
+(**
 
  We  adapt Schutte's definition of critical ordinals :
-   
+
    - Cr(zero) = AP   (the set of additive principal ordinals )
-  
+
    - if zero < alpha, then
-       Cr(alpha) is the   intersection of all the sets of fixpoints 
+       Cr(alpha) is the   intersection of all the sets of fixpoints
        of the ordering functions of Cr(beta) for beta < alpha.
-*) 
+*)
 
 
 From Coq Require Import Arith Logic.Epsilon  Ensembles Classical.
+From ZornsLemma Require Import CountableTypes.
 From hydras Require Export Schutte_basics  Ordering_Functions
      Countable  Schutte.Addition AP CNF Well_Orders MoreEpsilonIota.
 
@@ -25,19 +26,19 @@ Set Implicit Arguments.
 
 Definition Cr_fun : forall alpha : Ord,
     (forall beta : Ord, beta < alpha -> Ensemble Ord) ->
-    Ensemble Ord 
-  := 
+    Ensemble Ord
+  :=
     fun (alpha :Ord)
-        (Cr : forall beta, 
-            beta < alpha -> Ensemble Ord) 
+        (Cr : forall beta,
+            beta < alpha -> Ensemble Ord)
         (x : Ord) => (
         (alpha = zero /\ AP x) \/
         (zero < alpha /\
-         forall beta (H:beta < alpha), 
+         forall beta (H:beta < alpha),
            In (the_ordering_segment (Cr beta H)) x /\
            ord (Cr beta H) x = x)).
 
-Definition Cr (alpha : Ord) : Ensemble Ord := 
+Definition Cr (alpha : Ord) : Ensemble Ord :=
   (Fix  all_ord_acc
         (fun (_:Ord) => Ensemble Ord) Cr_fun) alpha.
 
@@ -60,7 +61,7 @@ Definition Gamma0 := the_least strongly_critical.
 
 (* begin snippet phiDef *)
 
-Definition phi (alpha : Ord) : Ord -> Ord 
+Definition phi (alpha : Ord) : Ord -> Ord
     :=  ord (Cr alpha).
 
 Definition A_ (alpha : Ord) : Ensemble Ord :=
@@ -70,7 +71,7 @@ Definition A_ (alpha : Ord) : Ensemble Ord :=
 
 
 Lemma Cr_extensional :
-  forall (x:Ord) 
+  forall (x:Ord)
          (f g : forall y : Ord, y < x -> (fun _ : Ord => Ensemble Ord) y),
     (forall (y : Ord) (p : y < x), f y p = g y p) ->
     ((Cr_fun  f  :Ensemble Ord) =  (Cr_fun  g :Ensemble Ord)).
@@ -93,7 +94,7 @@ Qed.
 
 Lemma Cr_equation (alpha : Ord) :
   Cr  alpha =
-  Cr_fun 
+  Cr_fun
     (fun (y : Ord) (h : y < alpha) =>  Cr y).
 
 Proof.
@@ -103,8 +104,8 @@ Proof.
 Qed.
 
 
-Lemma Cr_inv (alpha x : Ord): 
-  Cr alpha x -> 
+Lemma Cr_inv (alpha x : Ord):
+  Cr alpha x ->
   ((alpha = zero /\ (Cr  alpha x <-> AP x)) \/
    (zero < alpha /\
     (forall beta (H:beta < alpha),
@@ -129,7 +130,7 @@ Qed.
 
 Lemma Cr_pos : forall alpha,
     zero < alpha ->
-    forall x : Ord , 
+    forall x : Ord ,
       (forall beta (H:beta < alpha),
           A_  beta  x /\   ord (Cr  beta) x = x) ->
       Cr alpha x.
@@ -160,24 +161,24 @@ Qed.
 
 Lemma Cr_pos_inv (alpha : Ord) :
   zero < alpha ->
-  forall x, 
+  forall x,
     Cr alpha x ->
     (forall beta (H:beta < alpha), In (A_ beta) x /\ phi beta x = x).
 Proof.
   intros H x H0 beta H1; case (Cr_inv alpha x H0).
-  - destruct 1; subst alpha; case (@not_lt_zero beta);  auto. 
-  - destruct 1;  eauto. 
+  - destruct 1; subst alpha; case (@not_lt_zero beta);  auto.
+  - destruct 1;  eauto.
 Qed.
 
 Lemma Cr_pos_iff (alpha : Ord) :
   zero < alpha ->
-  forall x, 
+  forall x,
     (Cr alpha x <->
      (forall beta (H:beta < alpha), In (A_ beta) x /\ phi beta x = x)).
 Proof.
   split.
   - intros; apply Cr_pos_inv with alpha; auto.
-  - intros; apply Cr_pos; auto. 
+  - intros; apply Cr_pos; auto.
 Qed.
 
 Lemma A_Cr (alpha beta:Ord) : In (A_ alpha) beta ->  phi alpha beta = beta ->
@@ -202,7 +203,7 @@ Lemma Cr_incl (alpha beta : Ord) (H :beta <= alpha) :
 Proof.
   case (le_disj H).
   -  intro;subst beta; auto with schutte.
-  -  red; intros; apply Cr_lt with alpha; auto. 
+  -  red; intros; apply Cr_lt with alpha; auto.
 Qed.
 
 
@@ -314,13 +315,13 @@ Section Proof_of_Lemma5.
         intros xi Hxi.
         assert (forall n,  phi xi (gamma_ n) <= gamma).
         {
-          intro n; apply le_trans with (gamma_ (S n)).        
+          intro n; apply le_trans with (gamma_ (S n)).
           cbn; apply sup_upper_bound.
           generalize (@countable_image _ _
                                        (members alpha)
                                        (fun x =>  phi x (gamma_ n))).
           intros H;
-            apply countable_inclusion with
+            apply countable_downward_closed with
                 (image (members alpha)
                        (fun x =>  phi x  (gamma_ n))).
           apply H.
@@ -348,8 +349,8 @@ Section Proof_of_Lemma5.
         assert (phi xi gamma <= gamma).
         { unfold gamma at 1; unfold omega_limit.
           assert (continuous (phi xi) ordinal (Cr xi)).
-          { apply Th_13_5_2.  
-            
+          { apply Th_13_5_2.
+
             replace ordinal with (the_ordering_segment (Cr xi)).
             apply ord_ok.
             apply segment_unbounded.
@@ -361,7 +362,7 @@ Section Proof_of_Lemma5.
               (@ ordering_unbounded_unbounded (A_ xi) (Cr xi) (phi xi)) in H1.
             auto.
             apply ord_ok.
-            destruct (IHalpha Hxi); auto. 
+            destruct (IHalpha Hxi); auto.
           }
           destruct H1.
           destruct H2.
@@ -372,11 +373,11 @@ Section Proof_of_Lemma5.
              intros y [x [H4 H5]].
              destruct H4 as [z [_ H6]].  subst x y; apply H.
           -  split.
-          -  exists (gamma_ 0), 0;auto. 
+          -  exists (gamma_ 0), 0;auto.
           -  apply seq_range_countable.
         }
         assert (gamma <= phi xi gamma).
-        {  
+        {
           eapply ordering_le.
          -  apply ord_ok.
          -  assert (Unbounded (Cr xi)) by ( now destruct (IHalpha  Hxi)).
@@ -410,12 +411,12 @@ Section Proof_of_Lemma5.
       Qed.
 
       Remark A_full : forall xi, xi < alpha -> A_ xi = ordinal.
-        unfold A_; intros.      
+        unfold A_; intros.
         replace (the_ordering_segment (Cr xi)) with ordinal .
         split.
         symmetry; apply segment_unbounded.
         eapply ordering_function_seg with (Cr xi).
-        unfold the_ordering_segment, the. 
+        unfold the_ordering_segment, the.
         apply iota_ind.
         apply ordering_segment_ex_unique.
         destruct 1; auto.
@@ -441,13 +442,13 @@ Section Proof_of_Lemma5.
 
     Section closedness.
       Variable M : Ensemble Ord.
-      Hypothesis HM : Inhabited _ M.
-      Hypothesis CM : countable M.
+      Hypothesis HM : Inhabited M.
+      Hypothesis CM : Countable M.
       Hypothesis IM : Included  M (Cr alpha).
 
-      
 
-      
+
+
       Lemma Lemma5_2 : forall xi eta,  xi < alpha ->
                                         In M eta  ->
                                         phi xi eta = eta.
@@ -460,7 +461,7 @@ Section Proof_of_Lemma5.
         now destruct (H1 _ H).
       Qed.
 
-      
+
 
       Lemma Lemma5_7 : In (Cr alpha) (sup M).
       Proof.
@@ -468,26 +469,26 @@ Section Proof_of_Lemma5.
         intros xi H; split.
         rewrite (A_full H). split.
         assert (continuous (phi xi) ordinal (Cr xi)).
-        { apply Th_13_5_2.  
+        { apply Th_13_5_2.
           replace ordinal with (the_ordering_segment (Cr xi)).
           apply ord_ok.
           apply segment_unbounded.
           eapply ordering_function_seg with (Cr xi).
           exists (phi xi); apply ord_ok.
-          assert (Unbounded (Cr xi)). 
+          assert (Unbounded (Cr xi)).
           now destruct (IHalpha  H).
           rewrite (@ ordering_unbounded_unbounded (A_ xi) (Cr xi) (phi xi))
             in H0.
           auto.
           apply ord_ok.
-          destruct (IHalpha H); auto. 
+          destruct (IHalpha H); auto.
         }
         destruct H0.
         destruct H1.
         unfold phi in H2.
         rewrite <- H2.
         f_equal; apply Extensionality_Ensembles.
-        split. 
+        split.
         intro x.
         destruct 1.
         destruct H3.
@@ -496,10 +497,10 @@ Section Proof_of_Lemma5.
         fold (phi xi x); rewrite Lemma5_2; auto.
         split.
         auto.
-        auto. 
+        auto.
       Qed.
 
-      
+
     End closedness.
 
 
@@ -552,7 +553,5 @@ Proof.
   destruct Th13_8 with alpha.
   eapply A_full with (succ alpha).
   - intros; apply Lemma5.
-  - auto with schutte. 
+  - auto with schutte.
 Qed.
-
-
