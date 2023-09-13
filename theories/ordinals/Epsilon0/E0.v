@@ -35,7 +35,7 @@ Class E0 : Type := mkord {cnf : T1; cnf_ok : nf cnf}.
 
 Arguments cnf : clear implicits.
 
-#[global] Hint Resolve cnf_ok : E0.
+#[export] Hint Resolve cnf_ok : E0.
 
 (* end snippet E0Def *)
 
@@ -53,9 +53,9 @@ Infix "o<=" := E0le : E0_scope.
 
 
 (* begin snippet ZeroOmega:: no-out  *)
-#[global] Instance E0zero : E0 := @mkord zero refl_equal.
+#[export] Instance E0zero : E0 := @mkord zero refl_equal.
 
-#[global] Instance E0omega : E0 := @mkord T1omega refl_equal.
+#[export] Instance E0omega : E0 := @mkord T1omega refl_equal.
 
 (* end snippet ZeroOmega *)
 
@@ -230,7 +230,7 @@ Proof.
   exists (@mkord  beta Hbeta); apply E0_eq_intro; now cbn.
 Defined.
 
-#[global] Hint Resolve E0_eq_intro : E0.
+#[export] Hint Resolve E0_eq_intro : E0.
 
 Ltac orefl := (apply E0_eq_intro; try reflexivity).
 
@@ -252,7 +252,7 @@ Proof.
   apply E0_eq_intro; simpl; now rewrite plus_zero_r.
 Qed.
 
-Hint Rewrite alpha_plus_zero : E0_rw.
+#[export] Hint Rewrite alpha_plus_zero : E0_rw.
 
 Lemma cnf_phi0 (alpha : E0) :
   cnf (E0phi0 alpha) = T1.phi0 (cnf alpha).
@@ -285,7 +285,7 @@ Proof.
   unfold E0phi0; apply T1limit_Omega_term.
 Qed.
 
-#[global] Hint Resolve T1limit_phi0 : E0.
+#[export] Hint Resolve T1limit_phi0 : E0.
 
 Definition Zero_Limit_Succ_dec (alpha : E0) :
   {alpha = E0zero} + {E0limit alpha = true} +
@@ -347,7 +347,7 @@ Proof.
 Defined.
 (* end snippet E0LtWf *)
 
-#[global] Hint Resolve E0lt_wf : E0.
+#[export] Hint Resolve E0lt_wf : E0.
 
 Lemma Lt_Succ_Le (alpha beta: E0):  beta o< alpha -> E0succ beta o<= alpha.
 Proof.
@@ -378,7 +378,7 @@ Proof.
     }
 Qed.
 
-Hint Rewrite E0pred_of_Succ: E0_rw.
+#[export] Hint Rewrite E0pred_of_Succ: E0_rw.
 
 Lemma Succ_inj alpha beta : E0succ alpha = E0succ beta -> alpha = beta.
 Proof.
@@ -399,14 +399,14 @@ Proof.
     apply LT_succ;auto.
 Qed.
 
-#[global] Hint Resolve E0pred_Lt : E0.
+#[export] Hint Resolve E0pred_Lt : E0.
 
 
 Lemma Succ_Succb (alpha : E0) : E0is_succ (E0succ alpha).
 destruct alpha; unfold E0is_succ, E0succ; cbn; apply T1.succ_is_succ.
 Qed.
 
-#[global] Hint Resolve Succ_Succb : E0.
+#[export] Hint Resolve Succ_Succb : E0.
 
 Ltac ord_eq alpha beta := assert (alpha = beta);
       [apply E0_eq_intro ; try reflexivity|].
@@ -426,7 +426,7 @@ Proof.
   intro i; compute. orefl; now destruct i.
 Qed.
 
-Hint Rewrite FinS_Succ_eq : E0_rw.
+#[export] Hint Rewrite FinS_Succ_eq : E0_rw.
 
 Lemma Limit_not_Zero alpha : E0limit alpha -> alpha <> E0zero.
 Proof.
@@ -453,7 +453,7 @@ Proof.
   intros H H0. rewrite (succ_not_limit _ H) in H0. discriminate.  
 Qed.
 
-#[global]
+#[export]
   Hint Resolve Limit_not_Zero Succ_not_Zero Lt_Succ Succ_not_T1limit : E0.
 
 Lemma lt_Succ_inv : forall alpha beta, beta o< alpha <->
