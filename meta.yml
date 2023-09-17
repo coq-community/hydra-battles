@@ -97,6 +97,7 @@ authors:
 - name: Pierre Castéran
 - name: Évelyne Contejean
 - name: Jeremy Damour
+- name: Stéphane Desarzens
 - name: Russell O'Connor
 - name: Karl Palmskog
 - name: Clément Pit-Claudel
@@ -166,8 +167,12 @@ dependencies:
     version: '{= "dev"}'
   description: |-
     [CoqPrime](https://github.com/thery/coqprime)
-
-namespace: hydras
+- opam:
+    name: coq-zorns-lemma
+    version: '{(>= "10.2.0")}'
+  description: |-
+    [ZornsLemma](https://github.com/coq-community/zorns-lemma)
+namespace: hydras 
 
 keywords:
 - name: Ketonen-Solovay machinery
