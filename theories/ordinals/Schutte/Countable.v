@@ -1,5 +1,5 @@
 (** A formalization of denumerable sets. *)
-(** by Florian Hatat, ENS-Lyon *)
+(** by Florian Hatat and Stéphane Desarzens  *)
 
 
 From Coq Require Import Ensembles  Arith ArithRing (* Even Div2 *)
@@ -170,4 +170,3 @@ Proof.
   apply countable_img.
   assumption.
 Qed.
-
