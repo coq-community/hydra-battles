@@ -57,12 +57,6 @@ Definition betaFormula : Formula :=
  
 Lemma betaRepresentable : Representable 2 beta betaFormula.
 Proof.
- assert (cPairLemma1 :
-          forall a b : nat, (a + b) * S (a + b) + 2 * a = 2 * cPair a b).
- { intros a b. unfold cPair in |- *.
-   assert (2 * sumToN (a + b) = (a + b) * S (a + b)) by
-     (induction (a + b); simpl in |- *; lia).
-    lia. }
  unfold Representable in |- *; split.
  - intros v H. simpl in H. lia.
  - simpl in |- *. intros a a0. unfold betaFormula in |- *.

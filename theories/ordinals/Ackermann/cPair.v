@@ -2,7 +2,7 @@
     (Originally  Russel O'Connors [goedel] contrib  *)
 
 
-Require Import Arith Coq.Lists.List .
+Require Import Arith Coq.Lists.List Lia.
 From hydras Require Import extEqualNat primRec.
 From hydras Require Import Compat815.
 Import Nat.
@@ -1006,3 +1006,13 @@ Proof.
 unfold cTriple, cTriplePi1, cTriplePi2, cTriplePi3; 
   repeat rewrite cPairProjections; reflexivity.
 Qed.
+
+
+Lemma cPairLemma1 :
+  forall a b : nat, (a + b) * S (a + b) + 2 * a = 2 * cPair a b.
+Proof. 
+  intros a b. unfold cPair in |- *.
+   assert (2 * sumToN (a + b) = (a + b) * S (a + b)) by
+     (induction (a + b); simpl in |- *; lia).
+    lia.
+Qed. 
