@@ -35,8 +35,6 @@ Definition RepresentableAlternate := RepresentableAlternate NN closedNN1.
 Definition RepresentableHelp := RepresentableHelp NN.
 Definition Representable_ext := Representable_ext NN.
 
-(* TO DO : intuitive meaning (links to CoqPrime? *)
-
 Definition beta (a z : nat) : nat :=
   snd
     (proj1_sig
@@ -75,7 +73,8 @@ Proof.
        substF (LT t1 t2) v (natToTerm a) =
        LT (substT _ t1 v (natToTerm a))
           (substT _ t2 v (natToTerm a))).
-    { intros. unfold LT at 1 in |- *. now rewrite (subFormulaRelation LNN). }
+   { intros ? ? ? ?; unfold LT at 1 in |- *. 
+     now rewrite (subFormulaRelation LNN). }
     repeat first
     [ rewrite H; [| discriminate ]
     | rewrite H0
@@ -114,7 +113,7 @@ Proof.
      -- apply closedNN.
      -- intros [H1 | H1]; try lia. 
         simpl in H1; elim (closedNatToTerm _ _ H1).
-     -- apply impE with (LT (var 3) (natToTerm (S a))).
+     -- apply impE with (v#3 < natToTerm (S a))%nn.
      ++ apply impE with
         (exH 4, v#4 < natToTerm (S a) 
                 /\
@@ -154,9 +153,8 @@ Proof.
                              (Succ (Plus (var 3) (var 4))))
                        (Times (natToTerm 2) (var 3)))
                     (Times (natToTerm 2) (natToTerm a))).
-               *** apply impE with (LT (var 4) (natToTerm (S a))).
-                   ---- apply impE with 
-                          (LT (var 3) (natToTerm (S a))).
+               *** apply impE with (v#4 < natToTerm (S a))%nn. 
+                   ---- apply impE with (v#3 < natToTerm (S a))%nn.
                    ++++ do 2 apply sysWeaken.
                         apply boundedLT; intros n H1.
                         rewrite (subFormulaImp LNN).
@@ -164,7 +162,7 @@ Proof.
                         rewrite (subFormulaRelation LNN).
                         simpl in |- *.
                         rewrite subTermNil.
-                        **** (* fold (var 4) in |- *. *)
+                        **** 
                              replace 
                                (apply LNN Languages.Succ_ 
                                   (Tcons (natToTerm a)
@@ -4697,7 +4695,8 @@ Opaque substF.
                                 (substF  betaFormula 2 (var (S (S (S n))))) 1
                                 (var (S (S n)))) (S (S n)) (var (S n))) 
                           (S (S (S n))) (var (S (S n)))).
-                   --- repeat (apply (reduceSub LNN); [ apply closedNN |]). apply (subFormulaNil LNN); PRsolveFV A B n.
+                   --- repeat (apply (reduceSub LNN); [ apply closedNN |]). 
+                       apply (subFormulaNil LNN); PRsolveFV A B n.
                    --- apply
                         iffTrans
                          with
