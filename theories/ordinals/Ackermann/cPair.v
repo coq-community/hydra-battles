@@ -16,8 +16,11 @@ Import Nat.
 (** Sum of all natural numbers upto [n] *)
 
 (* begin snippet sumToNDef:: no-out *)
-Definition sumToN (n : nat) :=
-  nat_rec (fun _ => nat) 0 (fun x y : nat => S x + y) n.
+Fixpoint sumToN (n : nat): nat :=
+  match n with 
+    0 => 0
+  | S p => S p + sumToN p 
+  end. 
 (* end snippet sumToNDef *)
 
 (* begin snippet sumToN1:: no-out *)
@@ -64,7 +67,7 @@ Qed.
      from the "usual" Cantor pairing function shown in  a big part 
      of the litterature (and Coq's standard library). 
       Since both versions are equivalent upto a swap of the 
-      rguments [a] and [b], we still use  Russel O'Connors notations *)
+      arguments [a] and [b], we still use  Russel O'Connors notations *)
 
 (* begin snippet cPairDef *)
 Definition cPair (a b : nat) := a + sumToN (a + b).
@@ -434,15 +437,11 @@ Qed.
 
 
 (* begin snippet codeNthDef:: no-out  *)
-
-
 Definition codeNth (n m:nat) : nat :=
   let X := nat_rec (fun _ : nat => nat)
              m
              (fun _ Hrecn : nat => cPairPi2 (pred Hrecn)) n
   in cPairPi1 (pred X).
-
-
 (* end snippet codeNthDef *)
 
 
@@ -629,10 +628,17 @@ Proof.
     apply predIsPR.
     apply cPairPi1IsPR.
   }
+<<<<<<< HEAD
   induction H0 as (x, p).
   induction H1 as (x0, p0).
   exists (composeFunc n.+1 1 (PRcons _ _ x0 (PRnil _)) x).
   simpl; fold (naryFunc n) in |- *.
+=======
+  destruct H0 as [x p]; destruct H1 as [x0 p0].
+  exists (composeFunc (S n) 1 (PRcons _ _ x0 (PRnil _)) x).
+  simpl in |- *.
+  fold (naryFunc n) in |- *.
+>>>>>>> 56bedee (Add examples of expressibility)
   intros c; apply extEqualCompose.
   unfold extEqualVector in |- *.
   simpl in |- *; repeat split.
@@ -951,7 +957,9 @@ Module LispAbbreviations.
   #[global] Notation cdddr n := (cPairPi2 (cPairPi2 (cPairPi2 n))). 
   #[global] Notation cddddr n := 
     (cPairPi2 (cPairPi2 (cPairPi2 (cPairPi2 n)))).
-
+  #[global] Notation plus2 n := (S (S n)).
+  #[global] Notation plus3 n  := (S (S (S n))).
+  #[global] Notation plus4 n := (S (S (S (S n)))).
 End LispAbbreviations. 
 
 

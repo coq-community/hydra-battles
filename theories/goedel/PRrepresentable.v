@@ -29,6 +29,7 @@ Import NNnotations.
 
 Import LispAbbreviations. 
 
+
 Section Primitive_Recursive_Representable.
 
 Definition Representable := Representable NN.
@@ -1582,6 +1583,9 @@ Proof.
   - simpl in |- *. intro H3. tauto.
   - auto.
 Qed.
+
+
+
 
 Definition primRecSigmaFormulaHelp (n : nat) (SigA SigB : Formula) : Formula :=
   andH

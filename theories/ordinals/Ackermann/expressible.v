@@ -15,11 +15,12 @@ Import NNnotations.
 Section RepresentableExpressible.
 
 Variable T : System.
+
 Hypothesis closedT1: (ClosedSystem LNN T).
 
-Lemma closedT : forall v : nat, ~ In_freeVarSys LNN v T.
+Remark closedT : forall v : nat, ~ In_freeVarSys LNN v T.
 Proof.
-  intros v [x H]; elim closedT1 with v x; tauto.
+  intros v [x [? ?]]; now destruct (closedT1 v x).  
 Qed.
 
 Fixpoint RepresentableHalf1 (n : nat) :
