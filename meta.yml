@@ -117,10 +117,11 @@ license:
 
 supported_coq_versions:
   text: 8.14 or later
-  opam: '{(>= "8.14" & < "8.18~") | (= "dev")}'
+  opam: '{>= "8.14"}'
 
 tested_coq_opam_versions:
-#- version: 'dev'
+- version: '1.17.0-coq-8.17'
+  repo: 'mathcomp/mathcomp'
 - version: '1.15.0-coq-8.16'
   repo: 'mathcomp/mathcomp'
 - version: '1.14.0-coq-8.15'
@@ -155,7 +156,7 @@ dependencies:
     [Gaia's Schütte ordinals](https://github.com/coq-community/gaia) 1.14 or later
 - opam:
     name: coq-mathcomp-zify
-    version: '{(< "2~")}'
+    version: '{< "2~"}'
   description: |-
     [Mczify](https://github.com/math-comp/mczify)
 - opam:
@@ -169,9 +170,10 @@ dependencies:
     [CoqPrime](https://github.com/thery/coqprime)
 - opam:
     name: coq-zorns-lemma
-    version: '{(>= "10.2.0")}'
+    version: '{>= "10.2.0"}'
   description: |-
-    [ZornsLemma](https://github.com/coq-community/zorns-lemma)
+    [ZornsLemma](https://github.com/coq-community/zorns-lemma) 10.2.0 or later
+
 namespace: hydras 
 
 keywords:
