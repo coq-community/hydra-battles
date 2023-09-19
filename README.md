@@ -36,10 +36,10 @@ This Coq-based project has four parts:
   [Gaia project](https://github.com/coq-community/gaia), in particular
   on ordinals.
 
- - A proof originally by Russell O'Connor of the Gödel-Rosser 1st
-   incompleteness theorem, which says that any first order theory
-   extending NN (which is PA without induction) that is complete is
-   inconsistent.
+- A proof originally by Russell O'Connor of the Gödel-Rosser 1st
+  incompleteness theorem, which says that any first order theory
+  extending NN (which is PA without induction) that is complete is
+  inconsistent.
 
 Both the [documentation](https://coq-community.org/hydra-battles/doc/hydras.pdf)
 and the Coq sources are _work continuously in progress_. For more information on
@@ -54,6 +54,7 @@ the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
   - Pierre Castéran
   - Évelyne Contejean
   - Jeremy Damour
+  - Stéphane Desarzens
   - Russell O'Connor
   - Karl Palmskog
   - Clément Pit-Claudel
@@ -71,6 +72,7 @@ the proceedings of [JFLA 2022](http://jfla.inria.fr/jfla2022.html).
   - [Mczify](https://github.com/math-comp/mczify)
   - [LibHyps](https://github.com/Matafou/LibHyps)
   - [CoqPrime](https://github.com/thery/coqprime)
+  - [ZornsLemma](https://github.com/coq-community/zorns-lemma) 10.2.0 or later
 - Coq namespace: `hydras`, `additions`, `gaia_hydras`, `Goedel`
 - Related publication(s):
   - [Hydras & Co.: Formalized mathematics in Coq for inspiration and entertainment](https://hal.archives-ouvertes.fr/hal-03404668) 
