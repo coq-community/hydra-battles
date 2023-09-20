@@ -679,7 +679,7 @@ Proof.
                                    (Plus (natToTerm b)
                                       (Times (natToTerm a1)
                                          (Succ (Times (natToTerm (cPairPi1 a)) (Succ (natToTerm a0)))))) by reflexivity.
-                                  apply eqTrans with (natToTerm (a1 *  coPrimeBeta a0 (cPairPi1 a) + b)).
+                                  apply eqTrans with (natToTerm (a1 * coPrimeBeta a0 (cPairPi1 a) + b)).
                                   ++++ rewrite Nat.add_comm. apply eqSym. eapply eqTrans.
                                        **** apply eqSym. apply natPlus.
                                        **** apply eqPlus.
@@ -750,8 +750,7 @@ Lemma subAddExistsNice :
  forall (n m : nat) (A : Formula) (v : nat) (s : Term),
  n + m <= v \/ v < m ->
  (forall v : nat, In v (freeVarT LNN s) -> n + m <= v \/ v < m) ->
- substF (addExists m n A) v s =
- addExists m n (substF  A v s).
+ substF (addExists m n A) v s = addExists m n (substF A v s).
 Proof.
   intros n m A v s H H0. induction n as [| n Hrecn]; simpl in |- *; auto.
   rewrite (subFormulaExist LNN).
@@ -1756,8 +1755,8 @@ Proof.
 Qed.
 
 
-Lemma succ_plus_discr : forall n m : nat, n <> S (m + n).
-Proof. lia. Qed.
+(* Lemma succ_plus_discr : forall n m : nat, n <> S (m + n).
+Proof. lia. Qed. *)
 
 Remark In_betaFormula_subst_1_2_0 :
  forall (a b c : Term) (v : nat),
