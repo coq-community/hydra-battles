@@ -29,6 +29,18 @@ Import NNnotations.
 
 Import LispAbbreviations. 
 
+#[local] Notation rem a Hposb b :=
+  (snd (proj1_sig (div_eucl b Hposb a))).
+
+Module wikiBeta.
+  (*
+  coPrimeBeta = fun z c : nat => S (c * S z)
+  *)
+  Definition beta x y z := rem x (gtBeta z y) (coPrimeBeta z y).
+  Definition cPair x y := cPair y x. 
+End wikiBeta. 
+
+ 
 
 Section Primitive_Recursive_Representable.
 
@@ -37,11 +49,22 @@ Definition RepresentableAlternate := RepresentableAlternate NN closedNN1.
 Definition RepresentableHelp := RepresentableHelp NN.
 Definition Representable_ext := Representable_ext NN.
 
+
+
+
+
 Definition beta (a z : nat) : nat :=
-  snd
-    (proj1_sig
-       (div_eucl (coPrimeBeta z (cPairPi1 a)) (gtBeta z (cPairPi1 a))
-          (cPairPi2 a))).
+  rem  (cdr a) (gtBeta z (car a)) (coPrimeBeta z (car a)).
+
+(* To do :  Equivalence with Wikipedia definition *)
+
+Lemma wikiBetaEquiv:  
+  forall x y z,  beta (cPair x y) z = wikiBeta.beta y x z.
+intros x y z; unfold beta, wikiBeta.beta.
+ Search (cdr (cPair _ _)).
+ now   rewrite !cPairProjections2, !cPairProjections1.
+Qed. 
+
 
 Definition betaFormula : Formula :=
 (exH 3,
