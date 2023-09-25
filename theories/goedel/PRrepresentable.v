@@ -29,17 +29,16 @@ Import NNnotations.
 
 Import LispAbbreviations. 
 
-#[local] Notation rem a Hposb b :=
+#[global] Notation rem a b Hposb :=
   (snd (proj1_sig (div_eucl b Hposb a))).
 
-Module wikiBeta.
-  (*
-  coPrimeBeta = fun z c : nat => S (c * S z)
-  *)
-  Definition beta x y z := rem x (gtBeta z y) (coPrimeBeta z y).
-  Definition cPair x y := cPair y x. 
-End wikiBeta. 
+(** E.g. Wikipedia page on [beta] function *)
 
+Module Usual.
+  Definition beta x y z := rem x  (S (y * S z))  (gtBeta _ _).
+End Usual. 
+
+Search cPair eq.
  
 
 Section Primitive_Recursive_Representable.
@@ -49,21 +48,79 @@ Definition RepresentableAlternate := RepresentableAlternate NN closedNN1.
 Definition RepresentableHelp := RepresentableHelp NN.
 Definition Representable_ext := Representable_ext NN.
 
-
-
-
+Print coPrimeBeta. 
+(*
+coPrimeBeta = fun z c : nat => S (c * S z)
+     : nat -> nat -> nat
+*)
 
 Definition beta (a z : nat) : nat :=
-  rem  (cdr a) (gtBeta z (car a)) (coPrimeBeta z (car a)).
+  rem (cdr a) (coPrimeBeta z (car a)) (gtBeta z (car a)).
 
-(* To do :  Equivalence with Wikipedia definition *)
+(** Paraphrase lemmas *)
+
+Lemma beta_def x y z :  beta (cPair x y) z = 
+                          rem y (S (x * S z)) (gtBeta _ _).
+Proof.
+  unfold beta. now rewrite !cPairProjections2, !cPairProjections1.
+Qed.
+
+(** Adaptations of CoqPrime's lemmas *)
+
+Lemma betaThm2 n (y : nat -> nat) :
+  {a : nat * nat |
+      forall z, z < n -> y z = beta (cPair (fst a) (snd a)) z}.
+Proof. 
+  destruct (betaTheorem1 n y) as [x e]; exists (snd x, fst x). 
+  intros; unfold beta; 
+    rewrite !cPairProjections2, !cPairProjections1; simpl; 
+    now apply e. 
+Qed. 
+
+Lemma betaThm3 n (y : nat -> nat) :
+  {a : nat |
+      forall z, z < n -> y z = beta (cPair (car a) (cdr a)) z}.
+Proof.  
+  destruct (betaThm2 n y) as [x e]; exists (cPair (fst x) (snd x)).
+  intros; rewrite !cPairProjections2, !cPairProjections1; auto.
+Qed.
+
 
 Lemma wikiBetaEquiv:  
-  forall x y z,  beta (cPair x y) z = wikiBeta.beta y x z.
-intros x y z; unfold beta, wikiBeta.beta.
- Search (cdr (cPair _ _)).
- now   rewrite !cPairProjections2, !cPairProjections1.
+  forall x y z,  beta (cPair x y) z = Usual.beta y x z.
+Proof. 
+  intros x y z; now rewrite beta_def. 
 Qed. 
+Lemma betaThm4 n (y : nat -> nat) :
+  {a : nat |
+      forall z, z < n -> y z = Usual.beta  (cdr a) (car a) z}.
+Proof.
+ destruct (betaThm3 n y). 
+  exists x. 
+ auto. 
+intros ; rewrite <- wikiBetaEquiv.
+ auto.   
+Qed. 
+
+
+
+
+(* To do :  Equivalence with usual (e.g. Wikipedia) definition *)
+
+About betaTheorem1.
+
+Lemma betaTheorem1' :
+forall (n : nat) (y : nat -> nat),
+{a : nat * nat
+| forall z : nat,
+  z < n -> y z = Usual.beta (fst a) (snd a) z }.
+intros n y; destruct (betaTheorem1 n y) as [x e]. 
+unfold Usual.beta.
+exists x. 
+auto. 
+Qed. 
+
+
 
 
 Definition betaFormula : Formula :=
@@ -154,7 +211,7 @@ Proof.
         ** apply sysWeaken. apply impI. apply existSys.
            --- apply closedNN.
            --- replace
-               (freeVarF LNN
+               (freeVarF _
                   (impH (LT (var 3) (natToTerm (S a)))
                      (equal (var 0) (natToTerm (beta a a0))))) 
                with
@@ -680,7 +737,9 @@ Proof.
                              repeat
                               (rewrite (subTermNil LNN (natToTerm a1)); [| apply closedNatToTerm ]).
                              apply andI.
-                             ---- replace (apply LNN Languages.Succ_ (Tcons (natToTerm (cPairPi2 a)) (Tnil ))) 
+                             ----  replace 
+                                 (apply LNN Languages.Succ_ 
+                                    (Tcons (natToTerm (cPairPi2 a)) (Tnil ))) 
                                     with (natToTerm (S (cPairPi2 a))) by reflexivity.
                                   apply natLT. unfold coPrimeBeta in *. lia.
                              ---- replace
@@ -830,7 +889,7 @@ Proof.
   intros n m A v s H H0. induction n as [| n Hrecn]; simpl in |- *; auto.
   rewrite (subFormulaForall LNN). destruct (eq_nat_dec (n + m) v) as [e | e]; try lia.
   destruct (in_dec Nat.eq_dec (n + m) (freeVarT LNN s)) as [e0 | e0].
-  - pose proof (H0 _ e0). lia.
+  - pose proof (H0 _ e0); lia.
   - rewrite Hrecn.
     + reflexivity.
     + lia.

@@ -62,3 +62,33 @@ Proof.
    - intro n.  simpl. lia. 
    - apply L3.
 Qed. 
+
+(** Mind the order of variables [v#1 ... v#n]  
+ [f v#n ... v#1 = v#0]
+
+ *)
+
+(** [v#2] is bound to n *)
+
+Lemma L5:   RepresentableHalf1 NN 2 (fun n p => n) (v#0 = v#2)%nn. 
+Proof. 
+  intros a b; simpl. 
+   unfold substF; simpl.  Search substT . rewrite subProp.subTermNil. 
+    Search (SysPrf _ (?A -> ?A)%nn). 
+   apply impRefl.
+   induction a.  
+    simpl. 
+    tauto.    
+   simpl. simpl.
+   Search freeVarT (S_ _).
+
+    now rewrite freeVarSucc.
+Qed.
+
+(** [v#1] is bound to p *)
+Lemma L6:   RepresentableHalf1 NN 2 (fun n p => p) (v#0 = v#1)%nn. 
+Proof. 
+  intros a b; simpl. 
+   unfold substF; simpl.  Search substT . 
+   apply impRefl.
+Qed.

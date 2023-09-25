@@ -75,6 +75,16 @@ Definition cPair (a b : nat) := a + sumToN (a + b).
 Compute cPair 4 0. 
 (* end snippet cPairDef *)
 
+(* begin snippet Compatibility:: no-out  *)
+(** Usual definition (e.g. wikipedia) *)
+
+ Definition xPair a b := b + sumToN ( b + a).
+
+ Lemma xPairDef a b : xPair a b = cPair b a. 
+ Proof.  reflexivity. Qed. 
+(* end snippet Compatibility *)
+
+
 (* begin snippet cPairIsPR:: no-out *)
 Lemma cPairIsPR : isPR 2 cPair.
 Proof.
