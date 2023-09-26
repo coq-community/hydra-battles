@@ -624,18 +624,17 @@ Proof.
                          apply
                           impE
                            with
-                             (substF 
-                                (substF 
-                                   (substF 
-                                      (substF 
-                                         (andH (LT (var 5) (Succ (var 4)))
-                                            (equal
-                                               (Plus (var 0)
-                                                  (Times (var 5)
-                                                     (Succ (Times (var 3) (Succ (natToTerm a0))))))
-                                               (var 4))) 3 (natToTerm (cPairPi1 a))) 4
-                                      (natToTerm (cPairPi2 a))) 5 (natToTerm a1)) 0 
-                                (natToTerm b)).
+                             (substF4 
+                                (andH (LT (var 5) (Succ (var 4)))
+                                   (equal
+                                      (Plus (var 0)
+                                         (Times (var 5)
+                                            (Succ (Times (var 3) (Succ (natToTerm a0))))))
+                                      (var 4)))
+                                         3 (natToTerm (cPairPi1 a))
+                                      4 (natToTerm (cPairPi2 a))
+                                   5 (natToTerm a1)
+                                0 (natToTerm b)).
                          *** apply (subWithEquals LNN). apply eqSym. apply Axm; right; constructor.
                          *** apply sysWeaken.
                              repeat first
@@ -1587,49 +1586,45 @@ Definition primRecSigmaFormulaHelp (n : nat) (SigA SigB : Formula) : Formula :=
   andH
     (existH 0
        (andH SigA
-          (substF  (substF betaFormula 1 Zero) 2
-             (var (S (S n))))))
+          (substF2 betaFormula 1 Zero 2 (var (S (S n))))))
     (forallH (S (S (S n)))
        (impH (LT (var (S (S (S n)))) (var (S n)))
           (existH 0
              (existH (S n)
                 (andH
-                   (substF 
-                      (substF 
-                         (substF  betaFormula 1
-                            (var (S (S (S n))))) 2 
-                         (var (S (S n)))) 0 (var (S n)))
+                   (substF3 
+                      betaFormula 
+                      1 (var (S (S (S n))))
+                      2 (var (S (S n))) 
+                      0 (var (S n)))
+
                    (andH
                       (substF SigB (S (S n))
                          (var (S (S (S n)))))
-                      (substF 
-                         (substF betaFormula 1
-                            (Succ (var (S (S (S n)))))) 2 
-                         (var (S (S n)))))))))).
+                      (substF2 betaFormula 
+                         1 (Succ (var (S (S (S n)))))
+                         2 (var (S (S n)))))))))).
 
 Definition primRecPiFormulaHelp (n : nat) (SigA SigB : Formula) : Formula :=
   andH
     (forallH 0
        (impH SigA
-          (substF  (substF betaFormula 1 Zero) 2
-             (var (S (S n))))))
+          (substF2 betaFormula 1 Zero 2 (var (S (S n))))))
     (forallH (S (S (S n)))
        (impH (LT (var (S (S (S n)))) (var (S n)))
           (forallH 0
              (forallH (S n)
                 (impH
-                   (substF 
-                      (substF 
-                         (substF betaFormula 1
-                            (var (S (S (S n))))) 2 
-                         (var (S (S n)))) 0 (var (S n)))
+                   (substF3 betaFormula 
+                      1 (var (S (S (S n))))
+                      2 (var (S (S n)))
+                      0 (var (S n)))
                    (impH
-                      (substF SigB (S (S n))
-                         (var (S (S (S n)))))
-                      (substF 
-                         (substF betaFormula 1
-                            (Succ (var (S (S (S n)))))) 2 
-                         (var (S (S n)))))))))).
+                      (substF SigB 
+                         (S (S n)) (var (S (S (S n)))))
+                      (substF2 betaFormula 
+                         1 (Succ (var (S (S (S n)))))
+                         2 (var (S (S n)))))))))).
 
 Lemma freeVarPrimRecSigmaFormulaHelp1 :
  forall (n : nat) (A B : Formula) (v : nat),

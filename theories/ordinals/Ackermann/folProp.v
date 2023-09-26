@@ -916,3 +916,15 @@ Arguments closed {L} _.
 About substF.
 Search substF.
 (* end snippet substLemmas *)
+
+(** to replace with a single custom notation ? *)
+
+#[global] Notation substF2 e v1 t1 v2 t2 :=
+  (substF (substF e v1 t1) v2 t2).
+
+#[global] Notation substF3 e v1 t1 v2 t2 v3 t3 :=
+  (substF (substF2 e v1 t1 v2 t2) v3 t3).
+
+#[global] Notation substF4 e v1 t1 v2 t2 v3 t3 v4 t4 :=
+  (substF (substF3 e v1 t1 v2 t2 v3 t3) v4 t4).
+
