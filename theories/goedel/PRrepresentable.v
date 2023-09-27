@@ -4684,30 +4684,29 @@ Opaque substF.
                 ** apply
                     iffTrans
                      with
-                       (substF 
-                          (substF 
-                             (substF 
-                                (substF  betaFormula 2 (var (S (S (S n))))) 1
-                                (var (S (S n)))) (S (S n)) (var (S n))) 
+                       (substF4  betaFormula
+                          2 (var (S (S (S n))))
+                          1 (var (S (S n)))
+                          (S (S n)) (var (S n))
                           (S (S (S n))) (var (S (S n)))).
                    --- repeat (apply (reduceSub LNN); [ apply closedNN |]). 
                        apply (subFormulaNil LNN); PRsolveFV A B n.
                    --- apply
                         iffTrans
                          with
-                           (substF 
-                              (substF 
-                                 (substF  betaFormula 2 (var (S (S (S n))))) 1
-                                 (var (S n))) (S (S (S n))) (var (S (S n)))).
+                           (substF3 betaFormula
+                              2 (var (S (S (S n))))
+                              1 (var (S n))
+                              (S (S (S n))) (var (S (S n)))).
                        +++ repeat (apply (reduceSub LNN); [ apply closedNN |]).
                            apply (subFormulaTrans LNN); PRsolveFV A B n.
                        +++ apply
                             iffTrans
                              with
-                               (substF 
-                                  (substF 
-                                     (substF  betaFormula 2 (var (S (S (S n)))))
-                                     (S (S (S n))) (var (S (S n)))) 1 (var (S n))).
+                               (substF3  betaFormula
+                                  2 (var (S (S (S n))))
+                                  (S (S (S n))) (var (S (S n)))
+                                  1 (var (S n))).
                            *** apply (subFormulaExch LNN); PRsolveFV A B n.
                            *** repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
                                apply (subFormulaTrans LNN); PRsolveFV A B n.
