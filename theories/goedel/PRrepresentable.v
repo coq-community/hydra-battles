@@ -18,7 +18,8 @@ From hydras.Ackermann Require Import ListExt.
 From hydras.Ackermann Require Import cPair.
 From Coq Require Import Decidable.
 From Coq Require Import Lia.
-From hydras Require Import Compat815.
+From hydras Require Import Compat815 ssrnat_extracts.
+
 
 From LibHyps Require Export LibHyps.
 From hydras Require Export MoreLibHyps NewNotations.
@@ -4632,8 +4633,9 @@ Opaque substF.
                                       (substF 
                                          (substF 
                                             (substF  betaFormula 1
-                                               (Succ (var (S (S (S (S n))))))) 2 (var (S (S (S (S (S n)))))))
-                                         (S (S (S (S n)))) (var (S (S (S n))))) (S (S (S (S (S n)))))
+                                               (Succ (var n.+4))) 2  (var n.+5))
+                                         (S (S (S (S n)))) 
+                                         (var (S (S (S n))))) (S (S (S (S (S n)))))
                                       (var (S (S (S (S n)))))).
                                ---- repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                     apply (subFormulaNil LNN); PRsolveFV A B n.
