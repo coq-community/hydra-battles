@@ -917,7 +917,7 @@ About substF.
 Search substF.
 (* end snippet substLemmas *)
 
-(** to replace with a single custom notation ? *)
+(** to replace with a single recursive custom notation ? *)
 
 #[global] Notation substF2 e v1 t1 v2 t2 :=
   (substF (substF e v1 t1) v2 t2).
@@ -928,3 +928,8 @@ Search substF.
 #[global] Notation substF4 e v1 t1 v2 t2 v3 t3 v4 t4 :=
   (substF (substF3 e v1 t1 v2 t2 v3 t3) v4 t4).
 
+#[global] Notation substF5 e v1 t1 v2 t2 v3 t3 v4 t4 v5 t5 :=
+  (substF (substF4 e v1 t1 v2 t2 v3 t3 v4 t4) v5 t5).
+
+#[global] Notation substF6 e v1 t1 v2 t2 v3 t3 v4 t4 v5 t5 v6 t6 :=
+  (substF (substF5 e v1 t1 v2 t2 v3 t3 v4 t4 v5 t5) v6 t6).

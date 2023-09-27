@@ -1587,24 +1587,21 @@ Definition primRecSigmaFormulaHelp (n : nat) (SigA SigB : Formula) : Formula :=
   andH
     (existH 0
        (andH SigA
-          (substF2 betaFormula 1 Zero 2 (var (S (S n))))))
-    (forallH (S (S (S n)))
-       (impH (LT (var (S (S (S n)))) (var (S n)))
+          (substF2 betaFormula 1 Zero 2 (var n.+2))))
+    (forallH n.+3
+       (impH (LT (var n.+3) (var n.+1))
           (existH 0
              (existH (S n)
                 (andH
-                   (substF3 
-                      betaFormula 
-                      1 (var (S (S (S n))))
-                      2 (var (S (S n))) 
-                      0 (var (S n)))
-
+                   (substF3 betaFormula 
+                      1 (var n.+3)
+                      2 (var n.+2)
+                      0 (var n.+1))
                    (andH
-                      (substF SigB (S (S n))
-                         (var (S (S (S n)))))
+                      (substF SigB n.+2 (var n.+3))
                       (substF2 betaFormula 
-                         1 (Succ (var (S (S (S n)))))
-                         2 (var (S (S n)))))))))).
+                         1 (Succ (var (n.+3)))
+                         2 (var n.+2)))))))).
 
 Definition primRecPiFormulaHelp (n : nat) (SigA SigB : Formula) : Formula :=
   andH
@@ -3408,14 +3405,13 @@ Proof.
                                                        apply
                                                         iffTrans
                                                          with
-                                                           (substF 
-                                                              (substF 
-                                                                 (substF 
-                                                                    (substF 
-                                                                       (substF 
-                                                                          (substF  betaFormula 1 (Succ (var 3))) 2
-                                                                          (var 2)) 2 (natToTerm b)) 3 (natToTerm x0)) 1
-                                                                 (natToTerm (beta b x0))) 0 (natToTerm (f (S x0)))).
+                                                           (substF6 betaFormula 
+                                                              1 (Succ (var 3))
+                                                              2 (var 2)  (* ??? *)
+                                                              2 (natToTerm b)
+                                                              3 (natToTerm x0) 
+                                                              1 (natToTerm (beta b x0))
+                                                              0 (natToTerm (f (S x0)))).
                                                        ++ apply (subFormulaExch LNN).
                                                           ** discriminate.
                                                           ** apply closedNatToTerm.
@@ -3497,14 +3493,12 @@ Proof.
                                                                    with
                                                                      (substF  (equal (var 0) (natToTerm (beta b x0))) 0 (var 1)).
                                                                  +++ rewrite (subFormulaId LNN).
-                                                                     apply
-                                                                      iffTrans
-                                                                       with
-                                                                         (substF 
-                                                                            (substF 
-                                                                               (substF 
-                                                                                  (substF  betaFormula 1 (var 3)) 2 
-                                                                                  (natToTerm b)) 0 (var 1)) 3 (natToTerm x0)).
+                                                                    
+ apply iffTrans with
+                                                                       (substF4  betaFormula                                                       1 (var 3)
+       2 (natToTerm b)
+       0 (var 1)
+       3 (natToTerm x0)).
                                                                      *** repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                                          apply (subFormulaExch LNN).
                                                                          ---- discriminate.
