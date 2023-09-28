@@ -933,3 +933,6 @@ Search substF.
 
 #[global] Notation substF6 e v1 t1 v2 t2 v3 t3 v4 t4 v5 t5 v6 t6 :=
   (substF (substF5 e v1 t1 v2 t2 v3 t3 v4 t4 v5 t5) v6 t6).
+
+#[global] Notation substF7 e v1 t1 v2 t2 v3 t3 v4 t4 v5 t5 v6 t6 v7 t7:=
+  (substF (substF6 e v1 t1 v2 t2 v3 t3 v4 t4 v5 t5 v6 t6) v7 t7).
