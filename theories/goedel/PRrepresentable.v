@@ -1607,28 +1607,28 @@ Definition primRecPiFormulaHelp (n : nat) (SigA SigB : Formula) : Formula :=
   andH
     (forallH 0
        (impH SigA
-          (substF2 betaFormula 1 Zero 2 (var (S (S n))))))
-    (forallH (S (S (S n)))
-       (impH (LT (var (S (S (S n)))) (var (S n)))
+          (substF2 betaFormula 1 Zero 2 (var n.+2))))
+    (forallH n.+3
+       (impH (LT (var n.+3) (var n.+1))
           (forallH 0
-             (forallH (S n)
+             (forallH n.+1
                 (impH
                    (substF3 betaFormula 
-                      1 (var (S (S (S n))))
-                      2 (var (S (S n)))
-                      0 (var (S n)))
+                      1 (var n.+3)
+                      2 (var n.+2)
+                      0 (var n.+1))
                    (impH
                       (substF SigB 
-                         (S (S n)) (var (S (S (S n)))))
+                         n.+2 (var n.+3))
                       (substF2 betaFormula 
-                         1 (Succ (var (S (S (S n)))))
-                         2 (var (S (S n)))))))))).
+                         1 (Succ (var n.+3))
+                         2 (var n.+2)))))))).
 
 Lemma freeVarPrimRecSigmaFormulaHelp1 :
  forall (n : nat) (A B : Formula) (v : nat),
  In v (freeVarF LNN (primRecSigmaFormulaHelp n A B)) ->
  In v (freeVarF LNN A) \/
- In v (freeVarF LNN B) \/ v = S (S n) \/ v = S n.
+ In v (freeVarF LNN B) \/ v = n.+2 \/ v = n.+1.
 Proof.
   intros n A B v H. unfold primRecSigmaFormulaHelp in H.
   assert
@@ -1678,7 +1678,7 @@ Lemma freeVarPrimRecPiFormulaHelp1 :
  forall (n : nat) (A B : Formula) (v : nat),
  In v (freeVarF LNN (primRecPiFormulaHelp n A B)) ->
  In v (freeVarF LNN A) \/
- In v (freeVarF LNN B) \/ v = S (S n) \/ v = S n.
+ In v (freeVarF LNN B) \/ v = n.+2 \/ v = n.+1.
 Proof.
   intros n A B v H. unfold primRecPiFormulaHelp in H.
   assert
@@ -1725,14 +1725,13 @@ Proof.
 Qed.
 
 Definition primRecSigmaFormula (n : nat) (SigA SigB : Formula) : Formula :=
-  existH (S (S n))
+  existH n.+2
     (andH
        (minimize (primRecSigmaFormulaHelp n SigA SigB)
-          (primRecPiFormulaHelp n SigA SigB) (S (S n)) 
-          (S (S (S (S n)))))
-       (substF 
-          (substF  betaFormula 2 (var (S (S n)))) 1 
-          (var (S n)))).
+          (primRecPiFormulaHelp n SigA SigB) n.+2 n.+4)
+       (substF2  betaFormula 
+          2 (var n.+2)
+          1 (var n.+1))).
 
 Remark notBoundedForall :
  forall (P : nat -> Prop) (b : nat),
@@ -1770,7 +1769,7 @@ Proof.
   - assert
      (H1: In v
         (freeVarF LNN
-           (substF  (substF  betaFormula 1 a) 2 b))).
+           (substF2 betaFormula 1 a 2 b))).
     { eapply in_remove; apply H0. }
     destruct (freeVarSubFormula3 _ _ _ _ _ H1) as [H2 | H2].
     + assert (H3: In v (freeVarF LNN (substF betaFormula 1 a))).
@@ -1794,12 +1793,12 @@ Proof.
 Qed.
 
 Remark In_betaFormula_subst_1_2 :
- forall (a b : Term) (v : nat),
- In v
-   (freeVarF LNN
-      (substF (substF betaFormula 1 a) 2 b)) ->
- In v (freeVarT LNN a) \/
- In v (freeVarT LNN b) \/ In v (freeVarT LNN (var 0)).
+  forall (a b : Term) (v : nat),
+    In v
+      (freeVarF LNN
+         (substF (substF betaFormula 1 a) 2 b)) ->
+    In v (freeVarT LNN a) \/
+      In v (freeVarT LNN b) \/ In v (freeVarT LNN (var 0)).
 Proof.
   intros a b v H. apply In_betaFormula_subst_1_2_0.
   rewrite (subFormulaId LNN); exact H.
@@ -1872,15 +1871,11 @@ Ltac PRsolveFV A B n :=
         elim (Compat815.n_SSSn X1); symmetry  in |- *; apply H
     | H:(In ?X3
            (freeVarF LNN
-              (substF 
-                 (substF 
-                    (substF  betaFormula 1 _) 2 _) 0 _))) |- _
-    =>
-        decompose sum (In_betaFormula_subst_1_2_0 _ _ _ _ H); clear H
+              (substF3   betaFormula 1 _ 2 _ 0 _)))|- _
+    => decompose sum (In_betaFormula_subst_1_2_0 _ _ _ _ H); clear H
     | H:(In ?X3
            (freeVarF LNN
-              (substF (substF betaFormula 1 _)
-                 2 _))) |- _ =>
+              (substF2 betaFormula 1 _ 2 _))) |- _ =>
         decompose sum (In_betaFormula_subst_1_2 _ _ _ H); clear H
     | H:(In ?X3 (freeVarF LNN (substF betaFormula 1 _)))
     |- _ =>
@@ -1889,16 +1884,12 @@ Ltac PRsolveFV A B n :=
         decompose sum (In_betaFormula _ H); clear H
     | H:(In ?X3
            (freeVarF LNN
-              (substF (substF betaFormula 2 _)
-                 1 _))) |- _ =>
+              (substF2 betaFormula 2 _ 1 _))) |- _ =>
         decompose sum (In_betaFormula_subst_2_1 _ _ _ H); clear H
     | H:(In ?X3 (freeVarF LNN (substF betaFormula 2 _)))
     |- _ =>
         decompose sum (In_betaFormula_subst_2 _ _ H);
          clear H
-          (*
-          Match Context With
-          *)
     | H:(In ?X3 (freeVarF LNN (existH ?X1 ?X2))) |- _ =>
         assert
          (In X3 (List.remove  eq_nat_dec X1 (freeVarF LNN X2)));
@@ -1963,7 +1954,7 @@ Remark primRecSigmaRepresentable :
  forall (n : nat) (A : Formula) (g : naryFunc n),
  Representable n g A ->
  forall (B : Formula) (h : naryFunc (S (S n))),
- Representable (S (S n)) h B ->
+ Representable n.+2 h B ->
  Representable (S n) (evalPrimRecFunc n g h) (primRecSigmaFormula n A B).
 Proof.
   assert
@@ -2116,13 +2107,12 @@ Proof.
                                               { apply closedNatToTerm. }
                                ---- destruct repBeta as (H1, H4). 
                                     simpl in H4. rewrite (subFormulaId LNN).
-                                    apply
-                                     impE
-                                      with
-                                        (substF 
-                                           (substF (substF betaFormula 1 Zero) 2
-                                              (natToTerm x)) 0 (natToTerm (f 0))).
-                                    ++++ apply iffE2. apply (reduceSub LNN).
+                                    apply impE with
+                                        (substF3 betaFormula 
+                                           1 Zero
+                                           2 (natToTerm x) 
+                                           0 (natToTerm (f 0))).
+                                    ++++ apply iffE2; apply (reduceSub LNN).
                                          **** apply closedNN.
                                          **** apply (reduceSub LNN).
                                               { apply closedNN. }
@@ -2130,32 +2120,28 @@ Proof.
                                                 destruct (freeVarSubFormula3 _ _ _ _ _ H5) as [H6 | H6].
                                                 - elim (in_remove_neq _ _ _ _ _ H6). reflexivity.
                                                 - elim H6. }
-                                    ++++ apply
-                                          impE
-                                           with
-                                             (substF (equal (var 0) (natToTerm (beta x 0))) 0
-                                                (natToTerm (f 0))).
-                                         **** apply iffE2. apply (reduceSub LNN).
+                                    ++++ apply impE with
+                                             (substF (v#0 = natToTerm (beta x 0))%nn 0 (natToTerm (f 0))).
+                                         **** apply iffE2, (reduceSub LNN).
                                               { apply closedNN. }
                                               { apply
                                                  iffTrans
                                                   with
-                                                    (substF 
-                                                       (substF betaFormula 2 (natToTerm x)) 1
-                                                       (natToTerm 0)).
+                                                    (substF2 betaFormula 
+                                                       2 (natToTerm x)
+                                                       1 (natToTerm 0)).
                                                 - apply (subFormulaExch LNN).
                                                   + discriminate.
                                                   + apply closedNatToTerm.
                                                   + apply closedNatToTerm.
                                                 - apply H4. }
                                          **** rewrite (subFormulaEqual LNN). 
-                                              simpl. rewrite (subTermNil LNN).
-                                              { rewrite H2. 
-                                                apply eqRefl. apply Nat.lt_0_succ. }
+                                              simpl; rewrite (subTermNil LNN).
+                                              { rewrite H2; [apply eqRefl | apply Nat.lt_0_succ]. }
                                               { apply closedNatToTerm. }
                            *** apply forallI.
                                ---- apply closedNN.
-                               ---- apply impTrans with (LT (var 3) (natToTerm a)).
+                               ---- apply impTrans with (v#3 < natToTerm a)%nn.
                                     ++++ unfold LT at 1. 
                                          repeat rewrite (subFormulaRelation LNN). 
                                          simpl.
@@ -2186,14 +2172,13 @@ Proof.
                                               apply
                                                impE
                                                 with
-                                                  (substF 
-                                                     (substF 
-                                                        (substF 
-                                                           (substF 
-                                                              (substF 
-                                                                 (substF betaFormula 1 (var 3)) 2
-                                                                 (natToTerm x)) 0 (var 1)) 3 (natToTerm n)) 0
-                                                        (natToTerm (f (S n)))) 1 (natToTerm (f n))).
+                                                  (substF6  betaFormula
+                                                    1 (var 3)  
+                                                    2 (natToTerm x)
+                                                    0 (var 1) 
+                                                    3 (natToTerm n)
+                                                    0 (natToTerm (f n.+1))
+                                                    1 (natToTerm (f n))).
                                               { apply iffE1. repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                 apply (subFormulaExch LNN).
                                                 - discriminate.
@@ -2204,31 +2189,27 @@ Proof.
                                               { apply
                                                  impE
                                                   with
-                                                    (substF 
-                                                       (substF 
-                                                          (substF 
-                                                             (substF 
-                                                                (substF 
-                                                                   (substF betaFormula 1 (var 3)) 2
-                                                                   (natToTerm x)) 3 (natToTerm n)) 0
-                                                             (var 1)) 0 (natToTerm (f (S n)))) 1 (natToTerm (f n))).
+                                                    (substF6 betaFormula
+                                                       1 (var 3)
+                                                       2 (natToTerm x)
+                                                       3 (natToTerm n)
+                                                       0 (var 1)
+                                                       0 (natToTerm (f n.+1))
+                                                       1 (natToTerm (f n))).
                                                 - apply iffE1. repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                   apply (subFormulaExch LNN).
                                                   + discriminate.
                                                   + apply closedNatToTerm.
-                                                  + intro H6. destruct H6 as [H6 | H6].
+                                                  + intros [H6 | H6].
                                                     * discriminate H6.
                                                     * elim H6.
-                                                - apply
-                                                   impE
-                                                    with
-                                                      (substF 
-                                                         (substF 
-                                                            (substF 
-                                                               (substF 
-                                                                  (substF betaFormula 1 (var 3)) 2
-                                                                  (natToTerm x)) 3 (natToTerm n)) 0 (var 1)) 1
-                                                         (natToTerm (f n))).
+                                                - apply impE with
+                                                      (substF5 betaFormula
+                                                         1 (var 3)
+                                                         2 (natToTerm x)
+                                                         3 (natToTerm n)
+                                                         0 (var 1)
+                                                         1 (natToTerm (f n))).
                                                   + apply iffE2. repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                     apply (subFormulaNil LNN). intro H6.
                                                     destruct (freeVarSubFormula3 _ _ _ _ _ H6) as [H7 | H7].
@@ -2236,16 +2217,13 @@ Proof.
                                                     * destruct H7 as [H7 | H7].
                                                       -- discriminate H7.
                                                       -- elim H7.
-                                                  + apply
-                                                     impE
-                                                      with
-                                                        (substF 
-                                                           (substF 
-                                                              (substF 
-                                                                 (substF 
-                                                                    (substF betaFormula 2 (natToTerm x)) 1
-                                                                    (var 3)) 3 (natToTerm n)) 0 (var 1)) 1
-                                                           (natToTerm (f n))).
+                                                  + apply impE with
+                                                        (substF5 betaFormula 
+                                                           2 (natToTerm x)
+                                                           1 (var 3)
+                                                           3 (natToTerm n)
+                                                           0 (var 1)
+                                                           1 (natToTerm (f n))).
                                                     * apply iffE2. repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                       apply (subFormulaExch LNN).
                                                       -- discriminate.
@@ -2256,11 +2234,11 @@ Proof.
                                                     * apply
                                                        impE
                                                         with
-                                                          (substF 
-                                                             (substF 
-                                                                (substF 
-                                                                   (substF  betaFormula 2 (natToTerm x)) 1
-                                                                   (natToTerm n)) 0 (var 1)) 1 (natToTerm (f n))).
+                                                          (substF4 betaFormula 
+                                                             2 (natToTerm x)
+                                                             1 (natToTerm n)
+                                                             0 (var 1)
+                                                             1 (natToTerm (f n))).
                                                       -- apply iffE2. repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                          apply (subFormulaTrans LNN). intro H6.
                                                          assert
@@ -2272,13 +2250,11 @@ Proof.
                                                             ** apply H4. eapply in_remove. apply H8.
                                                             ** repeat constructor.
                                                          ++ elim (closedNatToTerm _ _ H8).
-                                                      -- apply
-                                                          impE
-                                                           with
-                                                             (substF 
-                                                                (substF (equal (var 0) (natToTerm (beta x n))) 0
-                                                                   (var 1)) 1 (natToTerm (f n))).
-                                                         ++ apply iffE2. repeat (apply (reduceSub LNN); [ apply closedNN |]).
+                                                      -- apply impE with
+                                                             (substF2 (v#0 = natToTerm (beta x n))%nn
+                                                                0 (var 1)
+                                                                1 (natToTerm (f n))).
+                                                         ++ apply iffE2;repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                             apply H5.
                                                          ++ repeat rewrite (subFormulaEqual LNN). simpl.
                                                             repeat rewrite (subTermNil LNN (natToTerm (beta x n))).
@@ -2290,11 +2266,11 @@ Proof.
                                                 apply
                                                  impE
                                                   with
-                                                    (substF 
-                                                       (substF 
-                                                          (substF (substF B 2 (var 3)) 3
-                                                             (natToTerm n)) 0 (natToTerm (f (S n)))) 1
-                                                       (natToTerm (f n))).
+                                                    (substF4 B 
+                                                       2 (var 3)
+                                                       3 (natToTerm n)
+                                                       0 (natToTerm (f (S n)))
+                                                       1 (natToTerm (f n))).
                                                 - apply iffE2. repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                   apply (subFormulaNil LNN). intro H5.
                                                   destruct (freeVarSubFormula3 _ _ _ _ _ H5) as [H6 | [H6 | H6]].
@@ -2304,19 +2280,19 @@ Proof.
                                                 - apply
                                                    impE
                                                     with
-                                                      (substF 
-                                                         (substF  (substF  B 2 (natToTerm n)) 0
-                                                            (natToTerm (f (S n)))) 1 (natToTerm (f n))).
+                                                      (substF3 B 
+                                                         2 (natToTerm n)
+                                                         0 (natToTerm (f (S n)))
+                                                         1 (natToTerm (f n))).
                                                   + apply iffE2. repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                     apply (subFormulaTrans LNN). intro H5. elim (proj1 (Nat.le_ngt 3 2)).
                                                     * apply H0. eapply in_remove. apply H5.
                                                     * repeat constructor.
-                                                  + apply
-                                                     impE
-                                                      with
-                                                        (substF 
-                                                           (substF  (substF B 2 (natToTerm n)) 1
-                                                              (natToTerm (f n))) 0 (natToTerm (f (S n)))).
+                                                  + apply impE with
+                                                        (substF3 B 
+                                                           2 (natToTerm n)
+                                                           1 (natToTerm (f n))
+                                                           0 (natToTerm (f (S n)))).
                                                     * apply iffE2. repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                       apply (subFormulaExch LNN).
                                                       -- discriminate.
@@ -2332,31 +2308,25 @@ Proof.
                                                       -- rewrite (subFormulaEqual LNN). simpl. rewrite (subTermNil LNN).
                                                          ++ unfold f. simpl. apply eqRefl.
                                                          ++ apply closedNatToTerm. }
-                                              { apply
-                                                 impE
-                                                  with
-                                                    (substF 
-                                                       (substF 
-                                                          (substF 
-                                                             (substF 
-                                                                (substF betaFormula 2 (natToTerm x)) 1
-                                                                (Succ (var 3))) 3 (natToTerm n)) 0
-                                                          (natToTerm (f (S n)))) 1 (natToTerm (f n))).
+                                              { apply impE with
+                                                    (substF5  betaFormula 
+                                                       2 (natToTerm x)
+                                                       1 (Succ (var 3))
+                                                       3 (natToTerm n)
+                                                       0 (natToTerm (f (S n)))
+                                                       1 (natToTerm (f n))).
                                                 - apply iffE2. repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                   apply (subFormulaExch LNN).
                                                   + discriminate.
                                                   + simpl. intro H4. lia.
                                                   + apply closedNatToTerm.
-                                                - apply
-                                                   impE
-                                                    with
-                                                      (substF 
-                                                         (substF 
-                                                            (substF 
-                                                               (substF
-                                                                  (substF betaFormula 2 (natToTerm x)) 3
-                                                                  (natToTerm n)) 1 (natToTerm (S n))) 0
-                                                            (natToTerm (f (S n)))) 1 (natToTerm (f n))).
+                                                - apply impE with
+                                                      (substF5 betaFormula 
+                                                         2 (natToTerm x)
+                                                         3 (natToTerm n)
+                                                         1 (natToTerm (S n))
+                                                         0 (natToTerm (f (S n)))
+                                                         1 (natToTerm (f n))).
                                                   + apply iffE2. repeat (apply (reduceSub LNN); [ apply closedNN |]).
                                                     replace (natToTerm (S n)) with
                                                      (substT LNN (Succ (var 3)) 3 (natToTerm n)).
