@@ -55,7 +55,7 @@ Notation "A <-> B" := (@iffH _ A B): nt_scope.
 
 Notation "t = u" := (@equal _ t u): nt_scope.
 Notation "t <> u" := (~ t = u)%nt : nt_scope.
-Notation "'v#' i" := (var i) (at level 3, format "'v#' i") : nt_scope. 
+Notation "'v#' i" := (var i) (at level 3, format "'v#' i", i at level 0) : nt_scope. 
 
 Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
   (x at level 0, y at level 0, at level 200, right associativity) : nt_scope. 

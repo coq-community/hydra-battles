@@ -792,7 +792,7 @@ Infix "->" := (impH): fol_scope.
 Notation "~ A" := (@notH _ A): fol_scope. 
 Notation "A <-> B" := (@iffH _ A B): fol_scope.
 
-Notation "'v#' i" := (var i) (at level 3, format "'v#' i") : fol_scope. 
+Notation "'v#' i" := (var i) (at level 3, format "'v#' i", i at level 0) : fol_scope. 
 Notation "'exH' x .. y , p" := (existH  x .. (existH y p) ..)
   (x at level 0, y at level 0, at level 200, right associativity) : fol_scope. 
 Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
