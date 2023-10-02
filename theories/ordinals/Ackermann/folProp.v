@@ -890,7 +890,8 @@ End Fol_Properties.
 Arguments closed {L} _.
 
 #[global] Arguments substF {L} _ _.
-
+#[global] Arguments substT {L} _ _.
+#[global] Arguments substTs {L n} _ _ _ .
 (** compatibility with older names *)
 
 #[deprecated(note="use substF")]

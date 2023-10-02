@@ -27,7 +27,7 @@ Let SysPrf := SysPrf L.
 Lemma freeVarSubTerm1 (t : Term):
   forall  (v : nat) (s : Term) (x : nat),
     In x (freeVarT L t) ->
-    v <> x -> In x (freeVarT L (substT L t v s)).
+    v <> x -> In x (freeVarT L (substT t v s)).
 Proof.
   elim t using
     Term_Terms_ind
@@ -35,7 +35,7 @@ Proof.
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
              forall (v : nat) (s : Term) (x : nat),
                In x (freeVarTs L n ts) ->
-               v <> x -> In x (freeVarTs L n (substTs L n ts v s))).
+               v <> x -> In x (freeVarTs L n (substTs ts v s))).
   -  intros n v s x H H0; simpl.
      induction (eq_nat_dec v n) as [? | ?].
      + destruct H0; simpl in H; induction H as [H| H].
@@ -52,15 +52,15 @@ Qed.
 
 Lemma freeVarSubTerms1 (n : nat) (ts : Terms n) (v : nat) (s : Term) (x : nat):
   In x (freeVarTs L n ts) ->
-  v <> x -> In x (freeVarTs L n (substTs L n ts v s)).
+  v <> x -> In x (freeVarTs L n (substTs ts v s)).
 Proof.
   intros H H0; induction ts as [| n t ts Hrects].
   - auto.
   - unfold freeVarTs in H; fold (freeVarT L t) in H.
     fold (freeVarTs L _ ts) in H.
     unfold freeVarTs; simpl;
-      fold (freeVarT L (substT L t v s));
-      fold (freeVarTs L n (substTs L n ts v s));
+      fold (freeVarT L (substT t v s));
+      fold (freeVarTs L n (substTs ts v s));
       apply in_or_app.
     induction (in_app_or _ _ _ H).
     + left; apply freeVarSubTerm1; auto.
@@ -112,7 +112,7 @@ Qed.
 Lemma freeVarSubTerm2 (t : Term) :
   forall  (v : nat) (s : Term) (x : nat),
     In x (freeVarT L s) ->
-    In v (freeVarT L t) -> In x (freeVarT L (substT L t v s)).
+    In v (freeVarT L t) -> In x (freeVarT L (substT t v s)).
 Proof.
   elim t using Term_Terms_ind 
     with
@@ -120,7 +120,7 @@ Proof.
              forall (v : nat) (s : Term) (x : nat),
                In x (freeVarT L s) ->
                In v (freeVarTs L n ts) ->
-               In x (freeVarTs L n (substTs L n ts v s))).
+               In x (freeVarTs L n (substTs ts v s))).
   - intros n v s x H H0; simpl; induction (eq_nat_dec v n) as [? | b].
     + assumption.
     +  elim b; induction H0 as [H0| H0].
@@ -128,13 +128,13 @@ Proof.
           * contradiction.
   - intros f t0 H v s x H0 H1; simpl; unfold freeVarT;
       fold
-        (freeVarTs L _ (substTs L (arityF L f) t0 v s)).
+        (freeVarTs L _ (substTs  t0 v s)).
     apply H; auto.
   - intros v s x H H0; auto.
   - intros n t0 H t1 H0 v s x H1 H2; simpl; unfold freeVarTs in H2;
     fold (freeVarT L t0) in H2; fold (freeVarTs L n t1) in H2.
-    unfold freeVarTs; fold (freeVarT L (substT L t0 v s));
-      fold (freeVarTs L n (substTs L n t1 v s));
+    unfold freeVarTs; fold (freeVarT L (substT t0 v s));
+      fold (freeVarTs L n (substTs t1 v s));
       apply in_or_app.
     induction (in_app_or _ _ _ H2).
     + left; apply H; auto.
@@ -144,14 +144,14 @@ Qed.
 Lemma freeVarSubTerms2 (n : nat) (ts : Terms n) (v : nat) (s : Term) (x : nat):
  In x (freeVarT L s) ->
  In v (freeVarTs L n ts) ->
- In x (freeVarTs L n (substTs L n ts v s)).
+ In x (freeVarTs L n (substTs ts v s)).
 Proof.
   intros H H0; induction ts as [| n t ts Hrects].
   - contradiction H0. 
   - simpl; unfold freeVarTs in H0; fold (freeVarT L t) in H0.
     fold (freeVarTs L n ts) in H0; unfold freeVarTs.
-    fold (freeVarT L (substT L t v s));
-      fold (freeVarTs L n (substTs L n ts v s));
+    fold (freeVarT L (substT t v s));
+      fold (freeVarTs L n (substTs ts v s));
       apply in_or_app.
     destruct (in_app_or _ _ _ H0).
     + left; apply freeVarSubTerm2; auto.
@@ -209,7 +209,7 @@ Qed.
 
 Lemma freeVarSubTerm3  (t : Term):
   forall (v : nat) (s : Term) (x : nat),
-    In x (freeVarT L (substT L t v s)) ->
+    In x (freeVarT L (substT t v s)) ->
     In x (List.remove eq_nat_dec v (freeVarT L t)) \/
       In x (freeVarT L s).
 Proof.
@@ -218,7 +218,7 @@ Proof.
     with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
              forall (v : nat) (s : Term) (x : nat),
-               In x (freeVarTs L n (substTs L n ts v s)) ->
+               In x (freeVarTs L n (substTs ts v s)) ->
                In x (List.remove eq_nat_dec v (freeVarTs L n ts)) \/
                  In x (freeVarT L s)). 
   - intros n v s x H; simpl in H.
@@ -233,8 +233,8 @@ Proof.
   - auto.
   - intros n t0 H t1 H0 v s x H1; simpl in H1;
       unfold freeVarTs in H1;
-      fold (freeVarT L (substT L t0 v s)) in H1;
-      fold (freeVarTs L n (substTs L n t1 v s)) in H1.
+      fold (freeVarT L (substT t0 v s)) in H1;
+      fold (freeVarTs L n (substTs t1 v s)) in H1.
     destruct (in_app_or _ _ _ H1) as [H2 | H2].
     + induction (H _ _ _ H2) as [H3 | H3].
       * left; apply in_in_remove.
@@ -253,15 +253,15 @@ Qed.
 
 Lemma freeVarSubTerms3 (n : nat) (ts : fol.Terms L n) (v : nat) 
   (s : Term) (x : nat):
-  In x (freeVarTs L n (substTs L n ts v s)) ->
+  In x (freeVarTs L n (substTs ts v s)) ->
   In x (List.remove  eq_nat_dec v (freeVarTs L n ts)) \/
     In x (freeVarT L s).
 Proof.
   intros H; induction ts as [| n t ts Hrects].
   - left; apply H. 
   - simpl in H; unfold freeVarTs in H;
-      fold (freeVarT L (substT L t v s)) in H;
-      fold (freeVarTs L n (substTs L n ts v s)) in H;
+      fold (freeVarT L (substT t v s)) in H;
+      fold (freeVarTs L n (substTs ts v s)) in H;
       induction (in_app_or _ _ _ H) as [H0 | H0].
     + induction (freeVarSubTerm3 _ _ _ _ H0) as [H1 | H1].
       * left.
@@ -373,7 +373,7 @@ Qed.
 
 Lemma freeVarSubTerm4 (t : Term) :
  forall  (v : nat) (s : Term) (x : nat),
- In x (freeVarT L (substT L t v s)) ->
+ In x (freeVarT L (substT t v s)) ->
  ~ In v (freeVarT L t) -> In x (freeVarT L t).
 Proof.
   elim t using
@@ -381,7 +381,7 @@ Proof.
     with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
              forall (v : nat) (s : Term) (x : nat),
-               In x (freeVarTs L n (substTs L n ts v s)) ->
+               In x (freeVarTs L n (substTs ts v s)) ->
                ~ In v (freeVarTs L n ts) -> 
                In x (freeVarTs L n ts)).
   - intros n v s x H H0; simpl in H |- *.
@@ -394,8 +394,8 @@ Proof.
   - intros; assumption.
   - intros n t0 H t1 H0 v s x H1 H2; simpl in H1.
     unfold freeVarTs in H1;
-    fold (freeVarT L (substT L t0 v s)) in H1;
-    fold (freeVarTs L n (substTs L n t1 v s)) in H1;
+    fold (freeVarT L (substT t0 v s)) in H1;
+    fold (freeVarTs L n (substTs t1 v s)) in H1;
     unfold freeVarTs ;
       fold (freeVarT L t0); fold (freeVarTs L n t1).
     induction (in_app_or _ _ _ H1) as [H3 | H3].
@@ -414,14 +414,14 @@ Qed.
 
 Lemma freeVarSubTerms4 (n : nat) (ts : Terms n) (v : nat)
   (s : Term) (x : nat):
-  In x (freeVarTs L n (substTs L n ts v s)) ->
+  In x (freeVarTs L n (substTs  ts v s)) ->
   ~ In v (freeVarTs L n ts) -> In x (freeVarTs L n ts).
 Proof.
   intros H H0; induction ts as [| n t ts Hrects].
   - auto.
   - simpl in H; unfold freeVarTs in H;
-      fold (freeVarT L (substT L t v s)) in H;
-      fold (freeVarTs L n (substTs L n ts v s)) in H.
+      fold (freeVarT L (substT t v s)) in H;
+      fold (freeVarTs L n (substTs ts v s)) in H.
     unfold freeVarTs; fold (freeVarT L t); fold (freeVarTs L n ts).
     induction (in_app_or _ _ _ H) as [H1 | H1].
     + apply in_or_app; left; eapply freeVarSubTerm4.
@@ -506,13 +506,13 @@ Proof.
 Qed.
 
 Lemma subTermNil (t : Term) (v : nat) (s : Term):
- ~ In v (freeVarT L t) -> substT L t v s = t.
+ ~ In v (freeVarT L t) -> substT t v s = t.
 Proof.
   elim t using
     Term_Terms_ind
     with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-             ~ In v (freeVarTs L n ts) -> substTs L n ts v s = ts).
+             ~ In v (freeVarTs L n ts) -> substTs ts v s = ts).
   - intros n H; simpl in H; rewrite subTermVar2.
     + reflexivity.
     + intro H0; apply H; left; auto. 
@@ -530,16 +530,15 @@ Qed.
  
 Lemma subTermTrans  (t : Term) (v1 v2 : nat) (s : Term):
  ~ In v2 (List.remove  eq_nat_dec v1 (freeVarT L t)) ->
- substT L (substT L t v1 (var v2)) v2 s =
- substT L t v1 s.
+ substT (substT t v1 (var v2)) v2 s = substT t v1 s.
 Proof.
   elim t using
     Term_Terms_ind
     with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
              ~ In v2 (List.remove eq_nat_dec v1 (freeVarTs L n ts)) ->
-             substTs L n (substTs L n ts v1 (var v2)) v2 s =
-               substTs L n ts v1 s).
+             substTs  (substTs  ts v1 (var v2)) v2 s =
+               substTs ts v1 s).
   - intros n H; simpl; induction (eq_nat_dec v1 n) as [? | b].
     + now rewrite (subTermVar1 L).
     + rewrite (subTermVar2 L).
@@ -568,8 +567,8 @@ Lemma subTermExch  (t : Term) (v1 v2 : nat) (s1 s2 : Term):
  v1 <> v2 ->
  ~ In v2 (freeVarT L s1) ->
  ~ In v1 (freeVarT L s2) ->
- substT L (substT L t v1 s1) v2 s2 =
- substT L (substT L t v2 s2) v1 s1.
+ substT (substT t v1 s1) v2 s2 =
+ substT (substT t v2 s2) v1 s1.
 Proof.
   elim t using
     Term_Terms_ind
@@ -578,8 +577,8 @@ Proof.
              v1 <> v2 ->
              ~ In v2 (freeVarT L s1) ->
              ~ In v1 (freeVarT L s2) ->
-             substTs L n (substTs L n ts v1 s1) v2 s2 =
-               substTs L n (substTs L n ts v2 s2) v1 s1).
+             substTs (substTs ts v1 s1) v2 s2 =
+               substTs (substTs ts v2 s2) v1 s1).
  - intros n H H0 H1; simpl; induction (eq_nat_dec v1 n) as [a | ?].
    + induction (eq_nat_dec v2 n).
      * elim H; congruence. 
@@ -596,7 +595,7 @@ Proof.
 Qed.
 
 Lemma subTermsNil  (n : nat) (ts : Terms n) (v : nat) (s : Term):
- ~ In v (freeVarTs L n ts) -> substTs L n ts v s = ts.
+ ~ In v (freeVarTs L n ts) -> substTs ts v s = ts.
 Proof.
   intros H; induction ts as [| n t ts Hrects].
   - auto.
@@ -609,8 +608,8 @@ Qed.
 
 Lemma subTermsTrans (n : nat) (ts : Terms n) (v1 v2 : nat) (s : Term):
  ~ In v2 (List.remove  eq_nat_dec v1 (freeVarTs L n ts)) ->
- substTs L n (substTs L n ts v1 (var v2)) v2 s =
- substTs L n ts v1 s.
+ substTs (substTs ts v1 (var v2)) v2 s =
+ substTs ts v1 s.
 Proof.
   intros H; induction ts as [| n t ts Hrects].
   - auto.
@@ -630,8 +629,8 @@ Lemma subTermsExch  (n : nat) (ts : Terms n) (v1 v2 : nat)
   v1 <> v2 ->
   ~ In v2 (freeVarT L s1) ->
   ~ In v1 (freeVarT L s2) ->
-  substTs L n (substTs L n ts v1 s1) v2 s2 =
-    substTs L n (substTs L n ts v2 s2) v1 s1.
+  substTs (substTs ts v1 s1) v2 s2 =
+    substTs (substTs ts v2 s2) v1 s1.
 Proof.
   intros H H0 H1; induction ts as [| n t ts Hrects].
   - auto.

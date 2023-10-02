@@ -300,7 +300,7 @@ Compute subAllFormula L
 
 
 (* begin snippet substTExample *)
-Compute substT L (h v#1 (h (f v#1) (f v#2)))%fol 1 (h a b)%fol.
+Compute substT (h v#1 (h (f v#1) (f v#2)))%fol 1 (h a b)%fol.
 (* end snippet substTExample *)
 
 Section OnSubstF.

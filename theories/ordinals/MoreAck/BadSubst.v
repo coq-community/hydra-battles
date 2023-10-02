@@ -15,8 +15,8 @@ Module BadSubst.
 
   Fixpoint substF L (F : Formula L) v (t: Term L) :=
     match F with
-  | equal  t1 t2 => equal (substT L t1 v t) (substT L t2 v t)
-  | atomic  r s =>  atomic L r (substTs L (arityR  L r) s v t)
+  | equal  t1 t2 => equal (substT t1 v t) (substT t2 v t)
+  | atomic  r s =>  atomic L r (substTs s v t)
   | impH  G H => impH (substF L G v t) (substF L H v t)
   | notH  G => notH (substF L G v t)
   | forallH  w G => if Nat.eq_dec w v then F else forallH w (substF L G v t)

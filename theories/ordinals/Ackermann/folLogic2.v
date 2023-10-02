@@ -67,16 +67,15 @@ Qed.
 Lemma subSubTerm (t : Term) (v1 v2 : nat) (s1 s2 : Term):
   v1 <> v2 ->
   ~ In v1 (freeVarT L s2) ->
-  substT L (substT L t v1 s1) v2 s2 =
-    substT L 
-      (substT L t v2 s2) v1 (substT L s1 v2 s2).
+  substT (substT t v1 s1) v2 s2 =
+    substT (substT t v2 s2) v1 (substT s1 v2 s2).
 Proof.
   intros H H0. 
   elim t using Term_Terms_ind with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-             substTs L n (substTs L n ts v1 s1) v2 s2 =
-               substTs L n (substTs L n ts v2 s2) v1
-                 (substT L s1 v2 s2)); simpl in |- *.
+             substTs (substTs ts v1 s1) v2 s2 =
+               substTs (substTs ts v2 s2) v1
+                 (substT s1 v2 s2)); simpl in |- *.
   - intros n. 
     destruct (eq_nat_dec v1 n)  as [ e | n0].
     + destruct (eq_nat_dec v2 n)  as [e0 | n0].
@@ -97,9 +96,8 @@ Qed.
 Lemma subSubTerms (n : nat) (ts : Terms n) (v1 v2 : nat) (s1 s2 : Term):
   v1 <> v2 ->
   ~ In v1 (freeVarT L s2) ->
-  substTs L n (substTs L n ts v1 s1) v2 s2 =
-    substTs L n (substTs L n ts v2 s2) v1
-      (substT L s1 v2 s2).
+  substTs (substTs ts v1 s1) v2 s2 =
+    substTs (substTs ts v2 s2) v1 (substT s1 v2 s2).
 Proof.
   intros H H0; induction ts as [| n t ts Hrects].
   - reflexivity.
@@ -116,7 +114,7 @@ Lemma subSubFormula (f : Formula) (v1 v2 : nat) (s1 s2 : Term):
  SysPrf T
    (iffH (substF  (substF  f v1 s1) v2 s2)
       (substF  (substF  f v2 s2) v1
-         (substT L s1 v2 s2))).
+         (substT s1 v2 s2))).
 Proof.
   intros H H0 T; apply (sysExtend L) with (Empty_set Formula).
   - intros x H1; destruct H1.
@@ -197,7 +195,7 @@ Proof.
           (substF 
              (substF 
                 (forallH v' (substF  a v (var v'))) v2 s2) v1
-             (substT L s1 v2 s2))).
+             (substT s1 v2 s2))).
      apply (iffE2 L).
       * assert
           (H7: folProof.SysPrf L (Empty_set Formula)

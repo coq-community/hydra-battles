@@ -42,7 +42,7 @@ Definition codeSubTerms (t s v : nat) : nat :=
 Lemma codeSubTermCorrect :
   forall (t : Term) (v : nat) (s : Term),
     codeSubTerm (codeTerm t) v (codeTerm s) =
-      codeTerm (substT L t v s).
+      codeTerm (substT t v s).
 Proof.
   set
     (g :=
@@ -60,7 +60,7 @@ Proof.
     with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
              codeSubTerms (codeTerms ts) v (codeTerm s) =
-               codeTerms (substTs L n ts v s)).
+               codeTerms (substTs ts v s)).
     - intro n; simpl; replace (codeTerm (var n)) with (cPair 0 n).
       + unfold codeSubTerm, codeSubTermTerms, evalStrongRec; simpl.
         repeat rewrite cPairProjections1 || rewrite cPairProjections2.
@@ -73,7 +73,7 @@ Proof.
     - intros f t0 H; simpl;
         transitivity
           (cPair (S (cf f))
-             (codeTerms (substTs L (arityF L f) t0 v s))).
+             (codeTerms (substTs t0 v s))).
       + rewrite <- H; 
           replace (codeTerm (apply f t0)) 
           with
@@ -107,8 +107,8 @@ Proof.
       reflexivity.
     - intros n t0 H t1 H0 ; simpl.
       transitivity
-        (S (cPair (codeTerm (substT L t0 v s))
-              (codeTerms (substTs L n t1 v s)))).
+        (S (cPair (codeTerm (substT t0 v s))
+              (codeTerms (substTs t1 v s)))).
       + rewrite <- H, <-  H0.
         replace (codeTerms  (Tcons t0 t1)) 
           with
@@ -157,7 +157,7 @@ Qed.
 Lemma codeSubTermsCorrect :
   forall (n : nat) (ts : Terms n) (v : nat) (s : Term),
     codeSubTerms (codeTerms ts) v (codeTerm s) =
-      codeTerms  (substTs L n ts v s).
+      codeTerms  (substTs ts v s).
 Proof.
   set
     (g :=
@@ -175,8 +175,8 @@ Proof.
     simpl; repeat rewrite cPairProjections1 || rewrite cPairProjections2.
     reflexivity.
   - simpl; transitivity
-             (S (cPair (codeTerm (substT L t v s))
-                   (codeTerms  (substTs L n ts v s)))).
+             (S (cPair (codeTerm (substT t v s))
+                   (codeTerms  (substTs ts v s)))).
     + rewrite <- Hrects, <- codeSubTermCorrect.
       replace (codeTerms (Tcons t ts)) with
         (S (cPair (codeTerm t) (codeTerms ts))).
