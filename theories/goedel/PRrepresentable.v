@@ -1,58 +1,41 @@
 (** TO DO: Define abbreviations and re-indent !!! 
 **)
 From Coq Require Import Arith.
-From hydras.Ackermann Require Import extEqualNat.
-From hydras.Ackermann Require Import subAll.
-From hydras.Ackermann Require Import folProp.
-From hydras.Ackermann Require Import subProp.
-From hydras.Ackermann Require Import folReplace.
-From hydras.Ackermann Require Import folLogic3.
-From hydras.Ackermann Require Import NN.
-From hydras.Ackermann Require Import NNtheory.
-From hydras.Ackermann Require Import primRec.
+From hydras.Ackermann Require Import extEqualNat subAll folProp subProp folReplace
+  folLogic3 NN NNtheory primRec  expressible.
 From Coqprime Require Import ChineseRem.
-From hydras.Ackermann Require Import expressible.
-From Coq Require Import List.
-From Coq Require Vector.
-From hydras.Ackermann Require Import ListExt.
-From hydras.Ackermann Require Import cPair.
-From Coq Require Import Decidable.
-From Coq Require Import Lia.
+From Coq Require Import  Vector List.
+From hydras.Ackermann Require Import ListExt cPair.
+From Coq Require Import Decidable Lia.
 From hydras Require Import Compat815 ssrnat_extracts.
-
-
 From LibHyps Require Export LibHyps.
 From hydras Require Export MoreLibHyps NewNotations.
 Import NNnotations. 
-
 #[local] Arguments apply _ _ _ : clear implicits.
-
 Import LispAbbreviations. 
+
+(** * Goedel's beta function *)
 
 #[global] Notation rem a b Hposb :=
   (snd (proj1_sig (div_eucl b Hposb a))).
 
-(** E.g. Wikipedia page on [beta] function *)
+Definition beta (a z : nat) : nat :=
+  rem (cdr a) (coPrimeBeta z (car a)) (gtBeta z (car a)).
+
+(** From CoqPrime.ChineseRem 
+
+coPrimeBeta = fun z c : nat => S (c * S z)
+     : nat -> nat -> nat
+
+gtBeta : forall z c : nat, coPrimeBeta z c > 0
+*)
+
+(* ** Usual Definition (cf Wikipedia's page) *)
 
 Module Usual.
   Definition beta x y z := rem x  (y * z.+1).+1  (gtBeta _ _).
 End Usual. 
 
-Section Primitive_Recursive_Representable.
-
-Definition Representable := Representable NN.
-Definition RepresentableAlternate := RepresentableAlternate NN closedNN1.
-Definition RepresentableHelp := RepresentableHelp NN.
-Definition Representable_ext := Representable_ext NN.
-
-Print coPrimeBeta. 
-(*
-coPrimeBeta = fun z c : nat => S (c * S z)
-     : nat -> nat -> nat
-*)
-
-Definition beta (a z : nat) : nat :=
-  rem (cdr a) (coPrimeBeta z (car a)) (gtBeta z (car a)).
 
 (** Paraphrase lemmas *)
 
@@ -62,7 +45,16 @@ Proof.
   unfold beta. now rewrite !cPairProjections2, !cPairProjections1.
 Qed.
 
-(** Adaptations of CoqPrime's lemmas *)
+
+Lemma betaEquiv:  
+  forall x y z,  beta (cPair x y) z = Usual.beta y x z.
+Proof. 
+  intros x y z; now rewrite beta_def. 
+Qed. 
+
+About betaTheorem1.
+
+(** Variations on  CoqPrime's [BetaTheorem1]  *)
 
 Lemma betaThm2 n (y : nat -> nat) :
   {a : nat * nat |
@@ -83,28 +75,18 @@ Proof.
 Qed.
 
 
-Lemma wikiBetaEquiv:  
-  forall x y z,  beta (cPair x y) z = Usual.beta y x z.
-Proof. 
-  intros x y z; now rewrite beta_def. 
-Qed. 
+
+
 Lemma betaThm4 n (y : nat -> nat) :
   {a : nat |
-      forall z, z < n -> y z = Usual.beta  (cdr a) (car a) z}.
+      forall z, z < n -> y z = Usual.beta (cdr a) (car a) z}.
 Proof.
  destruct (betaThm3 n y). 
   exists x. 
  auto. 
-intros ; rewrite <- wikiBetaEquiv.
+intros ; rewrite <- betaEquiv.
  auto.   
 Qed. 
-
-
-
-
-(* To do :  Equivalence with usual (e.g. Wikipedia) definition *)
-
-About betaTheorem1.
 
 Lemma betaTheorem1' :
 forall (n : nat) (y : nat -> nat),
@@ -117,9 +99,6 @@ exists x.
 auto. 
 Qed. 
 
-
-
-
 Definition betaFormula : Formula :=
 (exH 3,
   v#3 < Succ v#2 /\
@@ -131,6 +110,15 @@ Definition betaFormula : Formula :=
       exH 5, (v#5 < Succ v#4 /\ 
                 v#0 +  v#5 * Succ (v#3 * Succ v#1) = v#4))
 )%nn.
+
+Section Primitive_Recursive_Representable.
+
+Definition Representable := Representable NN.
+Definition RepresentableAlternate := RepresentableAlternate NN closedNN1.
+Definition RepresentableHelp := RepresentableHelp NN.
+Definition Representable_ext := Representable_ext NN.
+
+
  
 Lemma betaRepresentable : Representable 2 beta betaFormula.
 Proof.
@@ -162,31 +150,20 @@ Proof.
     simpl in |- *; repeat rewrite (subTermNil LNN).
    + assert
        (H1: SysPrf NN
-          (iffH
+         (iffH
              (existH 3
-                (andH (LT (var 3) (natToTerm (S a)))
+                (andH (v#3 < natToTerm a.+1)%nn
                    (existH 4
-                      (andH (LT (var 4) (natToTerm (S a)))
+                      (andH (v#4 < natToTerm a.+1)%nn
                          (andH
-                            (equal
-                               (Plus
-                                  (Times (Plus (var 3) (var 4))
-                                     (Succ (Plus (var 3) (var 4))))
-                                  (Times (natToTerm 2) (var 3)))
-                               (Times (natToTerm 2) (natToTerm a)))
+                            ((v#3 + v#4) * Succ (v#3+v#4) + natToTerm 2 * v#3 =
+                            natToTerm 2 * natToTerm a)%nn
                             (andH
-                               (LT (var 0)
-                                  (Succ (Times (var 3) (Succ (natToTerm a0)))))
+                               (v#0 < Succ (v#3 * Succ (natToTerm a0)))%nn
                                (existH 5
-                                  (andH (LT (var 5) (Succ (var 4)))
-                                     (equal
-                                        (Plus (var 0)
-                                           (Times (var 5)
-                                              (Succ
-                                                 (Times (var 3)
-                                                    (Succ (natToTerm a0))))))
-                                        (var 4))))))))))
-             (equal (var 0) (natToTerm (beta a a0))))); auto.
+                                  (andH (v#5 < Succ v#4)%nn
+                                        (v#0 + v#5 * Succ (v#3 * Succ (natToTerm a0)) = v#4)%nn))))))))
+             (v#0 = natToTerm (beta a a0))%nn)); auto.
    apply iffI.
    * apply impI. apply existSys.
      -- apply closedNN.
@@ -1475,6 +1452,7 @@ Proof.
   - apply H; auto.
 Qed.
 
+
 Remark boundedCheck :
  forall P : nat -> Prop,
  (forall x : nat, decidable (P x)) ->
@@ -1492,6 +1470,7 @@ Proof.
       * destruct H0 as (x, H0). right. exists x. split; try lia. tauto.
 Qed.
 
+(* move to Coq.Logic.Decidable ? *)
 Remark smallestExists :
  forall P : nat -> Prop,
  (forall x : nat, decidable (P x)) ->
@@ -1841,11 +1820,8 @@ Remark In_betaFormula_subst_1_2_0 :
  forall (a b c : Term) (v : nat),
  In v
    (freeVarF LNN
-      (substF 
-         (substF  (substF  betaFormula 1 a) 2 b)
-         0 c)) ->
- In v (freeVarT LNN a) \/
- In v (freeVarT LNN b) \/ In v (freeVarT LNN c).
+      (substF3  betaFormula 1 a 2 b 0 c)) ->
+ In v (freeVarT LNN a) \/ In v (freeVarT LNN b) \/ In v (freeVarT LNN c).
 Proof.
   intros a b c v H. destruct (freeVarSubFormula3 _ _ _ _ _ H) as [H0 | H0].
   - assert
