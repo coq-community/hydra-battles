@@ -638,17 +638,10 @@ Proof.
     apply predIsPR.
     apply cPairPi1IsPR.
   }
-<<<<<<< HEAD
-  induction H0 as (x, p).
-  induction H1 as (x0, p0).
-  exists (composeFunc n.+1 1 (PRcons _ _ x0 (PRnil _)) x).
-  simpl; fold (naryFunc n) in |- *.
-=======
   destruct H0 as [x p]; destruct H1 as [x0 p0].
   exists (composeFunc (S n) 1 (PRcons _ _ x0 (PRnil _)) x).
   simpl in |- *.
   fold (naryFunc n) in |- *.
->>>>>>> 56bedee (Add examples of expressibility)
   intros c; apply extEqualCompose.
   unfold extEqualVector in |- *.
   simpl in |- *; repeat split.

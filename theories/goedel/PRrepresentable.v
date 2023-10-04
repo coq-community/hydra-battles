@@ -35,11 +35,8 @@ Import LispAbbreviations.
 (** E.g. Wikipedia page on [beta] function *)
 
 Module Usual.
-  Definition beta x y z := rem x  (S (y * S z))  (gtBeta _ _).
+  Definition beta x y z := rem x  (y * z.+1).+1  (gtBeta _ _).
 End Usual. 
-
-Search cPair eq.
- 
 
 Section Primitive_Recursive_Representable.
 
@@ -447,11 +444,11 @@ Proof.
                                               - apply
                                                   impE
                                                     with
-                                                     (substF (LT (var 0) (var 1)) 1
+                                                     (substF (v#0 < v#1)%nn 1
                                                       (Succ (Times (natToTerm (cPairPi1 a)) (Succ (natToTerm a0))))).
-                                                + apply (subWithEquals LNN). apply sysWeaken. simpl in |- *.
+                                                + apply (subWithEquals LNN). apply sysWeaken. simpl.
                                                   apply eqSucc.
-                                                  replace (Succ (natToTerm a0)) with (natToTerm (S a0)) by reflexivity.
+                                                  change (Succ (natToTerm a0)) with (natToTerm a0.+1).
                                                   apply natTimes.
                                                 + unfold LT at 2 in |- *.
                                                   rewrite (subFormulaRelation LNN).
@@ -3865,10 +3862,9 @@ Opaque substF.
                     |  |-
                     (folProof.SysPrf LNN NN
                        (iffH 
-                          (substF 
-                             (substF 
-                                (substF (forallH (S (S n)) ?X1) ?X2
-                                   (var (S (S n)))) ?X3 ?X4) ?X5 ?X6) _)) =>
+                          (substF3 
+                             (forallH (S (S n)) ?X1) ?X2
+                                   (var (S (S n))) ?X3 ?X4 ?X5 ?X6) _)) =>
                         apply
                          iffTrans
                           with
@@ -4303,7 +4299,7 @@ Opaque substF.
                                    (substF5 B
                                       n.+1 (natToTerm a0)
                                       n.+2 (var n.+1)
-                                      n.+3  (var n.+4)
+                                      n.+3 (var n.+4)
                                       n.+4 (var n.+3)
                                       n.+5 (var n.+4)).
                                ---- repeat (apply (reduceSub LNN); [ apply closedNN |]).
@@ -4425,9 +4421,9 @@ Opaque substF.
                        +++ repeat (apply (reduceSub LNN); [ apply closedNN |]).
                            apply (subFormulaTrans LNN); PRsolveFV A B n.
                        +++ apply iffTrans with
-                               (substF3  betaFormula
+                               (substF3 betaFormula
                                   2 (var n.+3)
-                                  n.+3  (var n.+2)
+                                  n.+3 (var n.+2)
                                   1 (var n.+1)).
                            *** apply (subFormulaExch LNN); PRsolveFV A B n.
                            *** repeat (apply (reduceSub LNN); [ apply closedNN | idtac ]).
@@ -4445,7 +4441,7 @@ Opaque substF.
     unfold primRecSigmaFormula, minimize, existH in H4;
      repeat
       match goal with
-      | H1:(?X1 = ?X2),H2:(?X1 <> ?X2) |- _ =>
+      | H1:(?X1 = ?X2), H2:(?X1 <> ?X2) |- _ =>
           elim H2; apply H1
       | H1:(?X1 = ?X2),H2:(?X2 <> ?X1) |- _ =>
           elim H2; symmetry  in |- *; apply H1
