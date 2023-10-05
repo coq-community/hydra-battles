@@ -74,9 +74,6 @@ Proof.
   intros; rewrite !cPairProjections2, !cPairProjections1; auto.
 Qed.
 
-
-
-
 Lemma betaThm4 n (y : nat -> nat) :
   {a : nat |
       forall z, z < n -> y z = Usual.beta (cdr a) (car a) z}.
@@ -148,30 +145,25 @@ Proof.
     | rewrite (subFormulaAnd LNN)
     | rewrite (subFormulaEqual LNN) ].
     simpl in |- *; repeat rewrite (subTermNil LNN).
-   + assert
-       (H1: SysPrf NN
-         (iffH
-             (existH 3
-                (andH (v#3 < natToTerm a.+1)%nn
-                   (existH 4
-                      (andH (v#4 < natToTerm a.+1)%nn
-                         (andH
-                            ((v#3 + v#4) * Succ (v#3+v#4) + natToTerm 2 * v#3 =
-                            natToTerm 2 * natToTerm a)%nn
-                            (andH
-                               (v#0 < Succ (v#3 * Succ (natToTerm a0)))%nn
-                               (existH 5
-                                  (andH (v#5 < Succ v#4)%nn
-                                        (v#0 + v#5 * Succ (v#3 * Succ (natToTerm a0)) = v#4)%nn))))))))
-             (v#0 = natToTerm (beta a a0))%nn)); auto.
-   apply iffI.
+   + assert (H1: SysPrf NN
+                   ((exH 3,
+                      v#3 < natToTerm a.+1 /\
+                        (exH 4,
+                          v#4 < natToTerm a.+1 /\
+                            (v#3 + v#4) * S_ (v#3 + v#4) + natToTerm 2 * v#3 = natToTerm 2 * natToTerm a /\
+                            v#0 < S_ (v#3 * S_ (natToTerm a0)) /\
+                            (exH 5, v#5 < S_ v#4 /\
+                                      v#0 + v#5 * S_ (v#3 * S_ (natToTerm a0)) = v#4)))
+                    <->
+                      v#0 = natToTerm (beta a a0))%nn); auto.
+     apply iffI.
    * apply impI. apply existSys.
      -- apply closedNN.
      -- intros [H1 | H1]; try lia. 
         simpl in H1; elim (closedNatToTerm _ _ H1).
      -- apply impE with (v#3 < natToTerm (S a))%nn.
      ++ apply impE with
-        (exH 4, v#4 < natToTerm (S a) 
+        (exH 4, v#4 < natToTerm a.+1 
                 /\
                 (v#3 + v#4) * Succ (v#3 + v#4) + 
                     natToTerm 2 * v#3 = natToTerm 2 * natToTerm a 
