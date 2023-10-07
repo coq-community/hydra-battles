@@ -1,14 +1,15 @@
 From LibHyps Require Import LibHyps.
 
+Tactic Notation (at level 4) tactic4(Tac) "/" "dr" := 
+  Tac ; {< fun h => try generalize dependent h }.
+
+Tactic Notation (at level 4) tactic4(Tac) "/" "r?" :=
+  Tac ; {< fun h  => try revert h }.
+
+
 Require Import List.
 Import ListNotations. 
 #[local] Open Scope autonaming_scope.
-
-
-Tactic Notation (at level 4) tactic4(Tac) "/" "dr" := 
-  Tac ; {< fun h => try generalize dependent h }.
-Tactic Notation (at level 4) tactic4(Tac) "/" "r?" :=
-  Tac ; {< fun h  => try revert h }.
 
 
 (*  move to experimental file (not to export *)
