@@ -16,17 +16,17 @@ Import NNnotations.
 (** * Axioms of [NN] *)
 Section NN.
 
-Definition NN1 := (allH 0, Succ (v#0) <> Zero)%nn. 
+Definition NN1 := (allH 0, S_ v#0 <> Zero)%nn. 
 
-Definition NN2 := (allH 1 0,  Succ(v#0) = Succ(v#1) -> v#0 = v#1)%nn.
+Definition NN2 := (allH 1 0,  S_ v#0 = S_ v#1 -> v#0 = v#1)%nn.
 
 Definition NN3 := (allH 0, v#0 + Zero = v#0)%nn.
 
-Definition NN4 := (allH 1 0, v#0 + Succ(v#1) = Succ (v#0 + v#1))%nn.
+Definition NN4 := (allH 1 0, v#0 + S_ v#1 = S_ (v#0 + v#1))%nn.
 
 Definition NN5 := (allH 0, v#0 * Zero = Zero)%nn.
 
-Definition NN6 := (allH 1 0, v#0 * Succ(v#1) = v#0 * v#1 + v#0)%nn.
+Definition NN6 := (allH 1 0, v#0 * S_ v#1 = v#0 * v#1 + v#0)%nn.
 
 Definition NN7 := (allH 0, ~ v#0 < Zero)%nn.
 
@@ -52,22 +52,22 @@ Qed.
 
 (** ** Generic instantiation of axioms *)
 
-Lemma nn1 (a : Term) : SysPrf NN (Succ a <> Zero)%nn.
+Lemma nn1 (a : Term) : SysPrf NN (S_ a <> Zero)%nn.
 Proof.
-  change (Succ a <> Zero)%nn with
-    (substF  (Succ(v#0) <> Zero)%nn 0 a).
+  change (S_ a <> Zero)%nn with
+    (substF  (S_ v#0 <> Zero)%nn 0 a).
   - apply forallE, Axm; repeat (try right; constructor) || left.
 Qed.
 
-Lemma nn2 (a b : Term):  SysPrf NN (Succ a = Succ b -> a = b)%nn. 
+Lemma nn2 (a b : Term):  SysPrf NN (S_ a = S_ b -> a = b)%nn. 
 Proof.
   set (m := fun x : nat => match x with
                            | O => a
                            | S _ => b
                            end) in *.
-  change (Succ a = Succ b -> a = b)%nn with
+  change (S_ a = S_ b -> a = b)%nn with
     (subAllFormula LNN
-       (Succ(v#0) = Succ(v#1) -> v#0 = v#1)%nn
+       (S_ v#0 = S_ v#1 -> v#0 = v#1)%nn
        (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x
@@ -84,13 +84,13 @@ Proof.
   - apply forallE; apply Axm; repeat (try right; constructor) || left.
 Qed.
 
-Lemma nn4 (a b : Term) : SysPrf NN (a + Succ b = Succ (a + b))%nn.
+Lemma nn4 (a b : Term) : SysPrf NN (a + S_ b = S_ (a + b))%nn.
 Proof.
   set (m := fun x : nat => match x with
                            | O => a
                            | S _ => b
                            end).
-  change (a + Succ b = Succ (a + b))%nn
+  change (a + S_ b = S_ (a + b))%nn
     with (subAllFormula LNN
             (v#0 + Succ(v#1) = Succ(v#0 + v#1))%nn
             (fun x : nat =>

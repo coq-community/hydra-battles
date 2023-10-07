@@ -66,7 +66,7 @@ Notation "'allH' x .. y , p" := (forallH  x .. (forallH y p) ..)
 
 Infix "+" := Plus :nt_scope.
 Infix "*" := Times :nt_scope.
-
+Notation S_ t := (apply LNT Succ_ (Tcons t (Tnil))).
 
 (** ** Notations for printing computed formulas/terms with derived connectives *)
 
@@ -116,7 +116,7 @@ Proof.
 Qed.
 
 Lemma freeVarSucc (x : Term):
-  freeVarT LNT (Succ x) = freeVarT LNT x.
+  freeVarT LNT (S_ x)%nt = freeVarT LNT x.
 Proof.
   now rewrite (app_nil_end (freeVarT LNT x)).
 Qed.
@@ -380,7 +380,7 @@ End Logic.
 Fixpoint natToTerm (n : nat) : Term :=
   match n with
   | O => Zero
-  | S m => Succ (natToTerm m)
+  | S m => S_ (natToTerm m)
   end.
 
 Lemma closedNatToTerm :
@@ -388,7 +388,7 @@ Lemma closedNatToTerm :
 Proof.
   intros a v; induction a as [| a Hreca].
   - cbn; auto. 
-  - simpl; now rewrite freeVarSucc.
+  - simpl. now rewrite freeVarSucc.
 Qed.
 
 
