@@ -85,7 +85,7 @@ Notation "'exH' x .. y , p" := (@existH  LNN x .. (@existH LNN y p) ..)
 Notation "'allH' x .. y , p" := (@forallH LNN  x .. (@forallH LNN y p) ..)
   (x at level 0, y at level 0, at level 200, right associativity) : nn_scope. 
 
-Notation S_ := Succ.
+Notation S_ t := (apply LNN Succ_ (Tcons t (Tnil))).
 
 Infix "+" := Plus: nn_scope.
 Infix "*" := Times: nn_scope.

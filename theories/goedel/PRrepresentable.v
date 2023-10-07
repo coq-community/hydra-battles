@@ -611,7 +611,7 @@ Proof.
                           (subFormulaId LNN
                              (substF 
                                 (substF 
-                                   (LT (var 0) (Succ (Times (var 3) (Succ (natToTerm a0))))) 3
+                                   (LT (var 0) (S_ (Times (var 3) (S_ (natToTerm a0))))) 3
                                    (natToTerm (car a))) 4 (natToTerm (cdr a))) 0).
                          apply
                           impE
@@ -655,7 +655,7 @@ Proof.
                          rewrite <-
                           (subFormulaId LNN
                              (substF3 
-                                (v#5 < Succ v#4 /\ v#0 + v#5 * Succ (v#3 * Succ (natToTerm a0)) = v#4)%nn
+                                (v#5 < S_ v#4 /\ v#0 + v#5 * S_ (v#3 * S_ (natToTerm a0)) = v#4)%nn
                                 3 (natToTerm (car a))
                                 4 (natToTerm (cdr a))
                                 5 (natToTerm a1))
@@ -664,11 +664,11 @@ Proof.
                           impE
                            with
                              (substF4 
-                                (andH (LT (var 5) (Succ (var 4)))
+                                (andH (LT (var 5) (S_ (var 4)))
                                    (equal
                                       (Plus (var 0)
                                          (Times (var 5)
-                                            (Succ (Times (var 3) (Succ (natToTerm a0))))))
+                                            (S_ (Times (var 3) (S_ (natToTerm a0))))))
                                       (var 4)))
                                          3 (natToTerm (car a))
                                       4 (natToTerm (cdr a))
@@ -694,9 +694,7 @@ Proof.
                              repeat
                               (rewrite (subTermNil LNN (natToTerm a1)); [| apply closedNatToTerm ]).
                              apply andI.
-                             ---- replace  (*(Succ (natToTerm (cdr a)))%nn*)
-                                    (apply LNN Languages.Succ_ 
-                                    (Tcons (natToTerm (cdr a)) (Tnil )))
+                             ---- replace  (S_ (natToTerm (cdr a)))%nn
                                     with (natToTerm (S (cdr a))) by reflexivity.
                                   apply natLT. unfold coPrimeBeta in *. lia.
                              ---- replace

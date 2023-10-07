@@ -132,14 +132,14 @@ Lemma nnPlusNotNeeded (n:nat) :
     + apply contradiction with (v#1 < Zero)%nn.
       * apply Axm; right; constructor.
       * apply sysWeaken, nn7. 
-    + rewrite <- (subFormulaId LNN (v#1 < Succ Zero)%nn 1).
+    + rewrite <- (subFormulaId LNN (v#1 < S_ Zero)%nn 1).
       apply impE with 
-        (substF (v#1 < Succ Zero)%nn 1 Zero).
+        (substF (v#1 < S_ Zero)%nn 1 Zero).
       * apply (subWithEquals LNN).
         apply eqSym.
         apply Axm; right; constructor.
       * apply sysWeaken;
-          replace (substF (v#1 < Succ Zero)%nn 1 Zero) 
+          replace (substF (v#1 < S_ Zero)%nn 1 Zero) 
           with
           (natToTerm 0 < natToTerm 1)%nn.
       -- apply natLT; auto.
@@ -151,31 +151,31 @@ Lemma nnPlusNotNeeded (n:nat) :
           apply impTrans with (v#1 < natToTerm (S n))%nn.
         -- apply Hrecn.
         -- apply boundedLT.
-           intros n0 H. 
+           intros n0 H. unfold Succ.
            replace
-             (substF (v#1 < (Succ (Succ (natToTerm n))))%nn
+             (substF (v#1 < (S_ (S_ (natToTerm n))))%nn
                 1 (natToTerm n0)) 
              with (natToTerm n0 < natToTerm (S (S n)))%nn.
-           { apply natLT; now apply Nat.lt_lt_succ_r. }
+           {  apply natLT. now apply Nat.lt_lt_succ_r. }
            unfold LT; rewrite (subFormulaRelation LNN).
            cbn; rewrite (subTermNil LNN).
            ++ reflexivity.
            ++ apply closedNatToTerm.
-      * apply impE with (v#1 < Succ (natToTerm n))%nn.
+      * apply impE with (v#1 < S_ (natToTerm n))%nn.
         -- apply sysWeaken, nn8.
         -- apply Axm; right; constructor.
-    + rewrite <- 
+    + unfold Succ; rewrite <- 
         (subFormulaId LNN 
-           (v#1 <  (Succ (Succ (natToTerm n))))%nn 1).
+           (v#1 <  (S_ (S_ (natToTerm n))))%nn 1).
       apply impE with
-        (substF (v#1 < Succ (Succ (natToTerm n)))%nn 1
-           (Succ (natToTerm n))).
+        (substF (v#1 < S_ (S_ (natToTerm n)))%nn 1
+           (S_ (natToTerm n))).
       * apply (subWithEquals LNN), eqSym, Axm; right; constructor. 
       * apply sysWeaken.
         replace
           (substF 
-             (v# 1 < Succ (Succ (natToTerm n)))%nn 1
-             (Succ (natToTerm n))) 
+             (v# 1 < S_ (S_ (natToTerm n)))%nn 1
+             (S_ (natToTerm n))) 
           with (natToTerm (S n) <  natToTerm (S (S n)))%nn.
         { apply natLT, Nat.lt_succ_diag_r. }
         unfold LT; rewrite (subFormulaRelation LNN); cbn. 
