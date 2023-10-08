@@ -1081,7 +1081,7 @@ Proof.
   apply andI.
   assert
     (H11: forall (t1 t2 s : Term) (v : nat),
-        substF (t1 < t2)%nn v s = (substT t1 v s < substT t2 v s)%nn)
+        substF (t1 < t2)%fol v s = (substT t1 v s < substT t2 v s)%fol)
         by reflexivity.
   repeat rewrite H11.
   repeat rewrite (subTermVar1 LNN) || rewrite (subTermVar2 LNN);

@@ -5,21 +5,21 @@ Require Import NewNotations NNtheory.
 Import NNnotations.
 From Coq Require Import Lia. 
 
-Goal forall n, RepresentableHalf1 NN 0 n (v#0 = natToTerm n)%nn. 
+Goal forall n, RepresentableHalf1 NN 0 n (v#0 = natToTerm n)%fol. 
 Proof. 
   intro n; red; apply impRefl. 
 Qed. 
 
 Lemma L1:   RepresentableHalf1 NN 1 (fun n => n + n) 
-  (v#0 = v#1 + v#1)%nn. 
+  (v#0 = v#1 + v#1)%fol. 
 Proof. 
   intro a; simpl. 
    pose (H:= natPlus a a). 
    unfold substF; simpl.
    apply impI.   
-   apply eqTrans with (natToTerm a + natToTerm a)%nn. 
+   apply eqTrans with (natToTerm a + natToTerm a)%fol. 
    - apply sysExtend with (Ensembles.Singleton _
-                           (v#0 = natToTerm a + natToTerm a)%nn).
+                           (v#0 = natToTerm a + natToTerm a)%fol).
      + right; assumption.
      +  apply Axm; split. 
    - eapply sysExtend with NN.
@@ -28,7 +28,7 @@ Proof.
 Qed. 
 
 Lemma L2:  RepresentableHalf2 NN 1 (fun n => n + n) 
-  (v#0 = v#1 + v#1)%nn. 
+  (v#0 = v#1 + v#1)%fol. 
 Proof. 
   intro a; simpl. 
    pose (H:= natPlus a a). 
@@ -36,7 +36,7 @@ Proof.
    apply impI.   
    apply eqTrans with (natToTerm (a + a)).
    - apply sysExtend with (Ensembles.Singleton _
-                           (v#0 = natToTerm (a + a))%nn).
+                           (v#0 = natToTerm (a + a))%fol).
      + right.  assumption.
      +  apply Axm; split. 
    - eapply sysExtend with NN.
@@ -44,7 +44,7 @@ Proof.
      + apply eqSym. apply H.
 Qed. 
 
-Lemma L3:  Representable NN 1 (fun n => n + n)   (v#0 = v#1 + v#1)%nn. 
+Lemma L3:  Representable NN 1 (fun n => n + n)   (v#0 = v#1 + v#1)%fol. 
 Proof.  
  split. 
  simpl. 
@@ -54,7 +54,7 @@ Proof.
    apply L2.
  Qed. 
 
-Lemma L4 : Representable NN 1 (fun n => n * 2)  (v#0 = v#1 + v#1)%nn.
+Lemma L4 : Representable NN 1 (fun n => n * 2)  (v#0 = v#1 + v#1)%fol.
 Proof. 
  split. 
   simpl; lia.
@@ -70,11 +70,11 @@ Qed.
 
 (** [v#2] is bound to n *)
 
-Lemma L5:   RepresentableHalf1 NN 2 (fun n p => n) (v#0 = v#2)%nn. 
+Lemma L5:   RepresentableHalf1 NN 2 (fun n p => n) (v#0 = v#2)%fol. 
 Proof. 
   intros a b; simpl. 
    unfold substF; simpl.  Search substT . rewrite subProp.subTermNil. 
-    Search (SysPrf _ (?A -> ?A)%nn). 
+    Search (SysPrf _ (?A -> ?A)%fol). 
    apply impRefl.
    induction a.  
     simpl. 
@@ -86,7 +86,7 @@ Proof.
 Qed.
 
 (** [v#1] is bound to p *)
-Lemma L6:   RepresentableHalf1 NN 2 (fun n p => p) (v#0 = v#1)%nn. 
+Lemma L6:   RepresentableHalf1 NN 2 (fun n p => p) (v#0 = v#1)%fol. 
 Proof. 
   intros a b; simpl. 
    unfold substF; simpl.  Search substT . 

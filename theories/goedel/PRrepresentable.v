@@ -103,7 +103,7 @@ Definition betaFormula : Formula :=
       v#0 < Succ (v#3 * Succ v#1) /\
       exH 5, (v#5 < Succ v#4 /\ 
                 v#0 +  v#5 * Succ (v#3 * Succ v#1) = v#4))
-)%nn.
+)%fol.
 
 Section Primitive_Recursive_Representable.
 
@@ -150,13 +150,13 @@ Proof.
                             (exH 5, v#5 < S_ v#4 /\
                                       v#0 + v#5 * S_ (v#3 * S_ (natToTerm a0)) = v#4)))
                     <->
-                      v#0 = natToTerm (beta a a0))%nn); auto.
+                      v#0 = natToTerm (beta a a0))%fol); auto.
      apply iffI.
    * apply impI. apply existSys.
      -- apply closedNN.
      -- intros [H1 | H1]; try lia. 
         simpl in H1; elim (closedNatToTerm _ _ H1).
-     -- apply impE with (v#3 < natToTerm (S a))%nn.
+     -- apply impE with (v#3 < natToTerm (S a))%fol.
      ++ apply impE with
         (exH 4, v#4 < natToTerm a.+1 
                 /\
@@ -167,7 +167,7 @@ Proof.
                 /\
                   (exH 5, v#5 < Succ v#4 /\ 
                             v#0 + v#5 * Succ (v#3 * Succ (natToTerm a0)) 
-                            = v#4))%nn.
+                            = v#4))%fol.
  
         ** apply sysWeaken. apply impI. apply existSys.
            --- apply closedNN.
@@ -196,8 +196,8 @@ Proof.
                              (Succ (Plus (var 3) (var 4))))
                        (Times (natToTerm 2) (var 3)))
                     (Times (natToTerm 2) (natToTerm a))).
-               *** apply impE with (v#4 < natToTerm (S a))%nn. 
-                   ---- apply impE with (v#3 < natToTerm (S a))%nn.
+               *** apply impE with (v#4 < natToTerm (S a))%fol. 
+                   ---- apply impE with (v#3 < natToTerm (S a))%fol.
                    ++++ do 2 apply sysWeaken.
                         apply boundedLT; intros n H1.
                         rewrite (subFormulaImp LNN).
@@ -408,7 +408,7 @@ Proof.
                                               - apply
                                                   impE
                                                     with
-                                                     (substF (v#0 < v#1)%nn 1
+                                                     (substF (v#0 < v#1)%fol 1
                                                       (Succ (Times (natToTerm (car a)) (Succ (natToTerm a0))))).
                                                 + apply (subWithEquals LNN). apply sysWeaken. simpl.
                                                   apply eqSucc.
@@ -655,7 +655,7 @@ Proof.
                          rewrite <-
                           (subFormulaId LNN
                              (substF3 
-                                (v#5 < S_ v#4 /\ v#0 + v#5 * S_ (v#3 * S_ (natToTerm a0)) = v#4)%nn
+                                (v#5 < S_ v#4 /\ v#0 + v#5 * S_ (v#3 * S_ (natToTerm a0)) = v#4)%fol
                                 3 (natToTerm (car a))
                                 4 (natToTerm (cdr a))
                                 5 (natToTerm a1))
@@ -694,7 +694,7 @@ Proof.
                              repeat
                               (rewrite (subTermNil LNN (natToTerm a1)); [| apply closedNatToTerm ]).
                              apply andI.
-                             ---- replace  (S_ (natToTerm (cdr a)))%nn
+                             ---- replace  (S_ (natToTerm (cdr a)))%fol
                                     with (natToTerm (S (cdr a))) by reflexivity.
                                   apply natLT. unfold coPrimeBeta in *. lia.
                              ---- replace
@@ -2160,7 +2160,7 @@ Proof.
                                                 - elim (in_remove_neq _ _ _ _ _ H6). reflexivity.
                                                 - elim H6. }
                                     ++++ apply impE with
-                                             (substF (v#0 = natToTerm (beta x 0))%nn 0 (natToTerm (f 0))).
+                                             (substF (v#0 = natToTerm (beta x 0))%fol 0 (natToTerm (f 0))).
                                          **** apply iffE2, (reduceSub LNN).
                                               { apply closedNN. }
                                               { apply
@@ -2180,7 +2180,7 @@ Proof.
                                               { apply closedNatToTerm. }
                            *** apply forallI.
                                ---- apply closedNN.
-                               ---- apply impTrans with (v#3 < natToTerm a)%nn.
+                               ---- apply impTrans with (v#3 < natToTerm a)%fol.
                                     ++++ unfold LT at 1. 
                                          repeat rewrite (subFormulaRelation LNN). 
                                          simpl.
@@ -2290,7 +2290,7 @@ Proof.
                                                             ** repeat constructor.
                                                          ++ elim (closedNatToTerm _ _ H8).
                                                       -- apply impE with
-                                                             (substF2 (v#0 = natToTerm (beta x n))%nn
+                                                             (substF2 (v#0 = natToTerm (beta x n))%fol
                                                                 0 (var 1)
                                                                 1 (natToTerm (f n))).
                                                          ++ apply iffE2;repeat (apply (reduceSub LNN); [ apply closedNN |]).

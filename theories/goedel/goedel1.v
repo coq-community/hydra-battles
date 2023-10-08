@@ -50,7 +50,7 @@ Hypothesis
 Hypothesis
   expressT2 :
     forall f : Formula, ~ mem _ T f ->
-    SysPrf T (~ (substF repT v0 (reflection f)))%nn.
+    SysPrf T (~ (substF repT v0 (reflection f)))%fol.
 
 
 

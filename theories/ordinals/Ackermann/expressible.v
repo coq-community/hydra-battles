@@ -28,7 +28,7 @@ Fixpoint RepresentableHalf1 (n : nat) :
   match n return (naryFunc n -> Formula -> Prop) with
   | O =>
       fun (f : naryFunc 0) (A : Formula) =>
-      SysPrf T (A -> v#0 = natToTerm f)%nn
+      SysPrf T (A -> v#0 = natToTerm f)%fol
   | S m =>
       fun (f : naryFunc (S m)) (A : Formula) =>
       forall a : nat,
@@ -40,7 +40,7 @@ Fixpoint RepresentableHalf2 (n : nat) : naryFunc n -> Formula -> Prop :=
   match n return (naryFunc n -> Formula -> Prop) with
   | O =>
       fun (f : naryFunc 0) (A : Formula) =>
-      SysPrf T (v#0 = natToTerm f -> A)%nn
+      SysPrf T (v#0 = natToTerm f -> A)%fol
   | S m =>
       fun (f : naryFunc (S m)) (A : Formula) =>
       forall a : nat,
@@ -68,7 +68,7 @@ Qed.
 
 Lemma RepresentableHalf2Alternate :
  forall (n : nat) (f : naryFunc n) (A B : Formula),
-   SysPrf T (A -> B)%nn -> RepresentableHalf2 n f A -> 
+   SysPrf T (A -> B)%fol -> RepresentableHalf2 n f A -> 
    RepresentableHalf2 n f B.
 Proof.
   induction n as [| n Hrecn]; intros.
@@ -87,7 +87,7 @@ Fixpoint RepresentableHelp (n : nat) : naryFunc n -> Formula -> Prop :=
   match n return (naryFunc n -> Formula -> Prop) with
   | O =>
       fun (f : naryFunc 0) (A : Formula) =>
-      SysPrf T (A <-> v#0 = natToTerm f)%nn
+      SysPrf T (A <-> v#0 = natToTerm f)%fol
   | S m =>
       fun (f : naryFunc (S m)) (A : Formula) =>
       forall a : nat,
@@ -147,7 +147,7 @@ Fixpoint ExpressibleHelp (n : nat) : naryRel n -> Formula -> Prop :=
       fun (R : naryRel 0) (A : Formula) =>
       match R with
       | true => SysPrf T A
-      | false => SysPrf T ( ~ A)%nn
+      | false => SysPrf T ( ~ A)%fol
       end
   | S m =>
       fun (R : naryRel (S m)) (A : Formula) =>
@@ -173,7 +173,7 @@ Proof.
       * apply iffE1, H.
       * apply H0. 
     + simpl in H0 |- *.
-      apply impE with (~ A)%nn.
+      apply impE with (~ A)%fol.
       * apply cp2.
         now apply iffE2.
       * apply H0. 
@@ -189,7 +189,7 @@ Proof.
   + apply H0.
 Qed.
 
-Hypothesis nn1: SysPrf T (natToTerm 1 <> natToTerm 0)%nn.
+Hypothesis nn1: SysPrf T (natToTerm 1 <> natToTerm 0)%fol.
 
 Lemma Representable2Expressible :
  forall (n : nat) (R : naryRel n) (A : Formula),
@@ -213,7 +213,7 @@ Proof.
         induction R.
         * simpl in H.
           apply impE with
-            (substF (v#0 = Succ Zero)%nn  0 (Succ Zero)).
+            (substF (v#0 = Succ Zero)%fol  0 (Succ Zero)).
           -- apply iffE2.
             rewrite <- (subFormulaIff LNN).
             apply forallE.
@@ -225,7 +225,7 @@ Proof.
              apply eqRefl.
         * simpl in H.
           apply  impE with
-            (~ (substF (v#0 = Zero) 0 (Succ Zero)))%nn.
+            (~ (substF (v#0 = Zero) 0 (Succ Zero)))%fol.
           -- apply cp2.
              apply iffE1.
              rewrite <- (subFormulaIff LNN).

@@ -1,7 +1,7 @@
 (** LNN2LNT: 
 
    Translation of [LNN]-formulas and proofs into [LNT] by replacement of 
-    [(t < t')%nn] subformulas with [(exists v, t + Succ v = t')%nt].
+    [(t < t')%fol] subformulas with [(exists v, t + Succ v = t')%nt].
 
    Original file by Russel O'Connor
 
@@ -135,11 +135,11 @@ Qed.
 
 (** * Translation of formulas *)
 
-(** ** Translation of [(v#0 < v#1)%nn] *)
+(** ** Translation of [(v#0 < v#1)%fol] *)
 
 Definition LTFormula := (exH 2, v#0 + Succ v#2 = v#1)%nt.
 
-(** ** Translation of [(t < t')%nn] *)
+(** ** Translation of [(t < t')%fol] *)
 
 (**  The function [translateLT] is defined by an interactive proof (omitted).
      It is specified by the lemma [translateLT1] 
@@ -187,15 +187,15 @@ Qed.
 
 Fixpoint LNN2LNT_formula (f : fol.Formula LNN) : Formula :=
   match f with
-  | (t1 = t2)%nn => (LNN2LNT_term t1 = LNN2LNT_term t2)%nt
+  | (t1 = t2)%fol => (LNN2LNT_term t1 = LNN2LNT_term t2)%nt
   | atomic r ts =>
       match
         r as l return (fol.Terms LNN (arityR LNN l) -> Formula)
       with
       | LT_ => fun ts : fol.Terms LNN (arityR LNN LT_) => translateLT ts
       end ts
-  | (A -> B)%nn => (LNN2LNT_formula A -> LNN2LNT_formula B)%nt
-  | (~ A)%nn =>  (~ LNN2LNT_formula A)%nt
+  | (A -> B)%fol => (LNN2LNT_formula A -> LNN2LNT_formula B)%nt
+  | (~ A)%fol =>  (~ LNN2LNT_formula A)%nt
   | (allH v, A)%fol => (allH v, LNN2LNT_formula A)%nt
   end.
 
@@ -465,12 +465,12 @@ Qed.
 
 Fixpoint LNT2LNN_formula (f : Formula) : fol.Formula LNN :=
   match f with
-  | (t1 = t2)%nt => (LNT2LNN_term t1 = LNT2LNN_term t2)%nn
+  | (t1 = t2)%nt => (LNT2LNN_term t1 = LNT2LNN_term t2)%fol
   | atomic r ts => match r with
                    end
-  | (A -> B)%nt => (LNT2LNN_formula A -> LNT2LNN_formula B)%nn
-  | (~  A)%nt =>   (~ LNT2LNN_formula A)%nn
-  | (allH v, A)%nt => (allH v, LNT2LNN_formula A)%nn
+  | (A -> B)%nt => (LNT2LNN_formula A -> LNT2LNN_formula B)%fol
+  | (~  A)%nt =>   (~ LNT2LNN_formula A)%fol
+  | (allH v, A)%nt => (allH v, LNT2LNN_formula A)%fol
   end.
 
 (** *** Commutation lemmas *)

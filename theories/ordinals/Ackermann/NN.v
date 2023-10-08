@@ -16,24 +16,24 @@ Import NNnotations.
 (** * Axioms of [NN] *)
 Section NN.
 
-Definition NN1 := (allH 0, S_ v#0 <> Zero)%nn. 
+Definition NN1 := (allH 0, S_ v#0 <> Zero)%fol. 
 
-Definition NN2 := (allH 1 0,  S_ v#0 = S_ v#1 -> v#0 = v#1)%nn.
+Definition NN2 := (allH 1 0,  S_ v#0 = S_ v#1 -> v#0 = v#1)%fol.
 
-Definition NN3 := (allH 0, v#0 + Zero = v#0)%nn.
+Definition NN3 := (allH 0, v#0 + Zero = v#0)%fol.
 
-Definition NN4 := (allH 1 0, v#0 + S_ v#1 = S_ (v#0 + v#1))%nn.
+Definition NN4 := (allH 1 0, v#0 + S_ v#1 = S_ (v#0 + v#1))%fol.
 
-Definition NN5 := (allH 0, v#0 * Zero = Zero)%nn.
+Definition NN5 := (allH 0, v#0 * Zero = Zero)%fol.
 
-Definition NN6 := (allH 1 0, v#0 * S_ v#1 = v#0 * v#1 + v#0)%nn.
+Definition NN6 := (allH 1 0, v#0 * S_ v#1 = v#0 * v#1 + v#0)%fol.
 
-Definition NN7 := (allH 0, ~ v#0 < Zero)%nn.
+Definition NN7 := (allH 0, ~ v#0 < Zero)%fol.
 
 Definition NN8 := 
- (allH 1 0, v#0 < Succ(v#1) -> v#0 < v#1 \/ v#0 = v#1)%nn.
+ (allH 1 0, v#0 < Succ(v#1) -> v#0 < v#1 \/ v#0 = v#1)%fol.
 
-Definition NN9 := (allH 1 0, v#0 < v#1 \/ v#0 = v#1 \/ v#1 < v#0)%nn.
+Definition NN9 := (allH 1 0, v#0 < v#1 \/ v#0 = v#1 \/ v#1 < v#0)%fol.
 
 Definition NN := SetEnum NN1 NN2 NN3 NN4 NN5 NN6 NN7 NN8 NN9.
  
@@ -52,22 +52,22 @@ Qed.
 
 (** ** Generic instantiation of axioms *)
 
-Lemma nn1 (a : Term) : SysPrf NN (S_ a <> Zero)%nn.
+Lemma nn1 (a : Term) : SysPrf NN (S_ a <> Zero)%fol.
 Proof.
-  change (S_ a <> Zero)%nn with
-    (substF  (S_ v#0 <> Zero)%nn 0 a).
+  change (S_ a <> Zero)%fol with
+    (substF  (S_ v#0 <> Zero)%fol 0 a).
   - apply forallE, Axm; repeat (try right; constructor) || left.
 Qed.
 
-Lemma nn2 (a b : Term):  SysPrf NN (S_ a = S_ b -> a = b)%nn. 
+Lemma nn2 (a b : Term):  SysPrf NN (S_ a = S_ b -> a = b)%fol. 
 Proof.
   set (m := fun x : nat => match x with
                            | O => a
                            | S _ => b
                            end) in *.
-  change (S_ a = S_ b -> a = b)%nn with
+  change (S_ a = S_ b -> a = b)%fol with
     (subAllFormula LNN
-       (S_ v#0 = S_ v#1 -> v#0 = v#1)%nn
+       (S_ v#0 = S_ v#1 -> v#0 = v#1)%fol
        (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x
@@ -77,22 +77,22 @@ Proof.
     cbn; apply Axm; repeat (try right; constructor) || left.
 Qed.
 
-Lemma nn3 (a : Term): SysPrf NN (a + Zero = a)%nn.
+Lemma nn3 (a : Term): SysPrf NN (a + Zero = a)%fol.
 Proof.
-  change  (a + Zero = a)%nn with
-    (substF (v#0 + Zero = v#0)%nn 0 a).
+  change  (a + Zero = a)%fol with
+    (substF (v#0 + Zero = v#0)%fol 0 a).
   - apply forallE; apply Axm; repeat (try right; constructor) || left.
 Qed.
 
-Lemma nn4 (a b : Term) : SysPrf NN (a + S_ b = S_ (a + b))%nn.
+Lemma nn4 (a b : Term) : SysPrf NN (a + S_ b = S_ (a + b))%fol.
 Proof.
   set (m := fun x : nat => match x with
                            | O => a
                            | S _ => b
                            end).
-  change (a + S_ b = S_ (a + b))%nn
+  change (a + S_ b = S_ (a + b))%fol
     with (subAllFormula LNN
-            (v#0 + Succ(v#1) = Succ(v#0 + v#1))%nn
+            (v#0 + Succ(v#1) = Succ(v#0 + v#1))%fol
             (fun x : nat =>
                match le_lt_dec 2 x with
                | left _ => var x
@@ -102,23 +102,23 @@ Proof.
     cbn; apply Axm; repeat (try right; constructor) || left.
 Qed.
 
-Lemma nn5 ( a : Term) : SysPrf NN (a * Zero = Zero)%nn.
+Lemma nn5 ( a : Term) : SysPrf NN (a * Zero = Zero)%fol.
 Proof.
-  change (a * Zero = Zero)%nn with
-    (substF (v#0 * Zero = Zero)%nn 0 a).
+  change (a * Zero = Zero)%fol with
+    (substF (v#0 * Zero = Zero)%fol 0 a).
   - apply forallE, Axm; repeat (try right; constructor) || left.
 Qed.
 
 Lemma nn6 (a b : Term):
-  SysPrf NN (a * Succ b = a * b + a)%nn.
+  SysPrf NN (a * Succ b = a * b + a)%fol.
 Proof.
   set (m := fun x : nat => match x with
                            | O => a
                            | S _ => b
                            end) in *.
-  change (a * Succ b = a * b + a)%nn with 
+  change (a * Succ b = a * b + a)%fol with 
     (subAllFormula LNN
-       (v#0 * Succ( v#1) = v#0 * v#1 + v#0)%nn
+       (v#0 * Succ( v#1) = v#0 * v#1 + v#0)%fol
        (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x
@@ -129,21 +129,21 @@ Proof.
     cbn; apply Axm; repeat (try right; constructor) || left.
 Qed.
 
-Lemma nn7 (a : Term): SysPrf NN (~ (a <Zero))%nn.
+Lemma nn7 (a : Term): SysPrf NN (~ (a <Zero))%fol.
 Proof.
-  change (~ (a <Zero))%nn with
-    (substF (~ v#0 < Zero)%nn 0 a).
+  change (~ (a <Zero))%fol with
+    (substF (~ v#0 < Zero)%fol 0 a).
   - apply forallE, Axm; repeat (try right; constructor) || left.
 Qed.
 
-Lemma nn8 (a b : Term) : SysPrf NN (a < Succ b -> a < b \/ a = b)%nn.
+Lemma nn8 (a b : Term) : SysPrf NN (a < Succ b -> a < b \/ a = b)%fol.
 Proof.
   set (m := fun x : nat => match x with
                            | O => a
                            | S _ => b
                            end) in *.
-  change (a < Succ b -> a < b \/ a = b)%nn with 
-    (subAllFormula LNN (v#0 < Succ v#1 -> v#0 < v#1 \/ v#0 = v#1)%nn 
+  change (a < Succ b -> a < b \/ a = b)%fol with 
+    (subAllFormula LNN (v#0 < Succ v#1 -> v#0 < v#1 \/ v#0 = v#1)%fol 
               (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x
@@ -153,16 +153,16 @@ Proof.
     cbn; apply Axm; repeat (try right; constructor) || left.
 Qed.
 
-Lemma nn9 (a b : Term):  SysPrf NN (a < b \/ a = b \/ b < a)%nn.
+Lemma nn9 (a b : Term):  SysPrf NN (a < b \/ a = b \/ b < a)%fol.
 Proof.
   set (m := fun x : nat => match x with
                            | O => a
                            | S _ => b
                            end) in *.
-  change (a < b \/ a = b \/ b < a)%nn 
+  change (a < b \/ a = b \/ b < a)%fol 
     with 
     (subAllFormula LNN
-       (v#0 < v#1 \/ v#0 = v#1 \/ v#1 < v#0)%nn
+       (v#0 < v#1 \/ v#0 = v#1 \/ v#1 < v#0)%fol
        (fun x : nat =>
           match le_lt_dec 2 x with
           | left _ => var x

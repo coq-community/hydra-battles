@@ -299,8 +299,8 @@ Lemma NN92PA : SysPrf PA (LNN2LNT_formula NN9).
 Proof.
   replace (LNN2LNT_formula NN9) with
 (allH 1 0,
-     LNN2LNT_formula ((v#0)%nt < (v#1)%nt)%nn \/
-     v#0 = v#1 \/ LNN2LNT_formula (v#1 < v#0)%nn)%nt;
+     LNN2LNT_formula ((v#0)%nt < (v#1)%nt)%fol \/
+     v#0 = v#1 \/ LNN2LNT_formula (v#1 < v#0)%fol)%nt;
     [ idtac | reflexivity ].
   simpl in |- *.
   repeat rewrite translateLT1.
