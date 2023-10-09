@@ -30,6 +30,14 @@ Definition SysPrf := SysPrf LNN.
 #[local] Arguments apply _ _ _ : clear implicits.
 #[local] Arguments atomic _ _ _ : clear implicits.
 
+
+(* end snippet Instantiations *)
+
+(** * Notations (Experimental and unstable)  *)
+
+ Module NNnotations. 
+ Export FolNotations. 
+
 Definition Plus (x y : Term) : Term :=
   apply LNN Plus_ (Tcons x (Tcons y (Tnil))).
 
@@ -44,12 +52,6 @@ Definition Zero : Term := apply LNN Zero_ (Tnil).
 
 Definition LT (x y : Term) : Formula :=
   atomic LNN LT_ (Tcons x (Tcons y (Tnil))). 
-(* end snippet Instantiations *)
-
-(** * Notations (Experimental and unstable)  *)
-
- Module NNnotations. 
- Export FolNotations. 
 (*
 Declare Scope nn_scope.
 Delimit Scope nn_scope with nn. 

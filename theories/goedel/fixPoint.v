@@ -19,7 +19,7 @@ From hydras.Ackermann Require Import NN.
 From hydras.Ackermann Require Import expressible.
 From hydras Require Import Compat815.
 Import FolNotations.
-
+Import NNnotations.
 
 Definition subStar (a v n : nat) : nat := codeSubFormula a v (codeNatToTerm n).
 

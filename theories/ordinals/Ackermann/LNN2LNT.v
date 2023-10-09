@@ -137,7 +137,7 @@ Qed.
 
 (** ** Translation of [(v#0 < v#1)%fol] *)
 
-Definition LTFormula := (exH 2, v#0 + Succ v#2 = v#1)%nt.
+Definition LTFormula := (exH 2, v#0 + LNT.Succ v#2 = v#1)%nt.
 
 (** ** Translation of [(t < t')%fol] *)
 
@@ -712,12 +712,12 @@ Proof.
       - repeat rewrite translateLT1; simpl; unfold newVar; simpl.  
         apply impE 
           with
-          (iffH (existH 3 (equal (Plus (var 2) (Succ (var 3))) (var 0)))
-             (existH 4 (equal (Plus (var 3) (Succ (var 4))) (var 1)))).
+          (iffH (existH 3 (equal (LNT.Plus (var 2) (LNT.Succ (var 3))) (var 0)))
+             (existH 4 (equal (LNT.Plus (var 3) (LNT.Succ (var 4))) (var 1)))).
         + apply impRefl.
         + eapply iffTrans with
             (exH 4,
-               (substF (v#2 + Succ v#3 = v#0)%nt 3 (v#4)))%nt.
+               (substF (v#2 + LNT.Succ v#3 = v#0)%nt 3 (v#4)))%nt.
           * apply (rebindExist LNT).
             simpl in |- *. intro H0; decompose sum H0.
             -- discriminate H1.
@@ -739,7 +739,7 @@ Proof.
                apply iffI.
                ++ apply impI.
                   apply eqTrans with (var 0).
-                  ** apply eqTrans with (Plus (var 2) (Succ (var 4))).
+                  ** apply eqTrans with (LNT.Plus (var 2) (LNT.Succ (var 4))).
                      apply eqPlus.
                      apply eqSym.
                      apply Axm.
@@ -753,9 +753,9 @@ Proof.
                   ** apply Axm; left; right; constructor.
                ++ apply impI.
                   apply eqTrans with (var 1).
-                  **  apply eqTrans with (Plus (var 3) (Succ (var 4))).
-                      fold (Succ (var 4)) in |- *.
-                      fold (Plus (var 2) (Succ (var 4))) in |- *.
+                  **  apply eqTrans with (v#3 + LNT.Succ v#4)%nt.
+                      fold (LNT.Succ (var 4)) in |- *.
+                      fold (LNT.Plus (var 2) (LNT.Succ (var 4))) in |- *.
                       apply eqPlus.
                       apply Axm.
                       left.

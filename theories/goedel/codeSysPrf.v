@@ -25,7 +25,7 @@ From hydras.Ackermann Require Import wellFormed.
 From hydras.Ackermann Require Import prLogic.
 
 From hydras Require Import Compat815.
-
+Import NNnotations. 
 (* begin hide *)
 Ltac SimplFreeVar :=
   repeat

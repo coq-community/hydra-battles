@@ -26,6 +26,7 @@ Definition Terms := Terms LNT.
 Definition SysPrf := SysPrf LNT.
 #[local] Arguments apply _ _ _ : clear implicits.
 
+Module LNT.
 
 Definition Plus (x y : Term) : Term :=
   apply LNT Plus_ (Tcons x (Tcons y (Tnil))).
@@ -39,6 +40,8 @@ Definition Succ (x : Term) : Term :=
 
 Definition Zero : Term := apply LNT Zero_ (Tnil).
 
+End LNT.
+Export LNT.
 
 (** * Notations for LNT formulas: experimental and unstable *)
 

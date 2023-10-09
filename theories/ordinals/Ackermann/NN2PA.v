@@ -67,16 +67,16 @@ simple induction m.
     (LNN2LNT_formula (v#x < LNN.natToTerm 0)%fol).
   apply Axm; right; constructor.
   apply sysWeaken.
-  replace (notH (LNN2LNT_formula (LNN.LT (var x) (LNN.natToTerm 0)))) 
+  replace (notH (LNN2LNT_formula (LT (var x) (LNN.natToTerm 0)))) 
     with
-    (LNN2LNT_formula (notH  (LNN.LT (var x) (LNN.natToTerm 0)))).
+    (LNN2LNT_formula (notH  (LT (var x) (LNN.natToTerm 0)))).
   + apply NN2PA.
     apply nn7.
   + reflexivity.
 - intros n H a x H0; apply impI.
   eapply orE.
   + apply impE with 
-      (LNN2LNT_formula (LNN.LT (var x) (LNN.natToTerm (S n)))).
+      (LNN2LNT_formula (LT (var x) (LNN.natToTerm (S n)))).
     * apply sysWeaken.
       assert (H1: SysPrf PA (LNN2LNT_formula
                      ((v#x < S_ (LNN.natToTerm n)) ->

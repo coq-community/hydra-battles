@@ -212,7 +212,7 @@ Proof.
                                      (Tnil)))
                                with (natToTerm (S a)); 
                                [| reflexivity ].
-                             fold (LT (var 4) (natToTerm (S a))).
+                             fold (LT (var 4) (natToTerm (S a))). 
                              apply boundedLT. intros n0 H2.
                              repeat rewrite (subFormulaImp LNN).
                              repeat rewrite (subFormulaAnd LNN).
@@ -254,7 +254,7 @@ Proof.
                              { intros; apply (subTermNil LNN).
                                apply closedNatToTerm. }
                              repeat rewrite H4.
-                             apply impTrans with
+                             apply impTrans with 
                                (equal 
                                 (natToTerm ((n + n0) * S (n + n0) + 2 * n)) 
                                 (natToTerm (2 * a))).
@@ -277,15 +277,9 @@ Proof.
                                    apply natTimes.
                                + eapply eqTrans.
                                  * apply Axm; right; constructor.
-                                 * apply sysWeaken.
-                                   replace
-                                     (apply LNN Languages.Succ_
-                                        (Tcons (apply LNN Languages.Succ_
-                                              (Tcons 
-                                                 (apply LNN Languages.Zero_
-                                                    (Tnil))
-                                                 (Tnil)))
-                                           (Tnil)))
+                                 * apply sysWeaken. 
+                                   replace (S_ (S_ (apply LNN Zero_ Tnil)))%fol 
+                                    
                                      with (natToTerm 2) by reflexivity.
                                    apply natTimes. }
                              { rewrite cPairLemma1.

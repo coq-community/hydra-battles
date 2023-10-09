@@ -41,9 +41,9 @@ reflexivity.
 Qed. 
 (* end snippet CNNF0 *)
 
-Locate zero.
+Locate Plus. 
 Locate "_ + _".
- Example t1_0 : Term _ := LNN.Plus (S_ (var 1))%fol Zero.  
+ Example t1_0 : Term _ := Plus (S_ (var 1))%fol Zero.  
 Print t1_0. 
 Check S_ Zero. 
 Compute t1_0. 

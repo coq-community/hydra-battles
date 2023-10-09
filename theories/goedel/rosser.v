@@ -16,7 +16,7 @@ From Goedel Require Import PRrepresentable.
 From hydras.Ackermann Require Import expressible.
 From hydras.Ackermann Require Import checkPrf.
 From hydras.Ackermann Require Import codeNatToTerm.
-Import LNN NN.
+Import LNN NN NNnotations.
 From hydras Require Import Compat815.
 
 
