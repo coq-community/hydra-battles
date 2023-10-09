@@ -220,7 +220,7 @@ Proof.
                              assert 
                                (H3: (substT 
                                    (substT 
-                                      (Plus (Times (Plus (var 3) (var 4)) 
+                                      (Plus (Times (v#3 + v#4)%fol 
                                                (Succ (Plus (var 3) (var 4))))
                                          (Times (Succ (Succ Zero)) (var 3))) 
                                       3 (natToTerm n)) 4
@@ -910,16 +910,14 @@ Proof.
             (substT (natToTerm a) (S n)
               (natToTerm a0)))
           with
-          (substF  (equal (var 0)
-                                  (var (S n))) (S n)
-              (natToTerm a)).
+          (substF  (v#0 = v#(n.+1))%fol (S n) (natToTerm a)).
         -- auto.
-        -- rewrite (subFormulaEqual LNN); simpl in |- *.
+        -- rewrite subFormulaEqual; simpl in |- *.
            destruct (Nat.eq_dec n n); try lia.
            rewrite subTermNil; try reflexivity.
            apply closedNatToTerm.
-    + apply RepresentableAlternate with (equal (var 0) (var (S m))).
-      * apply iffSym. apply (subFormulaNil LNN). simpl in |- *. lia.
+    + apply RepresentableAlternate with (v#0 = v#(m.+1))%fol.
+      * apply iffSym, subFormulaNil; simpl; lia.
       * auto.
 Qed.
 
