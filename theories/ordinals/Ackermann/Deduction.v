@@ -140,7 +140,7 @@ Proof.
                 apply H0.
                 firstorder.
               * assumption.
-        } assert (H2: ~ In v (freeVarF L g)).
+        } assert (H2: ~ In v (freeVarF g)).
         { unfold not in |- *; intros; elim n.
           eapply In_freeVarListFormula.
           apply H2.

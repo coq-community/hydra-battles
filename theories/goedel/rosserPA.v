@@ -37,7 +37,7 @@ Hypothesis extendsPA : Included _ PA T.
 Variable repT : Formula.
 Variable v0 : nat.
 Hypothesis
-  freeVarRepT : forall v : nat, In v (freeVarF LNT repT) -> v = v0.
+  freeVarRepT : forall v : nat, In v (freeVarF repT) -> v = v0.
 Hypothesis
   expressT1 :
     forall f : Formula,
@@ -51,7 +51,7 @@ Hypothesis
       (notH (substF repT v0 (natToTerm (codeFormula f)))).
 
 Lemma freeVarRepT' :
- forall v : nat, In v (freeVarF LNN (LNT2LNN_formula repT)) -> v = v0.
+ forall v : nat, In v (freeVarF (LNT2LNN_formula repT)) -> v = v0.
 Proof.
   intros v H; apply freeVarRepT.
   rewrite <- (LNT2LNT_formula repT); now apply LNN2LNT_freeVarF2.
@@ -495,7 +495,7 @@ Proof.
           induction H1.
     - exists (nil (A:=Formula)); split.
       + auto.
-      + assert (H0: ~ In v (freeVarF LNT (LNN2LNT_formula A))).
+      + assert (H0: ~ In v (freeVarF (LNN2LNT_formula A))).
         { intros H0; apply n.
           apply LNN2LNT_freeVarF1.
           assumption.
@@ -556,7 +556,7 @@ Qed.
 Theorem Rosser'sIncompleteness :
   (forall x : Formula, mem _ T x \/ ~ mem _ T x) ->
   exists f : Formula,
-    (forall v : nat, ~ In v (freeVarF LNT f)) /\
+    (forall v : nat, ~ In v (freeVarF f)) /\
       (SysPrf T f \/ SysPrf T (notH f) -> Inconsistent LNT T).
 Proof.
   intros decide;
@@ -572,9 +572,9 @@ Proof.
   -  intros v H; induction (H1 v) as [H2 H3].
      assert
        (H4: In v
-              (List.remove  eq_nat_dec 0 (freeVarF LNT (LNN2LNT_formula A))))
+              (List.remove  eq_nat_dec 0 (freeVarF (LNN2LNT_formula A))))
        by (apply H2; assumption).
-     cut (In v (List.remove eq_nat_dec 0 (freeVarF LNN A))).
+     cut (In v (List.remove eq_nat_dec 0 (freeVarF A))).
      + clear H4.
        intros H4; unfold A in H4; SimplFreeVar. (* introduces H5 H6 H7 ? *)
        assert (H4: v <= 1).
@@ -868,7 +868,7 @@ Proof.
                                 (substF codeSysPrfNot 0
                                    (natToTermLNN (codeFormula x))) 1 
                                 (natToTermLNN n))) rec) (codePrf x0 x x1))). 
-           assert (H4: forall x : nat, ~ In x (freeVarF LNT E)).
+           assert (H4: forall x : nat, ~ In x (freeVarF E)).
            { unfold E; clear H3 E; induction (codePrf x0 x x1).
              - simpl; auto.
              - intros x2; unfold nat_rec, nat_rect; intro H3.
@@ -888,7 +888,7 @@ Proof.
                        end) n).
                assert
                  (H4: In x2
-                        (freeVarF LNN
+                        (freeVarF
                            (andH
                               (notH
                                  (substF 
@@ -1118,14 +1118,14 @@ Proof.
                                    (substF codeSysPrf 0
                                       (natToTermLNN (codeFormula x))) 1 
                                    (natToTermLNN n))) rec) (S (codePrf _ _ x1)))).
-            assert (H4: forall x : nat, ~ In x (freeVarF LNT E)).
+            assert (H4: forall x : nat, ~ In x (freeVarF E)).
             { unfold E; clear H3 E.
               induction (S (codePrf x0 (notH x) x1)).
               - simpl; auto.
               - intros x2; unfold nat_rec, nat_rect; intros H3.
                 cut
                   (In x2
-                     (freeVarF LNN
+                     (freeVarF
                         (andH 
                            (notH
                               (substF
@@ -1161,7 +1161,7 @@ Proof.
                       apply (closedNatToTerm _ _ H3).
                    ** assert
                        (H4: In x2
-                              (freeVarF LNT
+                              (freeVarF
                                  (LNN2LNT_formula
                                     (nat_rec (fun _ : nat => fol.Formula LNN)
                                        (LNT2LNN_formula (equal LNT.Zero LNT.Zero))
@@ -1592,7 +1592,7 @@ Proof.
   destruct  H as [H H0]; simpl in H0.
   assert
     (H1: exists f : Formula,
-        (forall v : nat, ~ In v (freeVarF LNT f)) /\
+        (forall v : nat, ~ In v (freeVarF f)) /\
           (SysPrf PA f \/ SysPrf PA (notH f) -> Inconsistent LNT PA)).
   { eapply Rosser'sIncompleteness with
       (repT := 

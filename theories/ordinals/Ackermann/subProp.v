@@ -70,8 +70,8 @@ Qed.
 Lemma freeVarSubFormula1 (f : Formula):
  forall  (v : nat) (s : Term) (x : nat),
  v <> x ->
- In x (freeVarF L f) ->
- In x (freeVarF L (substF f v s)).
+ In x (freeVarF f) ->
+ In x (freeVarF (substF f v s)).
 Proof.
   elim f using Formula_depth_ind2. 
   - intros t t0 v s x H H0; rewrite subFormulaEqual.
@@ -88,9 +88,9 @@ Proof.
         induction (eq_nat_dec v v0) as [? | b].
       + auto.
       + induction (In_dec eq_nat_dec v (freeVarT L s)) as [a0 | ?].
-        * set (nv := newVar (v0 :: freeVarT L s ++ freeVarF L a)).
+        * set (nv := newVar (v0 :: freeVarT L s ++ freeVarF a)).
           simpl; apply in_in_remove.
-          --  intro H2; elim (newVar1 (v0 :: freeVarT L s ++ freeVarF L a)).
+          --  intro H2; elim (newVar1 (v0 :: freeVarT L s ++ freeVarF a)).
               fold nv; simpl; right; apply in_or_app; right; eapply in_remove.
               rewrite <- H2; apply H1.
           -- apply H.
@@ -161,8 +161,8 @@ Qed.
 Lemma freeVarSubFormula2 (f : Formula):
   forall  (v : nat) (s : Term) (x : nat),
     In x (freeVarT L s) ->
-    In v (freeVarF L f) ->
-    In x (freeVarF L (substF f v s)).
+    In v (freeVarF f) ->
+    In x (freeVarF (substF f v s)).
 Proof.
   elim f using Formula_depth_ind2.  
   - intros t t0 v s x H H0; rewrite subFormulaEqual.
@@ -182,10 +182,10 @@ Proof.
     induction (eq_nat_dec v v0).
     + simpl in H1; elim (in_remove_neq _ eq_nat_dec _ _ _ H1); auto. 
     + induction (In_dec eq_nat_dec v (freeVarT L s)) as [a0 | b0].
-      * set (nv := newVar (v0 :: freeVarT L s ++ freeVarF L a)).
+      * set (nv := newVar (v0 :: freeVarT L s ++ freeVarF a)).
         simpl; apply in_in_remove.
         -- intro H2; 
-             elim (newVar1 (v0 :: freeVarT L s ++ freeVarF L a)).
+             elim (newVar1 (v0 :: freeVarT L s ++ freeVarF a)).
            fold nv; simpl; right.
            apply in_or_app.
            rewrite <- H2; auto.
@@ -282,8 +282,8 @@ Qed.
 
 Lemma freeVarSubFormula3  (f : Formula):
  forall (v : nat) (s : Term) (x : nat),
- In x (freeVarF L (substF f v s)) ->
- In x (List.remove  eq_nat_dec v (freeVarF L f)) \/
+ In x (freeVarF (substF f v s)) ->
+ In x (List.remove  eq_nat_dec v (freeVarF f)) \/
  In x (freeVarT L s).
 Proof.
   elim f using Formula_depth_ind2. 
@@ -322,7 +322,7 @@ Proof.
       * eapply in_remove_neq; rewrite <- a0; apply H0.
       * apply H0.
     + induction (In_dec eq_nat_dec v (freeVarT L s)) as [a0 | ?].
-      * set (nv := newVar (v0 :: freeVarT L s ++ freeVarF L a)).
+      * set (nv := newVar (v0 :: freeVarT L s ++ freeVarF a)).
         induction (eq_nat_dec x v) as [a1 | ?].
         -- rewrite a1;  now right.
         -- assert
@@ -333,7 +333,7 @@ Proof.
            }
            assert
              (H2: In x
-                    (freeVarF L
+                    (freeVarF
                        (substF 
                           (substF a v (var nv)) v0 s))).
            { eapply in_remove; apply H0. }
@@ -343,8 +343,7 @@ Proof.
            induction (H _ H1 _ _ _ H2) as [H0 | H0].
            ++ assert (H4: lt_depth L a (forallH v a)) by
               apply depthForall.
-              assert (H5: In x (freeVarF L
-                              (substF a v (var nv)))).
+              assert (H5: In x (freeVarF (substF a v (var nv)))).
               { eapply in_remove; apply H0. }
               assert (H6: x <> v0).
               { eapply in_remove_neq, H0. }
@@ -360,7 +359,7 @@ Proof.
       * assert (H1: lt_depth L a (forallH v a)) 
           by apply depthForall.
         simpl in H0.
-        assert (H2: In x (freeVarF L (substF a v0 s))).
+        assert (H2: In x (freeVarF (substF a v0 s))).
         { eapply in_remove, H0. }
         induction (H _ H1 _ _ _ H2) as [H3 | H3].
         -- left; apply in_in_remove.
@@ -438,8 +437,8 @@ Qed.
 
 Lemma freeVarSubFormula4  (f : Formula) :
  forall (v : nat) (s : Term) (x : nat),
- In x (freeVarF L (substF f v s)) ->
- ~ In v (freeVarF L f) -> In x (freeVarF L f).
+ In x (freeVarF (substF f v s)) ->
+ ~ In v (freeVarF f) -> In x (freeVarF f).
 Proof.
   elim f using Formula_depth_ind2.
   - intros t t0 v s x H H0; rewrite subFormulaEqual in H.
@@ -472,21 +471,21 @@ Proof.
     induction (eq_nat_dec v v0) as [a0 | ?]. 
     + apply H0.
     + induction (In_dec eq_nat_dec v (freeVarT L s)) as [a0 | ?].
-      * set (nv := newVar (v0 :: freeVarT L s ++ freeVarF L a)).
+      * set (nv := newVar (v0 :: freeVarT L s ++ freeVarF a)).
         simpl in H0.
         assert
           (H2: In x
-             (freeVarF L
+             (freeVarF
                 (substF (substF a v (var nv)) v0 s))).
         { eapply in_remove; apply H0. } 
-        assert (H3: In x (freeVarF L (substF a v (var nv)))).
+        assert (H3: In x (freeVarF (substF a v (var nv)))).
         { eapply H.
           - unfold lt_depth; rewrite subFormulaDepth.
             apply depthForall.
           - apply H2.
           - intros H3; induction (freeVarSubFormula3 _ _ _ _ H3).
             + auto.
-            + elim (newVar1 (v0 :: freeVarT L s ++ freeVarF L a)).
+            + elim (newVar1 (v0 :: freeVarT L s ++ freeVarF a)).
               fold nv; induction H4 as [H4| H4].
               * rewrite H4; simpl; now left.  
               * elim H4.
@@ -656,10 +655,10 @@ Qed.
 Remark subFormulaNTE  (f : Formula):
   forall (T : System),
     (forall (v : nat) (s : Term),
-        ~ In v (freeVarF L f) ->
+        ~ In v (freeVarF f) ->
         SysPrf T (iffH (substF f v s) f)) /\
       (forall (v1 v2 : nat) (s : Term),
-          ~ In v2 (List.remove  eq_nat_dec v1 (freeVarF L f)) ->
+          ~ In v2 (List.remove  eq_nat_dec v1 (freeVarF f)) ->
           SysPrf T
             (iffH (substF (substF f v1 (var v2)) v2 s)
                (substF f v1 s))) /\
@@ -754,12 +753,12 @@ Proof.
       induction H5 as [x0 H5| x0 H5] ; [ induction H5 | induction H5 ].
       * assert
           (H5: In v
-             (freeVarF L
+             (freeVarF
                 (substF (substF a v (var x)) v0 s))).
         { eapply in_remove.
           apply H4.
         } 
-        assert (H6: In v (freeVarF L (substF a v (var x)))).
+        assert (H6: In v (freeVarF (substF a v (var x)))).
         { eapply (freeVarSubFormula4 _ _ _ _ H5).
           intro H6; induction (freeVarSubFormula3 _ _ _ _ H6).
           + auto.
@@ -802,7 +801,7 @@ Proof.
               intro H10; 
                 induction (freeVarSubFormula3 _ _ _ _ H10) 
                 as [H13 | H13].
-              ** assert (H14: In v0 (freeVarF L A1))
+              ** assert (H14: In v0 (freeVarF A1))
                  by (eapply in_remove, H13).
                  induction (freeVarSubFormula3 _ _ _ _ H14) as [H15 | H15].
                  --- elim H0; apply H15.
@@ -879,11 +878,11 @@ Proof.
                        [ induction H11 | induction H11 ].
                      assert
                        (H11: In v
-                               (freeVarF L
+                               (freeVarF
                                   (substF 
                                      (substF a v (var x1)) v2 s)))
                      by (eapply in_remove, H10). 
-                     assert (H12: In v (freeVarF L 
+                     assert (H12: In v (freeVarF 
                                      (substF a v (var x1)))).
                      { eapply freeVarSubFormula4.
                        - apply H11.
@@ -932,7 +931,7 @@ Proof.
                              intros H11 H13 H14.
                              apply H11; clear H11 H13 H14.
                              intros H11; induction (freeVarSubFormula3 _ _ _ _ H11).
-                             assert (H13: In v2 (freeVarF L A1)).
+                             assert (H13: In v2 (freeVarF A1)).
                              { eapply in_remove; apply H12. }
                              unfold A1 in H13; 
                                induction (freeVarSubFormula3 _ _ _ _ H13) as [H14 | H14]. 
@@ -1000,7 +999,7 @@ Proof.
                 [ induction H11 | induction H11 ].
               **  assert
                   (H11: In x
-                          (freeVarF L
+                          (freeVarF
                              (substF 
                                 (substF 
                                    (substF  
@@ -1013,7 +1012,7 @@ Proof.
                 as [H12 | H12].
                   --- assert
                       (H13: In x
-                              (freeVarF L
+                              (freeVarF
                                  (substF 
                                     (substF  
                                        (substF a v 
@@ -1024,7 +1023,7 @@ Proof.
                         as [H14 | H14].
                       +++ assert
                           (H15: In x
-                                  (freeVarF L
+                                  (freeVarF 
                                      (substF
                                         (substF a v 
                                            (var x0)) 
@@ -1034,7 +1033,7 @@ Proof.
                           induction (freeVarSubFormula3 _ _ _ _ H15)
                             as [H16 | H16].
                           *** assert (H17 :
-                                   In x (freeVarF L 
+                                   In x (freeVarF 
                                            (substF a v
                                               (var x0)))).
                               { eapply in_remove; apply H16. }
@@ -1069,16 +1068,16 @@ Proof.
                               (substF  a v (var x0)) 
                               v1 (var v2)) 
                            x0 (var x1)) v2 s).
-                 set (x2 := newVar (v1 :: v2 :: freeVarF L A1 ++ 
-                                      freeVarF L A2)).
+                 set (x2 := newVar (v1 :: v2 :: freeVarF A1 ++ 
+                                      freeVarF A2)).
                  assert
                    (x2prop : ~ In x2 (v1 :: v2 :: 
-                                        freeVarF L A1 ++ 
-                                        freeVarF L A2)).
+                                        freeVarF A1 ++ 
+                                        freeVarF A2)).
                  { unfold x2; apply newVar1. }
                  unfold In in x2prop.
-                 fold (In x2 (freeVarF L A1 ++ 
-                                freeVarF L A2)) in x2prop.
+                 fold (In x2 (freeVarF A1 ++ 
+                                freeVarF A2)) in x2prop.
                  apply impE with
                    (substF 
                       (substF 
@@ -1146,14 +1145,14 @@ Proof.
                              intros H12; 
                                assert
                                  (H13: In v2
-                                         (freeVarF L
+                                         (freeVarF
                                             (substF
                                                (substF a v (var x)) 
                                                x
                                                (var x2)))).
                              { eapply in_remove; apply H12. } 
                              induction (freeVarSubFormula3 _ _ _ _ H13) as [H14 | H14].
-                             assert (H15: In v2 (freeVarF L
+                             assert (H15: In v2 (freeVarF 
                                               (substF a v  (var x))))
                              by (eapply in_remove; apply H14).
                              induction (freeVarSubFormula3 _ _ _ _ H15) as [? | H16].
@@ -1299,13 +1298,13 @@ Proof.
                        [ induction H11 | induction H11 ].
                      assert
                        (H11: In x1
-                               (freeVarF L
+                               (freeVarF
                                   (substF 
                                      (substF a v (var x)) v1 s))) by
                        ( eapply in_remove, H10).
                      induction (freeVarSubFormula3 _ _ _ _ H11) as [H12 | H12].
                      +++ assert (H13: In x1 
-                                        (freeVarF L 
+                                        (freeVarF  
                                            (substF a v (var x)))) by
                            (eapply in_remove, H12).
                          induction (freeVarSubFormula3 _ _ _ _ H13).
@@ -1340,15 +1339,15 @@ Proof.
                      set (A2 := substF 
                                   (substF a v (var x)) v1 s).
                      unfold A2; set (x2 := newVar 
-                                             (v1 :: v2 :: freeVarF L A1 ++ 
-                                                freeVarF L A2)).
+                                             (v1 :: v2 :: freeVarF A1 ++ 
+                                                freeVarF A2)).
                      assert
                        (x2prop : 
-                         ~ In x2 (v1 :: v2 :: freeVarF L A1 ++ 
-                                    freeVarF L A2)) by
+                         ~ In x2 (v1 :: v2 :: freeVarF A1 ++ 
+                                    freeVarF A2)) by
                        ( unfold x2; apply newVar1).
                      unfold In in x2prop;
-                       fold (In x2 (freeVarF L A1 ++ freeVarF L A2)) 
+                       fold (In x2 (freeVarF A1 ++ freeVarF A2)) 
                        in x2prop.
                      apply impE with
                        (substF 
@@ -1475,13 +1474,13 @@ Proof.
                       intros H11;
                         assert
                           (H12: In v2
-                                  (freeVarF L
+                                  (freeVarF 
                                      (substF 
                                         (substF a v (var x0)) x0
                                         (var x2)))).
                       { eapply in_remove; apply H11. }
                      induction (freeVarSubFormula3 _ _ _ _ H12) as [H13 | H13].
-                     assert (H14: In v2 (freeVarF L 
+                     assert (H14: In v2 (freeVarF  
                                            (substF  a v (var x0)))).
                      { eapply in_remove; apply H13. }
                      induction (freeVarSubFormula3 _ _ _ _ H14) as [H15 | H15].
@@ -1615,12 +1614,12 @@ Proof.
                          induction (freeVarSubFormula3 _ _ _ _ H13) as [H14 | H14].
                        --- assert
                            (H15: In v1
-                                   (freeVarF L
+                                   (freeVarF 
                                       (substF  
                                          (substF  a v (var x0)) v2 s2)))
                            by  eapply in_remove, H14.
                            induction (freeVarSubFormula3 _ _ _ _ H15) as [H16 | H16].
-                           assert (H17: In v1 (freeVarF L
+                           assert (H17: In v1 (freeVarF 
                                                  (substF  a v 
                                                     (var x0))))
                            by eapply in_remove, H16.
@@ -1650,7 +1649,7 @@ Proof.
                     induction H13 as [x2 H13| x2 H13]; [ induction H13 | induction H13 ].
                   assert
                     (H13: In x
-                            (freeVarF L
+                            (freeVarF 
                                (substF 
                                   (substF 
                                      (substF  
@@ -1659,7 +1658,7 @@ Proof.
                    by eapply in_remove, H12. 
                   assert
                     (H14: In x
-                            (freeVarF L
+                            (freeVarF 
                                (substF 
                                   (substF  
                                      (substF  a v (var x)) v1 s1)
@@ -1670,13 +1669,13 @@ Proof.
                          as [H15 | H15].
                       ** assert
                           (H16 : In v2
-                                   (freeVarF L
+                                   (freeVarF 
                                       (substF  
                                          (substF  a v (var x)) v1 s1)))
                          by eapply in_remove, H15.
                          induction (freeVarSubFormula3 _ _ _ _ H16) as [H17 | H17].
                          ---  assert 
-                             (H18: In v2 (freeVarF L 
+                             (H18: In v2 (freeVarF  
                                             (substF  a v (var x))))
                               by eapply in_remove, H17. 
                               induction (freeVarSubFormula3 _ _ _ _ H18) as [H19 | H19].
@@ -1750,7 +1749,7 @@ Proof.
                            [H14 | H14]. 
                          +++ assert
                              (In v2
-                                (freeVarF L
+                                (freeVarF 
                                    (substF 
                                       (substF  
                                          (substF  a v (var x)) v1 s1)
@@ -1759,14 +1758,14 @@ Proof.
                              induction (freeVarSubFormula3 _ _ _ _ H15) as [H16 | H16].
                              *** assert
                                  (H17: In v2
-                                         (freeVarF L
+                                         (freeVarF 
                                             (substF  
                                                (substF  a v (var x)) 
                                                v1 s1))).
                                  { eapply in_remove, H16. }
                                  induction (freeVarSubFormula3 _ _ _ _ H17) as 
                                    [H18 | H18].
-                                 assert (H19: In v2 (freeVarF L 
+                                 assert (H19: In v2 (freeVarF  
                                                        (substF  a v 
                                                           (var x)))).
                                  { eapply in_remove, H18. }
@@ -1830,11 +1829,11 @@ Proof.
                      [ induction H16 | induction H16 ].
                    assert
                      (H16: In x0
-                             (freeVarF L
+                             (freeVarF 
                                 (substF  
                                    (substF  a v (var x)) v1 s1))).
                    { eapply in_remove, H15. }
-                   assert (H17: In x0 (freeVarF L 
+                   assert (H17: In x0 (freeVarF  
                                          (substF  a v (var x)))).
                    { eapply freeVarSubFormula4. 
                      - apply H16.
@@ -1879,7 +1878,7 @@ Proof.
                          decompose record (H _ H15 (Empty_set _)) /r.
                          intros H16 H18 H19; apply H18; clear H16 H18 H19; auto.
                          intros H16.
-                         assert (H17: In x (freeVarF L 
+                         assert (H17: In x (freeVarF  
                                               (substF  a v (var x0)))).
                          { eapply in_remove, H16. }
                          induction (freeVarSubFormula3 _ _ _ _ H17) as [H18 | H18].
@@ -1931,12 +1930,12 @@ Proof.
                  induction H16 as [x3 H16| x3 H16]; [ induction H16 | induction H16 ].
                assert
                  (H16: In x2
-                         (freeVarF L
+                         (freeVarF 
                             (substF  
                                (substF  a v (var x)) v1 s1)))
                by eapply in_remove, H15. 
                ++ induction (freeVarSubFormula3 _ _ _ _ H16) as [H17 | H17].
-                  ** assert (H18: In x2 (freeVarF L 
+                  ** assert (H18: In x2 (freeVarF  
                                            (substF  a v (var x))))
                        by eapply in_remove, H17.
                      induction (freeVarSubFormula3 _ _ _ _ H18) as [H19 | H19].
@@ -2036,7 +2035,7 @@ Proof.
                   induction H16 as [x3 H16| x3 H16]; [ induction H16 | induction H16 ].
                   --- assert
                       (H16: In x0
-                              (freeVarF L
+                              (freeVarF 
                                  (substF 
                                     (substF 
                                        (substF  
@@ -2046,7 +2045,7 @@ Proof.
                       induction (freeVarSubFormula3 _ _ _ _ H16) as [H17 | H17].
                       +++ assert
                           (H18: In x0
-                                  (freeVarF L
+                                  (freeVarF 
                                      (substF 
                                         (substF 
                                            (substF  a v (var x)) v1 s1)
@@ -2055,12 +2054,12 @@ Proof.
                           induction (freeVarSubFormula3 _ _ _ _ H18) as [H19 | H19].
                           *** assert
                               (H20: In x0
-                                      (freeVarF L
+                                      (freeVarF 
                                          (substF  
                                             (substF  a v (var x))
                                             v1 s1))).
                               { eapply in_remove, H19. }
-                              assert (H21: In x0 (freeVarF L 
+                              assert (H21: In x0 (freeVarF  
                                                     (substF  a v 
                                                        (var x)))).
                               { eapply freeVarSubFormula4.
@@ -2189,7 +2188,7 @@ Proof.
                        newVar
                          (v2
                             :: v1
-                            :: freeVarF L
+                            :: freeVarF 
                             (forallH x2
                                (substF 
                                   (substF 
@@ -2197,7 +2196,7 @@ Proof.
                                         (substF  a v (var x0)) v2 s2) 
                                      x0
                                      (var x2)) v1 s1)) ++
-                            freeVarF L
+                            freeVarF 
                             (forallH x1
                                (substF 
                                   (substF 
@@ -2210,7 +2209,7 @@ Proof.
                         In z1
                         (v2
                            :: v1
-                           :: freeVarF L
+                           :: freeVarF 
                            (forallH x2
                               (substF 
                                  (substF 
@@ -2218,7 +2217,7 @@ Proof.
                                        (substF  a v (var x0)) v2 s2) 
                                     x0
                                     (var x2)) v1 s1)) ++
-                           freeVarF L
+                           freeVarF 
                            (forallH x1
                               (substF 
                                  (substF 
@@ -2230,14 +2229,14 @@ Proof.
                   unfold In in z1prop.
                   fold
                     (In z1
-                       (freeVarF L
+                       (freeVarF 
                           (forallH x2
                              (substF 
                                 (substF 
                                    (substF  
                                       (substF  a v (var x0))
                                       v2 s2) x0 (var x2)) v1 s1)) ++
-                          freeVarF L
+                          freeVarF 
                           (forallH x1
                              (substF 
                                 (substF 
@@ -2499,7 +2498,7 @@ Proof.
                            [ induction H16 | induction H16 ].
                          assert
                            (H16: In x2
-                                   (freeVarF L
+                                   (freeVarF
                                       (substF 
                                          (substF 
                                             (substF 
@@ -2580,14 +2579,14 @@ Qed.
 
 Lemma subFormulaNil :
   forall (f : Formula) (T : System) (v : nat) (s : Term),
-    ~ In v (freeVarF L f) -> SysPrf T (iffH (substF  f v s) f).
+    ~ In v (freeVarF f) -> SysPrf T (iffH (substF  f v s) f).
 Proof.
   intros f T; eapply proj1;  apply subFormulaNTE.
 Qed.
 
 Lemma subFormulaTrans :
   forall (f : Formula) (T : System) (v1 v2 : nat) (s : Term),
-    ~ In v2 (List.remove  eq_nat_dec v1 (freeVarF L f)) ->
+    ~ In v2 (List.remove  eq_nat_dec v1 (freeVarF f)) ->
     SysPrf T
       (iffH (substF  (substF  f v1 (var v2)) v2 s)
          (substF  f v1 s)).

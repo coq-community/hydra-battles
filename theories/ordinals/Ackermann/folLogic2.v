@@ -21,7 +21,7 @@ Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 
 Lemma rebindForall (T : System) (a b : nat) (f : Formula):
-  ~ In b (freeVarF L (forallH a f)) ->
+  ~ In b (freeVarF (forallH a f)) ->
   SysPrf T ((allH a, f) <->
               (allH b, (substF  f a v#b)))%fol.
 Proof.
@@ -36,7 +36,7 @@ Proof.
     + apply (impI L), (forallI L).
       intros [x [H0 H1]] ; destruct H1 as [x H1| x H1]; 
         [induction H1 | induction H1].
-     * assert (H1: In a (freeVarF L (substF  f a (var b))))
+     * assert (H1: In a (freeVarF (substF  f a (var b))))
        by (eapply in_remove; apply H0).
        induction (freeVarSubFormula3 _ _ _ _ _ H1).
        elim (in_remove_neq _ _ _ _ _ H2).
@@ -55,7 +55,7 @@ Proof.
 Qed.
 
 Lemma rebindExist (T : System) (a b : nat) (f : Formula):
-  ~ In b (freeVarF L (existH a f)) ->
+  ~ In b (freeVarF (existH a f)) ->
   SysPrf T (iffH (existH a f) (existH b (substF  f a (var b)))).
 Proof.
   intro H; unfold existH.  
@@ -134,15 +134,15 @@ Proof.
              newVar
                (v1
                   :: v2
-                  :: freeVarF L (forallH v a) ++
-                  freeVarT L s1 ++ freeVarT L s2)) in *.
+                  :: freeVarF (forallH v a) ++
+                  freeVarT _ s1 ++ freeVarT _ s2)) in *.
       assert (H2: v' <> v1).
       { intro H2;
         elim
           (newVar1
              (v1
                 :: v2
-                :: freeVarF L (forallH v a) ++
+                :: freeVarF (forallH v a) ++
                 freeVarT L s1 ++ freeVarT L s2)).
         fold v' ; simpl; auto.
       } 
@@ -152,17 +152,17 @@ Proof.
           (newVar1
              (v1
                 :: v2
-                :: freeVarF L (forallH v a) ++
+                :: freeVarF (forallH v a) ++
                 freeVarT L s1 ++ freeVarT L s2)).
         fold v'; simpl; auto.
       } 
-      assert (H4: ~ In v' (freeVarF L (forallH v a))).
+      assert (H4: ~ In v' (freeVarF (forallH v a))).
       { intro H4; 
         elim
           (newVar1
              (v1
                 :: v2
-                :: freeVarF L (forallH v a) ++
+                :: freeVarF (forallH v a) ++
                 freeVarT L s1 ++ freeVarT L s2)).
         fold v' ;simpl; auto with datatypes.
       } 
@@ -172,7 +172,7 @@ Proof.
           (newVar1
              (v1
                 :: v2
-                :: freeVarF L (forallH v a) ++
+                :: freeVarF (forallH v a) ++
                 freeVarT L s1 ++ freeVarT L s2)).
         fold v' ;  simpl; repeat right; auto with datatypes.
       } 
@@ -182,7 +182,7 @@ Proof.
             (newVar1
                (v1
                   :: v2
-                  :: freeVarF L (forallH v a) ++
+                  :: freeVarF (forallH v a) ++
                   freeVarT L s1 ++ freeVarT L s2)).
        fold v' ; simpl;  repeat right; auto with datatypes.
      }

@@ -348,7 +348,7 @@ Proof.
   - unfold close.
       induction
         (List.nodup Nat.eq_dec
-           (freeVarF LNT
+           (freeVarF 
               (impH (substF x x0 Zero)
                  (impH
                     (forallH x0

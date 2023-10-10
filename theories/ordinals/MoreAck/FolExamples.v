@@ -177,14 +177,14 @@ Compute close L (v#0 = a \/ v#0 = f v#1)%fol.
 (* end snippet closeExample *)
 
 (* begin snippet freeVarEx *)
-Compute freeVarF L (allH 0, v#0 = v#1)%fol.
-Compute freeVarF L (allH 0, v#0 = v#0)%fol.
-Compute freeVarF L (v#0 = v#1 \/ allH 0, v#0 = v#1)%fol.
+Compute freeVarF (allH 0, v#0 = v#1)%fol.
+Compute freeVarF (allH 0, v#0 = v#0)%fol.
+Compute freeVarF (v#0 = v#1 \/ allH 0, v#0 = v#1)%fol.
 (* end snippet freeVarEx *)
 
 (* begin snippet freeVarDup *)
-Compute freeVarF L (v#0 = v#1 <-> v#1 = v#0)%fol. 
-Compute nodup Nat.eq_dec (freeVarF L (v#0 = v#1 <-> v#1 = v#0)%fol). 
+Compute freeVarF  (v#0 = v#1 <-> v#1 = v#0)%fol. 
+Compute nodup Nat.eq_dec (freeVarF (v#0 = v#1 <-> v#1 = v#0)%fol). 
 (* end snippet freeVarDup *)
 
 

@@ -117,7 +117,7 @@ Proof.
 Qed.
 
 Lemma freeVarInterpFormula (v1 v2 : nat -> U M) (g : Formula L):
- (forall x : nat, List.In x (freeVarF L g) -> v1 x = v2 x) ->
+ (forall x : nat, List.In x (freeVarF g) -> v1 x = v2 x) ->
  interpFormula v1 g -> interpFormula v2 g.
 Proof.
   revert v1 v2.
@@ -237,13 +237,13 @@ Proof.
         --  auto.
     + induction (In_dec eq_nat_dec v (freeVarT L s)) as [a0 | b0].
       * simpl;
-        set (nv := newVar (v0 :: freeVarT L s ++ freeVarF L a)) in *.
-        assert (~ List.In nv (v0 :: freeVarT L s ++ freeVarF L a)).
+        set (nv := newVar (v0 :: freeVarT L s ++ freeVarF a)) in *.
+        assert (~ List.In nv (v0 :: freeVarT L s ++ freeVarF a)).
         { unfold nv in |- *.
           apply newVar1. }
         assert
               (forall (x : U M) (x0 : nat),
-                  List.In x0 (freeVarF L a) ->
+                  List.In x0 (freeVarF a) ->
                   updateValue (updateValue value v0 (interpTerm value s)) v x x0 =
                     updateValue
                       (updateValue (updateValue value nv x) v0
@@ -362,7 +362,7 @@ Proof.
       * simpl in |- *.
         assert
           (forall (x : U M) (x0 : nat),
-              List.In x0 (freeVarF L a) ->
+              List.In x0 (freeVarF a) ->
               updateValue (updateValue value v0 (interpTerm value s)) v x x0 =
                 updateValue (updateValue value v x) v0
                   (interpTerm (updateValue value v x) s) x0).
@@ -441,7 +441,7 @@ Fixpoint nnHelp (f : Formula L) : Formula L :=
 Definition nnTranslate (f : Formula L) : Formula L :=
   notH (notH (nnHelp f)).
 
-Lemma freeVarNNHelp (f : Formula L):  freeVarF L f = freeVarF L (nnHelp f).
+Lemma freeVarNNHelp (f : Formula L):  freeVarF f = freeVarF (nnHelp f).
 Proof.
   induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf];
     try reflexivity.

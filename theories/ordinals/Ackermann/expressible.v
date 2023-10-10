@@ -107,7 +107,7 @@ Qed.
 
 Definition Representable (n : nat) (f : naryFunc n) 
   (A : Formula) : Prop :=
-  (forall v : nat, In v (freeVarF LNN A) -> v <= n) /\
+  (forall v : nat, In v (freeVarF A) -> v <= n) /\
   RepresentableHelp n f A.
 
 Lemma RepresentableAlternate :
@@ -157,7 +157,7 @@ Fixpoint ExpressibleHelp (n : nat) : naryRel n -> Formula -> Prop :=
   end.
 
 Definition Expressible (n : nat) (R : naryRel n) (A : Formula) : Prop :=
-  (forall v : nat, In v (freeVarF LNN A) -> 
+  (forall v : nat, In v (freeVarF A) -> 
                    v <= n /\ v <> 0) /\
   ExpressibleHelp n R A.
 

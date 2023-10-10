@@ -133,7 +133,7 @@ Proof.
                      unfold close.  
                  induction
                    (List.nodup eq_nat_dec
-                      (freeVarF LNT
+                      (freeVarF 
                         (substF x0 x1 Zero ->
                           (allH x1, x0 -> substF x0 x1 (Succ (v#x1))) ->
                           allH x1, x0)%nt)).
@@ -159,7 +159,7 @@ Proof.
                      unfold close in |- *.
                      induction
                        (List.nodup eq_nat_dec
-                          (freeVarF LNT
+                          (freeVarF 
                              (substF x0 x1 Zero ->
                               (allH x1, x0 -> substF x0 x1 (Succ (v#x1))) ->
                               (allH x1, x0)))%nt).
