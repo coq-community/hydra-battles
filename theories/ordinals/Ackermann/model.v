@@ -77,13 +77,13 @@ Fixpoint interpFormula (value : nat -> U M) (f : Formula L) {struct f} :
   end.
 
 Lemma freeVarInterpTerm (v1 v2 : nat -> U M) (t : Term L):
- (forall x : nat, List.In x (freeVarT L t) -> v1 x = v2 x) ->
+ (forall x : nat, List.In x (freeVarT t) -> v1 x = v2 x) ->
  interpTerm v1 t = interpTerm v2 t.
 Proof.
   elim t using  Term_Terms_ind with
     (P0 := fun (n : nat) (ts : Terms L n) =>
              forall f : naryFunc (U M) n,
-               (forall x : nat, List.In x (freeVarTs L n ts) -> v1 x = v2 x) ->
+               (forall x : nat, List.In x (freeVarTs ts) -> v1 x = v2 x) ->
                interpTerms n f v1 ts = interpTerms n f v2 ts); 
     simpl.
   - intros n H; apply H; left; auto.
@@ -103,7 +103,7 @@ Qed.
 
 Lemma freeVarInterpRel (v1 v2 : nat -> U M) (n : nat) 
   (ts : Terms L n) (r : naryRel (U M) n): 
-  (forall x : nat, List.In x (freeVarTs L n ts) -> v1 x = v2 x) ->
+  (forall x : nat, List.In x (freeVarTs ts) -> v1 x = v2 x) ->
   interpRels n r v1 ts -> interpRels n r v2 ts.
 Proof.
   intros H; induction ts as [| n t ts Hrects]; simpl in |- *.
@@ -117,7 +117,7 @@ Proof.
 Qed.
 
 Lemma freeVarInterpFormula (v1 v2 : nat -> U M) (g : Formula L):
- (forall x : nat, List.In x (freeVarF L g) -> v1 x = v2 x) ->
+ (forall x : nat, List.In x (freeVarF g) -> v1 x = v2 x) ->
  interpFormula v1 g -> interpFormula v2 g.
 Proof.
   revert v1 v2.
@@ -156,13 +156,13 @@ Qed.
  
 Lemma subInterpTerm (value : nat -> U M) (t : Term L) (v : nat) (s : Term L):
  interpTerm (updateValue value v (interpTerm value s)) t =
- interpTerm value (substT L t v s).
+ interpTerm value (substT t v s).
 Proof.
   elim t using  Term_Terms_ind  with
     (P0 := fun (n : nat) (ts : Terms L n) =>
              forall f : naryFunc (U M) n,
                interpTerms n f (updateValue value v (interpTerm value s)) ts =
-                 interpTerms n f value (substTs L n ts v s)); 
+                 interpTerms n f value (substTs ts v s)); 
     simpl.
   - intro n; unfold updateValue; induction (eq_nat_dec v n); reflexivity.
   - intros f t0 H; rewrite H.
@@ -174,7 +174,7 @@ Qed.
 Lemma subInterpRel (value : nat -> U M) (n : nat) (ts : Terms L n) 
   (v : nat) (s : Term L) (r : naryRel (U M) n):
   interpRels n r (updateValue value v (interpTerm value s)) ts <->
-    interpRels n r value (substTs L n ts v s).
+    interpRels n r value (substTs ts v s).
 Proof.
   induction ts as [| n t ts Hrects].
   - simpl; tauto.
@@ -235,15 +235,15 @@ Proof.
              end).
         -- intros x0 H1; induction (eq_nat_dec v0 x0); reflexivity.
         --  auto.
-    + induction (In_dec eq_nat_dec v (freeVarT L s)) as [a0 | b0].
+    + induction (In_dec eq_nat_dec v (freeVarT s)) as [a0 | b0].
       * simpl;
-        set (nv := newVar (v0 :: freeVarT L s ++ freeVarF L a)) in *.
-        assert (~ List.In nv (v0 :: freeVarT L s ++ freeVarF L a)).
+        set (nv := newVar (v0 :: freeVarT s ++ freeVarF a)) in *.
+        assert (~ List.In nv (v0 :: freeVarT s ++ freeVarF a)).
         { unfold nv in |- *.
           apply newVar1. }
         assert
               (forall (x : U M) (x0 : nat),
-                  List.In x0 (freeVarF L a) ->
+                  List.In x0 (freeVarF a) ->
                   updateValue (updateValue value v0 (interpTerm value s)) v x x0 =
                     updateValue
                       (updateValue (updateValue value nv x) v0
@@ -362,7 +362,7 @@ Proof.
       * simpl in |- *.
         assert
           (forall (x : U M) (x0 : nat),
-              List.In x0 (freeVarF L a) ->
+              List.In x0 (freeVarF a) ->
               updateValue (updateValue value v0 (interpTerm value s)) v x x0 =
                 updateValue (updateValue value v x) v0
                   (interpTerm (updateValue value v x) s) x0).
@@ -441,7 +441,7 @@ Fixpoint nnHelp (f : Formula L) : Formula L :=
 Definition nnTranslate (f : Formula L) : Formula L :=
   notH (notH (nnHelp f)).
 
-Lemma freeVarNNHelp (f : Formula L):  freeVarF L f = freeVarF L (nnHelp f).
+Lemma freeVarNNHelp (f : Formula L):  freeVarF f = freeVarF (nnHelp f).
 Proof.
   induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf];
     try reflexivity.
@@ -461,7 +461,7 @@ Proof.
   - simpl; do 2 rewrite subFormulaForall.
     simpl; induction (eq_nat_dec v v0).
     + simpl; reflexivity.
-    + induction (In_dec eq_nat_dec v (freeVarT L s)) as [? | ?].
+    + induction (In_dec eq_nat_dec v (freeVarT s)) as [? | ?].
       * simpl; repeat rewrite subFormulaNot; repeat rewrite H.
         -- now rewrite <- freeVarNNHelp.
         -- eapply eqDepth.

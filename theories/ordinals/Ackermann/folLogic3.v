@@ -140,7 +140,7 @@ Proof.
   induction a as [| a Hreca].
   - simpl; symmetry; apply (nilTerms L).
   - assert
-      (H: forall v : nat, In v (freeVarTs L _ (fst (nVars L a))) -> v < a + a).
+      (H: forall v : nat, In v (freeVarTs (fst (nVars L a))) -> v < a + a).
     {  intros v H; clear Hreca ss ts.
        induction a as [| a Hreca].
        - elim H.
@@ -207,7 +207,7 @@ Proof.
   induction a as [| a Hreca].
   - simpl; symmetry; apply (nilTerms L).
   - assert
-      (H: forall v : nat, In v (freeVarTs L _ (snd (nVars L a))) -> v < a + a).
+      (H: forall v : nat, In v (freeVarTs (snd (nVars L a))) -> v < a + a).
     { intros v H; clear Hreca ss ts; induction a as [| a Hreca].
       - elim H.
       - simpl in H; induction (nVars L a) as [a0 b].
@@ -452,12 +452,12 @@ Qed.
 Lemma subWithEqualsTerm (a b t : fol.Term L) (v : nat) 
   (T : fol.System L):
  SysPrf T (a = b)%fol ->
- SysPrf T (substT L t v a =  substT L t v b)%fol.
+ SysPrf T (substT t v a =  substT t v b)%fol.
 Proof.
   intros H; elim t using  Term_Terms_ind  with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-             PairwiseEqual T _ (substTs L _ ts v a)
-               (substTs L _ ts v b)); simpl in |- *. 
+             PairwiseEqual T _ (substTs ts v a)
+               (substTs ts v b)); simpl in |- *. 
     - intros n; induction (eq_nat_dec v n); [easy | apply eqRefl].
     - intros f t0 H0; apply equalFunction.
       apply H0.
@@ -465,11 +465,11 @@ Proof.
     - intros.  
       destruct
         (consTerms L n
-           (Tcons (substT L t0 v a) (substTs L n t1 v a))). 
+           (Tcons (substT t0 v a) (substTs t1 v a))). 
       destruct x as [a0 b0].
       destruct
         (consTerms L n
-           (Tcons (substT L t0 v b) (substTs L n t1 v b))).  
+           (Tcons (substT t0 v b) (substTs t1 v b))).  
       destruct x as [a1 b1]. 
       simpl in |- *.  simpl in e0; simpl in e.
       inversion e0.
@@ -483,17 +483,16 @@ Qed.
 Lemma subWithEqualsTerms (a b : fol.Term L) (n : nat) (ts : fol.Terms L n) 
   (v : nat) (T : fol.System L):
   SysPrf T (a = b)%fol ->
-  PairwiseEqual T _ (substTs L _ ts v a) 
-    (substTs L _ ts v b).
+  PairwiseEqual T _ (substTs ts v a) (substTs ts v b).
 Proof.
   intros H; induction ts as [| n t ts Hrects]; simpl in |- *.
   - auto.
   - destruct
       (consTerms L n
-         (Tcons (substT L t v a) (substTs L n ts v a))) as [[a0 b0] p].
+         (Tcons (substT t v a) (substTs ts v a))) as [[a0 b0] p].
     destruct
       (consTerms L n
-         (Tcons (substT L t v b) (substTs L n ts v b))) as [[a1 b1] e].
+         (Tcons (substT t v b) (substTs ts v b))) as [[a1 b1] e].
     simpl in |- *; simpl in p,  e.
     inversion p.
     inversion e.
@@ -512,11 +511,11 @@ Proof.
   intro f; elim f using Formula_depth_ind2; intros.
   - repeat rewrite subFormulaEqual.
     apply (impI L).
-    apply eqTrans with (substT L t v a).
+    apply eqTrans with (substT t v a).
     + apply subWithEqualsTerm.
       apply (sysWeaken L).
       now apply eqSym.
-    + apply eqTrans with (substT L t0 v a).
+    + apply eqTrans with (substT t0 v a).
       * apply (Axm L); right; constructor.
       * apply subWithEqualsTerm.
         now apply (sysWeaken L).
@@ -549,8 +548,8 @@ Proof.
     + set
         (nv :=
            v0
-             :: List.remove eq_nat_dec v (freeVarF L a) ++
-             freeVarT L a0 ++ freeVarT L b) in *.
+             :: List.remove eq_nat_dec v (freeVarF a) ++
+             freeVarT a0 ++ freeVarT b) in *.
       apply  (impTrans L) with
         (forallH (newVar nv)
            (substF (substF a v (var (newVar nv)))
@@ -571,12 +570,12 @@ Proof.
         unfold nv at 2 in |- *.
         assert
           (H8: In (newVar nv)
-                 (freeVarF L
+                 (freeVarF 
                     (substF  (substF a v (var x)) v0 a0)))
           by (eapply in_remove; apply H7).
         induction (freeVarSubFormula3 _ _ _ _ _ H8).
         -- assert
-          (In (newVar nv) (freeVarF L (substF a v (var x)))) by
+          (In (newVar nv) (freeVarF (substF a v (var x)))) by
           (eapply in_remove; apply H9). 
         induction (freeVarSubFormula3 _ _ _ _ _ H10).
            ++ right.
@@ -655,14 +654,14 @@ Proof.
            unfold nv at 2 in |- *.
            assert
              (H8: In (newVar nv)
-                    (freeVarF L
+                    (freeVarF
                        (substF  
                           (substF  a v (var x0)) v0 b)))
              by (eapply in_remove; apply H7).
            induction (freeVarSubFormula3 _ _ _ _ _ H8).
            assert
              ( H10:In (newVar nv) 
-                     (freeVarF L (substF a v (var x0)))) by
+                     (freeVarF  (substF a v (var x0)))) by
              (eapply in_remove; apply H9).
            induction (freeVarSubFormula3 _ _ _ _ _ H10).
            right; apply in_or_app.

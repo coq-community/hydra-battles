@@ -89,7 +89,7 @@ Inductive Prf : Formulas -> Formula -> Set :=
     Prf [] ((allH v, A) -> substF A v t)%fol
 | FA2 :
   forall (A : Formula) (v : nat),
-    ~ In v (freeVarF L A) -> Prf [] (A -> allH v, A)%fol
+    ~ In v (freeVarF A) -> Prf [] (A -> allH v, A)%fol
 | FA3 :
   forall (A B : Formula) (v : nat),
     Prf []

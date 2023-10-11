@@ -21,7 +21,7 @@ Let Prf := Prf L.
 Let SysPrf := SysPrf L.
 
 Lemma rebindForall (T : System) (a b : nat) (f : Formula):
-  ~ In b (freeVarF L (forallH a f)) ->
+  ~ In b (freeVarF (forallH a f)) ->
   SysPrf T ((allH a, f) <->
               (allH b, (substF  f a v#b)))%fol.
 Proof.
@@ -36,7 +36,7 @@ Proof.
     + apply (impI L), (forallI L).
       intros [x [H0 H1]] ; destruct H1 as [x H1| x H1]; 
         [induction H1 | induction H1].
-     * assert (H1: In a (freeVarF L (substF  f a (var b))))
+     * assert (H1: In a (freeVarF (substF  f a (var b))))
        by (eapply in_remove; apply H0).
        induction (freeVarSubFormula3 _ _ _ _ _ H1).
        elim (in_remove_neq _ _ _ _ _ H2).
@@ -55,7 +55,7 @@ Proof.
 Qed.
 
 Lemma rebindExist (T : System) (a b : nat) (f : Formula):
-  ~ In b (freeVarF L (existH a f)) ->
+  ~ In b (freeVarF (existH a f)) ->
   SysPrf T (iffH (existH a f) (existH b (substF  f a (var b)))).
 Proof.
   intro H; unfold existH.  
@@ -66,17 +66,16 @@ Qed.
 
 Lemma subSubTerm (t : Term) (v1 v2 : nat) (s1 s2 : Term):
   v1 <> v2 ->
-  ~ In v1 (freeVarT L s2) ->
-  substT L (substT L t v1 s1) v2 s2 =
-    substT L 
-      (substT L t v2 s2) v1 (substT L s1 v2 s2).
+  ~ In v1 (freeVarT s2) ->
+  substT (substT t v1 s1) v2 s2 =
+    substT (substT t v2 s2) v1 (substT s1 v2 s2).
 Proof.
   intros H H0. 
   elim t using Term_Terms_ind with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-             substTs L n (substTs L n ts v1 s1) v2 s2 =
-               substTs L n (substTs L n ts v2 s2) v1
-                 (substT L s1 v2 s2)); simpl in |- *.
+             substTs (substTs ts v1 s1) v2 s2 =
+               substTs (substTs ts v2 s2) v1
+                 (substT s1 v2 s2)); simpl in |- *.
   - intros n. 
     destruct (eq_nat_dec v1 n)  as [ e | n0].
     + destruct (eq_nat_dec v2 n)  as [e0 | n0].
@@ -96,10 +95,9 @@ Qed.
 
 Lemma subSubTerms (n : nat) (ts : Terms n) (v1 v2 : nat) (s1 s2 : Term):
   v1 <> v2 ->
-  ~ In v1 (freeVarT L s2) ->
-  substTs L n (substTs L n ts v1 s1) v2 s2 =
-    substTs L n (substTs L n ts v2 s2) v1
-      (substT L s1 v2 s2).
+  ~ In v1 (freeVarT s2) ->
+  substTs (substTs ts v1 s1) v2 s2 =
+    substTs (substTs ts v2 s2) v1 (substT s1 v2 s2).
 Proof.
   intros H H0; induction ts as [| n t ts Hrects].
   - reflexivity.
@@ -111,12 +109,12 @@ Qed.
 
 Lemma subSubFormula (f : Formula) (v1 v2 : nat) (s1 s2 : Term):
  v1 <> v2 ->
- ~ In v1 (freeVarT L s2) ->
+ ~ In v1 (freeVarT s2) ->
  forall T : System,
  SysPrf T
    (iffH (substF  (substF  f v1 s1) v2 s2)
       (substF  (substF  f v2 s2) v1
-         (substT L s1 v2 s2))).
+         (substT s1 v2 s2))).
 Proof.
   intros H H0 T; apply (sysExtend L) with (Empty_set Formula).
   - intros x H1; destruct H1.
@@ -136,16 +134,16 @@ Proof.
              newVar
                (v1
                   :: v2
-                  :: freeVarF L (forallH v a) ++
-                  freeVarT L s1 ++ freeVarT L s2)) in *.
+                  :: freeVarF (forallH v a) ++
+                  freeVarT s1 ++ freeVarT s2)) in *.
       assert (H2: v' <> v1).
       { intro H2;
         elim
           (newVar1
              (v1
                 :: v2
-                :: freeVarF L (forallH v a) ++
-                freeVarT L s1 ++ freeVarT L s2)).
+                :: freeVarF (forallH v a) ++
+                freeVarT s1 ++ freeVarT s2)).
         fold v' ; simpl; auto.
       } 
       assert (H3: v' <> v2).
@@ -154,38 +152,38 @@ Proof.
           (newVar1
              (v1
                 :: v2
-                :: freeVarF L (forallH v a) ++
-                freeVarT L s1 ++ freeVarT L s2)).
+                :: freeVarF (forallH v a) ++
+                freeVarT s1 ++ freeVarT s2)).
         fold v'; simpl; auto.
       } 
-      assert (H4: ~ In v' (freeVarF L (forallH v a))).
+      assert (H4: ~ In v' (freeVarF (forallH v a))).
       { intro H4; 
         elim
           (newVar1
              (v1
                 :: v2
-                :: freeVarF L (forallH v a) ++
-                freeVarT L s1 ++ freeVarT L s2)).
+                :: freeVarF (forallH v a) ++
+                freeVarT s1 ++ freeVarT s2)).
         fold v' ;simpl; auto with datatypes.
       } 
-      assert (H5: ~ In v' (freeVarT L s1)).
+      assert (H5: ~ In v' (freeVarT s1)).
       { intro H5; 
         elim
           (newVar1
              (v1
                 :: v2
-                :: freeVarF L (forallH v a) ++
-                freeVarT L s1 ++ freeVarT L s2)).
+                :: freeVarF (forallH v a) ++
+                freeVarT s1 ++ freeVarT s2)).
         fold v' ;  simpl; repeat right; auto with datatypes.
       } 
-      assert (H6: ~ In v' (freeVarT L s2)).
+      assert (H6: ~ In v' (freeVarT s2)).
       { intro H6; 
           elim
             (newVar1
                (v1
                   :: v2
-                  :: freeVarF L (forallH v a) ++
-                  freeVarT L s1 ++ freeVarT L s2)).
+                  :: freeVarF (forallH v a) ++
+                  freeVarT s1 ++ freeVarT s2)).
        fold v' ; simpl;  repeat right; auto with datatypes.
      }
      apply impE with
@@ -197,7 +195,7 @@ Proof.
           (substF 
              (substF 
                 (forallH v' (substF  a v (var v'))) v2 s2) v1
-             (substT L s1 v2 s2))).
+             (substT s1 v2 s2))).
      apply (iffE2 L).
       * assert
           (H7: folProof.SysPrf L (Empty_set Formula)
@@ -211,13 +209,13 @@ Proof.
        * assert (H7: 
                   forall (f : Formula) (x v : nat) (s : Term),
                     x <> v ->
-                    ~ In x (freeVarT L s) ->
+                    ~ In x (freeVarT s) ->
                     substF  (forallH x f) v s =
                       forallH x (substF f v s)). 
          { intros f0 x v0 s H7; rewrite (subFormulaForall L).
            destruct (eq_nat_dec x v0) as [e | n0].
            - elim H7; auto.
-           - destruct (In_dec eq_nat_dec x (freeVarT L s)) as [i | n1]. 
+           - destruct (In_dec eq_nat_dec x (freeVarT s)) as [i | n1]. 
          + intro H8; elim H8; auto.
          + reflexivity.
      }

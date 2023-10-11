@@ -15,6 +15,7 @@ Class RelDecision {A B} (R : A -> B -> Prop) :=
   decide_rel x y :> Decision (R x y).
 
 #[export] Hint Mode RelDecision ! ! ! : typeclass_instances.
+
 Arguments decide_rel {_ _} _ {_} _ _ : simpl never, assert.
 
 Notation EqDecision A := (RelDecision (@eq A)).

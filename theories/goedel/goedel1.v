@@ -40,7 +40,7 @@ Hypothesis extendsNN : Included _ NN T.
 Variable repT : Formula.
 Variable v0 : nat.
 Hypothesis
-  freeVarRepT : forall v : nat, In v (freeVarF LNN repT) -> v = v0.
+  freeVarRepT : forall v : nat, In v (freeVarF repT) -> v = v0.
 
 Hypothesis
   expressT1 :
@@ -50,7 +50,7 @@ Hypothesis
 Hypothesis
   expressT2 :
     forall f : Formula, ~ mem _ T f ->
-    SysPrf T (~ (substF repT v0 (reflection f)))%nn.
+    SysPrf T (~ (substF repT v0 (reflection f)))%fol.
 
 
 
@@ -98,8 +98,8 @@ Proof.
     + apply freeVarRepT.
     + assert
         (H5:(forall f : Formula,
-                In v (freeVarF LNN (notH f)) ->
-                In v (freeVarF LNN f))).
+                In v (freeVarF (notH f)) ->
+                In v (freeVarF f))).
       { intros f H5; apply H5. }
       apply H5; eapply in_remove.
       unfold codeSysPf in H3; apply H3; assumption.
@@ -145,11 +145,11 @@ Proof.
      notH
        (substF  codeSysPrf 0 (codeNatToTerm.natToTermLNN codeX)))
     in *.
-  assert (forall x : nat, In x (freeVarF LNN y) -> 1 = x).
+  assert (forall x : nat, In x (freeVarF y) -> 1 = x).
   { intros x0 H3; unfold y in H3.
     assert (H4:
       (In x0
-         (freeVarF LNN
+         (freeVarF 
             (substF codeSysPrf 0
                (codeNatToTerm.natToTermLNN codeX))))) by apply H3.
     destruct (freeVarSubFormula3 _ _ _ _ _ H4) as [H5 | H5]. 
@@ -159,7 +159,7 @@ Proof.
       + destruct n as [|n ].
         * reflexivity.
         * elim (Compat815.le_not_lt (S (S n)) 1).
-          assert (H6: In (S (S n)) (freeVarF LNN codeSysPrf)).
+          assert (H6: In (S (S n)) (freeVarF codeSysPrf)).
           { eapply in_remove; apply H5. }
        
 apply ( freeVarCodeSysPrf _ _ _ _ _ _ _ _ freeVarRepT _ H6).
@@ -269,7 +269,7 @@ apply ( freeVarCodeSysPrf _ _ _ _ _ _ _ _ freeVarRepT _ H6).
            destruct (eq_nat_dec 1 0) as [e|n].
            ++ discriminate e.
            ++ induction
-               (In_dec eq_nat_dec 1 (freeVarT LNN
+               (In_dec eq_nat_dec 1 (freeVarT 
                                        (codeNatToTerm.natToTermLNN codeX)))
                  as [a | _]. 
               ** elim (closedNatToTerm _ _ a).

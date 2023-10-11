@@ -890,7 +890,8 @@ End Fol_Properties.
 Arguments closed {L} _.
 
 #[global] Arguments substF {L} _ _.
-
+#[global] Arguments substT {L} _ _.
+#[global] Arguments substTs {L n} _ _ _ .
 (** compatibility with older names *)
 
 #[deprecated(note="use substF")]
@@ -916,3 +917,38 @@ Arguments closed {L} _.
 About substF.
 Search substF.
 (* end snippet substLemmas *)
+
+(** to replace with a single recursive custom notation ? *)
+
+#[global] Notation substF2 e v1 t1 v2 t2 :=
+  (substF (substF e v1 t1) v2 t2).
+
+#[global] Notation substF3 e v1 t1 v2 t2 v3 t3 :=
+  (substF (substF2 e v1 t1 v2 t2) v3 t3).
+
+#[global] Notation substF4 e v1 t1 v2 t2 v3 t3 v4 t4 :=
+  (substF (substF3 e v1 t1 v2 t2 v3 t3) v4 t4).
+
+#[global] Notation substF5 e v1 t1 v2 t2 v3 t3 v4 t4 v5 t5 :=
+  (substF (substF4 e v1 t1 v2 t2 v3 t3 v4 t4) v5 t5).
+
+#[global] Notation substF6 e v1 t1 v2 t2 v3 t3 v4 t4 v5 t5 v6 t6 :=
+  (substF (substF5 e v1 t1 v2 t2 v3 t3 v4 t4 v5 t5) v6 t6).
+
+#[global] Notation substF7 e v1 t1 v2 t2 v3 t3 v4 t4 v5 t5 v6 t6 v7 t7:=
+  (substF (substF6 e v1 t1 v2 t2 v3 t3 v4 t4 v5 t5 v6 t6) v7 t7).
+
+#[global] Notation
+  substF8 e v1 t1 v2 t2 v3 t3 v4 t4 v5 t5 v6 t6 v7 t7 v8 t8 :=
+  (substF2 (substF6 e v1 t1 v2 t2 v3 t3 v4 t4 v5 t5 v6 t6)
+     v7 t7 v8 t8).
+
+#[global] Notation
+  substF9 e v1 t1 v2 t2 v3 t3 v4 t4 v5 t5 v6 t6 v7 t7 v8 t8 v9 t9:=
+  (substF3 (substF6 e v1 t1 v2 t2 v3 t3 v4 t4 v5 t5 v6 t6)
+     v7 t7 v8 t8 v9 t9).
+
+
+#[global] Arguments freeVarF {L} _.
+#[global] Arguments freeVarT {L} _.
+#[global] Arguments freeVarTs {L n} _.

@@ -32,7 +32,7 @@ Section Goedel's_2nd_Incompleteness.
   Variable repT : Formula.
   Variable v0 : nat.
   Hypothesis
-    freeVarRepT : forall v : nat, In v (freeVarF LNT repT) -> v = v0.
+    freeVarRepT : forall v : nat, In v (freeVarF repT) -> v = v0.
   Hypothesis
     expressT1 :
     forall f : Formula,
@@ -111,7 +111,7 @@ Section Goedel's_2nd_Incompleteness.
                             In g Axm -> mem (fol.Formula LNT) T g) /\
                      (forall v : nat,
                          In v (freeVarListFormula LNT Axm) ->
-                         In v (freeVarF LNN f))).
+                         In v (freeVarF f))).
       { intros f H0; destruct H0 as [x0 H0|].
         - assert (H1: SysPrf PA (LNN2LNT_formula x0)).
           { apply NN2PA.

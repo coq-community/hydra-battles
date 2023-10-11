@@ -36,14 +36,14 @@ End bare_syntax.
 (* begin snippet CNNF0 *)
 Print  f0. 
 Compute f0. 
-Goal f0 = (allH 0, v#0 = Zero \/ exH 1, v#0 = Succ v#1)%nn.
+Goal f0 = (allH 0, v#0 = Zero \/ exH 1, v#0 = Succ v#1)%fol.
 reflexivity. 
 Qed. 
 (* end snippet CNNF0 *)
 
-Locate zero.
+Locate Plus. 
 Locate "_ + _".
- Example t1_0 : Term _ := LNN.Plus (S_ (var 1))%nn Zero.  
+ Example t1_0 : Term _ := Plus (S_ (var 1))%fol Zero.  
 Print t1_0. 
 Check S_ Zero. 
 Compute t1_0. 
@@ -91,12 +91,12 @@ Let f2 : Formula LNN :=
    (existH 2 (LT Zero (v#2) /\ natToTerm 4 = Plus (v#2) (v#2)))%fol.
 
 Let f2' : Formula LNN :=
-   (existH 2 (Zero < v#2 /\ natToTerm 4 = Plus (v#2) (v#2)))%nn.
+   (existH 2 (Zero < v#2 /\ natToTerm 4 = Plus (v#2) (v#2)))%fol.
 
-Let f3 := (v#0 = Zero \/ existH 1 (v#0 = Succ (v#1)))%nn.
+Let f3 := (v#0 = Zero \/ existH 1 (v#0 = Succ (v#1)))%fol.
 
 
-Let f4 := (v#0 = v#1 + v#1 <-> v#0 = v#1 * (natToTerm 2))%nn.
+Let f4 := (v#0 = v#1 + v#1 <-> v#0 = v#1 * (natToTerm 2))%fol.
 (* end snippet f2Example *)
 
 Compute f4. 
@@ -108,15 +108,15 @@ Compute (Plus Zero  Zero)%fol.
 Compute (depth _ f1, depth _ f2).
 (* end snippet depthCompute *)
 (* begin snippet freeVarExamples *)
-Compute  freeVarF _ f3.
+Compute  freeVarF f3.
 
-Compute List.nodup Nat.eq_dec (freeVarF _ f3).
+Compute List.nodup Nat.eq_dec (freeVarF f3).
 
 Compute close _ f3.
 
-Compute freeVarFormula _ f3.
+Compute freeVarFormula  f3.
 
-Compute freeVarFormula _ (close _ f4).
+Compute freeVarFormula  (close _ f4).
 
 Compute substF f4 0 (natToTerm 0).
 (* end snippet freeVarExamples *)
@@ -136,19 +136,19 @@ Compute AxmEq5 LNN Languages.Succ_.
 Compute EQ3 LNN. 
 
 
-Check GEN LNN nil (v#0 = v#0)%nn 1. 
+Check GEN LNN nil (v#0 = v#0)%fol 1. 
 
-Compute FA1 LNN  (v#0 = v#0)%nn 0 Zero%nn. 
+Compute FA1 LNN  (v#0 = v#0)%fol 0 Zero%fol. 
 
 
-Compute FA1 LNN  (v#0 = v#0)%nn 0 Zero%nn. 
+Compute FA1 LNN  (v#0 = v#0)%fol 0 Zero%fol. 
 
-Compute substF  (v#0 = v#0)%nn 0 Zero.
+Compute substF  (v#0 = v#0)%fol 0 Zero.
 
 Goal Prf LNN nil
-         (forallH 0 (v#0 = v#0))%nn  -> 
-       Prf LNN nil (Zero = Zero)%nn.
-intros; specialize (FA1 LNN  (v#0 = v#0)%nn 0 Zero%nn). 
+         (forallH 0 (v#0 = v#0))%fol  -> 
+       Prf LNN nil (Zero = Zero)%fol.
+intros; specialize (FA1 LNN  (v#0 = v#0)%fol 0 Zero%fol). 
 intro H0.
 unfold substF in H0. simpl in H0.    
 generalize (MP LNN nil nil _ _ H0). 

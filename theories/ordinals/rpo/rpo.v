@@ -1071,7 +1071,8 @@ simpl; rewrite map_app; do 2 rewrite projection_list_of_SN_terms; trivial.
 intros b In_b; destruct b; elim (H3 tt0).
 intros x H'; elim H'; clear H'; intros In_x H'; 
 elim In_x; clear In_x; intro In_x.
-subst x; exists (mk_sn a H5); intuition.
+subst x; exists (mk_sn a H5).  split; [ now left | ]. 
+red; now simpl. 
 assert (exists a', In a' (build_list_of_SN_terms lg H6) /\ tt a' = x).
 generalize lg H6 In_x; clear lg H1 H3 H6 In_x; induction lg.
 contradiction.
@@ -1223,6 +1224,9 @@ contradiction.
 Qed.
 
 End Make.
+
+
+
 
 
 

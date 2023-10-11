@@ -16,7 +16,7 @@ From Goedel Require Import PRrepresentable.
 From hydras.Ackermann Require Import expressible.
 From hydras.Ackermann Require Import checkPrf.
 From hydras.Ackermann Require Import codeNatToTerm.
-Import LNN NN.
+Import LNN NN NNnotations.
 From hydras Require Import Compat815.
 
 
@@ -31,7 +31,7 @@ Hypothesis extendsNN : Included _ NN T.
 Variable repT : Formula.
 Variable v0 : nat.
 Hypothesis
-  freeVarRepT : forall v : nat, In v (freeVarF LNN repT) -> v = v0.
+  freeVarRepT : forall v : nat, In v (freeVarF repT) -> v = v0.
 Hypothesis
   expressT1 :
     forall f : Formula,
@@ -177,7 +177,7 @@ Qed.
 Theorem Rosser'sIncompleteness :
  (forall x : Formula, mem _ T x \/ ~ mem _ T x) ->
  exists f : Formula,
-   (forall v : nat, ~ In v (freeVarF LNN f)) /\
+   (forall v : nat, ~ In v (freeVarF f)) /\
    (SysPrf T f \/ SysPrf T (notH f) -> Inconsistent LNN T).
 Proof.
   intros decide.
@@ -191,7 +191,7 @@ Proof.
   destruct (FixPointLNN A 0) as [x [H0 H1]].
   exists x; split.
   -  intros v H; induction (H1 v) as [H2 H3]. 
-     assert (H4: In v (List.remove eq_nat_dec 0 (freeVarF LNN A)))
+     assert (H4: In v (List.remove eq_nat_dec 0 (freeVarF A)))
      by apply H2, H.
      unfold A in H4; SimplFreeVar.
      + assert (H4: v <= 1).
@@ -330,7 +330,7 @@ Proof.
                              induction (eq_nat_dec 1 0) as [a | b].
                              ---- discriminate a.
                              ---- induction 
-                                 (In_dec eq_nat_dec 1 (freeVarT LNN 
+                                 (In_dec eq_nat_dec 1 (freeVarT 
                                                          (natToTerm (codeFormula x))))
                                    as [a | b0].
                                   ++++ elim (closedNatToTerm _ _ a).
@@ -340,7 +340,7 @@ Proof.
                                   induction (eq_nat_dec 2 0) as [a | b].
                                   discriminate a.
                                   induction (In_dec eq_nat_dec 2 
-                                               (freeVarT LNN 
+                                               (freeVarT 
                                                   (natToTerm (codeFormula x)))).
                                   elim (closedNatToTerm _ _ a).
                                   reflexivity.
@@ -348,7 +348,7 @@ Proof.
                              induction (eq_nat_dec 2 1) as [a | b]. 
                              discriminate a.
                              induction
-                               (In_dec eq_nat_dec 2 (freeVarT LNN 
+                               (In_dec eq_nat_dec 2 (freeVarT 
                                                        (natToTerm (codePrf x0 x x1))))
                                as [a | b0]. 
                              elim (closedNatToTerm _ _ a).
@@ -366,7 +366,7 @@ Proof.
                              (substF codeSysPrfNot 0
                                 (natToTerm (codeFormula x))) 1 (natToTerm n))) rec)
                   (codePrf x0 x x1)).
-           assert (H4: forall x : nat, ~ In x (freeVarF LNN E)).
+           assert (H4: forall x : nat, ~ In x (freeVarF E)).
            { unfold E; clear H3 E; induction (codePrf x0 x x1) as [ | n IHn].
             - simpl; auto.
             - intros x2; unfold nat_rec, nat_rect; intro H3. 
@@ -523,7 +523,7 @@ Proof.
            ++ discriminate a.
            ++ induction
                (In_dec eq_nat_dec 1
-                  (freeVarT LNN
+                  (freeVarT 
                      (natToTermLNN (code.codeFormula x)))) as [a | b0].
               ** elim (closedNatToTerm _ _ a).
               ** clear b0 b.
@@ -537,7 +537,7 @@ Proof.
                                    (substF codeSysPrf 0 
                                       (natToTerm (codeFormula x)))
                                    1 (natToTerm n))) rec) (S (codePrf _ _ x1))). 
-                 assert (H4: forall x : nat, ~ In x (freeVarF LNN E)).
+                 assert (H4: forall x : nat, ~ In x (freeVarF E)).
                  { unfold E; clear H3 E.
                    induction (S (codePrf x0 (notH x) x1)).
                    - simpl; auto.
@@ -585,7 +585,7 @@ Proof.
                              discriminate a.
                              induction
                                (In_dec eq_nat_dec 2
-                                  (freeVarT LNN
+                                  (freeVarT 
                                      (natToTermLNN 
                                         (code.codeFormula x)))).
                              elim (closedNatToTerm _ _ a).
@@ -774,7 +774,7 @@ End Rosser's_Incompleteness.
 
 Definition RepresentsInSelf (T:System) := 
   exists rep:Formula, exists v:nat,
-    (forall x : nat, In x (freeVarF LNN rep) -> x = v)  /\
+    (forall x : nat, In x (freeVarF rep) -> x = v)  /\
       (forall f : Formula,
           mem Formula T f ->
           SysPrf T (substF rep v (natToTerm (codeFormula f)))) /\

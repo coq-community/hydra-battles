@@ -1,7 +1,7 @@
 (** LNN2LNT: 
 
    Translation of [LNN]-formulas and proofs into [LNT] by replacement of 
-    [(t < t')%nn] subformulas with [(exists v, t + Succ v = t')%nt].
+    [(t < t')%fol] subformulas with [(exists v, t + Succ v = t')%nt].
 
    Original file by Russel O'Connor
 
@@ -43,40 +43,40 @@ Proof.
 Qed.
 
 Lemma LNN2LNT_freeVarT (t : fol.Term LNN):
- freeVarT LNT (LNN2LNT_term t) = freeVarT LNN t.
+ freeVarT  (LNN2LNT_term t) = freeVarT t.
 Proof.
   induction t using
     Term_Terms_ind
     with
     (P0 := fun (n : nat) (ts : fol.Terms LNN n) =>
-             freeVarTs LNT n (LNN2LNT_terms n ts) = freeVarTs LNN n ts).
+             freeVarTs (LNN2LNT_terms n ts) = freeVarTs ts).
   - intros; reflexivity.
   - intros; simpl; repeat rewrite freeVarTApply; now apply IHt.
   - intros; simpl; reflexivity. 
-  - transitivity (freeVarT LNN t ++ freeVarTs LNN n t0).
+  - transitivity (freeVarT t ++ freeVarTs t0).
     + rewrite <- IHt0; rewrite <- IHt; reflexivity.
     + reflexivity.
 Qed.
 
 Lemma LNN2LNT_freeVarTs (n : nat) (ts : fol.Terms LNN n):
-    freeVarTs LNT n (LNN2LNT_terms n ts) = freeVarTs LNN n ts.
+    freeVarTs (LNN2LNT_terms n ts) = freeVarTs ts.
 Proof.
   induction ts as [| n t ts Hrects].
   - reflexivity.
-  - simpl; transitivity (freeVarT LNN t ++ freeVarTs LNN n ts).
+  - simpl; transitivity (freeVarT t ++ freeVarTs ts).
     + rewrite <- Hrects; rewrite <- LNN2LNT_freeVarT; reflexivity.
     + reflexivity.
 Qed.
 
 Lemma LNN2LNT_subTerm (t : fol.Term LNN) (v : nat) (s : fol.Term LNN):
- LNN2LNT_term (substT LNN t v s) =
- substT LNT (LNN2LNT_term t) v (LNN2LNT_term s).
+ LNN2LNT_term (substT t v s) =
+ substT (LNN2LNT_term t) v (LNN2LNT_term s).
 Proof.
   elim t using  Term_Terms_ind
     with
     (P0 := fun (n : nat) (ts : fol.Terms LNN n) =>
-             LNN2LNT_terms n (substTs LNN n ts v s) =
-               substTs LNT n (LNN2LNT_terms n ts) v 
+             LNN2LNT_terms n (substTs ts v s) =
+               substTs (LNN2LNT_terms n ts) v 
                  (LNN2LNT_term s)).
   - intros n; simpl; destruct (eq_nat_dec v n); auto.
   - simpl in |- *; intros f t0 H; now rewrite H.
@@ -86,8 +86,8 @@ Qed.
 
 Lemma LNN2LNT_subTerms 
   (n : nat) (ts : fol.Terms LNN n) (v : nat) (s : fol.Term LNN):
-  LNN2LNT_terms n (substTs LNN n ts v s) =
-    substTs LNT n (LNN2LNT_terms n ts) v (LNN2LNT_term s).
+  LNN2LNT_terms n (substTs ts v s) =
+    substTs (LNN2LNT_terms n ts) v (LNN2LNT_term s).
 Proof.
   induction ts as [| n t ts Hrects].
   - reflexivity.
@@ -135,11 +135,11 @@ Qed.
 
 (** * Translation of formulas *)
 
-(** ** Translation of [(v#0 < v#1)%nn] *)
+(** ** Translation of [(v#0 < v#1)%fol] *)
 
-Definition LTFormula := (exH 2, v#0 + Succ v#2 = v#1)%nt.
+Definition LTFormula := (exH 2, v#0 + LNT.Succ v#2 = v#1)%nt.
 
-(** ** Translation of [(t < t')%nn] *)
+(** ** Translation of [(t < t')%fol] *)
 
 (**  The function [translateLT] is defined by an interactive proof (omitted).
      It is specified by the lemma [translateLT1] 
@@ -187,15 +187,15 @@ Qed.
 
 Fixpoint LNN2LNT_formula (f : fol.Formula LNN) : Formula :=
   match f with
-  | (t1 = t2)%nn => (LNN2LNT_term t1 = LNN2LNT_term t2)%nt
+  | (t1 = t2)%fol => (LNN2LNT_term t1 = LNN2LNT_term t2)%nt
   | atomic r ts =>
       match
         r as l return (fol.Terms LNN (arityR LNN l) -> Formula)
       with
       | LT_ => fun ts : fol.Terms LNN (arityR LNN LT_) => translateLT ts
       end ts
-  | (A -> B)%nn => (LNN2LNT_formula A -> LNN2LNT_formula B)%nt
-  | (~ A)%nn =>  (~ LNN2LNT_formula A)%nt
+  | (A -> B)%fol => (LNN2LNT_formula A -> LNN2LNT_formula B)%nt
+  | (~ A)%fol =>  (~ LNN2LNT_formula A)%nt
   | (allH v, A)%fol => (allH v, LNN2LNT_formula A)%nt
   end.
 
@@ -222,8 +222,7 @@ Proof. reflexivity. Qed.
 
 
 Lemma LNN2LNT_freeVarF (f : fol.Formula LNN) (v : nat):
-  In v (freeVarF LNT (LNN2LNT_formula f)) <->
-    In v (freeVarF LNN f).
+  In v (freeVarF (LNN2LNT_formula f)) <-> In v (freeVarF f).
 Proof.
   induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf].
   - simpl; repeat rewrite LNN2LNT_freeVarT; tauto.
@@ -236,7 +235,7 @@ Proof.
     rewrite translateLT1.
     rewrite <- (nilTerms _ b0).
     unfold freeVarTs in |- *.
-    fold (freeVarT LNN) in |- *.
+    fold (@freeVarT LNN) in |- *.
     rewrite <- app_nil_end.
     split.
     + intros H; decompose record (freeVarSubAllFormula1 _ _ _ _ H) /r.
@@ -288,15 +287,15 @@ Proof.
 Qed.
 
 Lemma LNN2LNT_freeVarF1 (f : fol.Formula LNN) (v : nat):
- In v (freeVarF LNT (LNN2LNT_formula f)) -> 
- In v (freeVarF LNN f).
+ In v (freeVarF (LNN2LNT_formula f)) -> 
+ In v (freeVarF f).
 Proof.
   intros ?; destruct (LNN2LNT_freeVarF f v); auto.
 Qed.
 
 Lemma LNN2LNT_freeVarF2 (f : fol.Formula LNN) (v : nat):
-  In v (freeVarF LNN f) -> 
-  In v (freeVarF LNT (LNN2LNT_formula f)).
+  In v (freeVarF f) -> 
+  In v (freeVarF (LNN2LNT_formula f)).
 Proof.
 intros ? ; destruct (LNN2LNT_freeVarF f v); auto.
 Qed.
@@ -325,22 +324,22 @@ Proof.
       * apply (subSubAllFormula LNT).
       * rewrite <- (nilTerms _ b0).
         replace
-          (substTs LNN 2 (Tcons a (Tcons a0 (Tnil))) v s) 
+          (substTs (Tcons a (Tcons a0 (Tnil))) v s) 
           with
-          (Tcons (substT _ a v s)
-             (Tcons (substT _ a0 v s) (Tnil))).
+          (Tcons (substT a v s)
+             (Tcons (substT a0 v s) (Tnil))).
         rewrite translateLT1.
         rewrite
           (subAllFormula_ext LNT LTFormula
              (fun H : nat =>
                 nat_rec (fun _ : nat => fol.Term LNT)
-                  (LNN2LNT_term (substT LNN a v s))
+                  (LNN2LNT_term (substT a v s))
                   (fun (H0 : nat) (_ : fol.Term LNT) =>
                      nat_rec (fun _ : nat => fol.Term LNT)
-                       (LNN2LNT_term (substT LNN a0 v s))
+                       (LNN2LNT_term (substT a0 v s))
                        (fun (H1 : nat) (_ : fol.Term LNT) => var H1) H0) H)
              (fun n : nat =>
-                substT LNT
+                substT 
                   (nat_rec (fun _ : nat => fol.Term LNT) (LNN2LNT_term a)
                      (fun (H0 : nat) (_ : fol.Term LNT) =>
                         nat_rec (fun _ : nat => fol.Term LNT) (LNN2LNT_term a0)
@@ -384,7 +383,7 @@ Proof.
         intros H6. 
         assert
           (H7: In x0
-             (freeVarF LNT
+             (freeVarF 
                 (LNN2LNT_formula
                    (substF 
                       (substF a v (var x))
@@ -392,12 +391,12 @@ Proof.
           by (eapply List.in_remove; apply H6). 
         assert
           (H8: In x0
-                 (freeVarF LNN
+                 (freeVarF 
                     (substF (substF a v (var x)) v0 s)))
           by (apply LNN2LNT_freeVarF1; assumption).
         induction (freeVarSubFormula3 _ _ _ _ _ H8).
         assert
-          (H10: In x0 (freeVarF LNN 
+          (H10: In x0 (freeVarF 
                          (substF a v (var x)))) 
           by (eapply in_remove; apply H9).
         induction (freeVarSubFormula3 _ _ _ _ _ H10).
@@ -465,12 +464,12 @@ Qed.
 
 Fixpoint LNT2LNN_formula (f : Formula) : fol.Formula LNN :=
   match f with
-  | (t1 = t2)%nt => (LNT2LNN_term t1 = LNT2LNN_term t2)%nn
+  | (t1 = t2)%nt => (LNT2LNN_term t1 = LNT2LNN_term t2)%fol
   | atomic r ts => match r with
                    end
-  | (A -> B)%nt => (LNT2LNN_formula A -> LNT2LNN_formula B)%nn
-  | (~  A)%nt =>   (~ LNT2LNN_formula A)%nn
-  | (allH v, A)%nt => (allH v, LNT2LNN_formula A)%nn
+  | (A -> B)%nt => (LNT2LNN_formula A -> LNT2LNN_formula B)%fol
+  | (~  A)%nt =>   (~ LNT2LNN_formula A)%fol
+  | (allH v, A)%nt => (allH v, LNT2LNN_formula A)%fol
   end.
 
 (** *** Commutation lemmas *)
@@ -488,15 +487,15 @@ Proof.
 Qed.
 
 Lemma LNT2LNN_subTerm  (t : Term) (v : nat) (s : Term):
-  LNT2LNN_term (substT LNT t v s) =
-    substT LNN (LNT2LNN_term t) v (LNT2LNN_term s).
+  LNT2LNN_term (substT t v s) =
+    substT (LNT2LNN_term t) v (LNT2LNN_term s).
 Proof.
   elim t using
     Term_Terms_ind
     with
     (P0 := fun (n : nat) (ts : fol.Terms LNT n) =>
-             LNT2LNN_terms n (substTs LNT n ts v s) =
-               substTs LNN n (LNT2LNN_terms n ts) v 
+             LNT2LNN_terms n (substTs ts v s) =
+               substTs (LNT2LNN_terms n ts) v 
                  (LNT2LNN_term s)); simpl.
   - intro n; destruct (eq_nat_dec v n); reflexivity.
   - intros f t0 H; rewrite H; reflexivity.
@@ -505,30 +504,30 @@ Proof.
 Qed.
 
 Lemma LNT2LNN_freeVarT ( t : Term):
-  freeVarT LNN (LNT2LNN_term t) = freeVarT LNT t.
+  freeVarT (LNT2LNN_term t) = freeVarT t.
 Proof.
   elim t using
     Term_Terms_ind
     with
     (P0 := fun (n : nat) (ts : fol.Terms LNT n) =>
-             freeVarTs _ n (LNT2LNN_terms n ts) = freeVarTs LNT n ts);
+             freeVarTs  (LNT2LNN_terms n ts) = freeVarTs ts);
     simpl in |- *.  
   - reflexivity.
   - intros f t0 H; transitivity
-                     (freeVarTs LNN (LNTFunctionArity f)
+                     (freeVarTs 
                         (LNT2LNN_terms (LNTFunctionArity f) t0)).
     + reflexivity.
     + now rewrite H.
   - reflexivity.
   - intros n t0 H t1 H0; transitivity
-                           (freeVarT LNN (LNT2LNN_term t0) ++
-                              freeVarTs LNN n (LNT2LNN_terms n t1)).
+                           (freeVarT (LNT2LNN_term t0) ++
+                              freeVarTs (LNT2LNN_terms n t1)).
     + reflexivity.
     + now rewrite H, H0.
 Qed.
 
 Lemma LNT2LNN_freeVarF (f : Formula):
-  freeVarF LNN (LNT2LNN_formula f) = freeVarF LNT f.
+  freeVarF (LNT2LNN_formula f) = freeVarF f.
 Proof.
   induction f as [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf];
     simpl in |- *.
@@ -557,7 +556,7 @@ Proof.
     destruct (eq_nat_dec v v0) as [e | n].
     + reflexivity.
     + rewrite LNT2LNN_freeVarT.
-      destruct (In_dec eq_nat_dec v (freeVarT LNT s)) as [i | i].
+      destruct (In_dec eq_nat_dec v (freeVarT s)) as [i | i].
       * simpl; repeat rewrite H; simpl. 
         -- now rewrite LNT2LNN_freeVarF.
         -- apply depthForall.
@@ -585,7 +584,7 @@ Hypothesis
     (exists prf : Prf LNT Axm (LNN2LNT_formula f),
        (forall g : Formula, In g Axm -> mem _ V g)) /\
     forall v, In v (freeVarListFormula LNT Axm) -> 
-              (In v (freeVarF LNN f)).
+              (In v (freeVarF f)).
 
 Lemma translatePrf f : 
  forall axm:fol.Formulas LNN, Prf LNN axm f -> 
@@ -679,7 +678,7 @@ Proof.
         -- assert (H2: In f (f::x)) by  auto with *.
            elim (H0 f H2).
   - exists (nil (A:=Formula)).
-    assert (H0: ~ In v (freeVarF LNT (LNN2LNT_formula A)))
+    assert (H0: ~ In v (freeVarF (LNN2LNT_formula A)))
     by (intro H0; elim n; now apply LNN2LNT_freeVarF1).
     split.
     + exists (FA2 LNT (LNN2LNT_formula A) v H0); contradiction.
@@ -712,12 +711,12 @@ Proof.
       - repeat rewrite translateLT1; simpl; unfold newVar; simpl.  
         apply impE 
           with
-          (iffH (existH 3 (equal (Plus (var 2) (Succ (var 3))) (var 0)))
-             (existH 4 (equal (Plus (var 3) (Succ (var 4))) (var 1)))).
+          (iffH (existH 3 (equal (LNT.Plus (var 2) (LNT.Succ (var 3))) (var 0)))
+             (existH 4 (equal (LNT.Plus (var 3) (LNT.Succ (var 4))) (var 1)))).
         + apply impRefl.
         + eapply iffTrans with
             (exH 4,
-               (substF (v#2 + Succ v#3 = v#0)%nt 3 (v#4)))%nt.
+               (substF (v#2 + LNT.Succ v#3 = v#0)%nt 3 (v#4)))%nt.
           * apply (rebindExist LNT).
             simpl in |- *. intro H0; decompose sum H0.
             -- discriminate H1.
@@ -739,7 +738,7 @@ Proof.
                apply iffI.
                ++ apply impI.
                   apply eqTrans with (var 0).
-                  ** apply eqTrans with (Plus (var 2) (Succ (var 4))).
+                  ** apply eqTrans with (LNT.Plus (var 2) (LNT.Succ (var 4))).
                      apply eqPlus.
                      apply eqSym.
                      apply Axm.
@@ -753,9 +752,9 @@ Proof.
                   ** apply Axm; left; right; constructor.
                ++ apply impI.
                   apply eqTrans with (var 1).
-                  **  apply eqTrans with (Plus (var 3) (Succ (var 4))).
-                      fold (Succ (var 4)) in |- *.
-                      fold (Plus (var 2) (Succ (var 4))) in |- *.
+                  **  apply eqTrans with (v#3 + LNT.Succ v#4)%nt.
+                      fold (LNT.Succ (var 4)) in |- *.
+                      fold (LNT.Plus (var 2) (LNT.Succ (var 4))) in |- *.
                       apply eqPlus.
                       apply Axm.
                       left.
@@ -808,7 +807,7 @@ Proof.
                                         mem (fol.Formula LNT) V g) /\
                  (forall v : nat,
                      In v (freeVarListFormula LNT Axm) -> 
-                     In v (freeVarF LNN f))).
+                     In v (freeVarF f))).
   { intros f0 H2; destruct (H0 f0 H2) as [x0 H3]. 
     exists x0; split.
     - apply H3.
