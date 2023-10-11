@@ -811,7 +811,7 @@ Proof.
                              ---- discriminate a.
                              ----induction 
                                  (In_dec eq_nat_dec 1 
-                                    (freeVarT LNT (natToTerm (codeFormula x)))) 
+                                    (freeVarT (natToTerm (codeFormula x)))) 
                                  as [a | b0].
                                  ++++ elim (closedNatToTerm _ _ a).
                                  ++++ reflexivity.
@@ -838,7 +838,7 @@ Proof.
                                   induction (eq_nat_dec 2 0) as [a | b]. 
                                   discriminate a.
                                   induction (In_dec eq_nat_dec 2 
-                                               (freeVarT LNT 
+                                               (freeVarT 
                                                   (natToTerm (codeFormula x)))).
                                   elim (closedNatToTerm _ _ a).
                                   reflexivity.
@@ -847,7 +847,7 @@ Proof.
                                   discriminate a.
                                   induction
                                     (In_dec eq_nat_dec 2 
-                                       (freeVarT LNT 
+                                       (freeVarT 
                                           (natToTerm (codePrf x0 x x1)))) as [a | b0].
                                   elim (closedNatToTerm _ _ a).
                                   reflexivity.
@@ -1101,7 +1101,7 @@ Proof.
               ** discriminate a.
               ** induction 
                   (In_dec eq_nat_dec 1
-                     (freeVarT LNT
+                     (freeVarT 
                         (natToTermLNT (code.codeFormula (cl:=LcodeLNT) 
                                           x)))).
         --- elim (closedNatToTerm _ _ a).
@@ -1204,7 +1204,7 @@ Proof.
                      discriminate a.
                      induction
                        (In_dec eq_nat_dec 2
-                          (freeVarT LNT
+                          (freeVarT 
                              (natToTermLNT (code.codeFormula (cl:=LcodeLNT)
                                                x))))
                        as [a | b0].

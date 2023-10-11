@@ -66,7 +66,7 @@ Qed.
 
 Lemma subSubTerm (t : Term) (v1 v2 : nat) (s1 s2 : Term):
   v1 <> v2 ->
-  ~ In v1 (freeVarT L s2) ->
+  ~ In v1 (freeVarT s2) ->
   substT (substT t v1 s1) v2 s2 =
     substT (substT t v2 s2) v1 (substT s1 v2 s2).
 Proof.
@@ -95,7 +95,7 @@ Qed.
 
 Lemma subSubTerms (n : nat) (ts : Terms n) (v1 v2 : nat) (s1 s2 : Term):
   v1 <> v2 ->
-  ~ In v1 (freeVarT L s2) ->
+  ~ In v1 (freeVarT s2) ->
   substTs (substTs ts v1 s1) v2 s2 =
     substTs (substTs ts v2 s2) v1 (substT s1 v2 s2).
 Proof.
@@ -109,7 +109,7 @@ Qed.
 
 Lemma subSubFormula (f : Formula) (v1 v2 : nat) (s1 s2 : Term):
  v1 <> v2 ->
- ~ In v1 (freeVarT L s2) ->
+ ~ In v1 (freeVarT s2) ->
  forall T : System,
  SysPrf T
    (iffH (substF  (substF  f v1 s1) v2 s2)
@@ -135,7 +135,7 @@ Proof.
                (v1
                   :: v2
                   :: freeVarF (forallH v a) ++
-                  freeVarT _ s1 ++ freeVarT _ s2)) in *.
+                  freeVarT s1 ++ freeVarT s2)) in *.
       assert (H2: v' <> v1).
       { intro H2;
         elim
@@ -143,7 +143,7 @@ Proof.
              (v1
                 :: v2
                 :: freeVarF (forallH v a) ++
-                freeVarT L s1 ++ freeVarT L s2)).
+                freeVarT s1 ++ freeVarT s2)).
         fold v' ; simpl; auto.
       } 
       assert (H3: v' <> v2).
@@ -153,7 +153,7 @@ Proof.
              (v1
                 :: v2
                 :: freeVarF (forallH v a) ++
-                freeVarT L s1 ++ freeVarT L s2)).
+                freeVarT s1 ++ freeVarT s2)).
         fold v'; simpl; auto.
       } 
       assert (H4: ~ In v' (freeVarF (forallH v a))).
@@ -163,27 +163,27 @@ Proof.
              (v1
                 :: v2
                 :: freeVarF (forallH v a) ++
-                freeVarT L s1 ++ freeVarT L s2)).
+                freeVarT s1 ++ freeVarT s2)).
         fold v' ;simpl; auto with datatypes.
       } 
-      assert (H5: ~ In v' (freeVarT L s1)).
+      assert (H5: ~ In v' (freeVarT s1)).
       { intro H5; 
         elim
           (newVar1
              (v1
                 :: v2
                 :: freeVarF (forallH v a) ++
-                freeVarT L s1 ++ freeVarT L s2)).
+                freeVarT s1 ++ freeVarT s2)).
         fold v' ;  simpl; repeat right; auto with datatypes.
       } 
-      assert (H6: ~ In v' (freeVarT L s2)).
+      assert (H6: ~ In v' (freeVarT s2)).
       { intro H6; 
           elim
             (newVar1
                (v1
                   :: v2
                   :: freeVarF (forallH v a) ++
-                  freeVarT L s1 ++ freeVarT L s2)).
+                  freeVarT s1 ++ freeVarT s2)).
        fold v' ; simpl;  repeat right; auto with datatypes.
      }
      apply impE with
@@ -209,13 +209,13 @@ Proof.
        * assert (H7: 
                   forall (f : Formula) (x v : nat) (s : Term),
                     x <> v ->
-                    ~ In x (freeVarT L s) ->
+                    ~ In x (freeVarT s) ->
                     substF  (forallH x f) v s =
                       forallH x (substF f v s)). 
          { intros f0 x v0 s H7; rewrite (subFormulaForall L).
            destruct (eq_nat_dec x v0) as [e | n0].
            - elim H7; auto.
-           - destruct (In_dec eq_nat_dec x (freeVarT L s)) as [i | n1]. 
+           - destruct (In_dec eq_nat_dec x (freeVarT s)) as [i | n1]. 
          + intro H8; elim H8; auto.
          + reflexivity.
      }

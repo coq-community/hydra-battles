@@ -330,7 +330,7 @@ Proof.
                              induction (eq_nat_dec 1 0) as [a | b].
                              ---- discriminate a.
                              ---- induction 
-                                 (In_dec eq_nat_dec 1 (freeVarT LNN 
+                                 (In_dec eq_nat_dec 1 (freeVarT 
                                                          (natToTerm (codeFormula x))))
                                    as [a | b0].
                                   ++++ elim (closedNatToTerm _ _ a).
@@ -340,7 +340,7 @@ Proof.
                                   induction (eq_nat_dec 2 0) as [a | b].
                                   discriminate a.
                                   induction (In_dec eq_nat_dec 2 
-                                               (freeVarT LNN 
+                                               (freeVarT 
                                                   (natToTerm (codeFormula x)))).
                                   elim (closedNatToTerm _ _ a).
                                   reflexivity.
@@ -348,7 +348,7 @@ Proof.
                              induction (eq_nat_dec 2 1) as [a | b]. 
                              discriminate a.
                              induction
-                               (In_dec eq_nat_dec 2 (freeVarT LNN 
+                               (In_dec eq_nat_dec 2 (freeVarT 
                                                        (natToTerm (codePrf x0 x x1))))
                                as [a | b0]. 
                              elim (closedNatToTerm _ _ a).
@@ -523,7 +523,7 @@ Proof.
            ++ discriminate a.
            ++ induction
                (In_dec eq_nat_dec 1
-                  (freeVarT LNN
+                  (freeVarT 
                      (natToTermLNN (code.codeFormula x)))) as [a | b0].
               ** elim (closedNatToTerm _ _ a).
               ** clear b0 b.
@@ -585,7 +585,7 @@ Proof.
                              discriminate a.
                              induction
                                (In_dec eq_nat_dec 2
-                                  (freeVarT LNN
+                                  (freeVarT 
                                      (natToTermLNN 
                                         (code.codeFormula x)))).
                              elim (closedNatToTerm _ _ a).

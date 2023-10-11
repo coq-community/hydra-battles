@@ -83,19 +83,17 @@ Ltac SimplFreeVar :=
        induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
    | H:(In _ (freeVarF (LT ?X1 ?X2))) |- _ =>
        rewrite freeVarLT in H
-   | H:(In _ (freeVarT  ?X9 (LNT.natToTerm _))) |- _ =>
+   | H:(In _ (freeVarT  (LNT.natToTerm _))) |- _ =>
        elim (LNT.closedNatToTerm _ _ H)
-   | H:(In _ (freeVarT ?X9 (natToTerm _))) |- _ =>
+   | H:(In _ (freeVarT (natToTerm _))) |- _ =>
        elim (closedNatToTerm _ _ H)
-   | H:(In _ (freeVarT ?X9 Zero)) |- _ =>
+   | H:(In _ (freeVarT Zero)) |- _ =>
        elim H
-   | H:(In _ (freeVarT ?X9 (Succ _))) |- _ =>
+   | H:(In _ (freeVarT (Succ _))) |- _ =>
        rewrite freeVarSucc in H
-   | H:(In _ (freeVarT ?X9 (var _))) |- _ =>
+   | H:(In _ (@freeVarT ?X9 (var _))) |- _ =>
        simpl in H; decompose sum H; clear H
-   | H:(In _ (freeVarT ?X9 (var ?X9 _))) |- _ =>
-       simpl in H; decompose sum H; clear H
-   end.
+     end.
 (* end hide *)
 
 Section code_SysPrf.
@@ -204,14 +202,14 @@ Proof.
   - elim H0; assumption.
   - induction
  (In_dec eq_nat_dec nv
-    (freeVarT LNN (natToTerm (codeFormula f)))) as [a | b0].
+    (freeVarT (natToTerm (codeFormula f)))) as [a | b0].
     + elim (closedNatToTerm _ _ a).
     + clear b b0; rewrite (subFormulaExist LNN).
       induction (eq_nat_dec nv 1) as [a | b].
       * elim H1; assumption.
       * induction
           (In_dec eq_nat_dec nv
-             (freeVarT LNN (natToTerm (codePrf A f p)))) as [a | b0].
+             (freeVarT (natToTerm (codePrf A f p)))) as [a | b0].
         -- elim (closedNatToTerm _ _ a).
         -- clear b b0.
            apply existI with (natToTerm (codeList (map (codeFormula) A))).
@@ -341,7 +339,7 @@ Proof.
                  +++ discriminate a.
                  +++ induction
                      (In_dec eq_nat_dec (S nv)
-                        (freeVarT LNN (natToTerm (codeFormula f)))).
+                        (freeVarT (natToTerm (codeFormula f)))).
                      *** elim (closedNatToTerm _ _ a).
                      *** clear b b0.
                          rewrite (subFormulaForall LNN).
@@ -349,7 +347,7 @@ Proof.
                          elim H4; assumption.
                          induction
                            (In_dec eq_nat_dec (S nv)
-                              (freeVarT LNN (natToTerm (codePrf A f p)))).
+                              (freeVarT (natToTerm (codePrf A f p)))).
                          ---- elim (closedNatToTerm _ _ a).
                          ---- clear b b0.
                               rewrite (subFormulaForall LNN).
@@ -357,7 +355,7 @@ Proof.
                               ++++ elim H6; assumption.
                               ++++ induction
                                   (In_dec eq_nat_dec (S nv)
-                                     (freeVarT LNN
+                                     (freeVarT 
                                         (natToTerm (codeList (map
                                                                 (codeFormula) 
                                                                 A))))).
@@ -807,7 +805,7 @@ Proof.
   elim H0; assumption.
   induction
     (In_dec eq_nat_dec nv
-       (freeVarT LNN (natToTerm (codeFormula f)))).
+       (freeVarT (natToTerm (codeFormula f)))).
   elim (closedNatToTerm _ _ a).
   clear b b0.
   rewrite (subFormulaExist LNN).
@@ -815,7 +813,7 @@ Proof.
   elim H1; assumption.
   induction
     (In_dec eq_nat_dec nv
-       (freeVarT LNN (natToTerm (codePrf A f p)))).
+       (freeVarT (natToTerm (codePrf A f p)))).
   elim (closedNatToTerm _ _ a).
   clear b b0.
   repeat rewrite (subFormulaAnd LNN).
@@ -1053,7 +1051,7 @@ Proof.
   discriminate a.
   induction
     (In_dec eq_nat_dec (S nv)
-       (freeVarT LNN (natToTerm (codeFormula f)))).
+       (freeVarT (natToTerm (codeFormula f)))).
   elim (closedNatToTerm _ _ a).
   clear b b0.
   rewrite (subFormulaForall LNN).
@@ -1061,7 +1059,7 @@ Proof.
   elim H8; assumption.
   induction
     (In_dec eq_nat_dec (S nv)
-       (freeVarT LNN (natToTerm (codePrf A f p)))).
+       (freeVarT (natToTerm (codePrf A f p)))).
   elim (closedNatToTerm _ _ a).
   clear b b0.
   rewrite (subFormulaNot LNN).
@@ -1070,7 +1068,7 @@ Proof.
   elim H10; assumption.
   induction
     (In_dec eq_nat_dec (S nv)
-       (freeVarT LNN
+       (freeVarT 
           (natToTerm (codeList (map (codeFormula) A))))).
   elim (closedNatToTerm _ _ a).
   clear b b0.
@@ -1430,13 +1428,13 @@ Proof.
   - elim H0; assumption.
   - induction
       (In_dec eq_nat_dec nv
-         (freeVarT LNN (natToTerm (codeFormula f)))) as [a | b0].
+         (freeVarT (natToTerm (codeFormula f)))) as [a | b0].
     + elim (closedNatToTerm _ _ a).
     + clear b b0.
       rewrite (subFormulaExist LNN).
       induction (eq_nat_dec nv 1).
       elim H1; assumption.
-      induction (In_dec eq_nat_dec nv (freeVarT LNN (natToTerm n))).
+      induction (In_dec eq_nat_dec nv (freeVarT (natToTerm n))).
       elim (closedNatToTerm _ _ a).
       clear b b0.
       repeat rewrite (subFormulaAnd LNN).
@@ -1586,16 +1584,16 @@ Proof.
         induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
     | H:(In _ (freeVarF (LT ?X1 ?X2))) |- _ =>
         rewrite freeVarLT in H
-    | H:(In _ (freeVarT _ (natToTerm _))) |- _ =>
+    | H:(In _ (freeVarT  (natToTerm _))) |- _ =>
         elim (closedNatToTerm _ _ H)
-    | H:(In _ (freeVarT LNN Zero)) |- _ =>
+    | H:(In _ (freeVarT  Zero)) |- _ =>
         elim H
-    | H:(In _ (freeVarT LNN (Succ _))) |- _ =>
+    | H:(In _ (freeVarT  (Succ _))) |- _ =>
         rewrite freeVarSucc in H
-    | H:(In _ (freeVarT LNN (var _))) |- _ =>
+    | H:(In _ (@freeVarT LNN (var _))) |- _ =>
         simpl in H; decompose sum H; clear H
-    | H:(In _ (freeVarT LNN (var LNN _))) |- _ =>
-        simpl in H; decompose sum H; clear H
+ (*   | H:(In _ (freeVarT LNN (var LNN _))) |- _ =>
+        simpl in H; decompose sum H; clear H *)
     end.
   - assert
     (H0: Representable NN 2 (checkPrf L cL codeArityF codeArityR)
@@ -1649,7 +1647,7 @@ Proof.
   - discriminate a.
   - induction
       (In_dec eq_nat_dec 1
-         (freeVarT LNN (natToTerm (codeFormula f)))) as [a | b0].
+         (freeVarT (natToTerm (codeFormula f)))) as [a | b0].
     + elim (closedNatToTerm _ _ a).
     + apply existI with (natToTerm (codePrf _ _ x0)).
       now apply codeSysPrfCorrect1.
@@ -1688,14 +1686,14 @@ Proof.
   - discriminate a.
   - induction
       (In_dec eq_nat_dec 2
-         (freeVarT LNN (natToTerm (codeFormula f)))).
+         (freeVarT (natToTerm (codeFormula f)))).
     + elim (closedNatToTerm _ _ a).
     + clear b b0; rewrite (subFormulaExist LNN).
       induction (eq_nat_dec 2 1) as [a | ?].
       * discriminate a.
       * induction
           (In_dec eq_nat_dec 2
-             (freeVarT LNN (natToTerm (codePrf A (notH f) p)))).
+             (freeVarT (natToTerm (codePrf A (notH f) p)))).
         -- elim (closedNatToTerm _ _ a).
         -- clear b b0.
            apply existI with (natToTerm (codeFormula (notH f))).
@@ -1864,7 +1862,7 @@ Proof.
   discriminate a.
   induction
     (In_dec eq_nat_dec 2
-       (freeVarT LNN (natToTerm (codeFormula f)))).
+       (freeVarT (natToTerm (codeFormula f)))).
   elim (closedNatToTerm _ _ a).
   clear b b0.
   rewrite (subFormulaExist LNN).
@@ -1872,7 +1870,7 @@ Proof.
   discriminate a.
   induction
     (In_dec eq_nat_dec 2
-       (freeVarT LNN (natToTerm (codePrf A (notH f) p)))).
+       (freeVarT (natToTerm (codePrf A (notH f) p)))).
   elim (closedNatToTerm _ _ a).
   clear b b0.
   apply nExist.
@@ -2059,13 +2057,13 @@ Proof.
   - discriminate a.
   - induction
       (In_dec eq_nat_dec 2
-         (freeVarT LNN (natToTerm (codeFormula f)))) as [a | b0].
+         (freeVarT (natToTerm (codeFormula f)))) as [a | b0].
     + elim (closedNatToTerm _ _ a).
     + clear b b0.
       rewrite (subFormulaExist LNN).
       induction (eq_nat_dec 2 1) as [a | b0].
       * discriminate a.
-      * induction (In_dec eq_nat_dec 2 (freeVarT LNN (natToTerm n))) as [a | b1].
+      * induction (In_dec eq_nat_dec 2 (freeVarT (natToTerm n))) as [a | b1].
         -- elim (closedNatToTerm _ _ a).
         -- clear b1 b0; apply nExist.
            apply

@@ -43,27 +43,27 @@ Proof.
 Qed.
 
 Lemma LNN2LNT_freeVarT (t : fol.Term LNN):
- freeVarT LNT (LNN2LNT_term t) = freeVarT LNN t.
+ freeVarT  (LNN2LNT_term t) = freeVarT t.
 Proof.
   induction t using
     Term_Terms_ind
     with
     (P0 := fun (n : nat) (ts : fol.Terms LNN n) =>
-             freeVarTs LNT n (LNN2LNT_terms n ts) = freeVarTs LNN n ts).
+             freeVarTs (LNN2LNT_terms n ts) = freeVarTs ts).
   - intros; reflexivity.
   - intros; simpl; repeat rewrite freeVarTApply; now apply IHt.
   - intros; simpl; reflexivity. 
-  - transitivity (freeVarT LNN t ++ freeVarTs LNN n t0).
+  - transitivity (freeVarT t ++ freeVarTs t0).
     + rewrite <- IHt0; rewrite <- IHt; reflexivity.
     + reflexivity.
 Qed.
 
 Lemma LNN2LNT_freeVarTs (n : nat) (ts : fol.Terms LNN n):
-    freeVarTs LNT n (LNN2LNT_terms n ts) = freeVarTs LNN n ts.
+    freeVarTs (LNN2LNT_terms n ts) = freeVarTs ts.
 Proof.
   induction ts as [| n t ts Hrects].
   - reflexivity.
-  - simpl; transitivity (freeVarT LNN t ++ freeVarTs LNN n ts).
+  - simpl; transitivity (freeVarT t ++ freeVarTs ts).
     + rewrite <- Hrects; rewrite <- LNN2LNT_freeVarT; reflexivity.
     + reflexivity.
 Qed.
@@ -235,7 +235,7 @@ Proof.
     rewrite translateLT1.
     rewrite <- (nilTerms _ b0).
     unfold freeVarTs in |- *.
-    fold (freeVarT LNN) in |- *.
+    fold (@freeVarT LNN) in |- *.
     rewrite <- app_nil_end.
     split.
     + intros H; decompose record (freeVarSubAllFormula1 _ _ _ _ H) /r.
@@ -504,24 +504,24 @@ Proof.
 Qed.
 
 Lemma LNT2LNN_freeVarT ( t : Term):
-  freeVarT LNN (LNT2LNN_term t) = freeVarT LNT t.
+  freeVarT (LNT2LNN_term t) = freeVarT t.
 Proof.
   elim t using
     Term_Terms_ind
     with
     (P0 := fun (n : nat) (ts : fol.Terms LNT n) =>
-             freeVarTs _ n (LNT2LNN_terms n ts) = freeVarTs LNT n ts);
+             freeVarTs  (LNT2LNN_terms n ts) = freeVarTs ts);
     simpl in |- *.  
   - reflexivity.
   - intros f t0 H; transitivity
-                     (freeVarTs LNN (LNTFunctionArity f)
+                     (freeVarTs 
                         (LNT2LNN_terms (LNTFunctionArity f) t0)).
     + reflexivity.
     + now rewrite H.
   - reflexivity.
   - intros n t0 H t1 H0; transitivity
-                           (freeVarT LNN (LNT2LNN_term t0) ++
-                              freeVarTs LNN n (LNT2LNN_terms n t1)).
+                           (freeVarT (LNT2LNN_term t0) ++
+                              freeVarTs (LNT2LNN_terms n t1)).
     + reflexivity.
     + now rewrite H, H0.
 Qed.
@@ -556,7 +556,7 @@ Proof.
     destruct (eq_nat_dec v v0) as [e | n].
     + reflexivity.
     + rewrite LNT2LNN_freeVarT.
-      destruct (In_dec eq_nat_dec v (freeVarT LNT s)) as [i | i].
+      destruct (In_dec eq_nat_dec v (freeVarT s)) as [i | i].
       * simpl; repeat rewrite H; simpl. 
         -- now rewrite LNT2LNN_freeVarF.
         -- apply depthForall.

@@ -213,8 +213,8 @@ Proof.
       (cTriple (cTriple v (codeTerm s) (codeFormula (forallH n f)))
          (codeFormula (substF (forallH n f) v s)) 0).
   - assert (H: lt_depth L f (forallH v f)) by apply depthForall.
-    destruct (In_dec eq_nat_dec n (freeVarT L s)) as [a | b0].
-    + set (nv := newVar (v :: freeVarT L s ++ freeVarF f)).
+    destruct (In_dec eq_nat_dec n (freeVarT s)) as [a | b0].
+    + set (nv := newVar (v :: freeVarT s ++ freeVarF f)).
       assert (H0: lt_depth L (substF f n (var nv)) 
                     (forallH v f)).
       { apply eqDepth with f.
@@ -291,7 +291,7 @@ Proof.
   unfold makeTraceForall;
     destruct  (eq_nat_dec n (fst (v, s))) as [a| b]; simpl.
   - rewrite cTripleProj1; reflexivity.
-  - destruct (In_dec eq_nat_dec n (freeVarT L s)); simpl;
+  - destruct (In_dec eq_nat_dec n (freeVarT s)); simpl;
       rewrite cTripleProj1; reflexivity.
 Qed.
 
@@ -304,7 +304,7 @@ Proof.
     try (rewrite cTripleProj2; reflexivity).
   unfold makeTraceForall; destruct (eq_nat_dec n (fst (v, s))); simpl.
   - rewrite cTripleProj2; reflexivity.
-  - destruct  (In_dec eq_nat_dec n (freeVarT L s)); simpl;
+  - destruct  (In_dec eq_nat_dec n (freeVarT s)); simpl;
       rewrite cTripleProj2; reflexivity.
 Qed.
 
@@ -601,7 +601,7 @@ elim f using Formula_depth_ind2.
        replace (charFunction 2 Nat.eqb v0 v) with 1.
        -- simpl; rewrite Nat.eqb_refl; reflexivity.
        -- simpl; now rewrite a0, Nat.eqb_refl.
-     *   induction (In_dec eq_nat_dec v (freeVarT L s)) as [a0 | b0].
+     *   induction (In_dec eq_nat_dec v (freeVarT s)) as [a0 | b0].
          -- simpl; unfold A at 1;
               repeat first
                 [ rewrite cTripleProj1
@@ -617,14 +617,14 @@ elim f using Formula_depth_ind2.
                        (v,
                          var
                            (newVar
-                              (v0 :: freeVarT L s ++ freeVarF a)))).
+                              (v0 :: freeVarT s ++ freeVarF a)))).
                 ** rewrite evalStrongRecHelp1 with
                      (m := 
                         makeTrace
                           (substF a v
                              (var
                                 (newVar
-                                   (v0 :: freeVarT L s ++ 
+                                   (v0 :: freeVarT s ++ 
                                       freeVarF a))))
                           (v0, s)).
                    replace
@@ -634,7 +634,7 @@ elim f using Formula_depth_ind2.
                               (codeApp (codeFreeVarTerm (codeTerm s))
                                  (codeFreeVarFormula (codeFormula a)))))) 
                      with
-                     (newVar (v0 :: freeVarT L s ++ freeVarF a)).
+                     (newVar (v0 :: freeVarT s ++ freeVarF a)).
                    simpl; repeat rewrite makeTrace1.
                    repeat rewrite makeTrace2.
                    repeat rewrite Nat.eqb_refl.
@@ -654,19 +654,19 @@ elim f using Formula_depth_ind2.
                    generalize
                      (makeTrace
                         (substF a v
-                           (var (newVar (v0 :: freeVarT L s ++ 
+                           (var (newVar (v0 :: freeVarT s ++ 
                                            freeVarF a)))) 
                         (v0, s))
                        (makeTrace a (v, var (newVar 
-                                               (v0 :: freeVarT L s ++ 
+                                               (v0 :: freeVarT s ++ 
                                                   freeVarF a))))
-                       (cPair (newVar (v0 :: freeVarT L s ++ 
+                       (cPair (newVar (v0 :: freeVarT s ++ 
                                          freeVarF a))
                           (codeFormula
                              (substF 
                                 (substF a v
                                    (var
-                                      (newVar (v0 :: freeVarT L s ++ 
+                                      (newVar (v0 :: freeVarT s ++ 
                                                  freeVarF a)))) v0 s)))
                        (cTriple v0 (codeTerm s) 
                           (cPair 3 (cPair v (codeFormula a)))).
@@ -684,18 +684,18 @@ elim f using Formula_depth_ind2.
                 ** generalize
                     (makeTrace
                        (substF a v
-                          (var (newVar (v0 :: freeVarT L s ++ 
+                          (var (newVar (v0 :: freeVarT s ++ 
                                           freeVarF a)))) 
                        (v0, s))
-                      (makeTrace a (v, var (newVar (v0 :: freeVarT L s 
+                      (makeTrace a (v, var (newVar (v0 :: freeVarT s 
                                                       ++ freeVarF a))))
-                      (cPair (newVar (v0 :: freeVarT L s ++ 
+                      (cPair (newVar (v0 :: freeVarT s ++ 
                                         freeVarF a))
                          (codeFormula
                             (substF 
                                (substF a v
                                   (var
-                                     (newVar (v0 :: freeVarT L s ++ 
+                                     (newVar (v0 :: freeVarT s ++ 
                                                 freeVarF a)))) v0 s)))
                       (cTriple v0 (codeTerm s) 
                          (cPair 3 (cPair v (codeFormula a)))).
@@ -712,7 +712,7 @@ elim f using Formula_depth_ind2.
                    apply cPairLe2.
             ++ unfold codeTerm; rewrite codeFreeVarTermCorrect.
                rewrite codeInCorrect.
-               induction (In_dec eq_nat_dec v (freeVarT L s)) as [a1 | b0].
+               induction (In_dec eq_nat_dec v (freeVarT s)) as [a1 | b0].
                **   reflexivity.
                ** elim b0; assumption.
             ++   simpl; rewrite nat_eqb_false.
@@ -752,7 +752,7 @@ elim f using Formula_depth_ind2.
                  **  unfold codeTerm in |- *.
                      rewrite codeFreeVarTermCorrect.
                      rewrite codeInCorrect.
-                     destruct (In_dec eq_nat_dec v (freeVarT L s)) 
+                     destruct (In_dec eq_nat_dec v (freeVarT s)) 
                        as [a0 | b1].
                      elim b0; assumption.
                      reflexivity.
@@ -1116,7 +1116,7 @@ elim f using Formula_depth_ind2.
     rewrite H1 in H0; clear H1.
     unfold codeTerm in H0; rewrite codeFreeVarTermCorrect in H0.
     rewrite codeInCorrect in H0.
-    induction (In_dec eq_nat_dec v (freeVarT L s)) as [a0 | ?].
+    induction (In_dec eq_nat_dec v (freeVarT s)) as [a0 | ?].
     * rewrite evalStrongRecHelp1 with (m := car m) in H0.
       -- rewrite evalStrongRecHelp1 with (m := cdr m) in H0.
          ++ simpl in H0.
@@ -1127,7 +1127,7 @@ elim f using Formula_depth_ind2.
                        (codeNewVar
                           (S
                              (cPair v0
-                                (codeApp (codeList (freeVarT L s))
+                                (codeApp (codeList (freeVarT s))
                                    (codeFreeVarFormula (codeFormula a))))))
                        (cTriplePi2 (cdr m))))) as [a1 | ?].
             ** rewrite <- a1 in H0.
@@ -1144,7 +1144,7 @@ elim f using Formula_depth_ind2.
                               (codeNewVar
                                  (S
                                     (cPair v0
-                                       (codeApp (codeList (freeVarT L s))
+                                       (codeApp (codeList (freeVarT s))
                                           (codeFreeVarFormula (codeFormula a)))))))
                            (codeFormula a)) (cTriplePi1 (car m))) as [a3 | ?].
                    +++ rewrite a3 in H0.
@@ -1165,14 +1165,14 @@ elim f using Formula_depth_ind2.
                                 (codeNewVar
                                    (S
                                       (cPair v0
-                                         (codeApp (codeList (freeVarT L s))
+                                         (codeApp (codeList (freeVarT s))
                                             (codeFreeVarFormula (codeFormula a)))))) =
                                 codeTerm
                                   (var
                                      (codeNewVar
                                         (S
                                            (cPair v0
-                                              (codeApp (codeList (freeVarT L s))
+                                              (codeApp (codeList (freeVarT s))
                                                  (codeFreeVarFormula 
                                                     (codeFormula a)))))))) by reflexivity.
                        rewrite H4 in H1.
@@ -1184,7 +1184,7 @@ elim f using Formula_depth_ind2.
                                       (codeNewVar
                                          (S
                                             (cPair v0
-                                               (codeApp (codeList (freeVarT L s))
+                                               (codeApp (codeList (freeVarT s))
                                                   (codeFreeVarFormula (codeFormula a))))))))
                                 (forallH v a)).
                    ***  eapply eqDepth.
@@ -1197,8 +1197,8 @@ elim f using Formula_depth_ind2.
                        rewrite codeFreeVarFormulaCorrect.
                        rewrite codeAppCorrect.
                        replace (S (cPair v0 (codeList 
-                                               (freeVarT L s ++ freeVarF a))))
-                         with (codeList (v0 :: freeVarT L s ++ freeVarF a));
+                                               (freeVarT s ++ freeVarF a))))
+                         with (codeList (v0 :: freeVarT s ++ freeVarF a));
                          [ idtac | reflexivity ].
                        rewrite codeNewVarCorrect.
                        reflexivity.
@@ -3072,7 +3072,7 @@ Lemma boundSubTerm :
  forall (t : fol.Term L) (v : nat) (s : fol.Term L),
  codeTerm (substT t v s) <=
  ReplaceTermTerm (codeTerm t)
-   (fold_right Nat.max 0 (codeTerm s :: freeVarT L t)).
+   (fold_right Nat.max 0 (codeTerm s :: freeVarT t)).
 Proof.
   intro t; unfold ReplaceTermTerm, ReplaceTermsTerm, ReplaceTermTermsTerm.
   set
@@ -3101,7 +3101,7 @@ Proof.
              forall (v : nat) (s : fol.Term L),
                codeTerms (substTs ts v s) <=
                  ReplaceTermsTerm (codeTerms ts)
-                   (fold_right Nat.max 0 (codeTerm s :: freeVarTs L n ts)));
+                   (fold_right Nat.max 0 (codeTerm s :: freeVarTs ts)));
     simpl in |- *; intros; unfold evalStrongRec in |- *;
     unfold evalComposeFunc, evalOneParamList, evalList in |- *;
     repeat rewrite computeEvalStrongRecHelp; unfold compose2 in |- *;
@@ -3176,26 +3176,26 @@ Proof.
             ** apply H0.
             ** apply
                 (ReplaceTermTermMonotone (codeTerm t0)
-                   (Nat.max (codeTerm s) (fold_right Nat.max 0 (freeVarT L t0)))
+                   (Nat.max (codeTerm s) (fold_right Nat.max 0 (freeVarT t0)))
                    (Nat.max (codeTerm s)
-                      (fold_right Nat.max 0 (freeVarTs L (S n) (Tcons t0 t1))))).
+                      (fold_right Nat.max 0 (freeVarTs (Tcons t0 t1))))).
                apply maxLemma.
                apply le_n.
-               replace (freeVarTs L (S n) (Tcons t0 t1)) with
-                 (freeVarT L t0 ++ freeVarTs L n t1); [ idtac | reflexivity ].
+               replace (freeVarTs (Tcons t0 t1)) with
+                 (freeVarT t0 ++ freeVarTs t1); [ idtac | reflexivity ].
                apply maxLemma2.
          ++ eapply Nat.le_trans.
             ** apply H1.
             ** repeat rewrite cPairProjections2.
                apply
                  (ReplaceTermsTermMonotone (codeTerms t1)
-                    (Nat.max (codeTerm s) (fold_right Nat.max 0 (freeVarTs L n t1)))
+                    (Nat.max (codeTerm s) (fold_right Nat.max 0 (freeVarTs t1)))
                     (Nat.max (codeTerm s)
-                       (fold_right Nat.max 0 (freeVarTs L (S n) (Tcons t0 t1))))).
+                       (fold_right Nat.max 0 (freeVarTs (Tcons t0 t1))))).
                apply maxLemma.
                apply le_n.
-               replace (freeVarTs L (S n) (Tcons t0 t1)) with
-                 (freeVarT L t0 ++ freeVarTs L n t1); [ idtac | reflexivity ].
+               replace (freeVarTs (Tcons t0 t1)) with
+                 (freeVarT t0 ++ freeVarTs  t1); [ idtac | reflexivity ].
                apply maxLemma3.
     * replace (codeTerms (Tcons t0 t1)) with
         (S (cPair (codeTerm t0) (codeTerms t1))); 
@@ -3214,7 +3214,7 @@ Lemma boundSubTerms :
   forall (n : nat) (ts : fol.Terms L n) (v : nat) (s : fol.Term L),
     codeTerms (substTs ts v s) <=
       ReplaceTermsTerm (codeTerms  ts)
-        (fold_right Nat.max 0 (codeTerm s :: freeVarTs L n ts)).
+        (fold_right Nat.max 0 (codeTerm s :: freeVarTs ts)).
 Proof.
   intros n ts.
   unfold ReplaceTermTerm in |- *.
@@ -3263,27 +3263,27 @@ Proof.
         -- apply boundSubTerm.
         -- apply
             (ReplaceTermTermMonotone (codeTerm t)
-               (Nat.max (codeTerm s) (fold_right Nat.max 0 (freeVarT L t)))
+               (Nat.max (codeTerm s) (fold_right Nat.max 0 (freeVarT t)))
                (Nat.max (codeTerm s)
-                  (fold_right Nat.max 0 (freeVarTs L (S n) (Tcons t ts))))).
+                  (fold_right Nat.max 0 (freeVarTs (Tcons t ts))))).
            apply maxLemma.
            ++ apply le_n.
-           ++ replace (freeVarTs L (S n) (Tcons t ts)) 
+           ++ replace (freeVarTs (Tcons t ts)) 
                 with
-                (freeVarT L t ++ freeVarTs L n ts); [ idtac | reflexivity ].
+                (freeVarT t ++ freeVarTs ts); [ idtac | reflexivity ].
               apply maxLemma2.
       * eapply Nat.le_trans.
         -- apply Hrects.
         -- repeat rewrite cPairProjections2.
            apply
              (ReplaceTermsTermMonotone (codeTerms ts)
-                (Nat.max (codeTerm s) (fold_right Nat.max 0 (freeVarTs L n ts)))
+                (Nat.max (codeTerm s) (fold_right Nat.max 0 (freeVarTs ts)))
                 (Nat.max (codeTerm s)
-                   (fold_right Nat.max 0 (freeVarTs L (S n) (Tcons t ts))))).
+                   (fold_right Nat.max 0 (freeVarTs (Tcons t ts))))).
            apply maxLemma.
            ++ apply le_n.
-           ++ replace (freeVarTs L (S n) (Tcons t ts)) 
-                with  (freeVarT L t ++ freeVarTs L n ts); 
+           ++ replace (freeVarTs (Tcons t ts)) 
+                with  (freeVarT t ++ freeVarTs ts); 
                 [ idtac | reflexivity ].
               apply maxLemma3.
     + replace (codeTerms (Tcons t ts)) 
@@ -3925,8 +3925,8 @@ Qed.
 
 Fixpoint varFormula (f : fol.Formula L) : list nat :=
   match f with
-  | equal t s => freeVarT L t ++ freeVarT L s
-  | atomic r ts => freeVarTs L _ ts
+  | equal t s => freeVarT t ++ freeVarT s
+  | atomic r ts => freeVarTs ts
   | impH A B => varFormula A ++ varFormula B
   | notH A => varFormula A
   | forallH v A => v :: varFormula A
@@ -4032,7 +4032,7 @@ Proof.
   - intros v a H0 v0 w s2; rewrite subFormulaForall.
     induction (eq_nat_dec v v0) as [a0 | ?].
     + reflexivity.
-    + induction (In_dec eq_nat_dec v (freeVarT L (var w))) as [a0 | ?].
+    + induction (In_dec eq_nat_dec v (freeVarT (var w))) as [a0 | ?].
       * simpl; unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList.
         repeat rewrite computeEvalStrongRecHelp.
         unfold compose2, evalComposeFunc, evalOneParamList, evalList.
@@ -4047,7 +4047,7 @@ Proof.
                (substF 
                   (substF a v
                      (var
-                        (newVar (v0 :: freeVarT L (var w) ++ freeVarF a))))
+                        (newVar (v0 :: freeVarT (L:=L) (var w) ++ freeVarF a))))
                   v0 (var w))).
         -- rewrite H with (m := codeFormula a).
            simpl; rewrite H0.
@@ -4062,13 +4062,13 @@ Proof.
            apply cPairLe2.
            apply cPairLt2.
         -- apply Nat.le_lt_trans with
-             (cPair (newVar (v0 :: freeVarT L (var w) ++ freeVarF a))
+             (cPair (newVar (v0 :: freeVarT (L:=L) (var w) ++ freeVarF a))
                 (codeFormula
                    (substF 
                       (substF a v
                          (var
                             (newVar
-                               (v0 :: freeVarT L (var w) ++ freeVarF a))))
+                               (v0 :: freeVarT (L:=L) (var w) ++ freeVarF a))))
                       v0 (var w)))).
            ++ apply cPairLe2.
            ++ apply cPairLt2.
@@ -4094,13 +4094,13 @@ Proof.
 Qed.
 
 Remark codeTermFreeVar :
- forall s : fol.Term L, fold_right Nat.max 0 (freeVarT L s) <= codeTerm s.
+ forall s : fol.Term L, fold_right Nat.max 0 (freeVarT s) <= codeTerm s.
 Proof.
   intros s; elim s using
               Term_Terms_ind
     with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-             fold_right Nat.max 0 (freeVarTs L n ts) <= 
+             fold_right Nat.max 0 (freeVarTs ts) <= 
                codeTerms ts);
     simpl.
   - intros n; apply Nat.max_case.
@@ -4110,14 +4110,14 @@ Proof.
     + assumption.
     + unfold codeTerm,  code.codeTerm; apply cPairLe2.
   - apply Nat.le_0_l. 
-  - intros n t H t0 H0; replace (freeVarTs L (S n) (Tcons t t0)) 
+  - intros n t H t0 H0; replace (freeVarTs (Tcons t t0)) 
       with
-      (freeVarT L t ++ freeVarTs L n t0); [ idtac | reflexivity ].
+      (freeVarT t ++ freeVarTs t0); [ idtac | reflexivity ].
     replace (codeTerms  (Tcons t t0))
       with
       (S (cPair (codeTerm t) (codeTerms t0))); 
       [ idtac | reflexivity ].
-    induction (maxApp (freeVarT L t) (freeVarTs L n t0)) as [a | b].
+    induction (maxApp (freeVarT t) (freeVarTs t0)) as [a | b].
     + rewrite a.
       eapply Nat.le_trans.
       * apply H.
@@ -4170,13 +4170,13 @@ Proof.
 Qed.
 
 Remark maxSubTerm (t : fol.Term L) (v : nat) (s : fol.Term L):
-  fold_right Nat.max 0 (freeVarT L (substT t v s)) <=
-    fold_right Nat.max 0 (freeVarT L s ++ freeVarT L t).
+  fold_right Nat.max 0 (freeVarT (substT t v s)) <=
+    fold_right Nat.max 0 (freeVarT s ++ freeVarT t).
 Proof.
   elim t using Term_Terms_ind with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
-             fold_right Nat.max 0 (freeVarTs L n (substTs ts v s)) <=
-               fold_right Nat.max 0 (freeVarT L s ++ freeVarTs L n ts));
+             fold_right Nat.max 0 (freeVarTs (substTs ts v s)) <=
+               fold_right Nat.max 0 (freeVarT s ++ freeVarTs ts));
     simpl; intros.
   - induction (eq_nat_dec v n) as [a | ?].
     + apply maxLemma2.
@@ -4184,40 +4184,40 @@ Proof.
   - apply H.
   - apply Nat.le_0_l.
   - replace
-      (freeVarTs L (S n)
+      (freeVarTs 
          (Tcons (substT t0 v s) (substTs t1 v s))) 
       with
-      (freeVarT L (substT t0 v s) ++
-         freeVarTs L n (substTs t1 v s)).
-    + replace (freeVarTs L (S n) (Tcons t0 t1)) 
+      (freeVarT (substT t0 v s) ++
+         freeVarTs (substTs t1 v s)).
+    + replace (freeVarTs  (Tcons t0 t1)) 
         with
-        (freeVarT L t0 ++ freeVarTs L n t1).
+        (freeVarT t0 ++ freeVarTs  t1).
       * induction
-          (maxApp (freeVarT L (substT t0 v s))
-             (freeVarTs L n (substTs t1 v s))) as [a | b].
+          (maxApp (freeVarT (substT t0 v s))
+             (freeVarTs (substTs t1 v s))) as [a | b].
         -- rewrite a; eapply Nat.le_trans.
            ++ apply H.
-           ++ induction (maxApp (freeVarT L s) (freeVarT L t0)) 
+           ++ induction (maxApp (freeVarT s) (freeVarT t0)) 
                 as [a0 | b].
               ** rewrite a0.
                  apply maxLemma2.
               ** rewrite b; 
                    apply Nat.le_trans with 
-                   (fold_right Nat.max 0 (freeVarT L t0 ++ 
-                                            freeVarTs L n t1)).
+                   (fold_right Nat.max 0 (freeVarT t0 ++ 
+                                            freeVarTs t1)).
                  apply maxLemma2.
                  apply maxLemma3.
         -- rewrite b.
            eapply Nat.le_trans.
            ++ apply H0.
-           ++ induction (maxApp (freeVarT L s) (freeVarTs L n t1)) 
+           ++ induction (maxApp (freeVarT s) (freeVarTs t1)) 
                 as [a | b0].
               ** rewrite a.
                  apply maxLemma2.
               ** rewrite b0.
                  apply Nat.le_trans with 
-                   (fold_right Nat.max 0 (freeVarT L t0 ++ 
-                                            freeVarTs L n t1)).
+                   (fold_right Nat.max 0 (freeVarT t0 ++ 
+                                            freeVarTs t1)).
                  apply maxLemma3.
                  apply maxLemma3.
       * reflexivity.
@@ -4225,41 +4225,40 @@ Proof.
 Qed.
 
 Remark maxSubTerms (n : nat) (ts : fol.Terms L n) (v : nat) (s : fol.Term L):
-  fold_right Nat.max 0 (freeVarTs L n (substTs ts v s)) <=
-    fold_right Nat.max 0 (freeVarT L s ++ freeVarTs L n ts).
+  fold_right Nat.max 0 (freeVarTs  (substTs ts v s)) <=
+    fold_right Nat.max 0 (freeVarT s ++ freeVarTs ts).
 Proof.
   induction ts as [| n t ts Hrects]; simpl in |- *. 
   - apply Nat.le_0_l.
   - replace
-      (freeVarTs L (S n)
-         (Tcons (substT t v s) (substTs ts v s))) 
+      (freeVarTs  (Tcons (substT t v s) (substTs ts v s))) 
       with
-      (freeVarT L (substT t v s) ++
-         freeVarTs L n (substTs ts v s)).
-    + replace (freeVarTs L (S n) (Tcons t ts)) 
+      (freeVarT (substT t v s) ++
+         freeVarTs  (substTs ts v s)).
+    + replace (freeVarTs (Tcons t ts)) 
         with
-        (freeVarT L t ++ freeVarTs L n ts).
+        (freeVarT t ++ freeVarTs  ts).
       * induction
-          (maxApp (freeVarT L (substT t v s))
-             (freeVarTs L n (substTs ts v s))) as [a | b].
+          (maxApp (freeVarT (substT t v s))
+             (freeVarTs (substTs ts v s))) as [a | b].
         -- rewrite a; eapply Nat.le_trans.
            ++ apply maxSubTerm.
-           ++ induction (maxApp (freeVarT L s) (freeVarT L t)) 
+           ++ induction (maxApp (freeVarT s) (freeVarT t)) 
                 as [a0 | b].
               ** rewrite a0; apply maxLemma2.
               ** rewrite b; apply Nat.le_trans 
-                   with (fold_right Nat.max 0 (freeVarT L t ++ 
-                                                 freeVarTs L n ts)).
+                   with (fold_right Nat.max 0 (freeVarT t ++ 
+                                                 freeVarTs ts)).
                  apply maxLemma2.
                  apply maxLemma3.
         -- rewrite b; eapply Nat.le_trans.
            ++ apply Hrects.
-           ++ induction (maxApp (freeVarT L s) (freeVarTs L n ts)) 
+           ++ induction (maxApp (freeVarT s) (freeVarTs ts)) 
                 as [a | b0].
               ** rewrite a; apply maxLemma2.
               ** rewrite b0; apply  Nat.le_trans with 
-                   (fold_right Nat.max 0 (freeVarT L t ++ 
-                                            freeVarTs L n ts)).
+                   (fold_right Nat.max 0 (freeVarT t ++ 
+                                            freeVarTs ts)).
                  apply maxLemma3.
                  apply maxLemma3.
       * reflexivity.
@@ -4324,17 +4323,17 @@ Proof.
 Qed.
                       
 Remark boundSubFormulaHelp2  (a : fol.Formula L) (v0 : nat) (s : fol.Term L):
-  newVar (v0 :: freeVarT L s ++ freeVarF a) <=
+  newVar (v0 :: freeVarT s ++ freeVarF a) <=
     S
       (fold_right Nat.max 0
-         (v0 :: fold_right Nat.max 0 (freeVarT L s) :: varFormula a)).
+         (v0 :: fold_right Nat.max 0 (freeVarT s) :: varFormula a)).
 Proof. 
   unfold newVar; apply Nat.le_trans with 
-    (S (fold_right Nat.max 0 (v0 :: freeVarT L s ++ freeVarF a))).
+    (S (fold_right Nat.max 0 (v0 :: freeVarT s ++ freeVarF a))).
   - apply mapListLemma.
   - apply le_n_S; simpl; apply maxLemma.
     + apply le_n.
-    + induction (maxApp (freeVarT L s) (freeVarF a)) as [a0 | b]. 
+    + induction (maxApp (freeVarT s) (freeVarF a)) as [a0 | b]. 
       * rewrite a0; apply Nat.le_max_l.
       * rewrite b; eapply Nat.le_trans.
         -- apply maxVarFreeVar.
@@ -4346,24 +4345,24 @@ Remark boundSubFormulaHelp1 :
     fold_right Nat.max 0
       (varFormula
          (substF b v
-            (var (newVar (v0 :: freeVarT L s ++ freeVarF a))))) <=
+            (var (newVar (v0 :: freeVarT s ++ freeVarF a))))) <=
       pow3 (depth L b) + pow3 (depth L b) +
         Nat.max v0
-          (Nat.max (fold_right Nat.max 0 (freeVarT L s))
+          (Nat.max (fold_right Nat.max 0 (freeVarT s))
              (Nat.max v
                 (Nat.max (fold_right Nat.max 0 (varFormula b))
                    (fold_right Nat.max 0 (varFormula a))))).
 Proof.
   intro b; elim b using Formula_depth_ind2.
   - intros t t0 a v0 v s;
-      set (nv := newVar (v0 :: freeVarT L s ++ freeVarF a)).
+      set (nv := newVar (v0 :: freeVarT s ++ freeVarF a)).
     simpl; apply le_S.
      induction
-       (maxApp (freeVarT L (substT t v (var nv)))
-          (freeVarT L (substT t0 v (var nv)))) as [a0 | b0].
+       (maxApp (freeVarT (substT t v (var nv)))
+          (freeVarT (substT t0 v (var nv)))) as [a0 | b0].
     + rewrite a0; eapply Nat.le_trans.
       * apply maxSubTerm.
-      * simpl; apply (Nat.max_case nv (fold_right Nat.max 0 (freeVarT L t))).
+      * simpl; apply (Nat.max_case nv (fold_right Nat.max 0 (freeVarT t))).
         -- eapply Nat.le_trans.
            ++ apply (boundSubFormulaHelp2 a v0 s).
            ++ apply le_n_S.
@@ -4376,7 +4375,7 @@ Proof.
            apply maxLemma2.
     + rewrite b0; eapply Nat.le_trans.
       * apply maxSubTerm.
-      * simpl; apply (Nat.max_case nv (fold_right Nat.max 0 (freeVarT L t0))).
+      * simpl; apply (Nat.max_case nv (fold_right Nat.max 0 (freeVarT t0))).
         -- eapply Nat.le_trans.
            ++ apply (boundSubFormulaHelp2 a v0 s).
            ++ apply le_n_S.
@@ -4388,14 +4387,14 @@ Proof.
            eapply Nat.le_trans; [ idtac | apply Nat.le_max_l ].
            apply maxLemma3.
   -  intros r t a v0 v s;
-       set (nv := newVar (v0 :: freeVarT L s ++ freeVarF a));
+       set (nv := newVar (v0 :: freeVarT s ++ freeVarF a));
        eapply Nat.le_trans.
      + simpl; apply maxSubTerms.
      + simpl; apply le_S.
        apply
          (Nat.max_case nv
             (fold_right max 0 
-               (freeVarTs L (arityR L r) t))).
+               (freeVarTs t))).
        * eapply Nat.le_trans.
          -- apply (boundSubFormulaHelp2 a v0 s).
          -- apply le_n_S.
@@ -4407,7 +4406,7 @@ Proof.
          eapply Nat.le_trans; [ idtac | apply Nat.le_max_l ].
          apply le_n.
   - intros f H f0 H0 a v0 v s;
-      set (nv := newVar (v0 :: freeVarT L s ++ freeVarF a)).
+      set (nv := newVar (v0 :: freeVarT s ++ freeVarF a)).
     rewrite subFormulaImp; simpl. 
     induction
       (maxApp (varFormula (substF f v (var nv)))
@@ -4437,7 +4436,7 @@ Proof.
         -- repeat apply maxLemma; try apply le_n.
            apply maxLemma3.
   - intros f H a v0 v s;
-      set (nv := newVar (v0 :: freeVarT L s ++ freeVarF a)).
+      set (nv := newVar (v0 :: freeVarT s ++ freeVarF a)).
     rewrite subFormulaNot; eapply Nat.le_trans.
     + apply (H a v0 v s).
     + apply  Nat.add_le_mono.
@@ -4445,7 +4444,7 @@ Proof.
         apply Compat815.le_plus_r.
       * apply le_n.
   - intros v a H a0 v0 v1 s;
-      set (nv := newVar (v0 :: freeVarT L s ++ freeVarF a));
+      set (nv := newVar (v0 :: freeVarT s ++ freeVarF a));
       clear nv.
     rewrite subFormulaForall; induction (eq_nat_dec v v1) as [a1 | b0].
     +  eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
@@ -4453,13 +4452,12 @@ Proof.
        apply Nat.le_max_l.
     + induction
       (In_dec eq_nat_dec v
-         (freeVarT L
-            (var (newVar (v0 :: freeVarT L s ++ freeVarF a0)))))
+         (freeVarT (var (newVar (v0 :: freeVarT s ++ freeVarF a0)))))
         as [a1 | b1].
       * simpl; apply (Nat.max_case
                         (newVar
                            (v1
-                              :: newVar (v0 :: freeVarT L s ++
+                              :: newVar (v0 :: freeVarT s ++
                                            freeVarF a0)
                               :: freeVarF a))
                         (fold_right Nat.max 0
@@ -4470,31 +4468,31 @@ Proof.
                                        (newVar
                                           (v1
                                              :: newVar
-                                             (v0 :: freeVarT L s ++ 
+                                             (v0 :: freeVarT s ++ 
                                                 freeVarF a0)
                                              :: freeVarF a)))) v1
                                  (var
-                                    (newVar (v0 :: freeVarT L s ++ 
+                                    (newVar (v0 :: freeVarT s ++ 
                                                freeVarF a0))))))).
     -- unfold newVar at 1; eapply Nat.le_trans.
        ++ apply mapListLemma.
        ++ apply Nat.le_trans with
             (1 + 1 +
                Nat.max v0
-                 (Nat.max (fold_right Nat.max 0 (freeVarT L s))
+                 (Nat.max (fold_right Nat.max 0 (freeVarT s))
                     (Nat.max v1
                        (Nat.max (Nat.max v (fold_right Nat.max 0 (varFormula a)))
                           (fold_right Nat.max 0 (varFormula a0)))))).
     ** simpl; apply le_n_S.
        apply
          (Nat.max_case v1
-            (Nat.max (newVar (v0 :: freeVarT L s ++ freeVarF a0))
+            (Nat.max (newVar (v0 :: freeVarT s ++ freeVarF a0))
                (fold_right Nat.max 0 (freeVarF a)))).
        apply le_S.
        do 2 (eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ]).
        apply Nat.le_max_l.
        apply
-         (Nat.max_case (newVar (v0 :: freeVarT L s ++ freeVarF a0))
+         (Nat.max_case (newVar (v0 :: freeVarT s ++ freeVarF a0))
             (fold_right max 0 (freeVarF a))).
        eapply Nat.le_trans.
        apply boundSubFormulaHelp2.
@@ -4529,7 +4527,7 @@ Proof.
             ** apply le_n.
             ** apply
                 (Nat.max_case v0
-                   (Nat.max (fold_right Nat.max 0 (freeVarT L s))
+                   (Nat.max (fold_right Nat.max 0 (freeVarT s))
                       (Nat.max v1
                          (Nat.max
                             (fold_right Nat.max 0
@@ -4540,14 +4538,14 @@ Proof.
                                            (v1
                                               :: newVar
                                               (v0
-                                                 :: freeVarT L s ++ 
+                                                 :: freeVarT s ++ 
                                                  freeVarF a0)
                                               :: freeVarF a))))))
                             (fold_right Nat.max 0 (varFormula a0)))))).
                eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
                apply Nat.le_max_l.
                apply
-                 (Nat.max_case (fold_right Nat.max 0 (freeVarT L s))
+                 (Nat.max_case (fold_right Nat.max 0 (freeVarT s))
                     (Nat.max v1
                        (Nat.max
                           (fold_right Nat.max 0
@@ -4557,7 +4555,7 @@ Proof.
                                       (newVar
                                          (v1
                                             :: newVar
-                                            (v0 :: freeVarT L s 
+                                            (v0 :: freeVarT s 
                                                ++ freeVarF a0)
                                             :: freeVarF a))))))
                           (fold_right Nat.max 0 (varFormula a0))))).
@@ -4574,7 +4572,7 @@ Proof.
                                    (newVar
                                       (v1
                                          :: newVar
-                                         (v0 :: freeVarT L s ++ freeVarF a0)
+                                         (v0 :: freeVarT s ++ freeVarF a0)
                                          :: freeVarF a))))))
                        (fold_right Nat.max 0 (varFormula a0)))).
                eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
@@ -4588,7 +4586,7 @@ Proof.
                              (var
                                 (newVar
                                    (v1
-                                      :: newVar (v0 :: freeVarT L s ++ 
+                                      :: newVar (v0 :: freeVarT s ++ 
                                                    freeVarF a0)
                                       :: freeVarF a))))))
                     (fold_right Nat.max 0 (varFormula a0))).
@@ -4598,7 +4596,7 @@ Proof.
                  (v := v)
                  (v0 := v1)
                  (a := a)
-                 (s := var (newVar (v0 :: freeVarT L s ++ freeVarF a0))).
+                 (s := var (newVar (v0 :: freeVarT s ++ freeVarF a0))).
                apply depthForall.
                rewrite
                  (Nat.add_comm (pow3 (depth L a))
@@ -4610,8 +4608,8 @@ Proof.
                  (Nat.max_case v1
                     (Nat.max
                        (fold_right Nat.max 0
-                          (freeVarT L
-                             (var (newVar (v0 :: freeVarT L s ++ 
+                          (freeVarT 
+                             (var (newVar (v0 :: freeVarT s ++ 
                                              freeVarF a0)))))
                        (Nat.max v
                           (Nat.max (fold_right Nat.max 0 (varFormula a))
@@ -4622,13 +4620,13 @@ Proof.
                apply
                  (Nat.max_case
                     (fold_right Nat.max 0
-                       (freeVarT L
-                          (var (newVar (v0 :: freeVarT L s ++ freeVarF a0)))))
+                       (freeVarT 
+                          (var (newVar (v0 :: freeVarT s ++ freeVarF a0)))))
                     (Nat.max v
                        (Nat.max (fold_right Nat.max 0 (varFormula a))
                           (fold_right Nat.max 0 (varFormula a))))).
                simpl;
-                 apply (Nat.max_case (newVar (v0 :: freeVarT L s ++ 
+                 apply (Nat.max_case (newVar (v0 :: freeVarT s ++ 
                                                 freeVarF a0)) 0).
                eapply Nat.le_trans.
                apply boundSubFormulaHelp2.
@@ -4637,7 +4635,7 @@ Proof.
                  with
                  (1 +
                     Nat.max v0
-                      (Nat.max (fold_right Nat.max 0 (freeVarT L s))
+                      (Nat.max (fold_right Nat.max 0 (freeVarT s))
                          (Nat.max v1
                             (Nat.max (Nat.max v (fold_right Nat.max 0 (varFormula a)))
                                (fold_right Nat.max 0 (varFormula a0)))))).
@@ -4673,7 +4671,7 @@ Proof.
                   (varFormula
                      (substF a v1
                         (var
-                           (newVar (v0 :: freeVarT L s ++ 
+                           (newVar (v0 :: freeVarT s ++ 
                                       freeVarF a0))))))).
         -- eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
            do 3 (eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ]).
@@ -4697,7 +4695,7 @@ Remark boundSubFormulaHelp :
  ReplaceFormulaTerm (codeFormula f)
    (Nat.max (codeTerm s)
       (pow3 (depth L f) +
-       fold_right Nat.max 0 (v :: freeVarT L s ++ varFormula f))).
+       fold_right Nat.max 0 (v :: freeVarT s ++ varFormula f))).
 Proof.
   intro f; unfold ReplaceFormulaTerm;
     set
@@ -4732,7 +4730,7 @@ Proof.
       (C :=
          Nat.max (codeTerm s)
            (pow3 (depth L (equal t t0)) +
-              fold_right Nat.max 0 (v :: freeVarT L s ++ varFormula (equal t t0)))).
+              fold_right Nat.max 0 (v :: freeVarT s ++ varFormula (equal t t0)))).
     simpl; repeat rewrite cPairProjections1.
     unfold A at 1; 
       repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
@@ -4741,7 +4739,7 @@ Proof.
     + apply cPairLe3.
       * apply Nat.le_trans with
           (ReplaceTermTerm (codeTerm t)
-             (fold_right Nat.max 0 (codeTerm s :: freeVarT L t))).
+             (fold_right Nat.max 0 (codeTerm s :: freeVarT t))).
         -- apply boundSubTerm.
         -- apply ReplaceTermTermMonotone.
            unfold C; simpl; apply maxLemma.
@@ -4752,7 +4750,7 @@ Proof.
               apply maxLemma2.
       * apply  Nat.le_trans with
           (ReplaceTermTerm (codeTerm t0)
-             (fold_right Nat.max 0 (codeTerm s :: freeVarT L t0))).
+             (fold_right Nat.max 0 (codeTerm s :: freeVarT t0))).
         -- apply boundSubTerm.
         -- apply ReplaceTermTermMonotone.
            unfold C; simpl; apply maxLemma.
@@ -4768,7 +4766,7 @@ Proof.
       (C :=
          Nat.max (codeTerm s)
            (pow3 (depth L (atomic r t)) +
-              fold_right Nat.max 0 (v :: freeVarT L s ++ varFormula (atomic r t)))).
+              fold_right Nat.max 0 (v :: freeVarT s ++ varFormula (atomic r t)))).
     simpl; repeat rewrite cPairProjections1.
     unfold A at 1; 
       repeat first [ rewrite cPairProjections1 | rewrite cPairProjections2 ].
@@ -4776,7 +4774,7 @@ Proof.
     + apply le_n.
     + apply Nat.le_trans  with
         (ReplaceTermsTerm (codeTerms t)
-           (fold_right Nat.max 0 (codeTerm s :: freeVarTs L _ t))).
+           (fold_right Nat.max 0 (codeTerm s :: freeVarTs  t))).
       * apply boundSubTerms.
       * apply ReplaceTermsTermMonotone.
         unfold C; simpl; apply maxLemma.
@@ -4789,7 +4787,7 @@ Proof.
       (C :=
          Nat.max (codeTerm s)
            (pow3 (depth L (impH f0 f1)) +
-              fold_right Nat.max 0 (v :: freeVarT L s ++ varFormula (impH  f0 f1)))).
+              fold_right Nat.max 0 (v :: freeVarT s ++ varFormula (impH  f0 f1)))).
     unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList.
     repeat rewrite computeEvalStrongRecHelp.
     unfold compose2, evalComposeFunc, evalOneParamList, evalList.
@@ -4805,7 +4803,7 @@ Proof.
                 (evalStrongRec 1 A (codeFormula f0)
                    (Nat.max (codeTerm s)
                       (pow3 (depth L f0) +
-                         fold_right Nat.max 0 (v :: freeVarT L s ++ varFormula f0)))).
+                         fold_right Nat.max 0 (v :: freeVarT s ++ varFormula f0)))).
               ** auto.
               ** apply ReplaceFormulaTermMonotone.
                  unfold C; apply maxLemma.
@@ -4822,7 +4820,7 @@ Proof.
                 (evalStrongRec 1 A (codeFormula f1)
                    (Nat.max (codeTerm s)
                       (pow3 (depth L f1) +
-                         fold_right Nat.max 0 (v :: freeVarT L s ++ varFormula f1)))).
+                         fold_right Nat.max 0 (v :: freeVarT s ++ varFormula f1)))).
               ** auto.
               ** apply ReplaceFormulaTermMonotone.
                  unfold C; apply maxLemma.
@@ -4833,7 +4831,7 @@ Proof.
                  apply Nat.le_max_r.
                  simpl; apply maxLemma.
                  apply le_n.
-                 induction (maxApp (freeVarT L s) (varFormula f1)) as [a | b].
+                 induction (maxApp (freeVarT s) (varFormula f1)) as [a | b].
                  --- rewrite a; apply maxLemma2.
                  --- rewrite b; eapply Nat.le_trans; [ idtac | apply maxLemma3 ].
                      apply maxLemma3.
@@ -4846,7 +4844,7 @@ Proof.
       (C :=
          Nat.max (codeTerm s)
            (pow3 (depth L (notH f0)) +
-              fold_right Nat.max 0 (v :: freeVarT L s ++ varFormula (notH f0)))). 
+              fold_right Nat.max 0 (v :: freeVarT s ++ varFormula (notH f0)))). 
     unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList.
     repeat rewrite computeEvalStrongRecHelp.
     unfold compose2, evalComposeFunc, evalOneParamList, evalList; simpl. 
@@ -4860,7 +4858,7 @@ Proof.
           (evalStrongRec 1 A (codeFormula f0)
              (Nat.max (codeTerm s)
                 (pow3 (depth L f0) +
-                   fold_right Nat.max 0 (v :: freeVarT L s ++ varFormula f0)))).
+                   fold_right Nat.max 0 (v :: freeVarT s ++ varFormula f0)))).
         -- auto.
         -- apply ReplaceFormulaTermMonotone.
            unfold C; apply maxLemma.
@@ -4875,7 +4873,7 @@ Proof.
                              Nat.max (codeTerm s)
                                (pow3 (depth L (forallH v a)) +
                                   fold_right Nat.max 0 
-                                    (v0 :: freeVarT L s ++ 
+                                    (v0 :: freeVarT s ++ 
                                        varFormula (forallH v a)))).
     unfold evalStrongRec, evalComposeFunc, evalOneParamList, evalList;
       repeat rewrite computeEvalStrongRecHelp.
@@ -4900,7 +4898,7 @@ Proof.
                    (evalStrongRec 1 A (codeFormula a)
                       (Nat.max (codeTerm (var 0))
                          (pow3 (depth L a) +
-                            fold_right Nat.max 0 (0 :: freeVarT L (var 0) ++ 
+                            fold_right Nat.max 0 (0 :: freeVarT (L:=L)(var 0) ++ 
                                                     varFormula a)))).
                  apply H0.
                  apply depthForall.
@@ -4913,22 +4911,22 @@ Proof.
                  simpl; eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ].
                  eapply Nat.le_trans; [ idtac | apply maxLemma3 ].
                  simpl; apply Nat.le_max_r.
-      * induction (In_dec eq_nat_dec v (freeVarT L s)) as [a0 | b0]. 
+      * induction (In_dec eq_nat_dec v (freeVarT s)) as [a0 | b0]. 
         -- simpl; apply cPairLe3.
            apply le_n.
-           set (nv := newVar (v0 :: freeVarT L s ++ freeVarF a)).
+           set (nv := newVar (v0 :: freeVarT s ++ freeVarF a)).
            apply cPairLe3.
            ++ unfold C; eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ].
               simpl; apply  Nat.le_trans with 
                 (1 + Nat.max v0 (fold_right Nat.max 0 
-                                   (freeVarT L s ++ v :: varFormula a))).
+                                   (freeVarT s ++ v :: varFormula a))).
               ** simpl; unfold nv, newVar.
                  eapply Nat.le_trans.
                  apply mapListLemma.
                  apply le_n_S.
                  simpl; apply maxLemma.
                  apply le_n.
-                 induction (maxApp (freeVarT L s) (freeVarF a)) as [a1 | b1].
+                 induction (maxApp (freeVarT s) (freeVarF a)) as [a1 | b1].
                  --- rewrite a1.
                      apply maxLemma2.
                  --- rewrite b1; eapply Nat.le_trans; [ idtac | apply maxLemma3 ].
@@ -4943,7 +4941,7 @@ Proof.
                 (evalStrongRec 1 A (codeFormula B)
                    (Nat.max (codeTerm s)
                       (pow3 (depth L B) +
-                         fold_right Nat.max 0 (v0 :: freeVarT L s ++ varFormula B)))).
+                         fold_right Nat.max 0 (v0 :: freeVarT s ++ varFormula B)))).
               ** apply H0.
                  unfold B; eapply eqDepth.
                  symmetry; apply subFormulaDepth.
@@ -4958,12 +4956,12 @@ Proof.
                  apply
                    (Nat.max_case v0
                       (fold_right Nat.max 0
-                         (freeVarT L s ++
+                         (freeVarT s ++
                             varFormula (substF a v (var nv))))).
                  eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
                  apply Nat.le_max_l.
                  induction
-                   (maxApp (freeVarT L s)
+                   (maxApp (freeVarT s)
                       (varFormula (substF a v (var nv)))) as [a1 | b1].
                  --- rewrite a1.
                      eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
@@ -5003,7 +5001,7 @@ Proof.
                  simpl; apply Nat.le_add_r.
                  simpl; apply maxLemma.
                  apply le_n.
-                 induction (maxApp (freeVarT L s) (varFormula a)) as [a0 | b1].
+                 induction (maxApp (freeVarT s) (varFormula a)) as [a0 | b1].
                  --- rewrite a0; apply maxLemma2.
                  --- rewrite b1; eapply Nat.le_trans; [ idtac | apply maxLemma3 ].
                      simpl; apply Nat.le_max_r.
@@ -5087,7 +5085,7 @@ Lemma boundMakeTrace :
    Nat.max (codeTerm s)
      (cPair 0
         (pow3 (depth L f) +
-         fold_right Nat.max 0 (v :: freeVarT L s ++ varFormula f))) in
+         fold_right Nat.max 0 (v :: freeVarT s ++ varFormula f))) in
  makeTrace f (v, s) <=
  boundComputation (depth L f)
    (cTriple C C (ReplaceFormulaTerm (codeFormula f) C))
@@ -5118,7 +5116,7 @@ Proof.
             (Nat.max (codeTerm s)
                (cPair 0
                   (pow3 (depth L f) +
-                     fold_right Nat.max 0 (v :: freeVarT L s ++ varFormula f))))).
+                     fold_right Nat.max 0 (v :: freeVarT s ++ varFormula f))))).
   { intros f v s; eapply Nat.le_trans.
     - apply boundSubFormulaHelp.
     - apply ReplaceFormulaTermMonotone,  maxLemma.
@@ -5148,7 +5146,7 @@ Proof.
             (Nat.max (codeTerm s)
                (cPair 0
                   (pow3 (depth L f) +
-                     fold_right Nat.max 0 (v :: freeVarT L s ++ varFormula f))))).
+                     fold_right Nat.max 0 (v :: freeVarT s ++ varFormula f))))).
   { intros f0 v s;
       apply Nat.le_trans with (codeFormula (substF f0 0 (var 0))).
     - rewrite (subFormulaId L); apply le_n.
@@ -5170,7 +5168,7 @@ Proof.
     unfold cTriple, C; simpl; repeat apply cPairLe3.
     + apply  (H 1 v
                 (fold_right Nat.max 0
-                   (freeVarT L s ++ freeVarT L t ++ freeVarT L t0)) 
+                   (freeVarT s ++ freeVarT  t ++ freeVarT t0)) 
                 (codeTerm s)).
     + apply Nat.le_max_l.
     + apply (H0 (equal t t0) v s).
@@ -5183,7 +5181,7 @@ Proof.
     + apply
         (H 1 v
            (fold_right Nat.max 0
-              (freeVarT L s ++ freeVarTs L (arityR L r) t))
+              (freeVarT s ++ freeVarTs t))
            (codeTerm s)).
     + apply Nat.le_max_l.
     + apply (H0 (atomic r t) v s).
@@ -5201,7 +5199,7 @@ Proof.
              (pow3 (Nat.max (depth L f0) (depth L f1)) +
                 (pow3 (Nat.max (depth L f0) (depth L f1)) +
                    pow3 (Nat.max (depth L f0) (depth L f1)))) v
-             (fold_right Nat.max 0 (freeVarT L s ++ varFormula f0 ++ varFormula f1))
+             (fold_right Nat.max 0 (freeVarT s ++ varFormula f0 ++ varFormula f1))
              (codeTerm s)).
       * unfold C; simpl; apply Nat.le_max_l.
       * apply (H0 (impH f0 f1) v s).
@@ -5212,7 +5210,7 @@ Proof.
             (H3 : Nat.max (codeTerm s)
                     (cPair 0
                        (pow3 (depth L f0) +
-                          fold_right Nat.max 0 (v :: freeVarT L s ++ varFormula f0)))
+                          fold_right Nat.max 0 (v :: freeVarT s ++ varFormula f0)))
                   <= C).
            { unfold C; apply maxLemma.
              - apply le_n.
@@ -5225,7 +5223,7 @@ Proof.
                  * simpl; apply Nat.max_case.
                    -- apply Nat.le_max_l.
                    -- eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ].
-                      induction (maxApp (freeVarT L s) (varFormula f0)) as [a | b].
+                      induction (maxApp (freeVarT s) (varFormula f0)) as [a | b].
                       ++ rewrite a; apply maxLemma2.
                       ++ rewrite b; eapply Nat.le_trans; [ idtac | apply maxLemma3 ].
                          apply maxLemma2.
@@ -5236,7 +5234,7 @@ Proof.
                        (cPair 0
                           (pow3 (depth L f0) +
                              fold_right Nat.max 0 
-                               (v :: freeVarT L s ++ varFormula f0)))) <=
+                               (v :: freeVarT s ++ varFormula f0)))) <=
                     ReplaceFormulaTerm (cPair 1 (cPair (codeFormula f0) 
                                                    (codeFormula f1))) C).
            { unfold ReplaceFormulaTerm at 2; fold A; unfold evalStrongRec.
@@ -5266,7 +5264,7 @@ Proof.
             (H3: Nat.max (codeTerm s)
                    (cPair 0
                       (pow3 (depth L f1) +
-                         fold_right Nat.max 0 (v :: freeVarT L s ++ varFormula f1))) 
+                         fold_right Nat.max 0 (v :: freeVarT s ++ varFormula f1))) 
                  <= C).
            { unfold C; apply maxLemma.
              - apply le_n.
@@ -5279,7 +5277,7 @@ Proof.
                  * simpl; apply Nat.max_case.
                    -- apply Nat.le_max_l.
                    -- eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ].
-                      induction (maxApp (freeVarT L s) (varFormula f1)) as [a | b].
+                      induction (maxApp (freeVarT s) (varFormula f1)) as [a | b].
                       ++ rewrite a.
                          apply maxLemma2.
                       ++ rewrite b; 
@@ -5292,7 +5290,7 @@ Proof.
                        (cPair 0
                           (pow3 (depth L f1) +
                              fold_right Nat.max 0
-                               (v :: freeVarT L s ++ varFormula f1)))) <=
+                               (v :: freeVarT s ++ varFormula f1)))) <=
                     ReplaceFormulaTerm (cPair 1 (cPair (codeFormula f0)
                                                    (codeFormula f1))) C).
            { unfold ReplaceFormulaTerm at 2; fold A; unfold evalStrongRec.
@@ -5339,7 +5337,7 @@ Proof.
       * unfold C ; simpl.
         apply
           (H (pow3 (depth L f0) + (pow3 (depth L f0) + pow3 (depth L f0))) v
-             (fold_right Nat.max 0 (freeVarT L s ++ varFormula f0)) 
+             (fold_right Nat.max 0 (freeVarT s ++ varFormula f0)) 
              (codeTerm s)).
       * unfold C; simpl; apply Nat.le_max_l.
       * apply (H0 (notH f0) v s).
@@ -5350,7 +5348,7 @@ Proof.
     (H2: Nat.max (codeTerm s)
           (cPair 0
              (pow3 (depth L f0) +
-                fold_right Nat.max 0 (v :: freeVarT L s ++ varFormula f0))) <= C).
+                fold_right Nat.max 0 (v :: freeVarT s ++ varFormula f0))) <= C).
    unfold C; simpl; apply maxLemma.
    ++ apply le_n.
    ++ apply cPairLe3.
@@ -5363,7 +5361,7 @@ Proof.
               (Nat.max (codeTerm s)
                  (cPair 0
                     (pow3 (depth L f0) +
-                       fold_right Nat.max 0 (v :: freeVarT L s ++ varFormula f0))))
+                       fold_right Nat.max 0 (v :: freeVarT s ++ varFormula f0))))
             <=
               ReplaceFormulaTerm (cPair 2 (codeFormula f0)) C).
       { unfold ReplaceFormulaTerm at 2; fold A; unfold evalStrongRec,
@@ -5407,18 +5405,18 @@ Proof.
       * unfold C; simpl;
           apply
             (H (pow3 (depth L a) + (pow3 (depth L a) + pow3 (depth L a))) v0
-               (fold_right Nat.max 0 (freeVarT L s ++ v :: varFormula a)) 
+               (fold_right Nat.max 0 (freeVarT s ++ v :: varFormula a)) 
                (codeTerm s)).
       * unfold C; simpl; apply Nat.le_max_l.
       * apply (H0 (forallH v a) v0 s).
       * apply (E (forallH v a) v0 s).
       * apply Nat.le_0_l.
-    + induction (In_dec eq_nat_dec v (freeVarT L s)) as [a0 | b1]; simpl in |- *.
+    + induction (In_dec eq_nat_dec v (freeVarT s)) as [a0 | b1]; simpl in |- *.
       * unfold cTriple; repeat apply cPairLe3.
         -- unfold C; simpl.
            apply
              (H (pow3 (depth L a) + (pow3 (depth L a) + pow3 (depth L a))) v0
-                (fold_right Nat.max 0 (freeVarT L s ++ v :: varFormula a)) 
+                (fold_right Nat.max 0 (freeVarT s ++ v :: varFormula a)) 
                 (codeTerm s)).
         -- unfold C; simpl; apply Nat.le_max_l.
         -- apply (H0 (forallH v a) v0 s).
@@ -5427,25 +5425,25 @@ Proof.
            ++ apply H1.
               apply depthForall.
            ++ assert
-               (H2: Nat.max (codeTerm (var (newVar (v0 :: freeVarT L s ++ 
+               (H2: Nat.max (codeTerm (var (newVar (v0 :: freeVarT (L:=L) s ++ 
                                                       freeVarF a))))
                       (cPair 0
                          (pow3 (depth L a) +
                             fold_right Nat.max 0
                               (v
-                                 :: freeVarT L
-                                 (var (newVar (v0 :: freeVarT L s ++ 
+                                 :: freeVarT  (L:=L)
+                                 (var (newVar (v0 :: freeVarT (L:=L) s ++ 
                                                  freeVarF a))) ++
                                  varFormula a))) <= C).
               { assert
-                  (H2: newVar (v0 :: freeVarT L s ++ freeVarF a) <=
+                  (H2: newVar (v0 :: freeVarT s ++ freeVarF a) <=
                          pow3 (depth L a) +
-                           fold_right Nat.max 0 (v0 :: freeVarT L s ++ 
+                           fold_right Nat.max 0 (v0 :: freeVarT s ++ 
                                                    varFormula (forallH v a))).
                 { apply Nat.le_trans with
                     (1 +
                        fold_right Nat.max 0
-                         (v0 :: fold_right Nat.max 0 (freeVarT L s) :: varFormula a)).
+                         (v0 :: fold_right Nat.max 0 (freeVarT s) :: varFormula a)).
                   - apply boundSubFormulaHelp2 with (a := a) (v0 := v0) (s := s).
                   - apply Nat.add_le_mono.
                     + apply pow3Min.
@@ -5459,10 +5457,10 @@ Proof.
                 } 
                 apply Nat.max_case.
                 - replace
-                    (codeTerm (var (newVar (v0 :: freeVarT L s ++ 
+                    (codeTerm (var (newVar (v0 :: freeVarT s ++ 
                                               freeVarF a)))) 
                     with
-                    (cPair 0 (newVar (v0 :: freeVarT L s ++ freeVarF a)));
+                    (cPair 0 (newVar (v0 :: freeVarT s ++ freeVarF a)));
                     [ idtac | reflexivity ].
                   unfold C; eapply Nat.le_trans; [ idtac | apply Nat.le_max_r ].
                   apply cPairLe3.
@@ -5494,15 +5492,15 @@ Proof.
               assert
                 (H3: ReplaceFormulaTerm (codeFormula a)
                        (Nat.max
-                          (codeTerm (var (newVar (v0 :: freeVarT L s ++ 
+                          (codeTerm (var (newVar (v0 :: freeVarT (L:=L) s ++ 
                                                     freeVarF a))))
                           (cPair 0
                              (pow3 (depth L a) +
                                 fold_right Nat.max 0
                                   (v
-                                     :: freeVarT L
+                                     :: freeVarT  (L:=L)
                                      (var
-                                        (newVar (v0 :: freeVarT L s ++ 
+                                        (newVar (v0 :: freeVarT s ++ 
                                                    freeVarF a))) ++
                                      varFormula a)))) <=
                        ReplaceFormulaTerm (cPair 3 (cPair v (codeFormula a))) C).
@@ -5541,11 +5539,11 @@ Proof.
                            (pow3 (depth L a) +
                               fold_right Nat.max 0
                                 (v0
-                                   :: freeVarT L s ++
+                                   :: freeVarT s ++
                                    varFormula
                                    (substF a v
                                       (var
-                                         (newVar (v0 :: freeVarT L s ++ 
+                                         (newVar (v0 :: freeVarT s ++ 
                                                     freeVarF  a))))))) 
                       <=
                         C).
@@ -5560,10 +5558,10 @@ Proof.
                      * eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
                        apply Nat.le_max_l.
                      * induction
-                         (maxApp (freeVarT L s)
+                         (maxApp (freeVarT s)
                             (varFormula
                                (substF a v
-                                  (var (newVar (v0 :: freeVarT L s ++ 
+                                  (var (newVar (v0 :: freeVarT s ++ 
                                                   freeVarF a)))))) as [a1 | b1].
                        -- rewrite a1.
                           eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
@@ -5587,19 +5585,19 @@ Proof.
                  (H3: ReplaceFormulaTerm
                         (codeFormula
                            (substF a v
-                              (var (newVar (v0 :: freeVarT L s ++ 
+                              (var (newVar (v0 :: freeVarT s ++ 
                                               freeVarF a)))))
                         (Nat.max (codeTerm s)
                            (cPair 0
                               (pow3 (depth L a) +
                                  fold_right Nat.max 0
                                    (v0
-                                      :: freeVarT L s ++
+                                      :: freeVarT s ++
                                       varFormula
                                       (substF  a v
                                          (var
                                             (newVar
-                                               (v0 :: freeVarT L s ++ 
+                                               (v0 :: freeVarT s ++ 
                                                   freeVarF a)))))))) 
                       <=
                         ReplaceFormulaTerm (cPair 3 (cPair v (codeFormula a))) C).
@@ -5631,7 +5629,7 @@ Proof.
         -- unfold C; simpl.
         apply
           (H (pow3 (depth L a) + (pow3 (depth L a) + pow3 (depth L a))) v0
-             (fold_right Nat.max 0 (freeVarT L s ++ v :: varFormula a)) 
+             (fold_right Nat.max 0 (freeVarT s ++ v :: varFormula a)) 
              (codeTerm s)).
         -- unfold C in |- *; simpl in |- *. 
            apply Nat.le_max_l.
@@ -5644,7 +5642,7 @@ Proof.
                (H2: Nat.max (codeTerm s)
                       (cPair 0
                          (pow3 (depth L a) +
-                            fold_right Nat.max 0 (v0 :: freeVarT L s ++ 
+                            fold_right Nat.max 0 (v0 :: freeVarT s ++ 
                                                     varFormula a))) <= C).
               { unfold C in |- *.
                 apply maxLemma.
@@ -5656,7 +5654,7 @@ Proof.
                       apply Nat.le_add_r.
                     * simpl; apply maxLemma.
                       -- apply le_n.
-                      -- induction (maxApp (freeVarT L s) (varFormula a)) 
+                      -- induction (maxApp (freeVarT s) (varFormula a)) 
                            as [a0 | b2].
                          ++ rewrite a0.
                             apply maxLemma2.
@@ -5669,7 +5667,7 @@ Proof.
                        (Nat.max (codeTerm s)
                           (cPair 0
                              (pow3 (depth L a) +
-                                fold_right Nat.max 0 (v0 :: freeVarT L s ++ 
+                                fold_right Nat.max 0 (v0 :: freeVarT s ++ 
                                                         varFormula a)))) 
                      <=
                        ReplaceFormulaTerm (cPair 3 (cPair v (codeFormula a))) C).
@@ -5812,7 +5810,7 @@ Proof.
             (H2: Nat.max (codeTerm s)
                    (cPair 0
                       (pow3 (depth L f) +
-                         fold_right Nat.max 0 (v :: freeVarT L s ++ varFormula f))) 
+                         fold_right Nat.max 0 (v :: freeVarT s ++ varFormula f))) 
                  <=
                    cPair 0 (pow3 (codeFormula f) + (v + (codeTerm s + codeFormula f)))).
           { apply Nat.max_case.
@@ -5829,7 +5827,7 @@ Proof.
                   apply Nat.max_case.
                   -- apply Nat.le_add_r.
                   -- eapply Nat.le_trans; [ idtac | apply Compat815.le_plus_r ].
-                     induction (maxApp (freeVarT L s) (varFormula f)) as [a | b0].
+                     induction (maxApp (freeVarT s) (varFormula f)) as [a | b0].
                      ++ rewrite a; eapply Nat.le_trans.
                         ** apply codeTermFreeVar.
                         ** apply Nat.le_add_r.
@@ -5840,7 +5838,7 @@ Proof.
                              [t t0| r t| f1 Hrecf1 f0 Hrecf0| f Hrecf| n f Hrecf];
                              simpl in |- *.
                            --- eapply Nat.le_trans; [ idtac | apply cPairLe2 ].
-                               induction (maxApp (freeVarT L t) (freeVarT L t0))
+                               induction (maxApp (freeVarT t) (freeVarT t0))
                                  as [a | b].
                                +++ rewrite a.
                                    eapply Nat.le_trans.
@@ -5853,17 +5851,17 @@ Proof.
                                induction t as [| n t t0 Hrect].
                                +++ simpl in |- *.
                                    apply Nat.le_0_l.
-                               +++ replace (freeVarTs L (S n) (Tcons t t0)) 
+                               +++ replace (freeVarTs (Tcons t t0)) 
                                      with
-                                     (freeVarT L t ++ freeVarTs L n t0);
+                                     (freeVarT t ++ freeVarTs t0);
                                      [ idtac | reflexivity ].
                                    replace (codeTerms (Tcons t t0)) 
                                      with
                                      (S (cPair (codeTerm t) (codeTerms t0))); 
                                      [ idtac | reflexivity ].
                                    apply le_S.
-                                   induction (maxApp (freeVarT L t) 
-                                                (freeVarTs L n t0)) as [a | b].
+                                   induction (maxApp (freeVarT t) 
+                                                (freeVarTs  t0)) as [a | b].
                                    *** rewrite a; eapply Nat.le_trans.
                                        apply codeTermFreeVar.
                                        apply cPairLe1.

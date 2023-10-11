@@ -77,13 +77,13 @@ Fixpoint interpFormula (value : nat -> U M) (f : Formula L) {struct f} :
   end.
 
 Lemma freeVarInterpTerm (v1 v2 : nat -> U M) (t : Term L):
- (forall x : nat, List.In x (freeVarT L t) -> v1 x = v2 x) ->
+ (forall x : nat, List.In x (freeVarT t) -> v1 x = v2 x) ->
  interpTerm v1 t = interpTerm v2 t.
 Proof.
   elim t using  Term_Terms_ind with
     (P0 := fun (n : nat) (ts : Terms L n) =>
              forall f : naryFunc (U M) n,
-               (forall x : nat, List.In x (freeVarTs L n ts) -> v1 x = v2 x) ->
+               (forall x : nat, List.In x (freeVarTs ts) -> v1 x = v2 x) ->
                interpTerms n f v1 ts = interpTerms n f v2 ts); 
     simpl.
   - intros n H; apply H; left; auto.
@@ -103,7 +103,7 @@ Qed.
 
 Lemma freeVarInterpRel (v1 v2 : nat -> U M) (n : nat) 
   (ts : Terms L n) (r : naryRel (U M) n): 
-  (forall x : nat, List.In x (freeVarTs L n ts) -> v1 x = v2 x) ->
+  (forall x : nat, List.In x (freeVarTs ts) -> v1 x = v2 x) ->
   interpRels n r v1 ts -> interpRels n r v2 ts.
 Proof.
   intros H; induction ts as [| n t ts Hrects]; simpl in |- *.
@@ -235,10 +235,10 @@ Proof.
              end).
         -- intros x0 H1; induction (eq_nat_dec v0 x0); reflexivity.
         --  auto.
-    + induction (In_dec eq_nat_dec v (freeVarT L s)) as [a0 | b0].
+    + induction (In_dec eq_nat_dec v (freeVarT s)) as [a0 | b0].
       * simpl;
-        set (nv := newVar (v0 :: freeVarT L s ++ freeVarF a)) in *.
-        assert (~ List.In nv (v0 :: freeVarT L s ++ freeVarF a)).
+        set (nv := newVar (v0 :: freeVarT s ++ freeVarF a)) in *.
+        assert (~ List.In nv (v0 :: freeVarT s ++ freeVarF a)).
         { unfold nv in |- *.
           apply newVar1. }
         assert
@@ -461,7 +461,7 @@ Proof.
   - simpl; do 2 rewrite subFormulaForall.
     simpl; induction (eq_nat_dec v v0).
     + simpl; reflexivity.
-    + induction (In_dec eq_nat_dec v (freeVarT L s)) as [? | ?].
+    + induction (In_dec eq_nat_dec v (freeVarT s)) as [? | ?].
       * simpl; repeat rewrite subFormulaNot; repeat rewrite H.
         -- now rewrite <- freeVarNNHelp.
         -- eapply eqDepth.

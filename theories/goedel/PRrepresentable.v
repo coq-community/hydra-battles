@@ -124,7 +124,7 @@ Proof.
        existH v (substF A x (natToTerm a))).
    { intros A v x a1 H; rewrite (subFormulaExist LNN).
      destruct (eq_nat_dec v x) as [H0 | H0]; try congruence.
-     destruct (In_dec eq_nat_dec v (freeVarT LNN (natToTerm a1))) 
+     destruct (In_dec eq_nat_dec v (freeVarT (natToTerm a1))) 
         as [i | i]; try reflexivity.
      elim (closedNatToTerm _ _ i). }
     assert
@@ -175,8 +175,8 @@ Proof.
                (freeVarF 
                   (v#3 < natToTerm (a.+1) ->  v#0 = (natToTerm (beta a a0)))%fol)
                with
-               ((freeVarT LNN (var 3) ++ 
-                   freeVarT LNN (natToTerm (S a))) ++
+               ((freeVarT (L:=LNN) (var 3) ++ 
+                   freeVarT (natToTerm (S a))) ++
                   freeVarF (equal (var 0) 
                                         (natToTerm (beta a a0))))
                by (rewrite <- freeVarLT; reflexivity).
@@ -778,13 +778,13 @@ Qed.
 Lemma subAddExistsNice :
  forall (n m : nat) (A : Formula) (v : nat) (s : Term),
  n + m <= v \/ v < m ->
- (forall v : nat, In v (freeVarT LNN s) -> n + m <= v \/ v < m) ->
+ (forall v : nat, In v (freeVarT s) -> n + m <= v \/ v < m) ->
  substF (addExists m n A) v s = addExists m n (substF A v s).
 Proof.
   intros n m A v s H H0. induction n as [| n Hrecn]; simpl in |- *; auto.
   rewrite (subFormulaExist LNN).
   destruct (eq_nat_dec (n + m) v) as [e | e]; try lia.
-  destruct (in_dec Nat.eq_dec (n + m) (freeVarT LNN s)) as [e0 | e0].
+  destruct (in_dec Nat.eq_dec (n + m) (freeVarT s)) as [e0 | e0].
   - pose proof (H0 _ e0). lia.
   - rewrite Hrecn.
     + reflexivity.
@@ -829,13 +829,13 @@ Qed.
 Lemma subAddForallsNice :
  forall (n m : nat) (A : Formula) (v : nat) (s : Term),
  n + m <= v \/ v < m ->
- (forall v : nat, In v (freeVarT LNN s) -> n + m <= v \/ v < m) ->
+ (forall v : nat, In v (freeVarT s) -> n + m <= v \/ v < m) ->
  substF (addForalls m n A) v s =
  addForalls m n (substF A v s).
 Proof.
   intros n m A v s H H0. induction n as [| n Hrecn]; simpl in |- *; auto.
   rewrite (subFormulaForall LNN). destruct (eq_nat_dec (n + m) v) as [e | e]; try lia.
-  destruct (in_dec Nat.eq_dec (n + m) (freeVarT LNN s)) as [e0 | e0].
+  destruct (in_dec Nat.eq_dec (n + m) (freeVarT s)) as [e0 | e0].
   - pose proof (H0 _ e0); lia.
   - rewrite Hrecn.
     + reflexivity.
@@ -1556,7 +1556,7 @@ Proof.
       * auto.
       * rewrite (subFormulaForall LNN). destruct (eq_nat_dec x v) as [e | e];
           try congruence.
-        destruct (In_dec eq_nat_dec x (freeVarT LNN (natToTerm a))) as [e0 | e0].
+        destruct (In_dec eq_nat_dec x (freeVarT (natToTerm a))) as [e0 | e0].
         -- elim (closedNatToTerm _ _ e0).
         -- apply forallI. apply closedNN. rewrite (subFormulaImp LNN).
            unfold LT in |- *. rewrite (subFormulaRelation LNN).
@@ -1567,7 +1567,7 @@ Proof.
               destruct H6 as [x0 H6 | x0 H6].
               ** elim closedNN with v. exists x0; auto.
               ** destruct H6. destruct H5 as [H5 | H5]; try congruence.
-                 fold (freeVarT LNN (natToTerm a)) in H5. simpl in H5.
+                 fold (freeVarT (natToTerm a)) in H5. simpl in H5.
                  rewrite <- app_nil_end in H5. elim (closedNatToTerm _ _ H5).
               ** apply impE with (LT (var x) (natToTerm a)).
                  --- apply sysWeaken. apply boundedLT. intros n H5.
@@ -1581,8 +1581,8 @@ Qed.
 
 Lemma subFormulaMinimize :
  forall (A B : Formula) (v x z : nat) (s : Term),
- ~ In x (freeVarT LNN s) ->
- ~ In v (freeVarT LNN s) ->
+ ~ In x (freeVarT s) ->
+ ~ In v (freeVarT s) ->
  x <> z ->
  v <> z ->
  SysPrf NN
@@ -1593,7 +1593,7 @@ Proof.
   intros A B v x z s H H0 H1 H2. unfold minimize in |- *.
   rewrite (subFormulaAnd LNN). rewrite (subFormulaForall LNN).
   destruct (eq_nat_dec x z) as [e | e]; try congruence.
-  destruct (In_dec eq_nat_dec x (freeVarT LNN s)) as [e0 | e0]; try tauto.
+  destruct (In_dec eq_nat_dec x (freeVarT s)) as [e0 | e0]; try tauto.
   rewrite (subFormulaImp LNN). unfold LT at 1 in |- *.
   rewrite (subFormulaRelation LNN). simpl in |- *.
   destruct (eq_nat_dec z x); try congruence.
@@ -1787,7 +1787,7 @@ Remark In_betaFormula_subst_1_2_0 :
  In v
    (freeVarF 
       (substF3  betaFormula 1 a 2 b 0 c)) ->
- In v (freeVarT LNN a) \/ In v (freeVarT LNN b) \/ In v (freeVarT LNN c).
+ In v (freeVarT a) \/ In v (freeVarT b) \/ In v (freeVarT c).
 Proof.
   intros a b c v H. destruct (freeVarSubFormula3 _ _ _ _ _ H) as [H0 | H0].
   - assert
@@ -1821,8 +1821,8 @@ Remark In_betaFormula_subst_1_2 :
     In v
       (freeVarF 
          (substF (substF betaFormula 1 a) 2 b)) ->
-    In v (freeVarT LNN a) \/
-      In v (freeVarT LNN b) \/ In v (freeVarT LNN (var 0)).
+    In v (freeVarT a) \/
+      In v (freeVarT b) \/ In v (freeVarT (L:=LNN) (var 0)).
 Proof.
   intros a b v H. apply In_betaFormula_subst_1_2_0.
   rewrite (subFormulaId LNN); exact H.
@@ -1831,8 +1831,8 @@ Qed.
 Remark In_betaFormula_subst_1 :
  forall (a : Term) (v : nat),
  In v (freeVarF (substF betaFormula 1 a)) ->
- In v (freeVarT _ a) \/
- In v (freeVarT LNN (var 2)) \/ In v (freeVarT LNN (var 0)).
+ In v (freeVarT a) \/
+ In v (@freeVarT LNN (var 2)) \/ In v (@freeVarT LNN (var 0)).
 Proof.
   intros a v H. apply In_betaFormula_subst_1_2.
   rewrite (subFormulaId LNN). exact H.
@@ -1841,8 +1841,8 @@ Qed.
 Remark In_betaFormula :
  forall v : nat,
  In v (freeVarF betaFormula) ->
- In v (freeVarT LNN (var 1)) \/
- In v (freeVarT LNN (var 2)) \/ In v (freeVarT LNN (var 0)).
+ In v (@freeVarT LNN (var 1)) \/
+ In v (@freeVarT LNN (var 2)) \/ In v (@freeVarT LNN (var 0)).
 Proof.
   intros v H. apply In_betaFormula_subst_1.
   rewrite (subFormulaId LNN). exact H.
@@ -1851,8 +1851,8 @@ Qed.
 Remark In_betaFormula_subst_2 :
  forall (a : Term) (v : nat),
  In v (freeVarF (substF betaFormula 2 a)) ->
- In v (freeVarT LNN a) \/
- In v (freeVarT LNN (var 1)) \/ In v (freeVarT LNN (var 0)).
+ In v (freeVarT a) \/
+ In v (@freeVarT LNN (var 1)) \/ In v (@freeVarT LNN (var 0)).
 Proof.
   intros a v H. rewrite <- (subFormulaId LNN betaFormula 1) in H.
   decompose sum (In_betaFormula_subst_1_2 _ _ _ H); tauto.
@@ -1863,8 +1863,8 @@ Remark In_betaFormula_subst_2_1 :
  In v
    (freeVarF 
       (substF  (substF betaFormula 2 a) 1 b)) ->
- In v (freeVarT LNN a) \/
- In v (freeVarT LNN b) \/ In v (freeVarT LNN (var 0)).
+ In v (freeVarT a) \/
+ In v (freeVarT b) \/ In v (@freeVarT LNN (var 0)).
 Proof.
   intros a b v H. destruct (freeVarSubFormula3 _ _ _ _ _ H) as [H0 | H0].
   - assert (H1: In v (freeVarF (substF betaFormula 2 a))).
@@ -1962,15 +1962,15 @@ Ltac PRsolveFV A B n :=
         induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
     | H:(In _ (freeVarF (LT ?X1 ?X2))) |- _ =>
         rewrite freeVarLT in H
-    | H:(In _ (freeVarT LNN (natToTerm _))) |- _ =>
+    | H:(In _ (freeVarT (natToTerm _))) |- _ =>
         elim (closedNatToTerm _ _ H)
-    | H:(In _ (freeVarT LNN Zero)) |- _ =>
+    | H:(In _ (freeVarT Zero)) |- _ =>
         elim H
-    | H:(In _ (freeVarT LNN (Succ _))) |- _ =>
+    | H:(In _ (freeVarT (Succ _))) |- _ =>
         rewrite freeVarSucc in H
-    | H:(In _ (freeVarT LNN (var _))) |- _ =>
+    | H:(In _ (@freeVarT LNN (var _))) |- _ =>
         simpl in H; decompose sum H; clear H
-    | H:(In _ (freeVarT LNN (var  _))) |- _ =>
+    | H:(In _ (@freeVarT LNN (var  _))) |- _ =>
         simpl in H; decompose sum H; clear H
     end.
 
@@ -1990,7 +1990,7 @@ Proof.
   { induction n as [| n Hrecn].
     - simpl; intros A g H B h H0.
       unfold primRecSigmaFormula. intros a. rewrite (subFormulaExist LNN).
-      induction (In_dec eq_nat_dec 2 (freeVarT LNN (natToTerm a))) as [a0 | b].
+      induction (In_dec eq_nat_dec 2 (freeVarT (natToTerm a))) as [a0 | b].
       + elim (closedNatToTerm _ _ a0).
       + simpl. clear b. assert (repBeta : Representable 2 beta betaFormula).
         { apply betaRepresentable. }
@@ -2049,7 +2049,7 @@ Proof.
                          destruct (eq_nat_dec b c) as [e | e].
                          - elim H1. auto.
                          - destruct 
-                             (In_dec eq_nat_dec b (freeVarT LNN (natToTerm a0))) 
+                             (In_dec eq_nat_dec b (freeVarT (natToTerm a0))) 
                              as [H4 | H4].
                            + elim (closedNatToTerm _ _ H4).
                            + reflexivity. }
@@ -2063,7 +2063,7 @@ Proof.
                          destruct (eq_nat_dec b c) as [e | e].
                          - elim H1. auto.
                          - destruct (In_dec eq_nat_dec b 
-                                       (freeVarT LNN (natToTerm a0))) as [e0 | e0].
+                                       (freeVarT (natToTerm a0))) as [e0 | e0].
                            + elim (closedNatToTerm _ _ e0).
                            + reflexivity. }
                        apply minimize1.
@@ -3605,7 +3605,7 @@ Proof.
                     | H:(In ?X4 (freeVarF (substF ?X1 ?X2 ?X3))) |- _
                     =>
                         induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
-                    | H:(In ?X4 (freeVarT LNN (var ?X1))) |- _ =>
+                    | H:(In ?X4 (@freeVarT LNN (var ?X1))) |- _ =>
                         induction H as [H3| H3]; [ idtac | contradiction ]
                     end.
                     congruence.
@@ -3640,7 +3640,7 @@ Proof.
                            | H:(In ?X4 (freeVarF (substF ?X1 ?X2 ?X3))) |- _
                            =>
                                induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
-                           | H:(In ?X4 (freeVarT LNN (var ?X1))) |- _ =>
+                           | H:(In ?X4 (@freeVarT LNN (var ?X1))) |- _ =>
                                simple induction H; [ idtac | contradiction ]
                            end.
                           --- elim (closedNatToTerm _ _ H3).
@@ -3704,7 +3704,7 @@ Proof.
                   existH b (substF F c (natToTerm a))).
                 { intros F a1 b c H5. rewrite (subFormulaExist LNN). destruct (eq_nat_dec b c) as [e | e].
                   - elim H5. auto.
-                  - destruct (In_dec eq_nat_dec b (freeVarT LNN (natToTerm a1))) as [e0 | e0].
+                  - destruct (In_dec eq_nat_dec b (freeVarT (natToTerm a1))) as [e0 | e0].
                     + elim (closedNatToTerm _ _ e0).
                     + reflexivity. }
                 assert
@@ -3715,7 +3715,7 @@ Proof.
                   forallH b (substF F c (natToTerm a))).
                 { intros F a1 b c H5. rewrite (subFormulaForall LNN). destruct (eq_nat_dec b c) as [e | e].
                   - elim H5. auto.
-                  - destruct (In_dec eq_nat_dec b (freeVarT LNN (natToTerm a1))) as [e0 | e0].
+                  - destruct (In_dec eq_nat_dec b (freeVarT (natToTerm a1))) as [e0 | e0].
                     + elim (closedNatToTerm _ _ e0).
                     + reflexivity. }
                 assert (H5: forall a b : nat, a <> b -> b <> a) by auto.
@@ -3729,7 +3729,7 @@ Proof.
                 { intros F a1 b c H6 H7. rewrite (subFormulaExist LNN). 
                   destruct (eq_nat_dec b c) as [e | e].
                   - elim H6. auto.
-                  - destruct (In_dec eq_nat_dec b (freeVarT LNN (var a1))) as [e0 | e0].
+                  - destruct (In_dec eq_nat_dec b (@freeVarT LNN (var a1))) as [e0 | e0].
                     + destruct e0 as [H8| H8].
                       * elim H7; auto.
                       * elim H8.
@@ -3743,7 +3743,7 @@ Proof.
                   forallH b (substF F c (var a))).
                 { intros F a1 b c H6 H7; rewrite (subFormulaForall LNN). destruct (eq_nat_dec b c) as [e | e].
                   - elim H6. auto.
-                  - destruct (In_dec eq_nat_dec b (freeVarT LNN (var a1))) as [e0 | e0].
+                  - destruct (In_dec eq_nat_dec b (@freeVarT LNN (var a1))) as [e0 | e0].
                     + destruct e0 as [H8 | H8].
                       * elim H7; auto.
                       * elim H8.
@@ -4420,15 +4420,15 @@ Opaque substF.
           induction (freeVarSubFormula3 _ _ _ _ _ H); clear H
       | H:(In _ (freeVarF (LT ?X1 ?X2))) |- _ =>
           rewrite freeVarLT in H
-      | H:(In _ (freeVarT LNN (natToTerm _))) |- _ =>
+      | H:(In _ (freeVarT (natToTerm _))) |- _ =>
           elim (closedNatToTerm _ _ H)
-      | H:(In _ (freeVarT LNN Zero)) |- _ =>
+      | H:(In _ (freeVarT Zero)) |- _ =>
           elim H
-      | H:(In _ (freeVarT LNN (Succ _))) |- _ =>
+      | H:(In _ (freeVarT (Succ _))) |- _ =>
           rewrite freeVarSucc in H
-      | H:(In _ (freeVarT LNN (var _))) |- _ =>
+      | H:(In _ (@freeVarT LNN (var _))) |- _ =>
           simpl in H; decompose sum H; clear H
-      | H:(In _ (freeVarT LNN (var  _))) |- _ =>
+      | H:(In _ (@freeVarT LNN (var  _))) |- _ =>
           simpl in H; decompose sum H; clear H
       end; try first [ assumption | apply le_n ].
       assert (H7: v <= 2) by auto. lia.

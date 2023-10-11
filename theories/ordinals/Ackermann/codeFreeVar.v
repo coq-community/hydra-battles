@@ -40,18 +40,18 @@ Definition codeFreeVarTerms (t : nat) : nat :=
   cdr (codeFreeVarTermTerms t).
 
 Lemma codeFreeVarTermCorrect (t: Term) :
- codeFreeVarTerm (codeTerm t) = codeList (freeVarT L t).
+ codeFreeVarTerm (codeTerm t) = codeList (freeVarT t).
 Proof.
  elim t using  Term_Terms_ind
   with
     (P0 := fun (n : nat) (ts : fol.Terms L n) =>
            codeFreeVarTerms (codeTerms ts) =
-           codeList (freeVarTs L n ts)); intros.
+           codeList (freeVarTs ts)); intros.
  - simpl; unfold codeTerm, codeFreeVarTerm, codeFreeVarTermTerms,
      evalStrongRec in |- *.
    simpl; repeat rewrite cPairProjections1 || rewrite cPairProjections2.
    simpl; reflexivity.
- - unfold freeVarT; fold (freeVarTs L (arityF L f) t0).
+ - unfold freeVarT; fold (freeVarTs t0).
    rewrite <- H; clear H.
    unfold codeTerm; fold (codeTerms  t0).
    generalize (codeTerms t0).
@@ -81,8 +81,8 @@ Proof.
    unfold evalStrongRec; simpl; 
      repeat rewrite cPairProjections1 || rewrite cPairProjections2.
    reflexivity.
- - unfold freeVarTs; fold (freeVarT L t0);
-     fold (freeVarTs L n t1); rewrite <- codeAppCorrect.
+ - unfold freeVarTs; fold (freeVarT t0);
+     fold (freeVarTs t1); rewrite <- codeAppCorrect.
    rewrite <- H; rewrite <- H0; clear H H0.
    unfold codeTerms.
    fold (codeTerm t0); fold (codeTerms  t1).
@@ -122,14 +122,14 @@ Proof.
 Qed.
 
 Lemma codeFreeVarTermsCorrect (n : nat) (ts : Terms n):
- codeFreeVarTerms (codeTerms ts) = codeList (freeVarTs L n ts).
+ codeFreeVarTerms (codeTerms ts) = codeList (freeVarTs ts).
 Proof.
   induction ts as [| n t ts Hrects].
   - simpl; unfold codeTerms, codeFreeVarTerms, codeFreeVarTermTerms.
     unfold evalStrongRec; simpl.
     repeat rewrite cPairProjections1 || rewrite cPairProjections2.
     reflexivity.
-  - unfold freeVarTs; fold (freeVarT L t); fold (freeVarTs L n ts).
+  - unfold freeVarTs; fold (freeVarT t); fold (freeVarTs ts).
     rewrite <- codeAppCorrect.
     rewrite <- Hrects.
     rewrite <- codeFreeVarTermCorrect; clear Hrects.

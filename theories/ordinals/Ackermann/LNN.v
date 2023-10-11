@@ -106,26 +106,26 @@ Proof. split; decide equality. Qed.
 Section Free_Variables.
 
 Lemma freeVarPlus (x y : Term) :
- freeVarT LNN (Plus x y) = freeVarT LNN x ++ freeVarT LNN y.
-Proof. now rewrite (app_nil_end (freeVarT LNN y)). Qed.
+ freeVarT (Plus x y) = freeVarT x ++ freeVarT y.
+Proof. now rewrite (app_nil_end (freeVarT y)). Qed.
 
 Lemma freeVarTimes (x y : Term):
- freeVarT LNN (Times x y) = freeVarT LNN x ++ freeVarT LNN y.
-Proof. now rewrite (app_nil_end (freeVarT LNN y)). Qed.
+ freeVarT (Times x y) = freeVarT x ++ freeVarT y.
+Proof. now rewrite (app_nil_end (freeVarT y)). Qed.
 
 Lemma freeVarSucc (x : Term): 
-  freeVarT LNN (Succ x) = freeVarT LNN x.
+  freeVarT (Succ x) = freeVarT x.
 Proof.
-  now rewrite (app_nil_end (freeVarT LNN x)).
+  now rewrite (app_nil_end (freeVarT x)).
 Qed.
 
-Lemma freeVarZero : freeVarT LNN Zero = nil.
+Lemma freeVarZero : freeVarT Zero = nil.
 Proof. reflexivity. Qed.
 
 Lemma freeVarLT (x y : Term) :
- freeVarF (LT x y) = freeVarT LNN x ++ freeVarT LNN y.
+ freeVarF (LT x y) = freeVarT x ++ freeVarT y.
 Proof.
-  now rewrite (app_nil_end (freeVarT LNN y)).
+  now rewrite (app_nil_end (freeVarT y)).
 Qed.
 
 End Free_Variables.
@@ -407,7 +407,7 @@ Fixpoint natToTerm (n : nat) : Term :=
   end.
 
 Lemma closedNatToTerm :
- forall a v : nat, ~ In v (freeVarT LNN (natToTerm a)).
+ forall a v : nat, ~ In v (freeVarT (natToTerm a)).
 Proof.
 intros a v; induction a as [| a Hreca].
  - simpl; auto. 

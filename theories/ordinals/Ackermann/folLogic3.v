@@ -140,7 +140,7 @@ Proof.
   induction a as [| a Hreca].
   - simpl; symmetry; apply (nilTerms L).
   - assert
-      (H: forall v : nat, In v (freeVarTs L _ (fst (nVars L a))) -> v < a + a).
+      (H: forall v : nat, In v (freeVarTs (fst (nVars L a))) -> v < a + a).
     {  intros v H; clear Hreca ss ts.
        induction a as [| a Hreca].
        - elim H.
@@ -207,7 +207,7 @@ Proof.
   induction a as [| a Hreca].
   - simpl; symmetry; apply (nilTerms L).
   - assert
-      (H: forall v : nat, In v (freeVarTs L _ (snd (nVars L a))) -> v < a + a).
+      (H: forall v : nat, In v (freeVarTs (snd (nVars L a))) -> v < a + a).
     { intros v H; clear Hreca ss ts; induction a as [| a Hreca].
       - elim H.
       - simpl in H; induction (nVars L a) as [a0 b].
@@ -549,7 +549,7 @@ Proof.
         (nv :=
            v0
              :: List.remove eq_nat_dec v (freeVarF a) ++
-             freeVarT L a0 ++ freeVarT L b) in *.
+             freeVarT a0 ++ freeVarT b) in *.
       apply  (impTrans L) with
         (forallH (newVar nv)
            (substF (substF a v (var (newVar nv)))
