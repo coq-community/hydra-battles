@@ -406,6 +406,8 @@ Fixpoint natToTerm (n : nat) : Term :=
   | S m => Succ (natToTerm m)
   end.
 
+#[global] Notation n2t i := (natToTerm i).
+
 Lemma closedNatToTerm :
  forall a v : nat, ~ In v (freeVarT (natToTerm a)).
 Proof.

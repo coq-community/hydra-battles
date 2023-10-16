@@ -301,6 +301,10 @@ Definition isPR (n : nat) (f : naryFunc n) : Set :=
 Definition isPRrel (n : nat) (R : naryRel n) : Set :=
   isPR n (charFunction n R).
 
+(** Should we make isPR a class and p implicit ? *)
+Definition fun2PR {n:nat}{f:  naryFunc n}(p: isPR _ f): PrimRec n :=
+  proj1_sig p.
+
 (* begin snippet SuccIsPR:: no-out *)
 Lemma succIsPR : isPR 1 S.
 Proof. exists succFunc; cbn; reflexivity. Qed.
