@@ -4532,7 +4532,7 @@ Qed.
 
 Theorem primRecRepresentable :
  forall (n : nat) (f : naryFunc n) (p : isPR n f),
- Representable n f (primRecFormula n (fun2PR p)).
+ Representable n f (primRecFormula n (fun2PR f)).
 Proof.
   intros n f p.
   assert

@@ -47,7 +47,7 @@ Proof.
 Qed.
 
 (* begin snippet sumToNPR:: no-out *)
-Lemma sumToNIsPR : isPR 1 sumToN.
+#[export] Instance sumToNIsPR : isPR 1 sumToN.
 Proof.
   unfold sumToN in |- *.
   apply indIsPR with (f := fun x y : nat => S x + y).
@@ -86,7 +86,7 @@ Compute cPair 4 0.
 
 
 (* begin snippet cPairIsPR:: no-out *)
-Lemma cPairIsPR : isPR 2 cPair.
+#[export] Instance cPairIsPR : isPR 2 cPair.
 Proof.
   unfold cPair; apply compose2_2IsPR
     with
@@ -259,7 +259,7 @@ Proof.
   apply sumToN1.
 Qed.
 
-Remark searchXYIsPR : isPR 1 searchXY.
+#[local] Instance searchXYIsPR : isPR 1 searchXY.
 Proof.
   unfold searchXY in |- *.
   apply boundSearchIsPR with (P := fun a y : nat => ltBool a (sumToN (S y))).
@@ -279,7 +279,7 @@ Proof.
 Qed.
 
 (* begin snippet  cPairPi1IsPR:: no-out *)
-Lemma cPairPi1IsPR : isPR 1 cPairPi1.
+#[export] Instance cPairPi1IsPR : isPR 1 cPairPi1.
 (* end snippet  cPairPi1IsPR *)
 Proof.
   unfold cPairPi1 in |- *.
@@ -322,7 +322,7 @@ Qed.
 
 
 (* begin snippet  cPairPi2IsPR:: no-out *)
-Lemma cPairPi2IsPR : isPR 1 cPairPi2.
+#[export] Instance cPairPi2IsPR : isPR 1 cPairPi2.
 (* end snippet  cPairPi2IsPR *)
 Proof.
   unfold cPairPi2 in |- *.
@@ -517,7 +517,7 @@ Proof.
 Qed.
 
 (* begin snippet codeNthIsPR:: no-out *)
-Lemma codeNthIsPR : isPR 2 codeNth.
+#[export] Instance codeNthIsPR : isPR 2 codeNth.
 (* end snippet codeNthIsPR *)
 Proof.
   unfold codeNth in |- *; apply compose2_1IsPR
@@ -567,7 +567,8 @@ Definition evalStrongRec (n : nat) (f : naryFunc n.+2):
 (* end snippet evalStrongRecDef *)
 
 (* begin snippet evalStrongRecPR:: no-out *)
-Lemma evalStrongRecIsPR (n : nat) (f : naryFunc n.+2):
+#[export] Instance
+ evalStrongRecIsPR (n : nat) (f : naryFunc n.+2):
   isPR _  f -> isPR _ (evalStrongRec n f).
 (* end snippet evalStrongRecPR *)
 Proof.
@@ -840,10 +841,10 @@ Proof.
     * apply extEqualRefl.
 Qed.
 
-Lemma callIsPR (g : nat -> nat) :
- isPR 1 g -> isPR 2 (fun a recs : nat => codeNth (a - S (g a)) recs).
+#[export] Instance  callIsPR (g : nat -> nat) (H : isPR 1 g) :
+   isPR 2 (fun a recs : nat => codeNth (a - S (g a)) recs).
 Proof.
-  intros H; apply  compose2_2IsPR
+  apply  compose2_2IsPR
     with (f := fun a recs : nat => a - S (g a))
          (g := fun a recs : nat => recs).
   - apply filter10IsPR with (g := fun a : nat => a - S (g a)).
@@ -861,7 +862,7 @@ Qed.
 
 End Strong_Recursion.
 
-Lemma div2IsPR : isPR 1 div2.
+#[export] Instance div2IsPR : isPR 1 div2.
 Proof.
   assert
     (H: isPR 1
@@ -978,7 +979,7 @@ Definition cTriplePi2 (n : nat) : nat := cPairPi1  (cPairPi2 n).
 
 Definition cTriplePi3 (n : nat) : nat := cPairPi2 (cPairPi2 n).
 
-Lemma cTripleIsPR : isPR 3 cTriple.
+#[export] Instance cTripleIsPR : isPR 3 cTriple.
 Proof.
   unfold cTriple; apply compose3_2IsPR with
     (g := cPair)
@@ -990,17 +991,17 @@ Proof.
   - apply cPairIsPR.
 Qed.
 
-Lemma cTriplePi1IsPR : isPR 1 cTriplePi1.
+#[export] Instance cTriplePi1IsPR : isPR 1 cTriplePi1.
 Proof. apply cPairPi1IsPR. Qed.
 
-Lemma cTriplePi2IsPR : isPR 1 cTriplePi2.
+#[export] Instance cTriplePi2IsPR : isPR 1 cTriplePi2.
 Proof.
   unfold cTriplePi2; apply compose1_1IsPR.
   - apply cPairPi2IsPR.
   - apply cPairPi1IsPR.
 Qed.
 
-Lemma cTriplePi3IsPR : isPR 1 cTriplePi3.
+#[export] Instance cTriplePi3IsPR : isPR 1 cTriplePi3.
 Proof.
   unfold cTriplePi3; apply compose1_1IsPR; apply cPairPi2IsPR.
 Qed.

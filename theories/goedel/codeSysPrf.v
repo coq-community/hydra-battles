@@ -104,24 +104,21 @@ Context `(cL: Lcode L cf cr).
 
 Variable codeArityF : nat -> nat.
 Variable codeArityR : nat -> nat.
-Hypothesis codeArityFIsPR : isPR 1 codeArityF.
+Context (codeArityFIsPR : isPR 1 codeArityF).
 Hypothesis
   codeArityFIsCorrect1 :
     forall f : Functions L, codeArityF (cf f) = S (arityF L f).
 Hypothesis
   codeArityFIsCorrect2 :
     forall n : nat, codeArityF n <> 0 -> exists f : Functions L, cf f = n.
-Hypothesis codeArityRIsPR : isPR 1 codeArityR.
+Context (codeArityRIsPR : isPR 1 codeArityR).
 Hypothesis
   codeArityRIsCorrect1 :
     forall r : Relations L, codeArityR (cr r) = S (arityR L r).
 Hypothesis
   codeArityRIsCorrect2 :
     forall n : nat, codeArityR n <> 0 -> exists r : Relations L, cr r = n.
-(*
-Hypothesis codeFInj : forall f g : Functions L, codeF f = codeF g -> f = g.
-Hypothesis codeRInj : forall R S : Relations L, codeR R = codeR S -> R = S.
-*)
+
 
 Import LNN NN.
 Import NNnotations. 
