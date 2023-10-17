@@ -95,7 +95,7 @@ Defined.
 
 Definition codeArityLNTR (r : nat) := 0.
 
-Lemma codeArityLNTRIsPR : isPR 1 codeArityLNTR.
+#[export]Instance codeArityLNTRIsPR : isPR 1 codeArityLNTR.
 Proof.
   unfold codeArityLNTR; apply const1_NIsPR.
 Qed.
@@ -116,7 +116,7 @@ Definition codeArityLNTF (f : nat) :=
        (switchPR (pred (pred f)) (switchPR (pred (pred (pred f))) 0 1) 2) 3)
     3.
 
-Lemma codeArityLNTFIsPR : isPR 1 codeArityLNTF.
+#[export]Instance codeArityLNTFIsPR : isPR 1 codeArityLNTF.
 Proof.
   set
     (f :=
@@ -181,7 +181,7 @@ Qed.
 
 Definition codeArityLNNR (r : nat) := switchPR r 0 3.
 
-Lemma codeArityLNNRIsPR : isPR 1 codeArityLNNR.
+#[export]Instance codeArityLNNRIsPR : isPR 1 codeArityLNNR.
 Proof.
   unfold codeArityLNNR in |- *;
     apply compose1_3IsPR with

@@ -61,7 +61,7 @@ Proof.
       apply  Nat.lt_succ_r,  cPairLe2.
 Qed.
 
-Lemma codeNewVarIsPR : isPR 1 codeNewVar.
+#[export] Instance codeNewVarIsPR : isPR 1 codeNewVar.
 Proof.
   unfold codeNewVar; apply  (evalStrongRecIsPR 0) with
     (f := fun n Hrecs : nat =>
@@ -1371,7 +1371,7 @@ Proof.
   - apply switchIsPR. 
 Qed.
  
-Lemma checkTraceIsPR : isPR 1 checkSubFormulaTrace.
+#[export] Instance checkTraceIsPR : isPR 1 checkSubFormulaTrace.
 Proof.
   unfold checkSubFormulaTrace in |- *.
   assert (H: isPR 1 (fun trace : nat => car (cTriplePi3 (cTriplePi1 trace)))).
@@ -2763,7 +2763,7 @@ Definition ReplaceTermTermsTerm : nat -> nat -> nat :=
              (cPair (car (codeNth (t - S (car (pred t))) recs))
                 (cdr (codeNth (t - S (cdr (pred t))) recs)))) 0)).
 
-Remark ReplaceTermTermsTermIsPR : isPR 2 ReplaceTermTermsTerm.
+#[local] Instance ReplaceTermTermsTermIsPR : isPR 2 ReplaceTermTermsTerm.
 Proof.
   unfold ReplaceTermTermsTerm; apply evalStrongRecIsPR.
   apply
@@ -2882,14 +2882,14 @@ Definition ReplaceTermTerm (t s : nat) : nat :=
 Definition ReplaceTermsTerm (t s : nat) : nat :=
   cdr (ReplaceTermTermsTerm t s).
 
-Lemma ReplaceTermTermIsPR : isPR 2 ReplaceTermTerm.
+#[export] Instance ReplaceTermTermIsPR : isPR 2 ReplaceTermTerm.
 Proof.
   unfold ReplaceTermTerm; apply compose2_1IsPR.
   - apply ReplaceTermTermsTermIsPR.
   - apply cPairPi1IsPR.
 Qed.
 
-Lemma ReplaceTermsTermIsPR : isPR 2 ReplaceTermsTerm.
+#[export] Instance ReplaceTermsTermIsPR : isPR 2 ReplaceTermsTerm.
 Proof.
   unfold ReplaceTermsTerm; apply compose2_1IsPR.
   - apply ReplaceTermTermsTermIsPR.
@@ -3571,7 +3571,7 @@ Definition ReplaceFormulaTerm : nat -> nat -> nat :=
           (cPair (ReplaceTermTerm (car (cdr f)) s)
              (ReplaceTermTerm (cdr (cdr f)) s)))).
 
-Lemma ReplaceFormulaTermIsPR : isPR 2 ReplaceFormulaTerm.
+#[export] Instance ReplaceFormulaTermIsPR : isPR 2 ReplaceFormulaTerm.
 Proof.
   unfold ReplaceFormulaTerm; apply evalStrongRecIsPR.
   apply
@@ -4272,7 +4272,7 @@ Definition pow3 : nat -> nat :=
 
 
 
-Lemma pow3IsPR : isPR 1 pow3.
+#[export] Instance pow3IsPR : isPR 1 pow3.
 Proof.
   unfold pow3; apply indIsPR with (g := 1) (f := fun _ rec : nat => rec + (rec + rec)).
   apply filter01IsPR with (g := fun rec : nat => rec + (rec + rec)).
@@ -5013,7 +5013,7 @@ Definition boundComputation (d p1 p2 : nat) : nat :=
   nat_rec (fun _ => nat) (cTriple p1 p2 0)
     (fun _ rec : nat => cTriple p1 p2 (cPair rec rec)) d.
 
-Lemma boundComputationIsPR : isPR 3 boundComputation.
+#[export] Instance boundComputationIsPR : isPR 3 boundComputation.
 Proof.
   unfold boundComputation;
     apply
@@ -5915,7 +5915,7 @@ Proof.
    rewrite H0 in H; cbn in H; discriminate.
 Qed.
 
-Lemma codeSubFormulaIsPR : isPR 3 codeSubFormula.
+#[export] Instance codeSubFormulaIsPR : isPR 3 codeSubFormula.
 Proof.
   unfold codeSubFormula; apply  compose3_1IsPR  with
     (f := fun f v s : nat =>

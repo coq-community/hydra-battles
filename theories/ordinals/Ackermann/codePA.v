@@ -67,7 +67,7 @@ Proof.
     + simpl; apply Compat815.le_lt_n_Sm, cPairLe2A.
 Qed.
 
-Lemma codeCloseListIsPR : isPR 2 codeCloseList.
+#[export] Instance codeCloseListIsPR : isPR 2 codeCloseList.
 Proof.
   unfold codeCloseList; apply evalStrongRecIsPR.
   apply compose3_3IsPR with
@@ -118,7 +118,7 @@ Proof.
   apply codeCloseListCorrect.
 Qed.
 
-Lemma codeCloseIsPR : isPR 1 codeClose.
+#[export] Instance codeCloseIsPR : isPR 1 codeClose.
 Proof.
   unfold codeClose;
     apply compose1_2IsPR with
@@ -189,7 +189,7 @@ Proof.
         apply cPairLt2.
 Qed.
 
-Lemma codeOpenIsPR : isPR 1 codeOpen.
+#[export] Instance codeOpenIsPR : isPR 1 codeOpen.
 Proof.
   unfold codeOpen; apply evalStrongRecIsPR.
   apply

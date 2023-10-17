@@ -27,7 +27,7 @@ Variable codeArityR : nat -> nat.
 
 (* begin snippet context2 *)
 
-Hypothesis codeArityFIsPR : isPR 1 codeArityF.
+Context (codeArityFIsPR : isPR 1 codeArityF).
 
 Hypothesis codeArityFIsCorrect1 :
   forall f : Functions L, codeArityF (cf f) = S (arityF L f).
@@ -36,7 +36,7 @@ Hypothesis codeArityFIsCorrect2 :
     forall n : nat, codeArityF n <> 0 -> 
                     exists f : Functions L, cf f = n.
 
-Hypothesis codeArityRIsPR : isPR 1 codeArityR.
+Context (codeArityRIsPR : isPR 1 codeArityR).
 
 Hypothesis
   codeArityRIsCorrect1 :
@@ -75,7 +75,7 @@ Definition checkPrfAXM (p recs : nat) :=
   switchPR (charFunction 2 Nat.eqb (cddr p) (car p))
     (S (S (cPair (car p) 0))) 0.
 
-Lemma checkPrfAXMIsPR : isPR 2 checkPrfAXM.
+#[export] Instance checkPrfAXMIsPR : isPR 2 checkPrfAXM.
 Proof.
   unfold checkPrfAXM;
   apply
@@ -124,7 +124,7 @@ Definition checkPrfMP (p recs : nat) :=
           (pred (codeNth (p - S (cdr (cdr (cdr p)))) recs))))
     0.
 
-Lemma checkPrfMPIsPR : isPR 2 checkPrfMP.
+#[export] Instance checkPrfMPIsPR : isPR 2 checkPrfMP.
 Proof.
   unfold checkPrfMP in |- *.
   apply compose2_3IsPR with
@@ -286,7 +286,7 @@ Definition checkPrfGEN (p recs : nat) :=
             (pred (codeNth (p - S (cdr (cdr (cdr p)))) recs))))))
     (codeNth (p - S (cdr (cdr (cdr p)))) recs) 0.
 
-Lemma checkPrfGENIsPR : isPR 2 checkPrfGEN.
+#[export] Instance checkPrfGENIsPR : isPR 2 checkPrfGEN.
 Proof.
   unfold checkPrfGEN;
     apply compose2_3IsPR with
@@ -438,7 +438,7 @@ Definition checkPrfIMP1 (p recs : nat) :=
   charFunction 2 Nat.eqb (cPair 1 (cPair A (cPair 1 (cPair B A))))
     (car p).
 
-Lemma checkPrfIMP1IsPR : isPR 2 checkPrfIMP1.
+#[export] Instance checkPrfIMP1IsPR : isPR 2 checkPrfIMP1.
 Proof.
   unfold checkPrfIMP1; apply filter10IsPR with
     (g := fun p : nat =>
@@ -511,7 +511,7 @@ Definition checkPrfIMP2 (p recs : nat) :=
     (car p).
 
 
-Lemma checkPrfIMP2IsPR : isPR 2 checkPrfIMP2.
+#[export] Instance checkPrfIMP2IsPR : isPR 2 checkPrfIMP2.
 Proof.
   unfold checkPrfIMP2; apply filter10IsPR with
     (g := fun p : nat =>
@@ -672,7 +672,7 @@ Definition checkPrfCP (p recs : nat) :=
        (cPair (cPair 1 (cPair (cPair 2 A) (cPair 2 B))) (cPair 1 (cPair B A))))
     (car p).
 
-Lemma checkPrfCPIsPR : isPR 2 checkPrfCP.
+#[export] Instance checkPrfCPIsPR : isPR 2 checkPrfCP.
 Proof.
   unfold checkPrfCP; apply filter10IsPR with
     (g := fun p : nat =>
@@ -763,7 +763,7 @@ Definition checkPrfFA1 (p recs : nat) :=
     (cPair 1 (cPair (cPair 3 (cPair v A)) (codeSubFormula A v t)))
     (car p).
 
-Lemma checkPrfFA1IsPR : isPR 2 checkPrfFA1.
+#[export] Instance checkPrfFA1IsPR : isPR 2 checkPrfFA1.
 Proof.
   unfold checkPrfFA1; apply filter10IsPR with
     (g := fun p : nat =>
@@ -888,7 +888,7 @@ Definition checkPrfFA2 (p recs : nat) :=
     (car p).
 
 
-Lemma checkPrfFA2IsPR : isPR 2 checkPrfFA2.
+#[export] Instance checkPrfFA2IsPR : isPR 2 checkPrfFA2.
 Proof.
   unfold checkPrfFA2; apply filter10IsPR with
     (g := fun p : nat =>
@@ -993,7 +993,7 @@ Definition checkPrfFA3 (p recs : nat) :=
           (cPair 1 (cPair (cPair 3 (cPair v A)) (cPair 3 (cPair v B))))))
     (car p).
 
-Lemma checkPrfFA3IsPR : isPR 2 checkPrfFA3.
+#[export] Instance checkPrfFA3IsPR : isPR 2 checkPrfFA3.
 Proof.
   unfold checkPrfFA3; apply filter10IsPR with
     (g := fun p : nat =>
@@ -1182,7 +1182,7 @@ Proof.
   - apply multIsPR.
 Qed.
 
-Lemma checkPrfEQ1IsPR : isPR 2 checkPrfEQ1.
+#[export] Instance checkPrfEQ1IsPR : isPR 2 checkPrfEQ1.
 Proof.
   unfold checkPrfEQ1; apply checkPrfEQnIsPR.
 Qed.
@@ -1194,7 +1194,7 @@ Definition checkPrfEQ2 (p recs : nat) :=
 
 
 
-Lemma checkPrfEQ2IsPR : isPR 2 checkPrfEQ2.
+#[export] Instance checkPrfEQ2IsPR : isPR 2 checkPrfEQ2.
 Proof.
   unfold checkPrfEQ2; apply checkPrfEQnIsPR.
 Qed.
@@ -1206,7 +1206,7 @@ Definition checkPrfEQ3 (p recs : nat) :=
          (v#0 = v#1 -> v#1 = v#2 -> v#0 = v#2)%fol)
       (car p).
 
-Lemma checkPrfEQ3IsPR : isPR 2 checkPrfEQ3.
+#[export] Instance checkPrfEQ3IsPR : isPR 2 checkPrfEQ3.
 Proof.
   unfold checkPrfEQ3; apply checkPrfEQnIsPR.
 Qed.
@@ -1218,7 +1218,7 @@ Definition codeAxmEqHelp (n f : nat) : nat :=
          (cPair (cPair 0 (cPair (cPair 0 (m + m)) (cPair 0 (S (m + m))))) rec))
     n.
 
-Lemma codeAxmEqHelpIsPR : isPR 2 codeAxmEqHelp.
+#[export] Instance codeAxmEqHelpIsPR : isPR 2 codeAxmEqHelp.
 Proof.
   unfold codeAxmEqHelp; apply  ind1ParamIsPR with
     (g := fun f : nat => f)
@@ -1274,7 +1274,7 @@ Definition codeNVars1 (n : nat) : nat :=
   nat_rec (fun _ => nat) 0
     (fun m rec : nat => S (cPair (cPair 0 (m + m)) rec)) n.
 
-Lemma codeNVars1IsPR : isPR 1 codeNVars1.
+#[export] Instance codeNVars1IsPR : isPR 1 codeNVars1.
 Proof.
   unfold codeNVars1; apply indIsPR with
     (f := fun m rec : nat => S (cPair (cPair 0 (m + m)) rec)).
@@ -1302,7 +1302,7 @@ Definition codeNVars2 (n : nat) : nat :=
   nat_rec (fun _ => nat) 0
     (fun m rec : nat => S (cPair (cPair 0 (S (m + m))) rec)) n.
 
-Lemma codeNVars2IsPR : isPR 1 codeNVars2.
+#[export] Instance codeNVars2IsPR : isPR 1 codeNVars2.
 Proof.
   unfold codeNVars2; apply indIsPR with
     (f := fun m rec : nat => S (cPair (cPair 0 (S (m + m))) rec)).
@@ -1351,7 +1351,7 @@ Definition checkPrfEQ4 (p recs : nat) :=
     charFunction 2 Nat.eqb (codeAxmEqHelp (pred (codeArityR r)) (codeIff A B))
       (car p).
 
-Lemma codeOrIsPR : isPR 2 codeOr.
+#[export] Instance codeOrIsPR : isPR 2 codeOr.
 Proof.
   unfold codeOr; apply compose2_2IsPR with 
     (f := fun a b : nat => codeNot a) (g := fun a b : nat => b).
@@ -1360,7 +1360,7 @@ Proof.
   - apply codeImpIsPR.
 Qed.
 
-Lemma codeAndIsPR : isPR 2 codeAnd.
+#[export] Instance codeAndIsPR : isPR 2 codeAnd.
 Proof.
   unfold codeAnd; apply compose2_1IsPR with 
     (f := fun a b : nat => codeOr (codeNot a) (codeNot b)).
@@ -1374,7 +1374,7 @@ Proof.
   - apply codeNotIsPR.
 Qed.
 
-Lemma codeIffIsPR : isPR 2 codeIff.
+#[export] Instance codeIffIsPR : isPR 2 codeIff.
 Proof.
   unfold codeIff; apply compose2_2IsPR with (g := fun a b : nat => codeImp b a).
   - apply codeImpIsPR.
@@ -1382,7 +1382,7 @@ Proof.
   - apply codeAndIsPR.
 Qed.
 
-Lemma checkPrfEQ4IsPR : isPR 2 checkPrfEQ4.
+#[export] Instance checkPrfEQ4IsPR : isPR 2 checkPrfEQ4.
 Proof.
   unfold checkPrfEQ4; apply filter10IsPR with
     (g := fun p : nat =>
@@ -1505,7 +1505,7 @@ Definition checkPrfEQ5 (p recs : nat) :=
                (cPair (S f) (codeNVars2 (pred (codeArityF f))))))) 
       (car p).
 
-Lemma checkPrfEQ5IsPR : isPR 2 checkPrfEQ5.
+#[export] Instance checkPrfEQ5IsPR : isPR 2 checkPrfEQ5.
 Proof.
   unfold checkPrfEQ5; apply filter10IsPR with
     (g := fun p : nat =>
@@ -1727,7 +1727,7 @@ Definition checkPrfHelp : nat -> nat :=
                 (checkPrfIMP1 p recs)) (checkPrfGEN p recs))
           (checkPrfMP p recs)) (checkPrfAXM p recs)).
 
-Lemma checkPrfHelpIsPR : isPR 1 checkPrfHelp.
+#[local] Instance checkPrfHelpIsPR : isPR 1 checkPrfHelp.
 Proof.
   set
     (f :=
@@ -1805,7 +1805,7 @@ Definition checkPrf (f p : nat) : nat :=
   switchPR (wellFormedFormula f) (checkPrfHelp (cPair f p)) 0.
 
 (* begin snippet checkPrfIsPR:: no-out *)
-Lemma checkPrfIsPR : isPR 2 checkPrf.
+#[export] Instance checkPrfIsPR : isPR 2 checkPrf.
 (* end snippet checkPrfIsPR *)
 Proof.
   unfold checkPrf; apply compose2_3IsPR with

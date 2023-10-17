@@ -8,8 +8,6 @@ Set Program Cases.
 From hydras Require Export Hydra_Lemmas.
 From hydras Require Import E0 Hessenberg.
 
-
-
 (** ***  Converting any hydra into an ordinal less than 
   #epsilon0# $\epsilon_0$  
 

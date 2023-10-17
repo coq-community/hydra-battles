@@ -23,7 +23,7 @@ Import NNnotations.
 
 Definition subStar (a v n : nat) : nat := codeSubFormula a v (codeNatToTerm n).
 
-Lemma subStarIsPR : isPR 3 subStar.
+#[export] Instance subStarIsPR : isPR 3 subStar.
 Proof.
   unfold subStar; apply compose3_3IsPR  with
     (f1 := fun a v n : nat => a)
@@ -35,11 +35,6 @@ Proof.
   - apply codeSubFormulaIsPR.
 Qed.
 
-(* #[global] Instance codeNN : Lcode LNN codeLNTFunction codeLNNRelation.
-split. 
-apply codeLNTFunctionInj.
-apply codeLNNRelationInj.
-Defined.  *)
 
 Section LNN_FixPoint.
 

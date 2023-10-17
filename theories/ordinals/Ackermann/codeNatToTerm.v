@@ -49,7 +49,7 @@ Proof.
   - simpl; now rewrite Hrecn.
 Qed.
 
-Lemma codeNatToTermIsPR : isPR 1 codeNatToTerm.
+#[export] Instance codeNatToTermIsPR : isPR 1 codeNatToTerm.
 Proof.
   unfold codeNatToTerm in |- *.
   apply indIsPR with 

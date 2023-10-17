@@ -27,7 +27,8 @@ Section Proof_of_MinIsPR.
 
 
 
-  Lemma minPR_PR : isPR 2 minPR.
+  #[local] Instance minPR_PR : isPR 2 minPR.
+  Proof.
     unfold minPR.
     apply   compose2_2IsPR.
     apply compose2_2IsPR.

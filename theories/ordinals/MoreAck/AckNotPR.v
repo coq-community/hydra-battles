@@ -396,7 +396,7 @@ Proof.
 
 Section Impossibility_Proof.
 
-  Hypothesis HAck : isPR 2 Ack.
+  Context (HAck : isPR 2 Ack).
 
   Lemma Ack_not_PR : False. (* .no-out *)
   (*|
@@ -477,7 +477,7 @@ Section Proof_of_Ackn_PR.
 
   Section S_step.
     Variable n:nat.
-    Hypothesis IHn: isPR 1 (Ack n).
+    Context (IHn: isPR 1 (Ack n)).
 
     Remark R1 : extEqual 1 (Ack (S n))
                          (fun a : nat =>
@@ -489,7 +489,7 @@ Section Proof_of_Ackn_PR.
       intro a; cbn; now rewrite iterate_nat_rec.
     Qed.
 
-    Remark R2 : isPR 1
+    #[local] Instance R2 : isPR 1
                      (fun a : nat =>
                         nat_rec (fun _ : nat => nat) 1
                                 (fun _ y : nat => Ack n y)
@@ -500,7 +500,7 @@ Section Proof_of_Ackn_PR.
       - eapply indIsPR; now apply filter01IsPR.  
     Qed.
 
-    Lemma iSPR_Ack_Sn : isPR 1 (Ack (S n)).
+    #[export] Instance iSPR_Ack_Sn : isPR 1 (Ack (S n)).
     Proof.
       destruct R2 as [x Hx]; exists x.
       eapply extEqualTrans with (1:= Hx).
@@ -517,7 +517,7 @@ Section Proof_of_Ackn_PR.
 .. coq:: no-out 
 |*)
   
-  Theorem Ackn_IsPR (n: nat) : isPR 1 (Ack n).
+  #[export] Instance Ackn_IsPR (n: nat) : isPR 1 (Ack n).
   Proof.
     induction n.
 

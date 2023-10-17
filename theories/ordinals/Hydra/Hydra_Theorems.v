@@ -116,7 +116,7 @@ Import E0.
 
 Section battle_length_notPR.
 
-  Hypothesis H: forall alpha, isPR 1 (l_std alpha).
+  Context (H: forall alpha, isPR 1 (l_std alpha)).
 
   (* end snippet battleLengthNotPRa *)
   
@@ -152,12 +152,12 @@ Section battle_length_notPR.
 
   (* begin snippet battleLengthNotPRd *)
   
-  Remark mIsPR : isPR 1 m. (* .no-out *)
+  #[local] Instance mIsPR : isPR 1 m. (* .no-out *)
 
    (* end snippet battleLengthNotPRd *)
   Proof.
     destruct (H alpha) as [x Hx].
-    apply isPR_extEqual_trans with (fun k => (l_std alpha  k + k)%nat).
+    apply isPRextEqual with (fun k => (l_std alpha  k + k)%nat).
     - apply compose1_2IsPR; auto.
       + apply idIsPR.
       + apply plusIsPR.
@@ -215,9 +215,8 @@ Section battle_length_notPR.
 
   (* begin snippet SmNotPR *)
   
-  Remark SmNotPR : isPR 1 (fun n => S (m n)) -> False. (* .no-out *)
+ Lemma SmNotPR : isPR 1 (fun n => S (m n)) -> False. (* .no-out *)
  (* end snippet SmNotPR *)
-
   Proof.
     intro; eapply dom_AckNotPR; eauto.
     apply m_dominates_Ack; auto.
