@@ -39,7 +39,7 @@ Proof.
       * rewrite cPairProjections; apply le_n.
 Qed.
 
-Lemma codeLengthIsPR : isPR 1 codeLength.
+#[export] Instance codeLengthIsPR : isPR 1 codeLength.
 Proof.
   unfold codeLength in |- *.
   apply evalStrongRecIsPR.
@@ -123,7 +123,7 @@ Proof.
        simpl in H; rewrite H; auto.
 Qed.
 
-Lemma codeAppIsPR : isPR 2 codeApp.
+#[export] Instance codeAppIsPR : isPR 2 codeApp.
 Proof.
   unfold codeApp; apply evalStrongRecIsPR.
   apply compose3_3IsPR   with
@@ -247,7 +247,7 @@ Proof.
       * auto.
 Qed.
 
-Lemma codeListRemoveIsPR : isPR 2 codeListRemove.
+#[export] Instance codeListRemoveIsPR : isPR 2 codeListRemove.
 Proof.
   unfold codeListRemove; apply swapIsPR; apply evalStrongRecIsPR.
   apply
@@ -391,7 +391,7 @@ Proof.
       assumption. 
 Qed.
 
-Lemma codeInIsPR : isPR 2 codeIn.
+#[export] Instance codeInIsPR : isPR 2 codeIn.
 Proof.
   unfold codeIn; apply swapIsPR.
   apply evalStrongRecIsPR.
@@ -501,7 +501,7 @@ Proof.
       apply cPairLe2A.
 Qed.
 
-Lemma codeNoDupIsPR : isPR 1 codeNoDup.
+#[export] Instance codeNoDupIsPR : isPR 1 codeNoDup.
 Proof.
   unfold codeNoDup; apply evalStrongRecIsPR.
   apply compose2_3IsPR with

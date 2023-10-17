@@ -167,7 +167,8 @@ Proof.
         apply cPairLe1.
 Qed.
 
-Lemma codeFreeVarTermTermsIsPR : isPR 1 codeFreeVarTermTerms.
+#[export] 
+  Instance codeFreeVarTermTermsIsPR : isPR 1 codeFreeVarTermTerms.
 Proof.
   unfold codeFreeVarTermTerms; apply evalStrongRecIsPR.
   apply
@@ -280,7 +281,8 @@ Proof.
   - apply cPairPi1IsPR.
 Qed.
 
-Lemma codeFreeVarTermsIsPR : isPR 1 codeFreeVarTerms.
+#[export] 
+  Instance codeFreeVarTermsIsPR : isPR 1 codeFreeVarTerms.
 Proof.
   unfold codeFreeVarTerms; apply compose1_1IsPR.
   - apply codeFreeVarTermTermsIsPR.
@@ -405,7 +407,8 @@ Proof.
         -- apply cPairLe2.
 Qed.
 
-Lemma codeFreeVarFormulaIsPR : isPR 1 codeFreeVarFormula.
+#[export] 
+  Instance codeFreeVarFormulaIsPR : isPR 1 codeFreeVarFormula.
 Proof.
   unfold codeFreeVarFormula; apply evalStrongRecIsPR.
   assert (H: isPR 1 (fun x : nat => pred (car x))).
@@ -604,7 +607,8 @@ Proof.
     + apply Compat815.le_lt_n_Sm, cPairLe2A.
 Qed.
 
-Lemma codeFreeVarListFormulaIsPR : isPR 1 codeFreeVarListFormula.
+#[export] 
+  Instance codeFreeVarListFormulaIsPR : isPR 1 codeFreeVarListFormula.
 Proof.
   unfold codeFreeVarListFormula; apply evalStrongRecIsPR.
   apply compose2_3IsPR with
