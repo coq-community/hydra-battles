@@ -1900,4 +1900,11 @@ Qed.
 Proof.
   intros H [x Hx]; exists x; apply extEqualTrans with f; auto.
 Qed.
- 
+
+(* begin snippet isPRextEqual:: no-out *)
+#[export] Instance isPRextEqual (n:nat) (f g : naryFunc n):
+  isPR n f -> extEqual n f g ->  isPR n g. 
+(* end snippet isPRextEqual *)
+Proof.
+  intros; eapply isPRTrans; eauto. 
+Qed.

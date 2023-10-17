@@ -16,7 +16,7 @@ Context `(cL : Lcode  L cf cr).
 
 
 Variable codeArityF : nat -> nat.
-Hypothesis codeArityFIsPR : isPR 1 codeArityF.
+Context (codeArityFIsPR : isPR 1 codeArityF).
 Hypothesis
   codeArityFIsCorrect1 :
     forall f : Functions L, codeArityF (cf f) = S (arityF L f).
@@ -324,7 +324,8 @@ Proof.
   intro n; eapply proj2; apply wellFormedTermTermsCorrect2.
 Qed.
 
-Remark wellFormedTermTermsIsPR : isPR 1 wellFormedTermTerms.
+#[local] Instance wellFormedTermTermsIsPR : 
+  isPR 1 wellFormedTermTerms.
 Proof.
   unfold wellFormedTermTerms; apply evalStrongRecIsPR.
   apply
@@ -454,14 +455,14 @@ Proof.
   - apply cPairIsPR.
 Qed.
 
-Lemma wellFormedTermIsPR : isPR 1 wellFormedTerm.
+#[export] Instance wellFormedTermIsPR : isPR 1 wellFormedTerm.
 Proof.
   unfold wellFormedTerm; apply compose1_1IsPR.
   - apply wellFormedTermTermsIsPR.
   - apply cPairPi1IsPR.
 Qed.
 
-Lemma wellFormedTermsIsPR : isPR 1 wellFormedTerms.
+#[export] Instance wellFormedTermsIsPR : isPR 1 wellFormedTerms.
 Proof.
   unfold wellFormedTerms; apply compose1_1IsPR.
   - apply wellFormedTermTermsIsPR.
@@ -470,9 +471,9 @@ Qed.
 
 Section Well_Formed_Formula.
 
-(* Variable codeR : Relations L -> nat. *)
+
 Variable codeArityR : nat -> nat.
-Hypothesis codeArityRIsPR : isPR 1 codeArityR.
+Context (codeArityRIsPR : isPR 1 codeArityR).
 Hypothesis
   codeArityRIsCorrect1 :
     forall r : Relations L, codeArityR (cr r) = S (arityR L r).
@@ -698,7 +699,7 @@ Proof.
   assumption.
 Qed.
 
-Lemma wellFormedFormulaIsPR : isPR 1 wellFormedFormula.
+#[export] Instance wellFormedFormulaIsPR : isPR 1 wellFormedFormula.
 Proof.
   unfold wellFormedFormula; apply evalStrongRecIsPR.
   assert (H: isPR 2 (fun f recs : nat => cPairPi1 f))

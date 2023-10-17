@@ -16,7 +16,7 @@ Fixpoint naryIf (n:nat) :
                fun x => naryIf m (p' x) (g x) (h x)
     end.
 
-Lemma If2IsPR (p: naryRel 2)(f g : naryFunc 2):
+#[export] Instance If2IsPR (p: naryRel 2)(f g : naryFunc 2):
   isPRrel 2 p -> isPR 2 f -> isPR 2 g ->
   isPR 2 (naryIf 2 p f g).
 Proof.
@@ -64,7 +64,7 @@ Section Proof_of_MinIsPR.
     - rewrite PeanoNat.Nat.min_r; auto with arith; reflexivity. 
   Qed.
 
-  Lemma minPR_PR : isPR 2 minPR.
+  #[local] Instance minPR_PR : isPR 2 minPR.
   Proof.
     unfold minPR;apply If2IsPR.
    -  apply leIsPR.
@@ -72,7 +72,7 @@ Section Proof_of_MinIsPR.
    -  apply pi2_2IsPR. 
   Qed.
 
-  Lemma minIsPR : isPR 2 min.
+  #[export] Instance minIsPR : isPR 2 min.
   Proof.
     destruct minPR_PR as [f Hf].
     exists f; eapply extEqualTrans with (1:= Hf). 

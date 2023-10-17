@@ -37,7 +37,7 @@ Qed.
 
 
 
-Lemma exp_alt_PR : isPR 2 exp_alt.
+#[local] Instance exp_alt_PR : isPR 2 exp_alt.
 Proof.
   unfold exp_alt.
     apply swapIsPR.
@@ -47,7 +47,7 @@ Proof.
     + apply const1_NIsPR.
 Qed.
 
-Lemma expIsPR : isPR 2 exp.
+#[export] Instance expIsPR : isPR 2 exp.
 Proof.
   destruct exp_alt_PR as [x Hx].
   exists x.
@@ -73,7 +73,7 @@ Definition tower2_alt h : nat :=  nat_rec (fun n => nat)
 Remark tower2_alt_ok  : extEqual 1 tower2_alt tower2.
 Proof. intro x; induction x; cbn; auto. Qed.
 
-Lemma tower2_alt_PR : isPR 1 tower2_alt.
+#[local] Instance tower2_alt_PR : isPR 1 tower2_alt.
 Proof.
 unfold tower2_alt;  apply indIsPR.
     +  apply filter01IsPR.
@@ -83,7 +83,7 @@ unfold tower2_alt;  apply indIsPR.
        * apply expIsPR.
          Qed.
 
-Lemma tower2IsPR : isPR 1 tower2.
+#[export] Instance tower2IsPR : isPR 1 tower2.
 Proof.
  destruct tower2_alt_PR as [x Hx].
  exists x.
@@ -106,7 +106,7 @@ Proof.
   intro x;induction x; cbn; auto.
 Qed.
 
-Lemma fact_altIsPR : isPR 1 fact_alt.
+#[local] Instance fact_altIsPR : isPR 1 fact_alt.
 Proof.
   unfold fact_alt; apply indIsPR.
   apply compose2_2IsPR.
@@ -115,7 +115,7 @@ Proof.
   +  apply multIsPR.
 Qed.
 
-Lemma factIsPR : isPR 1 fact.
+#[export] Instance factIsPR : isPR 1 fact.
 Proof.
   destruct fact_altIsPR as [x Hx].
   exists x; apply extEqualTrans with fact_alt; [trivial | ].

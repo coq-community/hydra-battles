@@ -212,33 +212,13 @@ Proof. reflexivity. Qed.
   The module [Alt] presents proofs of lemmas already proven in [primRec.v]
   We just hope that such a redundancy will help the reader to get familiar 
   with the various patterns allowed by that library.
-
 *)
-
-(* begin snippet isPRExtEqualTrans *)
-
-(*|
-.. coq:: no-out
-|*)
-
-Lemma isPR_extEqual_trans n f g :
-  isPR n f -> extEqual n f g -> isPR n g.
-Proof.
- intros [x Hx]; exists x.
- apply extEqualTrans with f; auto.
-Qed.
-
-(*||*)
-
-(* end snippet isPRExtEqualTrans *)
-
-
 
 Module Alt.
   
 (* begin snippet zeroIsPR *)
 
-Lemma zeroIsPR : isPR 0 0. (* .no-out *)
+#[export] Instance zeroIsPR : isPR 0 0. (* .no-out *)
 Proof. (* .no-out *)
   exists zeroFunc.
   cbn.
@@ -253,7 +233,7 @@ Qed.
 .. coq:: no-out
 |*)
 
-Lemma succIsPR : isPR 1 S.
+#[export] Instance succIsPR : isPR 1 S.
 Proof.
   exists succFunc; cbn; reflexivity.
 Qed.
@@ -266,7 +246,7 @@ Qed.
 .. coq:: no-out
 |*)
 
-Lemma pi2_5IsPR : isPR 5 (fun a b c d e => b).
+#[export] Instance pi2_5IsPR : isPR 5 (fun a b c d e => b).
 Proof.
  assert (H: 3 < 5) by auto.
  exists (projFunc 5 3 H).
@@ -304,7 +284,7 @@ Proof. reflexivity. Qed.
 |*)
 
 
-Lemma  const0_NIsPR n : isPR 0 n. 
+#[export] Instance  const0_NIsPR n : isPR 0 n. 
 Proof.
   induction n.
  - apply zeroIsPR.
@@ -361,9 +341,9 @@ Check filter010IsPR.
 
 (* begin snippet plusIsPRa *)
 
-Lemma plusIsPR : isPR 2 plus. (* .no-out *)
+#[export] Instance plusIsPR : isPR 2 plus. (* .no-out *)
 Proof. (* .no-out *)
-  apply isPR_extEqual_trans with plus_alt.
+  apply isPRextEqual with plus_alt.
   - (* .no-out *)  unfold plus_alt; apply ind1ParamIsPR.
     
 (* end snippet plusIsPRa *)
@@ -392,7 +372,7 @@ Definition xpred := primRecFunc 0 zeroFunc (projFunc 2 1 R02).
   
 Compute evalPrimRec 1 xpred 10.
 
-Lemma predIsPR : isPR 1 pred.
+#[export] Instance predIsPR : isPR 1 pred.
 Proof.
   exists xpred.
   intro n; induction n; now cbn. 
@@ -405,7 +385,7 @@ End Alt.
 
 Definition double (n:nat) := 2 * n.
 
-Lemma doubleIsPR : isPR 1 double. (* .no-out *)
+#[export] Instance doubleIsPR : isPR 1 double. (* .no-out *)
 Proof. (* .no-out *)
   unfold double; apply compose1_2IsPR. 
   (* end snippet doubleIsPRa *)

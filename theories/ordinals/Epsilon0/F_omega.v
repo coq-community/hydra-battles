@@ -77,7 +77,7 @@ Import primRec extEqualNat.
 
 Section F_omega_notPR.
 
-  Hypothesis F_omega_PR : isPR 1 (F_ E0omega).
+  Context (F_omega_PR : isPR 1 (F_ E0omega)).
 
   Lemma F_omega_not_PR : False.
   Proof.
@@ -114,7 +114,7 @@ Section F_alpha_notPR.
       destruct (F_mono_l _ _ Halpha) as [x Hx]; exists x; auto.
     Qed.
 
-    Hypothesis H: isPR 1 (F_ alpha).
+    Context (H: isPR 1 (F_ alpha)).
 
     Remark R00 : F_ alpha >> fun n => Ack n n.
     Proof.
@@ -135,7 +135,7 @@ Section F_alpha_notPR.
 
   
   Hypothesis H : E0omega o<= alpha.
-  Hypothesis H0: isPR 1 (F_ alpha).
+  Context (H0: isPR 1 (F_ alpha)).
 
   Lemma F_alpha_not_PR: False.
   Proof.
@@ -146,27 +146,15 @@ Section F_alpha_notPR.
 
 End F_alpha_notPR.
 
-
-(** TODO : move to more generic libraries *)
-
-Lemma isPR_trans n (f g : naryFunc n) : isPR n f ->
-                                        extEqual _ f g ->
-                                        isPR n g.
-Proof.
-  destruct 1 as [x Hx]; intros.
-  exists x;eapply extEqualTrans; eauto.
-Qed.
-
-
 (**  ** On the other hand, [F_ n] is PR for any [n:nat]
  *)
 
 
-Lemma F_0_isPR : isPR 1 (F_ 0).
+#[export] Instance F_0_isPR : isPR 1 (F_ 0).
 Proof.
-  apply isPR_trans with S.
+  apply isPRTrans with S.
+   - intro n; now rewrite F_zero_eqn.
   - apply succIsPR.
-  - intro n; now rewrite F_zero_eqn.
 Qed.
 
 Section step.
@@ -182,16 +170,16 @@ Section step.
     now  rewrite iterate_compat3.
   Qed. 
 
-  Remark R01 : isPR 2 F.
+  #[local] Instance R01 : isPR 2 F.
   Proof.
     assert (H: isPR 3 (fun x y _ => F_ n y)) by (apply filter010IsPR; auto).
-    apply isPR_trans with (fun x y =>  F x y).
-    apply swapIsPR; unfold F; apply ind1ParamIsPR; auto.
-    - apply idIsPR.
+    apply isPRTrans with (fun x y =>  F x y).
     - intros x y; reflexivity.
+    - apply swapIsPR; unfold F; apply ind1ParamIsPR; auto.
+       apply idIsPR.
   Qed.
 
-  Remark  R02 : isPR 1 (fun i  =>  F i (S i)).
+  #[local] Instance R02 : isPR 1 (fun i  =>  F i (S i)).
   Proof.
     apply compose1_2IsPR. 
     - apply idIsPR.
@@ -199,20 +187,20 @@ Section step.
     - apply R01.
   Qed.
 
-  Remark R03 : isPR 1 (F_ (S n)). 
+  #[local] Instance R03 : isPR 1 (F_ (S n)). 
   Proof.
-    apply isPR_trans with (F_ (E0succ n)).
-    -  eapply isPR_trans.
+    apply isPRTrans with (F_ (E0succ n)).
+ -  rewrite <- FinS_Succ_eq; rewrite FinS_eq.
+       intro; reflexivity.
+    -  eapply isPRextEqual.
        +  apply R02.
        +  intro i; red; now rewrite L00.
-    -  rewrite <- FinS_Succ_eq; rewrite FinS_eq.
-       intro; reflexivity.
   Qed.
 
 End step.
 
 
-Theorem F_n_PR (n:nat)  : isPR 1 (F_  n).
+#[export] Instance F_n_PR (n:nat)  : isPR 1 (F_  n).
 Proof.
   induction n.
   - apply F_0_isPR.

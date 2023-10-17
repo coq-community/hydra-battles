@@ -176,7 +176,7 @@ Lemma F_alpha_not_PR_E0  alpha:
 (* end snippet FAlphaNotPR *)
 Proof. 
   move => Halpha HPR;  have H0: isPR 1 (F_alpha.F_ (E0_g2h alpha)).
-  eapply isPR_extEqual_trans with  (F_ alpha) => //.
+  eapply isPRextEqual with  (F_ alpha) => //.
   eapply F_alpha_not_PR with (E0_g2h alpha) => //.
   replace E0.E0omega with (E0_g2h E0omega); last first.
   - by apply E0_eq_intro. 

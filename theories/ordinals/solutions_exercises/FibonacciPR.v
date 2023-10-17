@@ -53,7 +53,8 @@ Section Proof_of_FibIsPR.
 
   (** Let us prove that [fibPR] is PR *)
 
-  Lemma fibPRIsPR: isPR 1 fibPR.
+  #[export] Instance fibPRIsPR: isPR 1 fibPR.
+  Proof.
     unfold fibPR; apply compose1_1IsPR.
     - apply indIsPR.
       unfold fib_step_cPair; apply filter01IsPR.
@@ -107,7 +108,7 @@ Section Proof_of_FibIsPR.
     rewrite (inv_Pi _ _ (L1 _ _ L0 n ));  reflexivity.
   Qed.
 
-  Lemma fib_altIsPR : isPR 1 fib_alt.
+  #[export] Instance fib_altIsPR : isPR 1 fib_alt.
   Proof.    
     destruct fibPRIsPR  as [x Hx]; exists x.
     apply extEqualTrans with fibPR; auto.
@@ -134,7 +135,7 @@ Section Proof_of_FibIsPR.
   Qed.
 
 
-  Theorem fibIsPR : isPR 1 fib.
+  #[export] Instance fibIsPR : isPR 1 fib.
   Proof.
     destruct fib_altIsPR as [x Hx].
     exists x;  apply extEqualTrans with fib_alt; auto.

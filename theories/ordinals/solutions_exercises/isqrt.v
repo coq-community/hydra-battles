@@ -76,7 +76,7 @@ Section sqrtIsPR.
      - apply R01.
    Qed.
 
- Lemma issqrtIsPR : isPR 1 isqrt.
+ #[export] Instance issqrtIsPR : isPR 1 isqrt.
  Proof.
    unfold isqrt; apply boundSearchIsPR; unfold P; red.
    assert (H: isPR 2 (fun a b => 
