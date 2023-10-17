@@ -222,7 +222,7 @@ Proof.
     + reflexivity.
 Qed.
 
-Lemma codeSubTermTermsIsPR : isPR 3 codeSubTermTerms.
+#[export] Instance codeSubTermTermsIsPR : isPR 3 codeSubTermTerms.
 Proof.
   unfold codeSubTermTerms; apply evalStrongRecIsPR.
   apply compose4_2IsPR with
@@ -349,7 +349,7 @@ Proof.
   - apply cPairIsPR.
 Qed.
 
-Lemma codeSubTermIsPR : isPR 3 codeSubTerm.
+#[export] Instance codeSubTermIsPR : isPR 3 codeSubTerm.
 Proof.
   unfold codeSubTerm; apply compose3_1IsPR.
   - apply codeSubTermTermsIsPR.

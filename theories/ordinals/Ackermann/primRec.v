@@ -296,21 +296,22 @@ Qed.
 (* begin snippet isPRDef *)
 Class isPR (n : nat) (f : naryFunc n) : Set :=
   is_pr : {p : PrimRec n | extEqual n (evalPrimRec _ p) f}.
+
+Definition fun2PR {n:nat}(f:  naryFunc n){p: isPR _ f}: PrimRec n :=
+  proj1_sig p.
 (* end snippet isPRDef *)
 
 Definition isPRrel (n : nat) (R : naryRel n) : Set :=
   isPR n (charFunction n R).
 
-(** Should we make isPR a class and p implicit ? *)
-Definition fun2PR {n:nat}(f:  naryFunc n){p: isPR _ f}: PrimRec n :=
-  proj1_sig p.
+
 
 (* begin snippet SuccIsPR:: no-out *)
 #[export] Instance succIsPR : isPR 1 S.
 Proof. exists succFunc; cbn; reflexivity. Qed.
 (* end snippet SuccIsPR *)
 
-Lemma const0_NIsPR : forall n : nat, isPR 0 n.
+#[export] Instance const0_NIsPR (n:nat): isPR 0 n.
 Proof.
   induction n as [|n [x Hx]].
   - exists zeroFunc; reflexivity. 
@@ -318,7 +319,7 @@ Proof.
       cbn; now rewrite Hx.
 Qed.
 
-Lemma const1_NIsPR n: isPR 1 (fun _ => n).
+#[export] Instance const1_NIsPR n: isPR 1 (fun _ => n).
 Proof.
   destruct (const0_NIsPR n) as [x Hx]. 
   exists (composeFunc 1 _ (PRnil _) x); cbn in *; auto.
@@ -327,62 +328,62 @@ Qed.
 (** ** Usual projections (in curried form) are primitive recursive *)
 
 (* begin snippet idIsPR:: no-out *)
-Lemma idIsPR : isPR 1 (fun x : nat => x).
+#[export] Instance idIsPR : isPR 1 (fun x : nat => x).
 Proof.
   assert (H: 0 < 1) by auto.
   exists (projFunc 1 0 H); cbn; auto.
 Qed.
 (* end snippet idIsPR *)
 
-Lemma pi1_2IsPR : isPR 2 (fun a b : nat => a).
+#[export] Instance pi1_2IsPR : isPR 2 (fun a b : nat => a).
 Proof.
  assert (H: 1 < 2) by auto.
  exists (projFunc _ _ H); cbn; reflexivity.
 Qed.
 
-Lemma pi2_2IsPR : isPR 2 (fun a b : nat => b).
+#[export] Instance pi2_2IsPR : isPR 2 (fun a b : nat => b).
 Proof.
   assert (H: 0 < 2) by auto.
   exists (projFunc _ _ H); cbn; reflexivity.
 Qed.
 
-Lemma pi1_3IsPR : isPR 3 (fun a b c : nat => a).
+#[export] Instance pi1_3IsPR : isPR 3 (fun a b c : nat => a).
 Proof.
   assert (H: 2 < 3) by auto.
   exists (projFunc _ _ H); cbn in |- *; reflexivity.
 Qed.
 
-Lemma pi2_3IsPR : isPR 3 (fun a b c : nat => b).
+#[export] Instance pi2_3IsPR : isPR 3 (fun a b c : nat => b).
 Proof.
   assert (H: 1 < 3) by auto.
   exists (projFunc _ _ H); cbn; reflexivity.
 Qed.
 
-Lemma pi3_3IsPR : isPR 3 (fun a b c : nat => c).
+#[export] Instance pi3_3IsPR : isPR 3 (fun a b c : nat => c).
 Proof.
   assert (H: 0 < 3) by auto.
   exists (projFunc _ _ H);  cbn; reflexivity.
 Qed.
 
-Lemma pi1_4IsPR : isPR 4 (fun a b c d : nat => a).
+#[export] Instance pi1_4IsPR : isPR 4 (fun a b c d : nat => a).
 Proof.
   assert (H: 3 < 4) by auto.
   exists (projFunc _ _ H); cbn ; reflexivity.
 Qed.
 
-Lemma pi2_4IsPR : isPR 4 (fun a b c d : nat => b).
+#[export] Instance pi2_4IsPR : isPR 4 (fun a b c d : nat => b).
 Proof.
   assert (H: 2 < 4) by auto.
   exists (projFunc _ _ H); cbn ; reflexivity.
 Qed.
 
-Lemma pi3_4IsPR : isPR 4 (fun a b c d : nat => c).
+#[export] Instance pi3_4IsPR : isPR 4 (fun a b c d : nat => c).
 Proof.
   assert (H: 1 < 4) by auto.
   exists (projFunc _ _ H); cbn; reflexivity.
 Qed.
 
-Lemma pi4_4IsPR : isPR 4 (fun a b c d : nat => d).
+#[export] Instance pi4_4IsPR : isPR 4 (fun a b c d : nat => d).
 Proof.
   assert (0 < 4) by auto.
   exists (projFunc _ _ H); cbn; reflexivity.
@@ -390,10 +391,10 @@ Qed.
 
 (** ** Composition lemmas *)
 
-Lemma filter01IsPR :
- forall g : nat -> nat, isPR 1 g -> isPR 2 (fun a b : nat => g b).
+#[export] Instance filter01IsPR (g : nat -> nat) (H : isPR 1 g):
+  isPR 2 (fun a b : nat => g b).
 Proof.
-  intros g  [x p]; cbn in p.
+  destruct H as [x p]; cbn in p.
   assert (H: isPR 2 (fun a b : nat => b)) by apply pi2_2IsPR.
   destruct H as [x0 p0]; cbn in p0. 
   exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x).
@@ -401,31 +402,32 @@ Proof.
   replace (g c0) with (g (evalPrimRec 2 x0 c c0)); auto.  
 Qed.
 
-Lemma filter10IsPR :
- forall g : nat -> nat, isPR 1 g -> isPR 2 (fun a b : nat => g a).
+#[export] Instance filter10IsPR (g : nat -> nat) (H: isPR 1 g):
+  isPR 2 (fun a b : nat => g a).
 Proof.
-  intros g [x p]; cbn in p. 
+  destruct H as [x p]; cbn in p. 
   assert (H: isPR 2 (fun a b : nat => a)) by apply  pi1_2IsPR.
   destruct  H as [x0 p0]; cbn in p0.
   exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x).
   cbn; intros; replace (g c) with (g (evalPrimRec 2 x0 c c0)); auto. 
 Qed.
 
-Lemma filter100IsPR :
- forall g : nat -> nat, isPR 1 g -> isPR 3 (fun a b c : nat => g a).
+#[export] Instance filter100IsPR(g : nat -> nat)(H: isPR 1 g) :
+  isPR 3 (fun a b c : nat => g a).
 Proof.
-  intros g [x p]; cbn in p.
+  destruct H as [x p]; cbn in p.
   assert (H: isPR 3 (fun a b c : nat => a)) by apply pi1_3IsPR.
   destruct H as [x0 p0]; cbn in p0.
   exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x).
   cbn; intros c c0 c1;
     replace (g c) with (g (evalPrimRec 3 x0 c c0 c1)); auto. 
 Qed.
+(** TO do : convert isPR lemmas into instances of class isPR *)
 
-Lemma filter010IsPR :
- forall g : nat -> nat, isPR 1 g -> isPR 3 (fun a b c : nat => g b).
+#[export] Instance filter010IsPR (g : nat -> nat)(H: isPR 1 g):
+  isPR 3 (fun a b c : nat => g b).
 Proof.
-  intros g [x p]; cbn in p.
+  destruct H as  [x p]; cbn in p.
   assert (H:isPR 3 (fun a b c : nat => b)) by apply pi2_3IsPR.
   destruct H as [x0 p0]; cbn in p0.
   exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x); cbn.
@@ -434,10 +436,10 @@ Proof.
   - rewrite p0; auto.
 Qed.
 
-Lemma filter001IsPR :
- forall g : nat -> nat, isPR 1 g -> isPR 3 (fun a b c : nat => g c).
+#[export] Instance filter001IsPR (g:nat -> nat)(H: isPR 1 g) :
+ isPR 3 (fun a b c : nat => g c).
 Proof.
-  intros g [x p]; cbn in p. 
+  destruct H as [x p]; cbn in p. 
   assert (H: isPR 3 (fun a b c : nat => c)) by apply pi3_3IsPR.
   destruct H as [x0 p0]; cbn in p0.
   exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x).
@@ -446,10 +448,10 @@ Proof.
   - rewrite p0; auto.
 Qed.
 
-Lemma filter011IsPR (g: nat -> nat -> nat) :
-  isPR 2 g -> isPR 3 (fun a b c : nat => g b c).
+#[export] Instance filter011IsPR (g: nat -> nat -> nat)(H: isPR 2 g):
+   isPR 3 (fun a b c : nat => g b c).
 Proof.
-   intros [x p]; cbn in p. 
+   destruct H as [x p]; cbn in p. 
    assert (H: isPR 3 (fun a b c : nat => b)) by apply pi2_3IsPR.
    destruct H as [x0 p0]; cbn  in p0.
    assert (H: isPR 3 (fun a b c : nat => c)) by apply pi3_3IsPR.
@@ -462,10 +464,10 @@ Proof.
      auto. 
 Qed.
 
-Lemma filter110IsPR :
- forall g : nat -> nat -> nat, isPR 2 g -> isPR 3 (fun a b c : nat => g a b).
+#[export] Instance filter110IsPR(g : nat -> nat -> nat) :
+  isPR 2 g -> isPR 3 (fun a b c : nat => g a b).
 Proof.
-   intros g [x p]; cbn in p. 
+   intros [x p]; cbn in p. 
    assert (H: isPR 3 (fun a b c : nat => a)) by apply pi1_3IsPR.
    destruct H as [x0 p0]; cbn in p0.
    assert (H: isPR 3 (fun a b c : nat => b)) by apply pi2_3IsPR.
@@ -480,7 +482,7 @@ Proof.
 Qed.
 
 
-Lemma filter101IsPR :
+#[export] Instance filter101IsPR :
   forall g : nat -> nat -> nat, isPR 2 g ->
                                 isPR 3 (fun a b c : nat => g a c).
 Proof.
@@ -497,7 +499,7 @@ Proof.
   - rewrite p0, p1; auto. 
 Qed.
 
-Lemma filter0011IsPR ( g : nat -> nat -> nat) :
+#[export] Instance filter0011IsPR (g : nat -> nat -> nat) :
   isPR 2 g -> isPR 4 (fun a b c d : nat => g c d).
 Proof.
   intros [x p]; cbn in p.
@@ -513,7 +515,7 @@ Proof.
   - rewrite p0, p1; auto.
 Qed.
 
-Lemma filter1000IsPR (g : nat -> nat):
+#[export] Instance filter1000IsPR (g : nat -> nat):
   isPR 1 g -> isPR 4 (fun a b c d : nat => g a).
 Proof.
   intros [x p]; cbn  in p.
@@ -525,7 +527,8 @@ Proof.
   - rewrite p0; auto.
 Qed.
 
-Lemma filter1011IsPR (g : nat -> nat -> nat -> nat) :
+
+#[export] Instance filter1011IsPR (g : nat -> nat -> nat -> nat) :
  isPR 3 g -> isPR 4 (fun a b c d : nat => g a c d).
 Proof.
   intros [x p]; cbn  in p.
@@ -547,7 +550,7 @@ Proof.
   - rewrite p0; auto.
 Qed.
 
-Lemma filter1100IsPR (g : nat -> nat -> nat) :
+#[export] Instance filter1100IsPR (g : nat -> nat -> nat) :
   isPR 2 g -> isPR 4 (fun a b c d : nat => g a b).
 Proof.
   intros [x p]; cbn in p.
@@ -564,7 +567,7 @@ Proof.
   - auto.
 Qed.
 
-Lemma compose1_1IsPR (f : nat -> nat):
+#[export] Instance compose1_1IsPR (f : nat -> nat):
   isPR 1 f ->
   forall g : nat -> nat, isPR 1 g -> isPR 1 (fun x : nat => g (f x)).
 Proof.
@@ -573,7 +576,7 @@ Proof.
   cbn; intros; now rewrite <- p, p0.
 Qed.
 
-Lemma compose1_2IsPR :
+#[export] Instance compose1_2IsPR :
   forall f : nat -> nat,
     isPR 1 f ->
     forall f' : nat -> nat,
@@ -587,7 +590,7 @@ Proof.
   intros; now rewrite <- p, p0, p1.
 Qed.
 
-Lemma compose1_3IsPR :
+#[export] Instance compose1_3IsPR :
  forall f1 : nat -> nat,
  isPR 1 f1 ->
  forall f2 : nat -> nat,
@@ -606,7 +609,7 @@ Proof.
   intros; now rewrite <- p, p0, p1, p2.
 Qed.
 
-Lemma compose2_1IsPR :
+#[export] Instance compose2_1IsPR :
   forall f : nat -> nat -> nat,
     isPR 2 f ->
     forall g : nat -> nat, isPR 1 g ->
@@ -617,7 +620,7 @@ Proof.
   intros; now rewrite <- p   , p0.
 Qed.
 
-Lemma compose2_2IsPR :
+#[export] Instance compose2_2IsPR :
  forall f : nat -> nat -> nat,
  isPR 2 f ->
  forall g : nat -> nat -> nat,
@@ -630,7 +633,7 @@ Proof.
   cbn in *; intros; now rewrite <- p, p0, p1. 
 Qed.
 
-Lemma compose2_3IsPR :
+#[export] Instance compose2_3IsPR :
   forall f1 : nat -> nat -> nat,
     isPR 2 f1 ->
     forall f2 : nat -> nat -> nat,
@@ -648,7 +651,7 @@ Proof.
   cbn in *; intros; now rewrite <- p, p0, p1, p2. 
 Qed.
 
-Lemma compose2_4IsPR :
+#[export] Instance compose2_4IsPR :
  forall f1 : nat -> nat -> nat,
  isPR 2 f1 ->
  forall f2 : nat -> nat -> nat,
@@ -671,7 +674,7 @@ Proof.
   now rewrite <- p, p0, p1, p2, p3.
 Qed.
 
-Lemma compose3_1IsPR :
+#[export] Instance compose3_1IsPR :
   forall f : nat -> nat -> nat -> nat,
     isPR 3 f ->
     forall g : nat -> nat, isPR 1 g ->
@@ -682,7 +685,7 @@ Proof.
   cbn in *; intros; now rewrite <- p, p0.
 Qed.
 
-Lemma compose3_2IsPR :
+#[export] Instance compose3_2IsPR :
   forall f1 : nat -> nat -> nat -> nat,
     isPR 3 f1 ->
     forall f2 : nat -> nat -> nat -> nat,
@@ -695,7 +698,7 @@ Proof.
     cbn; intros;  now rewrite <- p, p0, p1.
 Qed.
 
-Lemma compose3_3IsPR :
+#[export] Instance compose3_3IsPR :
  forall f1 : nat -> nat -> nat -> nat,
  isPR 3 f1 ->
  forall f2 : nat -> nat -> nat -> nat,
@@ -713,7 +716,7 @@ Proof.
   cbn in *; intros; now rewrite <- p, p0, p1, p2.  
 Qed.
 
-Lemma compose4_2IsPR :
+#[export] Instance compose4_2IsPR :
  forall f1 : nat -> nat -> nat -> nat -> nat,
  isPR 4 f1 ->
  forall f2 : nat -> nat -> nat -> nat -> nat,
@@ -726,7 +729,7 @@ Proof.
   cbn in *; intros; now rewrite <- p, p0, p1. 
 Qed.
 
-Lemma compose4_3IsPR :
+#[export] Instance compose4_3IsPR :
  forall f1 : nat -> nat -> nat -> nat -> nat,
  isPR 4 f1 ->
  forall f2 : nat -> nat -> nat -> nat -> nat,
@@ -745,7 +748,7 @@ Proof.
   cbn in *; intros; now rewrite <- p, p0, p1, p2. 
 Qed.
 
-Lemma swapIsPR :
+#[export] Instance swapIsPR :
   forall f : nat -> nat -> nat, isPR 2 f -> isPR 2 (fun x y : nat => f y x).
 Proof.
   intros.
@@ -756,7 +759,7 @@ Proof.
   - apply H.
 Qed.
 
-Lemma indIsPR :
+#[export] Instance indIsPR :
   forall f : nat -> nat -> nat,
     isPR 2 f ->
     forall g : nat,
@@ -773,7 +776,7 @@ Proof.
   - intros; cbn in |- *;  now rewrite <- p, H.
 Qed.
 
-Lemma ind1ParamIsPR :
+#[export] Instance ind1ParamIsPR :
   forall f : nat -> nat -> nat -> nat,
     isPR 3 f ->
     forall g : nat -> nat,
@@ -789,7 +792,7 @@ Proof.
   - cbn  in |- *; now rewrite p, Hrecc.
 Qed.
 
-Lemma ind2ParamIsPR :
+#[export] Instance ind2ParamIsPR :
   forall f : nat -> nat -> nat -> nat -> nat,
     isPR 4 f ->
     forall g : nat -> nat -> nat,
@@ -805,10 +808,10 @@ Proof.
   - intros; cbn in *; now rewrite p, H.
 Qed.
 
-Lemma plusIndIsPR : isPR 3 (fun n fn b : nat => S fn).
+#[export] Instance plusIndIsPR : isPR 3 (fun n fn b : nat => S fn).
 Proof. apply (filter010IsPR _ succIsPR). Qed.
 
-Lemma plusIsPR : isPR 2 plus.
+#[export] Instance plusIsPR : isPR 2 plus.
 Proof.
   assert
     (H: isPR 2
@@ -823,10 +826,10 @@ Proof.
   - cbn in *; now rewrite Hrecc.
 Qed.
 
-Lemma multIndIsPR : isPR 3 (fun n fn b : nat => fn + b).
+#[export] Instance multIndIsPR : isPR 3 (fun n fn b : nat => fn + b).
 Proof. apply (filter011IsPR _ plusIsPR). Qed.
 
-Lemma multIsPR : isPR 2 mult.
+#[export] Instance multIsPR : isPR 2 mult.
 Proof.
   assert
     (H: isPR 2
@@ -844,7 +847,7 @@ Proof.
   - simpl in |- *; rewrite Hrecc; apply Nat.add_comm.
 Qed.
 
-Lemma predIsPR : isPR 1 pred.
+#[export] Instance predIsPR : isPR 1 pred.
 Proof.
   assert
     (H: isPR 1
@@ -857,10 +860,10 @@ Proof.
   induction c as [| c Hrecc]; trivial.
 Qed.
 
-Lemma minusIndIsPR : isPR 3 (fun n fn b : nat => pred fn).
+#[export] Instance minusIndIsPR : isPR 3 (fun n fn b : nat => pred fn).
 Proof. apply (filter010IsPR _ predIsPR). Qed.
 
-Lemma minusIsPR : isPR 2 minus.
+#[export] Instance minusIsPR : isPR 2 minus.
 Proof.
   assert
     (H: isPR 2
@@ -890,7 +893,7 @@ Qed.
 Definition notZero (a : nat) :=
   nat_rec (fun n : nat => nat) 0 (fun x y : nat => 1) a.
 
-Lemma notZeroIsPR : isPR 1 notZero.
+#[export] Instance notZeroIsPR : isPR 1 notZero.
 Proof.
   unfold notZero; apply indIsPR with (f := fun _ _ : nat => 1).
   apply filter10IsPR with (g := fun _ : nat => 1).
@@ -943,7 +946,7 @@ Proof.
 Qed.
 
 
-Lemma maxIsPR : isPR 2 max.
+#[export] Instance maxIsPR : isPR 2 max.
 Proof.
   assert (H: isPR 2 (fun a b : nat => a + (b - a))).
   { apply
@@ -1320,7 +1323,7 @@ Section Ignore_Params.
       + now destruct b.
   Qed.
     
-  Lemma ignoreParamsIsPR :
+  #[export] Instance ignoreParamsIsPR :
     forall (n m : nat) (f : naryFunc n),
       isPR _ f -> isPR _ (ignoreParams n m f).
   Proof.
@@ -1474,7 +1477,7 @@ induction c as [| c Hrecc].
 Qed.
 
 
-Lemma compose2IsPR :
+#[export] Instance compose2IsPR :
   forall (n : nat) (f : naryFunc n) (p : isPR n f) (g : naryFunc (S n))
          (q : isPR (S n) g), isPR n (compose2 n f g).
 Proof.
@@ -1534,7 +1537,7 @@ Proof.
       -- elim b; auto.
 Qed.
 
-Lemma compose1_NIsPR :
+#[export] Instance compose1_NIsPR :
   forall (n : nat) (g : naryFunc (S n)),
     isPR (S n) g ->
     forall f : naryFunc 1, isPR 1 f ->
@@ -1594,7 +1597,7 @@ Qed.
 Definition switchPR : naryFunc 3 :=
   fun n x y => match n with 0 => y | _ => x end.
 
-Lemma switchIsPR : isPR 3 switchPR.
+#[export] Instance switchIsPR : isPR 3 switchPR.
 Proof.
   assert (H: isPR 3
                   (fun a b c : nat =>
@@ -1713,7 +1716,7 @@ Proof.
 Qed.
 
 
-Lemma boundSearchIsPR :
+#[export] Instance boundSearchIsPR :
   forall P : naryRel 2,
     isPRrel 2 P -> isPR 1 (boundedSearch P).
 Proof.
@@ -1881,7 +1884,7 @@ Definition iterate (g : nat -> nat) :=
   nat_rec (fun _ => nat -> nat) (fun x : nat => x)
           (fun (_ : nat) (rec : nat -> nat) (x : nat) => g (rec x)).
 
-Lemma iterateIsPR :
+#[export] Instance iterateIsPR :
   forall g : nat -> nat, isPR 1 g ->
                          forall n : nat, isPR 1 (iterate g n).
 Proof.
@@ -1891,7 +1894,8 @@ Proof.
   - apply compose1_1IsPR; assumption.
 Qed.
 
-Lemma isPRTrans (n:nat) (f g : naryFunc n):
+
+#[export] Instance isPRTrans (n:nat) (f g : naryFunc n):
   extEqual n f g -> isPR n f -> isPR n g. 
 Proof.
   intros H [x Hx]; exists x; apply extEqualTrans with f; auto.

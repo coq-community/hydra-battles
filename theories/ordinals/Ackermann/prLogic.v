@@ -18,7 +18,7 @@ Proof.
   - apply cPairIsPR.
 Qed.
 
-Lemma codeNotIsPR : isPR 1 codeNot.
+#[export] Instance codeNotIsPR : isPR 1 codeNot.
 Proof.
   unfold codeNot; apply compose1_2IsPR with
     (f := fun a : nat => 2) (f' := fun a : nat => a).
@@ -27,7 +27,7 @@ Proof.
   - apply cPairIsPR.
 Qed.
 
-Lemma codeImpIsPR : isPR 2 codeImp.
+#[export] Instance codeImpIsPR : isPR 2 codeImp.
 Proof.
   unfold codeImp; apply compose2_2IsPR with (f := fun a b : nat => 1).
   - apply filter10IsPR with (g := fun _ : nat => 1).
