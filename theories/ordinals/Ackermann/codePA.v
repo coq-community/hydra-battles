@@ -557,7 +557,7 @@ Proof.
   - assumption.
 Qed.
 
-Lemma codeInductionSchemaIsPR : isPRrel 1 codeInductionSchema.
+#[local] Instance codeInductionSchemaIsPR : isPRrel 1 codeInductionSchema.
 Proof.
   lazy beta delta [codeInductionSchema];
     set (A := fun f : nat => cddddr (cdr (codeOpen f))).
@@ -838,7 +838,7 @@ Proof.
     repeat rewrite orb_true_b; repeat rewrite orb_b_true; reflexivity.
 Qed.
 
-Lemma codePAIsPR : isPRrel 1 codePA.
+#[export] Instance codePAIsPR : isPRrel 1 codePA.
 Proof.
   unfold codePA in |- *.
   assert (H: forall n : nat, isPRrel 1 (Nat.eqb n)).

@@ -301,8 +301,8 @@ Definition fun2PR {n:nat}(f:  naryFunc n){p: isPR _ f}: PrimRec n :=
   proj1_sig p.
 (* end snippet isPRDef *)
 
-Definition isPRrel (n : nat) (R : naryRel n) : Set :=
-  isPR n (charFunction n R).
+Class isPRrel (n : nat) (R : naryRel n) : Set :=
+  is_pr_rel: isPR n (charFunction n R).
 
 
 
@@ -422,7 +422,7 @@ Proof.
   cbn; intros c c0 c1;
     replace (g c) with (g (evalPrimRec 3 x0 c c0 c1)); auto. 
 Qed.
-(** TO do : convert isPR lemmas into instances of class isPR *)
+
 
 #[export] Instance filter010IsPR (g : nat -> nat)(H: isPR 1 g):
   isPR 3 (fun a b c : nat => g b).
@@ -918,7 +918,7 @@ Proof.
   - discriminate.
 Qed.
 
-Lemma ltIsPR : isPRrel 2 ltBool.
+#[export] Instance ltIsPR : isPRrel 2 ltBool.
 Proof.
   unfold isPRrel in |- *.
   assert (H: isPR 2 (fun a b : nat => notZero (b - a))).
@@ -969,7 +969,7 @@ Proof.
 Qed.
 
 
-Lemma gtIsPR : isPRrel 2 (fun a b : nat => ltBool b a).
+#[export] Instance gtIsPR : isPRrel 2 (fun a b : nat => ltBool b a).
 Proof.
   unfold isPRrel in |- *; cbn.
   apply swapIsPR with (f := fun a0 a : nat => if ltBool a0 a then 1 else 0);
@@ -1115,7 +1115,7 @@ Fixpoint bodd (n : nat) : bool :=
   | S n' => negb (bodd n')
   end.
 
-Lemma boddIsPR : isPRrel 1 bodd.
+#[export] Instance boddIsPR : isPRrel 1 bodd.
 Proof.
   assert (H: isPR 2 (fun _ rec : nat => 1 - rec)).
   { apply filter01IsPR with (g := fun rec : nat => 1 - rec).
@@ -1131,16 +1131,11 @@ Proof.
     clear Hrecc; induction (bodd c); reflexivity.
 Qed.
 
-Lemma nat_eqb_false : forall a b : nat, a <> b -> Nat.eqb a b = false.
-Proof.
-  induction a; destruct b.
-  - now destruct 1.
-  - auto.
-  - auto.
-  - cbn; intro; auto. 
-Qed.
+Lemma nat_eqb_false (a b: nat) : a <> b -> Nat.eqb a b = false.
+Proof. now rewrite <- Nat.eqb_neq. Qed.
 
-Lemma neqIsPR : isPRrel 2 (fun a b : nat => negb (Nat.eqb a b)).
+
+#[local] Instance neqIsPR : isPRrel 2 (fun a b : nat => negb (Nat.eqb a b)).
 Proof.
   intros.
   assert (H: isPRrel 2 (orRel 2 ltBool (fun a b : nat => ltBool b a))).
@@ -1165,7 +1160,7 @@ Proof.
 Qed.
 
 
-Lemma eqIsPR : isPRrel 2 Nat.eqb.
+#[export] Instance eqIsPR : isPRrel 2 Nat.eqb.
 Proof.
   assert (H: isPRrel 2
                (notRel 2 (fun a b : nat => negb (Nat.eqb a b))))
@@ -1177,7 +1172,7 @@ Qed.
 Definition leBool (a b : nat) : bool :=
   if le_lt_dec a b then true else false.
 
-Lemma leIsPR : isPRrel 2 leBool.
+#[export] Instance leIsPR : isPRrel 2 leBool.
 Proof.
   assert (H: isPRrel 2 (orRel 2 ltBool Nat.eqb)).
   { apply orRelPR.
