@@ -22,6 +22,7 @@ theories/ordinals/OrdinalNotations/Example_3PlusOmega.v
 theories/ordinals/OrdinalNotations/OmegaOmega.v
 
 theories/ordinals/Prelude/ssrnat_extracts.v
+theories/ordinals/Prelude/MoreDecidable.v
 theories/ordinals/Prelude/STDPP_compat.v
 theories/ordinals/Prelude/Comparable.v
 theories/ordinals/Prelude/First_toggle.v

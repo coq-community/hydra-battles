@@ -21,9 +21,8 @@ From Coq Require Import Arith.
 From hydras.Ackermann Require Import extEqualNat subAll folProp subProp folReplace
   folLogic3 NN NNtheory primRec  expressible.
 From Coqprime Require Import ChineseRem.
-From Coq Require Import  Vector List.
-From hydras.Ackermann Require Import ListExt cPair.
-From Coq Require Import Decidable Lia.
+From Coq Require Import  Vector List Lia.
+From hydras Require Import ListExt cPair MoreDecidable.
 From hydras Require Import Compat815 ssrnat_extracts.
 From LibHyps Require Export LibHyps.
 From hydras Require Export MoreLibHyps NewNotations.
@@ -1444,50 +1443,6 @@ Proof.
 Qed.
 
 
-Remark boundedCheck :
- forall P : nat -> Prop,
- (forall x : nat, decidable (P x)) ->
- forall c : nat,
- (forall d : nat, d < c -> ~ P d) \/ (exists d : nat, d < c /\ P d).
-Proof.
-  intros P H c. induction c as [| c Hrecc].
-  - left; intros d H0. lia.
-  - destruct (H c) as [e | e].
-    + right. exists c. split; auto.
-    + destruct Hrecc as [H0 | H0].
-      * left. intros d H1. assert (d < c \/ d = c) as H2 by lia. destruct H2.
-        -- eauto.
-        -- congruence.
-      * destruct H0 as (x, H0). right. exists x. split; try lia. tauto.
-Qed.
-
-(* move to Coq.Logic.Decidable ? *)
-Remark smallestExists :
- forall P : nat -> Prop,
- (forall x : nat, decidable (P x)) ->
- forall c : nat,
- P c -> exists a : nat, P a /\ (forall b : nat, b < a -> ~ P b).
-Proof.
-  assert
-   (H: forall P : nat -> Prop,
-   (forall x : nat, decidable (P x)) ->
-    forall d c : nat,
-    c < d -> P c -> exists a : nat, P a /\ (forall b : nat, b < a -> ~ P b)).
-  { intros P H d. induction d as [| d Hrecd].
-    - intros c H0 H1. lia.
-    - intros c H0 H1. assert (H2: c < d \/ c = d)  by lia. 
-      destruct H2.
-      + eauto.
-      + destruct (boundedCheck P H c).
-        * exists c. tauto.
-        * destruct H3 as (x, H3). apply (Hrecd x).
-          -- lia.
-          -- tauto. }
-  intros P H0 c H1. eapply H.
-  - exact H0.
-  - exact (Nat.lt_succ_diag_r c).
-  - exact H1.
-Qed.
 
 Definition minimize (A B : Formula) (v x : nat) : Formula :=
   (A /\ allH x, v#x < v#v -> ~ substF B v v#x)%fol.
