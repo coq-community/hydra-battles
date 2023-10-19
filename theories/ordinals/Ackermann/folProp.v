@@ -878,6 +878,19 @@ Proof.
       * rewrite subFormulaId; auto.
 Qed.
 
+Lemma substExHC  (A : Formula) (v x : nat)(t: Term):
+    v <> x -> ~ In v (freeVarT t) ->
+       substF (existH v A) x t =
+       existH v (substF A x t).
+Proof. 
+  intro H; rewrite (subFormulaExist).
+   destruct (eq_nat_dec v x) as [H0 | H0]; try congruence.
+     destruct (In_dec eq_nat_dec v (freeVarT t)) 
+        as [i | i]; try reflexivity.
+    intro; contradiction.    
+Qed. 
+
+
 End Substitution_Properties.
 
 End Substitution.

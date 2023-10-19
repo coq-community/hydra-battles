@@ -142,18 +142,14 @@ Proof.
        v <> x ->
        substF (existH v A) x (n2t a) =
        existH v (substF A x (n2t a))).
-   { intros A v x a1 H; rewrite (subFormulaExist LNN).
-     destruct (eq_nat_dec v x) as [H0 | H0]; try congruence.
-     destruct (In_dec eq_nat_dec v (freeVarT (n2t a1))) 
-        as [i | i]; try reflexivity.
-     elim (closedNatToTerm _ _ i). }
+   { intros A v x a1 H; rewrite (substExHC _ A v x _ H ); 
+       trivial; apply closedNatToTerm.  
+   }
     assert
       (H0: forall (t1 t2 : Term) (v a : nat),
-       substF (LT t1 t2) v (n2t a) =
-       LT (substT t1 v (n2t a))
-          (substT t2 v (n2t a))).
-   { intros ? ? ? ?; unfold LT at 1 in |- *. 
-     now rewrite (subFormulaRelation LNN). }
+       substF (t1 < t2)%fol v (n2t a) =
+       (substT t1 v (n2t a) < substT t2 v (n2t a))%fol).
+   { intros ? ? ? ?; unfold LT at 1;  now rewrite (subFormulaRelation LNN). }
     repeat first
     [ rewrite H; [| discriminate ]
     | rewrite H0

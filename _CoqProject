@@ -30,6 +30,7 @@ theories/ordinals/Prelude/Simple_LexProd.v
 theories/ordinals/Prelude/DecPreOrder.v
 theories/ordinals/Prelude/Exp2.v
 theories/ordinals/Prelude/Sort_spec.v
+
 theories/ordinals/Prelude/Merge_Sort.v
 theories/ordinals/Prelude/WfVariant.v
 theories/ordinals/Prelude/More_Arith.v
