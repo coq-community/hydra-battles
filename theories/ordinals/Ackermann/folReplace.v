@@ -78,8 +78,8 @@ Lemma reduceForall (f1 f2 : Formula) (v : nat) (T : System):
  SysPrf T (iffH f1 f2) -> SysPrf T (iffH (forallH v f1) (forallH v f2)).
 Proof.
 intros H H0; apply (iffI L).
-- apply impForall; [assumption |]; apply (iffE1 L), H0. 
-- apply impForall; [assumption |]; apply (iffE2 L), H0.
+- apply impForall; [assumption | ]; apply (iffE1 L), H0. 
+- apply impForall; [assumption | ]; apply (iffE2 L), H0.
 Qed.
 
 Lemma reduceOr (f1 f2 f3 f4 : Formula) (T : System):
