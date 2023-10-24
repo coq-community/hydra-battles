@@ -779,9 +779,7 @@ Arguments Tcons {L} {n} _ _.
 (* end snippet implicitArguments *)
 
 Declare Custom Entry fol.
-Notation "'f[' f ']f'" := f (f custom fol at level 200).
-
-Notation "'∀' i ',' f" := (forallH i f) (in custom fol at level 200, i constr, f custom fol at level 200).
+Notation "'f[' A ']f'" := A (A custom fol at level 200).
 
 Notation "x ∨ y" := (orH x y) (in custom fol at level 85, x custom fol, y custom fol, right associativity).
 
@@ -802,7 +800,12 @@ Notation "x <> y" := (notH (equal x y)) (in custom fol at level 70, no associati
 
 Notation "{ x }" := x (in custom fol, x constr).
 
-Check f[ ∀ 3, ∀ 4, {equal (var 3) (var 4)} ∨ {var 3} = {var 4} ]f.
+Notation "'∀' i ',' f" := (forallH i f) (in custom fol at level 200, i constr, f custom fol at level 200).
+
+Notation "'∃' i , f" := (existH  i f) 
+  (in custom fol at level 200, i constr, f custom fol at level 200).
+
+Check f[ ∀ 3, ∃ 4, {equal (var 3) (var 4)} ∨ {var 3} = {var 4} ]f.
 
 Check f[ ~ { equal (var 3) (var 4) } ]f.
 
