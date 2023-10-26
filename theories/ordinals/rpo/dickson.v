@@ -267,31 +267,6 @@ destruct (q'_lt_r' _ b_in_q') as [c [c_in_r' b_lt_c]].
 exists c; split; trivial; right; trivial.
 Qed.
 
-(*
-Lemma trans_multiset_extension_step :
-  forall R, antisymmetric elt R -> transitive elt R -> 
-  transitive (list elt) (multiset_extension_step R).
-Proof.
-intros R antisym trans.
-intros l1 l2 l3 R12 R23.
-destruct R12 as [ l1 l2 l12 la1 a2 H1 P1 P2].
-destruct R23 as [ l2 l3 l23 la2 a3 H2 P2' P3].
-generalize (ac_syntactic l12 (a2 :: nil) l23 la2 (list_permut_trans (list_permut_sym P2) P2')).
-intros [u1 [u2 [u3 [u4 [Q1 [Q2 [Q3 Q4]]]]]]].
-destruct u3 as [ | b3 u3]; destruct u4 as [ | b4 u4].
-assert (H := list_permut_length Q2); discriminate.
-destruct u4 as [ | c4 u4].
-simpl in Q2; rewrite <- app_nil_end in Q3.
-assert (a2_eq_b4 := list_permut_length_1 Q2); subst b4; clear Q2.
-apply (@rmv_case R l1 l3 u1 (app la1 u2) a3). 
-intros b H; destruct (in_app_or _ _ _ H) as [b_in_la1 | b_in_u2]; clear H.
-(*** ici ****)
-     forall l1 l2 l la a, (forall b, In b la -> R b a) -> 
-      list_permut l1 (la ++ l) -> list_permut l2 (a :: l) ->
-      multiset_extension_step R l1 l2.
 
-assert (H := list_permut_length Q2).
- discriminate.
-*)
 End Make.
 

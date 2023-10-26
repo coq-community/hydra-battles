@@ -13,9 +13,9 @@ The traditional definition of the set of primitive recursive functions is struct
 in five rules: three base cases, and two recursive construction rules. 
 
 \begin{description}
-  \item[zero] the constant function of value $0$ is primitive recursive.
+  \item[zero] the natural number $0$ is a primitive recursive function without arguments (in other words, a  \emph{constant}, or a \emph{nullary} function).
 \item[S] The successor function $S:\mathbb{N}\rightarrow\mathbb{N}$ is primitive recursive.
- \item[projections] For any pair $0< i\leq n$, the projection $\pi_{i,n}: \mathbb{N}^n\rightarrow\mathbb{N}$, defined by $\pi_{i,n}(x_1,x_2,\dots,x_{n})=x_i$, is primitive recursive.
+ \item[projections] For any $i$ and $n$, such that $0< i\leq n$, the projection $\pi_{i,n}: \mathbb{N}^n\rightarrow\mathbb{N}$, defined by $\pi_{i,n}(x_1,x_2,\dots,x_{n})=x_i$, is primitive recursive.
 \item[composition] For any $n$ and $m$, if $h: \mathbb{N}^m\rightarrow\mathbb{N}$, and
 $g_0,\dots, g_{m-1}: \mathbb{N}^n\rightarrow\mathbb{N}$ are primitive recursive of $n$ arguments, then the function which maps any
 tuple $(x_0,\dots,x_{n-1})$ to $h(g_0(x0,\dots,x_{n-1}),\dots, g_{m-1}(x0,\dots,x_{n-1})): \mathbb{N}^n\rightarrow\mathbb{N}$ is primitive recursive.
@@ -29,9 +29,76 @@ is primitive recursive.
 \end{description}
 
 
+
 Please note the use of dots: $\ldots$ in the definition above. 
 Dots are not part of \gallina's syntax. Thus, the formal definition of the set of primitive recursive function will have to overcome this representation problem.
 
+
+\subsection{A few (informal) examples}
+Before playing with primitive recursive functions in \coq{}, let us get familiar with the definition above, with the help of a few simple examples.
+\label{sect:primrec-examples1}
+
+\subsubsection{Projections}
+
+For instance, the projection $\pi{2,3}$ satisfies the equation
+$\pi{1,3}(x,y,z)=y$ for any natural numbers $x$, $y$ and $z$.
+
+\subsubsection{The constant function of value 0}
+\label{sect:k0}
+
+The \emph{unary} function which always returns $0$ may be defined through the \emph{composition} construction (with $n=1$, $m=0$, and $h=\texttt{zero}$).
+
+\subsection{Addition on natural natural numbers}
+
+Addition may be defined by primitive recursion:
+
+\begin{align}
+  0 + x_1 &:= x_1 \\
+  S x_0 + x_1 &:= S (x_0 + x_1)
+\end{align}
+
+Both equations can be rewritten as follows:
+
+\begin{align}
+0 + x_1 &:= g(x_1) \\
+S p + x_1 &:= h(p, p+x_1, x_1) \\
+\textbf{where}\; g(x_1)&:= x_1 \\
+\textbf{and}\; h(p,x, x_1) &:= S\;x 
+\end{align}
+
+It remains to show that $g$ and $h$ are primitive recursive, which is almost immediate:
+
+
+\begin{itemize}
+\item $g$ is the projection $\pi_{1,1}$,
+\item $h$ is the composition (with $n=3$ and $m=1$) of the function \textbf{S} and the projection $\pi_{2,3}$ .
+\end{itemize}
+
+
+\subsection{Multiplication on natural natural numbers}
+
+The following equations define the product of two natural numbers:
+
+\begin{align}
+  0 \times x_1 &:= 0 \\
+  S x_0 \times x_1 &:= (x_0 \times x_1) + x_1
+\end{align}  
+
+This function is an instance of the primitive recursion scheme,
+with $n=1$, $g$ the constant unary function which returns $0$ (see Subsection~\vref{sect:k0}),
+ and $h$ the function defined by $h(p,x,n_1)=x+n_1$, which can be written as the composition of $+$ and the projections 
+$\pi_{2,3}$ and $\pi_{3,3}$ (The three of them  being  primitive recursive).
+
+\index{hydras}{Exercises}
+\begin{exercise}
+ Show that the factorial function is primitive recursive (by the same method as above). 
+\end{exercise}
+
+\begin{remark}
+
+The four examples above are defined in \coq in Section~\vref{sect:primrec-examples2}
+
+\end{remark}
   We present in this chapter a formalization of  primitive recursive functions, taken from  Russel O'Connor's formalization in \coq{} of
 G\"odel's incompleteness theorems~\cite{OConnor05}.
 
@@ -174,24 +241,27 @@ the arity is fixed, these definitions behave well w.r.t.
 \vspace{4pt}
 \noindent
 
-Another example?
-Let us consider the following term\footnote{Of course, we never typed this term \emph{verbatim}; we obtained it by an interactive proof the reader will be able to make after 
-reading Sect.\vref{sect:proofs-of-isPR}.}:
+\subsection{A few arithmetic functions}
+\label{sect:primrec-examples2}
+Let us show how the few functions presented in Section~\vref{sect:primrec-examples2} can be defined in \coq.
 
-\label{sect:bigfac}
+\subsubsection{Constant function of value 0}
 
-\input{movies/snippets/PrimRecExamples/bigPRa}
+\inputsnippets{PrimRecExamples/cst0}
+
+\subsubsection{Addition}
+
+\inputsnippets{PrimRecExamples/addition}
+
+\subsubsection{Multiplication}
+
+\inputsnippets{PrimRecExamples/multiplication}
+
+\subsubsection{The factorial function}
+
+\inputsnippets{PrimRecExamples/factorial}
 
 
-Let us now interpret this term as an arithmetic function.
-
-\vspace{4pt}
-\noindent
-
-\input{movies/snippets/PrimRecExamples/bigPRb}
-
-
-After this test, the term \texttt{bigPR} looks to be a primitive recursive definition of the factorial function, although we haven't proved this fact yet. Fortunately, we will see in the following sections simple ways to prove that a given function is primitive recursive, without building such an unreadable term.
 
 \section{Proving that a given arithmetic function is primitive recursive}
 \label{sect:proofs-of-isPR}

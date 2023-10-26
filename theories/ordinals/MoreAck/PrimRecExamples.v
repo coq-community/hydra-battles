@@ -102,48 +102,123 @@ Proof. reflexivity.   Qed.
 (* end snippet evalPrimRecEx  *)  
 
 
-(* begin snippet bigPRa  *)
+Module MoreExamples. 
+(* begin snippet cst0 *)
 
-Example bigPR : PrimRec 1 :=
-primRecFunc 0
-  (composeFunc 0 1 (PRcons 0 0 zeroFunc (PRnil 0)) succFunc)
-  (composeFunc 2 2
-    (PRcons 2 1
-      (composeFunc 2 1
-         (PRcons 2 0 (projFunc 2 1 (le_n 2))
-                 (PRnil 2))
-         succFunc)
-      (PRcons 2 0
-        (composeFunc 2 1
-          (PRcons 2 0
-             (projFunc 2 0
-                       (le_S 1 1 (le_n 1)))
-             (PRnil 2))
-          (projFunc 1 0 (le_n 1))) (PRnil 2)))
-    (primRecFunc 1 (composeFunc 1 0 (PRnil 1) zeroFunc)
-       (composeFunc 3 2
-         (PRcons 3 1
-            (projFunc 3 1 (le_S 2 2 (le_n 2)))
-            (PRcons 3 0 (projFunc 3 0
-                          (le_S 1 2
-                                (le_S 1 1 (le_n 1))))
-                    (PRnil 3)))
-         (primRecFunc 1 (projFunc 1 0 (le_n 1))
-                      (composeFunc 3 1
-                          (PRcons 3 0
-                                  (projFunc 3 1 (le_S 2 2 (le_n 2)))
-                                  (PRnil 3))
-                          succFunc))))).
+(** The constant function which returns 0 *)
+Definition cst0 : PrimRec 1 := composeFunc 1 0 (PRnil _) zeroFunc.
 
-(*||*)
-(* end snippet bigPRa  *)
+Compute evalPrimRec _ cst0 42.
 
-(* begin snippet bigPRb  *)
-Example  mystery_fun : nat -> nat := evalPrimRec 1 bigPR.
+(* end snippet cst0 *)
 
-Compute map mystery_fun [0;1;2;3;4;5;6] : t nat _.
+(** Addition *)
+(* begin snippet addition *)
 
-(* end snippet bigPRb  *)
+(** A few remarks for building projections *)
+
+Remark R01 : O < 1.
+Proof. auto. Qed. 
+Compute evalPrimRec 1 (projFunc 1 0 R01).
+
+Remark R13 : 1 < 3.
+Proof. auto. Qed.
+
+Compute  evalPrimRec 3 (projFunc 3 1 R13).
+
+Definition plus := primRecFunc 1  (projFunc 1 0 R01)
+                      (composeFunc 3 1 
+                         (PRcons 3 _ 
+                            (projFunc 3 1 R13)
+                            (PRnil _)) 
+                         succFunc).
+
+Compute evalPrimRec _ plus 3 6.
+
+Lemma plus_correct: 
+  forall n p, evalPrimRec _ plus n p = n + p. (* .no-out *)
+Proof. (* .no-out *) 
+  induction n as [ | n IHn]. (* .no-out *) 
+  - reflexivity. 
+  - intro p; cbn in IHn |- *; now rewrite IHn. 
+Qed. 
+(* end snippet addition *)
+
+(* begin snippet multiplication:: no-out *)
+Lemma R03 : 0 < 3.
+Proof. auto. Qed.
+                   
+Definition mult := primRecFunc 1  cst0
+                      (composeFunc _ _ 
+                         (PRcons _ _ 
+                            (projFunc 3 1 R13)
+                              (PRcons _ _
+                                      (projFunc 3 0 R03)
+                              (PRnil _)))
+                         plus).
+
+Compute evalPrimRec _ mult 4 5.
+Compute evalPrimRec _ mult 4 9.
+
+Lemma mult_eqn1 n p: 
+    evalPrimRec _ mult (S n) p = 
+      evalPrimRec _ plus (evalPrimRec _ mult n p) p.
+Proof. reflexivity. Qed.
+
+Lemma mult_correct n p: evalPrimRec _ mult n p = n * p.
+Proof. 
+ revert p; induction n as [ | n IHn].
+ - intro p; reflexivity. 
+ - intro p; rewrite mult_eqn1, IHn, plus_correct; ring.
+Qed.      
+
+(* end snippet multiplication *)
+
+(* begin snippet factorial:: no-out *)
+Remark R23 : 2 < 3.
+Proof. auto. Qed. 
+
+Remark R02 : 0 < 2.
+Proof. auto. Qed.
+
+Remark R12 : 1 < 2. 
+Proof. auto. Qed.
+
+Definition fact := primRecFunc 0
+                      (composeFunc _ _ (PRcons _ _ zeroFunc (PRnil _))
+                         succFunc)
+                      (composeFunc _ _ 
+                         (PRcons _ _ 
+                            (projFunc 2 0 R02)
+                            (PRcons _ _
+                               (composeFunc _ _
+                                  (PRcons _ _  (projFunc 2 1 R12) (PRnil _))                                   succFunc)
+                               (PRnil _)))
+                         mult).
+
+(** A test *)
+Compute evalPrimRec _ fact 5.
+
+(** A correction proof *)
+Fixpoint usual_fact n :=
+ match n with 
+ | 0 => 1
+ | S p => n * usual_fact p
+end.
+
+Lemma fact_correct n : evalPrimRec _ fact n  = usual_fact n.
+Proof. 
+  assert (fact_eqn1: forall n, evalPrimRec _ fact  (S n)  = 
+                                 evalPrimRec _ mult
+                                   (evalPrimRec _ fact n) (S n))
+    by  reflexivity. 
+  induction n as [ | n IHn].
+  - reflexivity. 
+  - rewrite fact_eqn1, mult_correct, IHn; cbn; ring. 
+Qed. 
+(* end snippet factorial *)
+
+End MoreExamples.
 
 (** ** Understanding some constructions ...
 
@@ -310,7 +385,7 @@ Definition plus_alt x y  :=
                        x.
 
 Lemma plus_alt_ok:
-  extEqual 2 plus_alt plus.
+  extEqual 2 plus_alt Nat.add.
 Proof.
   intro x; induction x; cbn; auto.
   intros y; cbn; now rewrite <- (IHx y).
@@ -341,7 +416,7 @@ Check filter010IsPR.
 
 (* begin snippet plusIsPRa *)
 
-#[export] Instance plusIsPR : isPR 2 plus. (* .no-out *)
+#[export] Instance plusIsPR : isPR 2 Nat.add. (* .no-out *)
 Proof. (* .no-out *)
   apply isPRextEqual with plus_alt.
   - (* .no-out *)  unfold plus_alt; apply ind1ParamIsPR.
@@ -371,6 +446,8 @@ Proof. auto. Qed.
 Definition xpred := primRecFunc 0 zeroFunc (projFunc 2 1 R02).
   
 Compute evalPrimRec 1 xpred 10.
+
+
 
 #[export] Instance predIsPR : isPR 1 pred.
 Proof.
