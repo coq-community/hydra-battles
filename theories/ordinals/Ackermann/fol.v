@@ -8,7 +8,7 @@ This file is Public Domain
 
 (* begin hide *)
 From Coq Require Import Lists.List  Ensembles  Peano_dec  Eqdep_dec
-  Arith Compare_dec.
+  Arith Compare_dec Utf8.
 
 Require Import misc  Compat815 (* provisional *).
 (* end hide *)
@@ -777,6 +777,41 @@ Arguments ifThenElseH {L} _ _ _.
 Arguments Tnil {L}.
 Arguments Tcons {L} {n} _ _.
 (* end snippet implicitArguments *)
+
+Declare Custom Entry fol.
+Notation "'f[' A ']f'" := A (A custom fol at level 200).
+
+Notation "x ∨ y" := (orH x y) (in custom fol at level 85, x custom fol, y custom fol, right associativity).
+
+Notation "x ∧ y" := (andH x y) (in custom fol at level 80, x custom fol, y custom fol, right associativity).
+
+Notation "x -> y" := (impH x y) (in custom fol at level 99, right associativity, y at level 200).
+
+
+Notation "x <-> y" := (iffH x y) (in custom fol at level 99, right associativity, y at level 200).
+
+Notation "~ x" := (notH x) (in custom fol at level 75, right associativity).
+
+Notation "( x )" := x (in custom fol, x  custom fol at level 200).
+
+Notation "x = y" := (equal x y) (in custom fol at level 70, no associativity).
+
+Notation "x <> y" := (notH (equal x y)) (in custom fol at level 70, no associativity).
+
+Notation "{ x }" := x (in custom fol, x constr).
+
+Notation "'∀' i ',' f" := (forallH i f) (in custom fol at level 200, i constr, f custom fol at level 200).
+
+Notation "'∃' i , f" := (existH  i f) 
+  (in custom fol at level 200, i constr, f custom fol at level 200).
+
+Check f[ ∀ 3, ∃ 4, {equal (var 3) (var 4)} ∨ {var 3} = {var 4} ]f.
+
+Check f[ ~ { equal (var 3) (var 4) } ]f.
+
+Check f[ {var 3} <> {var 4} ]f.
+
+Check f[ ~ ( {var 3} = {var 4} ) ]f.
 
 (* begin snippet folScope1:: no-out *)
 (** ** The [fol_scope] notation scope *)

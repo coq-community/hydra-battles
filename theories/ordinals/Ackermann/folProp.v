@@ -60,7 +60,7 @@ Definition closed (a : fol.Formula L):=
 Fixpoint closeList (l: list nat)(a : fol.Formula L) :=
  match l with
    nil => a
-|  cons v l =>  (forallH v (closeList l a))
+|  cons v l =>  f[ ∀ v, {closeList l a} ]f
 end.
 
 Definition close (x : fol.Formula L) : fol.Formula L :=

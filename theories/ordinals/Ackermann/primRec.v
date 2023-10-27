@@ -6,12 +6,14 @@ Require Import Peano_dec.
 Require Import Compare_dec.
 Require Import Coq.Lists.List.
 Require Import Eqdep_dec.
+Require Import Utf8.
 From hydras Require Import extEqualNat misc Compat815.
 Require Vector.
 
 Require Export Bool.
 Require Export EqNat.
 Require Import Lia. 
+
 
 (** * Definitions *)
 
@@ -35,8 +37,43 @@ with PrimRecs : nat -> nat -> Set :=
   | PRcons : forall n m : nat, PrimRec n -> PrimRecs n m ->
                                PrimRecs n (S m).
 
-
 (* end snippet PrimRecDef *)
+
+(* begin snippet PRNotations *)
+
+Module PRNotations.
+  Declare Scope pr_scope.
+  Delimit Scope pr_scope with pr.
+  Notation "[ ]" := (PRnil _) : pr_scope.
+  Notation "h :: t" := (PRcons _ _ h t) (at level 60, right associativity)
+  : pr_scope.
+  Notation "[ x ]" := (PRcons _ _ x  (PRnil _)) : pr_scope.
+
+  Notation "[ x ; y ; .. ; z ]" := 
+    (PRcons _ _ x  (PRcons _ _ y .. (PRcons _ _ z  (PRnil _)) ..)) : pr_scope.
+
+
+  Notation PRcomp f v := (composeFunc _ _ v f).
+  
+  Notation PRrec f0 fS := (primRecFunc _ f0 fS).
+(** Popular projections *)
+
+
+Notation pi1_1 := (projFunc 1 0 (le_n 1)).
+
+Notation pi1_2 := (projFunc 2 1 (le_n 2)).
+Notation pi2_2 := (projFunc 2 0 (le_S 1 1 (le_n 1))).
+
+Notation pi1_3 := (projFunc 3 2 (le_n 3)).
+Notation pi2_3 := (projFunc 3 1 (le_S 2 2 (le_n 2))).
+Notation pi3_3 := (projFunc 3 0 (le_S 1 2 (le_S 1 1 (le_n 1)))).
+
+
+End PRNotations. 
+
+(* end snippet PRNotations *)
+
+Import PRNotations.
 
 
 Scheme PrimRec_PrimRecs_rec := Induction for PrimRec Sort Set
@@ -315,14 +352,13 @@ Proof. exists succFunc; cbn; reflexivity. Qed.
 Proof.
   induction n as [|n [x Hx]].
   - exists zeroFunc; reflexivity. 
-  - exists (composeFunc _ _ (PRcons _ _ x (PRnil _)) succFunc);
-      cbn; now rewrite Hx.
+  - exists (PRcomp succFunc [x]%pr)%pr; cbn; now rewrite Hx.
 Qed.
 
 #[export] Instance const1_NIsPR n: isPR 1 (fun _ => n).
 Proof.
   destruct (const0_NIsPR n) as [x Hx]. 
-  exists (composeFunc 1 _ (PRnil _) x); cbn in *; auto.
+  exists (PRcomp x [])%pr;  cbn in *; auto.
 Qed.
 
 (** ** Usual projections (in curried form) are primitive recursive *)
@@ -330,15 +366,13 @@ Qed.
 (* begin snippet idIsPR:: no-out *)
 #[export] Instance idIsPR : isPR 1 (fun x : nat => x).
 Proof.
-  assert (H: 0 < 1) by auto.
-  exists (projFunc 1 0 H); cbn; auto.
+  exists pi1_1; cbn; reflexivity.
 Qed.
 (* end snippet idIsPR *)
 
 #[export] Instance pi1_2IsPR : isPR 2 (fun a b : nat => a).
 Proof.
- assert (H: 1 < 2) by auto.
- exists (projFunc _ _ H); cbn; reflexivity.
+  exists pi1_2; cbn; reflexivity.
 Qed.
 
 #[export] Instance pi2_2IsPR : isPR 2 (fun a b : nat => b).

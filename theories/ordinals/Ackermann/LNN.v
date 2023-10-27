@@ -92,11 +92,17 @@ Notation "'allH' x .. y , p" := (@forallH LNN  x .. (@forallH LNN y p) ..)
 Notation S_ t := (apply LNN Succ_ (Tcons t (Tnil))).
 
 Infix "+" := Plus: fol_scope.
+Notation "n + p" := (Plus n p) (in custom fol at level 50, left associativity).
+
+Check f[ ∀ 1, {var 1} + {var 1} = {var 1} ]f.
 Infix "*" := Times: fol_scope.
+Notation "n * p" := (Times n p) (in custom fol at level 40, left associativity).
+
 Infix "<" := LT: fol_scope.
 End NNnotations.
 
 Import NNnotations. 
+
 
 
 

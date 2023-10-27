@@ -5,7 +5,7 @@
 Require Import Arith Coq.Lists.List Lia.
 From hydras Require Import extEqualNat primRec.
 From hydras Require Export Compat815 ssrnat_extracts.
-
+Import PRNotations.
 Import Nat.
 
 
@@ -603,13 +603,11 @@ Proof.
     induction H0 as (x0, p0).
     induction H1 as (x1, p1).
     exists
-      (primRecFunc n (composeFunc n 0 (PRnil _) zeroFunc)
-         (composeFunc (S (S n)) 2
-            (PRcons _ _ x
-               (PRcons _ _ (projFunc n.+2 n
+      (primRecFunc n (PRcomp zeroFunc [ ])
+       (PRcomp x0 
+            [ x ;  projFunc n.+2 n
                               (Nat.lt_lt_succ_r n n.+1
-                                 (Nat.lt_succ_diag_r  n)))
-                  (PRnil _))) x0)).
+                                 (Nat.lt_succ_diag_r n))]))%pr.
     apply
       extEqualTrans
       with

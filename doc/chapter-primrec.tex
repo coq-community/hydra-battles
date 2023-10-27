@@ -204,7 +204,7 @@ For instance, the projection $\pi_{2,5}$ defined by $\pi_{2,5}(a,b,c,d,e)=b$ cor
  This fact is reported in the comments of \texttt{primRec.v}. We presume that this convention makes it easier to define the evaluation function (\texttt{evalProjFunc $n$}) (see the next sub-section). Trying the other convention is left as an exercise.
 \end{remark}
 
-
+\inputsnippets{primRec/PRNotations}
 
 \subsection{A little bit of semantics} 
 Please note that inhabitants of type (\texttt{PrimRec $n$}) are not \coq{} functions like \texttt{Nat.mul}, or factorial, etc. The data-type (\texttt{PrimRec $n$}) is indeed an abstract syntax for the language of primitive recursive functions. The bridge between this language and the word of usual functions
@@ -251,7 +251,15 @@ Let us show how the few functions presented in Section~\vref{sect:primrec-exampl
 
 \subsubsection{Addition}
 
+Let us recall that projections $\pi{i,n}$ are represented by a 
+construction \texttt{projFunc $n$ $j$ $H$} where $j=n-i$
+and $H$ is a proof of $j<n$. Such equalities are registered as local remarks.
+
+
+
 \inputsnippets{PrimRecExamples/addition}
+
+
 
 \subsubsection{Multiplication}
 
