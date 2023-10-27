@@ -119,7 +119,7 @@ Compute (evalPrimRec _ pi2_3) 1 2 3.
 .. coq:: no-out 
 |*)
 
-Check  (PRcons _ _ pi2_3 (PRnil _)).
+Check  [pi2_3]%pr.
 
 Definition plus := (PRrec pi1_1
                       (PRcomp succFunc [pi2_3]))%pr.
@@ -203,7 +203,7 @@ End MoreExamples.
    make the construction more   concrete *)
 
 Definition PRcompose1 (g f : PrimRec 1) : PrimRec 1 :=
-  composeFunc 1  _ (PRcons _  _  f  (PRnil _) ) g.
+  PRcomp g [f]%pr.  
 
 Goal forall f g x, evalPrimRec 1 (PRcompose1 g f) x =
                  evalPrimRec 1 g (evalPrimRec 1 f x).
@@ -321,8 +321,7 @@ Fact compose_01 :
     forall (x:PrimRec 0) (t : PrimRec 1),
     let c := evalPrimRec 0 x in
     let f := evalPrimRec 1 t in
-    evalPrimRec 0
-      (composeFunc 0 1 (PRcons 0 0 x (PRnil 0)) t)
+    evalPrimRec 0 (PRcomp t [x])%pr
     = f c. 
 Proof. reflexivity. Qed.
 (*||*)
@@ -341,7 +340,7 @@ Proof.
   induction n.
  - apply zeroIsPR.
  - destruct IHn as [x Hx].
-   exists (composeFunc 0 1 (PRcons 0 0 x (PRnil 0)) succFunc). 
+   exists (PRcomp succFunc [x])%pr.
    cbn in *; intros; now rewrite Hx.
 Qed.
 
@@ -455,7 +454,8 @@ Qed.
 
 (* Move to MoreAck *)
 
-Section Exs. (* Todo: exercise *)Let f: naryFunc 2 := fun x y => x + pred (cPairPi1 y).
+Section Exs. (* Todo: exercise *)
+Let f: naryFunc 2 := fun x y => x + pred (cPairPi1 y).
 
   (* To prove !!! *)
   

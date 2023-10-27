@@ -14,6 +14,7 @@ Require Export Bool.
 Require Export EqNat.
 Require Import Lia. 
 
+
 (** * Definitions *)
 
 (** [PrimRec n] : data type of primitive recursive functions of arity [n] 
@@ -72,7 +73,7 @@ End PRNotations.
 
 (* end snippet PRNotations *)
 
-
+Import PRNotations.
 
 
 Scheme PrimRec_PrimRecs_rec := Induction for PrimRec Sort Set
@@ -351,14 +352,13 @@ Proof. exists succFunc; cbn; reflexivity. Qed.
 Proof.
   induction n as [|n [x Hx]].
   - exists zeroFunc; reflexivity. 
-  - exists (composeFunc _ _ (PRcons _ _ x (PRnil _)) succFunc);
-      cbn; now rewrite Hx.
+  - exists (PRcomp succFunc [x]%pr)%pr; cbn; now rewrite Hx.
 Qed.
 
 #[export] Instance const1_NIsPR n: isPR 1 (fun _ => n).
 Proof.
   destruct (const0_NIsPR n) as [x Hx]. 
-  exists (composeFunc 1 _ (PRnil _) x); cbn in *; auto.
+  exists (PRcomp x [])%pr;  cbn in *; auto.
 Qed.
 
 (** ** Usual projections (in curried form) are primitive recursive *)
@@ -366,15 +366,13 @@ Qed.
 (* begin snippet idIsPR:: no-out *)
 #[export] Instance idIsPR : isPR 1 (fun x : nat => x).
 Proof.
-  assert (H: 0 < 1) by auto.
-  exists (projFunc 1 0 H); cbn; auto.
+  exists pi1_1; cbn; reflexivity.
 Qed.
 (* end snippet idIsPR *)
 
 #[export] Instance pi1_2IsPR : isPR 2 (fun a b : nat => a).
 Proof.
- assert (H: 1 < 2) by auto.
- exists (projFunc _ _ H); cbn; reflexivity.
+  exists pi1_2; cbn; reflexivity.
 Qed.
 
 #[export] Instance pi2_2IsPR : isPR 2 (fun a b : nat => b).
