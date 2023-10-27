@@ -1,12 +1,13 @@
 Require Import Arith ArithRing List.
 Require Import Vector.
+Require Import Utf8.
 Import VectorNotations.
 
 (* begin snippet naryFunc3 *)
 
 Require Import primRec cPair.
 Import extEqualNat.
-
+Import PRNotations.
 Compute naryFunc 3.
 
 (* end snippet naryFunc3 *)
@@ -72,18 +73,12 @@ Proof. reflexivity. Qed.
 
 
 Example Ex4 (x y z : PrimRec 2) (t: PrimRec 3):
-  let u := composeFunc 2 3
-                       (PRcons 2 _ x
-                               (PRcons 2 _ y
-                                       (PRcons 2 _ z
-                                               (PRnil 2))))
-                       t in
-  let f := evalPrimRec 2 x in
-  let g := evalPrimRec 2 y in
-  let h := evalPrimRec 2 z in
-  let i := evalPrimRec 3 t in
-  let j := evalPrimRec 2 u in
-  forall a b, j a b = i (f a b) (g a b) (h a b).
+  let u := composeFunc 2 3 [x; y; z]%pr t                   
+  in  forall a b, evalPrimRec 2 u a b =
+                    evalPrimRec  _ t 
+                      (evalPrimRec _ x a b)
+                      (evalPrimRec _ y a b)
+                      (evalPrimRec _ z a b) .
 Proof. reflexivity. Qed.
 
 Example Ex5 (x : PrimRec 2)(y: PrimRec 4):
@@ -106,7 +101,7 @@ Module MoreExamples.
 (* begin snippet cst0 *)
 
 (** The constant function which returns 0 *)
-Definition cst0 : PrimRec 1 := composeFunc 1 0 (PRnil _) zeroFunc.
+Definition cst0 : PrimRec 1 := composeFunc 1 0 []%pr zeroFunc.
 
 Compute evalPrimRec _ cst0 42.
 
@@ -115,23 +110,19 @@ Compute evalPrimRec _ cst0 42.
 (** Addition *)
 (* begin snippet addition *)
 
-(** A few remarks for building projections *)
+Check (projFunc 3 1).
 
-Remark R01 : O < 1.
-Proof. auto. Qed. 
-Compute evalPrimRec 1 (projFunc 1 0 R01).
+Compute fun H : 1 < 3 => evalPrimRec _ (projFunc 3 1 H).
 
-Remark R13 : 1 < 3.
-Proof. auto. Qed.
+Compute (evalPrimRec _ pi2_3) 1 2 3.
+(*| 
+.. coq:: no-out 
+|*)
 
-Compute  evalPrimRec 3 (projFunc 3 1 R13).
+Check  (PRcons _ _ pi2_3 (PRnil _)).
 
-Definition plus := primRecFunc 1  (projFunc 1 0 R01)
-                      (composeFunc 3 1 
-                         (PRcons 3 _ 
-                            (projFunc 3 1 R13)
-                            (PRnil _)) 
-                         succFunc).
+Definition plus := (PRrec pi1_1
+                      (PRcomp succFunc [pi2_3]))%pr.
 
 Compute evalPrimRec _ plus 3 6.
 
@@ -145,17 +136,10 @@ Qed.
 (* end snippet addition *)
 
 (* begin snippet multiplication:: no-out *)
-Lemma R03 : 0 < 3.
-Proof. auto. Qed.
                    
-Definition mult := primRecFunc 1  cst0
-                      (composeFunc _ _ 
-                         (PRcons _ _ 
-                            (projFunc 3 1 R13)
-                              (PRcons _ _
-                                      (projFunc 3 0 R03)
-                              (PRnil _)))
-                         plus).
+Definition mult := PRrec cst0
+                      (PRcomp plus 
+                         [pi2_3; pi3_3]%pr).
 
 Compute evalPrimRec _ mult 4 5.
 Compute evalPrimRec _ mult 4 9.
@@ -184,17 +168,10 @@ Proof. auto. Qed.
 Remark R12 : 1 < 2. 
 Proof. auto. Qed.
 
-Definition fact := primRecFunc 0
-                      (composeFunc _ _ (PRcons _ _ zeroFunc (PRnil _))
-                         succFunc)
-                      (composeFunc _ _ 
-                         (PRcons _ _ 
-                            (projFunc 2 0 R02)
-                            (PRcons _ _
-                               (composeFunc _ _
-                                  (PRcons _ _  (projFunc 2 1 R12) (PRnil _))                                   succFunc)
-                               (PRnil _)))
-                         mult).
+
+Definition fact := (PRrec
+                      (PRcomp succFunc [zeroFunc])
+                      (PRcomp mult [pi2_2; PRcomp succFunc [pi1_2]]))%pr.
 
 (** A test *)
 Compute evalPrimRec _ fact 5.
