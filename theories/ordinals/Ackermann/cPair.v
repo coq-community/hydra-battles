@@ -638,10 +638,8 @@ Proof.
     apply cPairPi1IsPR.
   }
   destruct H0 as [x p]; destruct H1 as [x0 p0].
-  exists (composeFunc (S n) 1 (PRcons _ _ x0 (PRnil _)) x).
-  simpl in |- *.
-  fold (naryFunc n) in |- *.
-  intros c; apply extEqualCompose.
+  exists (PRcomp x [x0])%pr.
+  simpl; fold (naryFunc n); intros c; apply extEqualCompose.
   unfold extEqualVector in |- *.
   simpl in |- *; repeat split.
   - apply (p0 c).
@@ -873,14 +871,13 @@ Proof.
                   0))).
   { apply evalStrongRecIsPR.
     assert (H : isPR 2 (fun n recs : nat => 0)).
-    { exists (composeFunc 2 0 (PRnil _) zeroFunc).
-      simpl in |- *; auto.
+    { exists (PRcomp zeroFunc [])%pr; intros ?; cbn; now reflexivity.
     }
     apply compose2_3IsPR with
     (f1 := fun n recs : nat => n)
     (f2 := fun n recs : nat =>
              switchPR n.-1
-               (S (codeNth (n -  (n.-2).+1) recs)) 0)
+               (S (codeNth (n - (n.-2).+1) recs)) 0)
     (f3 := fun n recs : nat => 0).
     - apply pi1_2IsPR.
     - apply compose2_3IsPR with

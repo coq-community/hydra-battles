@@ -431,7 +431,7 @@ Proof.
   destruct H as [x p]; cbn in p.
   assert (H: isPR 2 (fun a b : nat => b)) by apply pi2_2IsPR.
   destruct H as [x0 p0]; cbn in p0. 
-  exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x).
+  exists (PRcomp x [x0])%pr.
   simpl in |- *; intros.
   replace (g c0) with (g (evalPrimRec 2 x0 c c0)); auto.  
 Qed.
@@ -442,7 +442,7 @@ Proof.
   destruct H as [x p]; cbn in p. 
   assert (H: isPR 2 (fun a b : nat => a)) by apply  pi1_2IsPR.
   destruct  H as [x0 p0]; cbn in p0.
-  exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x).
+  exists (PRcomp x [x0])%pr.
   cbn; intros; replace (g c) with (g (evalPrimRec 2 x0 c c0)); auto. 
 Qed.
 
@@ -452,7 +452,7 @@ Proof.
   destruct H as [x p]; cbn in p.
   assert (H: isPR 3 (fun a b c : nat => a)) by apply pi1_3IsPR.
   destruct H as [x0 p0]; cbn in p0.
-  exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x).
+  exists (PRcomp x [x0])%pr.
   cbn; intros c c0 c1;
     replace (g c) with (g (evalPrimRec 3 x0 c c0 c1)); auto. 
 Qed.
@@ -464,8 +464,8 @@ Proof.
   destruct H as  [x p]; cbn in p.
   assert (H:isPR 3 (fun a b c : nat => b)) by apply pi2_3IsPR.
   destruct H as [x0 p0]; cbn in p0.
-  exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x); cbn.
-  intros; replace (g c0) with (g (evalPrimRec 3 x0 c c0 c1)).
+  exists (PRcomp x [x0])%pr.
+  red; intros; replace (g c0) with (g (evalPrimRec 3 x0 c c0 c1)).
   - rewrite <- p; auto.
   - rewrite p0; auto.
 Qed.
@@ -476,7 +476,7 @@ Proof.
   destruct H as [x p]; cbn in p. 
   assert (H: isPR 3 (fun a b c : nat => c)) by apply pi3_3IsPR.
   destruct H as [x0 p0]; cbn in p0.
-  exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x).
+  exists (PRcomp x [x0])%pr.
   cbn; intros; replace (g c1) with (g (evalPrimRec 3 x0 c c0 c1)).
   - rewrite <- p; auto.
   - rewrite p0; auto.
@@ -490,8 +490,7 @@ Proof.
    destruct H as [x0 p0]; cbn  in p0.
    assert (H: isPR 3 (fun a b c : nat => c)) by apply pi3_3IsPR.
    destruct  H as [x1 p1]; cbn in p1. 
-   exists
-     (composeFunc _ _ (PRcons _ _ x0 (PRcons _ _ x1 (PRnil _))) x).
+   exists (PRcomp x [x0; x1]%pr).
    cbn in *; intros;
      replace (g c0 c1) with
      (g (evalPrimRec 3 x0 c c0 c1) (evalPrimRec 3 x1 c c0 c1));
@@ -506,8 +505,7 @@ Proof.
    destruct H as [x0 p0]; cbn in p0.
    assert (H: isPR 3 (fun a b c : nat => b)) by apply pi2_3IsPR.
    destruct H as [x1 p1]; cbn in p1.
-   exists
-     (composeFunc _ _ (PRcons _ _ x0 (PRcons _ _ x1 (PRnil _))) x).
+   exists (PRcomp x [x0; x1])%pr.
    cbn; intros; 
      replace (g c c0) with
          (g (evalPrimRec 3 x0 c c0 c1) (evalPrimRec 3 x1 c c0 c1)).
@@ -525,7 +523,7 @@ Proof.
   destruct  H as [x0 p0]; cbn in p0.
   assert (H: isPR 3 (fun a b c : nat => c)) by apply pi3_3IsPR.
   destruct H as [x1  p1]; cbn in p1. 
-  exists(composeFunc _ _ (PRcons _ _ x0 (PRcons _ _ x1 (PRnil _))) x).
+  exists (PRcomp x [x0; x1])%pr.
   cbn; intros;
     replace (g c c1) with
         (g (evalPrimRec 3 x0 c c0 c1) (evalPrimRec 3 x1 c c0 c1)).
@@ -541,8 +539,7 @@ Proof.
   destruct  H as [x0 p0]; cbn in p0.
   assert (H: isPR 4 (fun a b c d : nat => d)) by apply pi4_4IsPR.
   destruct  H as [x1 p1]; cbn in p1.
-  exists
-    (composeFunc _ _ (PRcons _ _ x0 (PRcons _ _ x1 (PRnil _))) x);
+  exists (PRcomp x [x0; x1])%pr.
   cbn; intros; replace (g c1 c2) with
     (g (evalPrimRec 4 x0 c c0 c1 c2) (evalPrimRec 4 x1 c c0 c1 c2)).
   - rewrite <- p; auto.
@@ -555,7 +552,7 @@ Proof.
   intros [x p]; cbn  in p.
   assert (H:isPR 4 (fun a b c d : nat => a)) by apply pi1_4IsPR.
   destruct H as [x0 p0]; cbn  in p0.
-  exists (composeFunc _ _ (PRcons _ _ x0 (PRnil _)) x).
+  exists (PRcomp x [x0])%pr.
   cbn; intros; replace (g c) with (g (evalPrimRec 4 x0 c c0 c1 c2)).
   - rewrite <- p; auto.
   - rewrite p0; auto.
@@ -572,10 +569,7 @@ Proof.
   destruct H as [x0 p0];
     destruct H0 as [x1 p1];
      destruct H1 as [x2 p2]; cbn in p0, p1, p2.
-  exists
-    (composeFunc _ _ (PRcons _ _ x0
-                        (PRcons _ _ x1
-                           (PRcons _ _ x2 (PRnil _)))) x).
+  exists (PRcomp x [x0; x1; x2])%pr.  
   cbn; intros; 
     replace (g c c1 c2) with
         (g (evalPrimRec 4 x0 c c0 c1 c2) (evalPrimRec 4 x1 c c0 c1 c2)
@@ -592,9 +586,8 @@ Proof.
   assert (H0: isPR 4 (fun a b c d : nat => b)) by apply pi2_4IsPR.
   destruct  H as [x0 p0]; cbn in p0.
   destruct  H0 as [x1 p1]; cbn in p1.
-  exists (composeFunc _ _ (PRcons _ _ x0
-                             (PRcons _ _ x1 (PRnil _))) x);
-    cbn; intros.
+  exists (PRcomp x [x0; x1])%pr.
+  cbn; intros.
   replace (g c c0) with
       (g (evalPrimRec 4 x0 c c0 c1 c2) (evalPrimRec 4 x1 c c0 c1 c2)).
   - rewrite <- p; auto.
@@ -606,7 +599,7 @@ Qed.
   forall g : nat -> nat, isPR 1 g -> isPR 1 (fun x : nat => g (f x)).
 Proof.
   intros [x p] g [x0 p0]; cbn in *;
-  exists (composeFunc _ _ (PRcons _ _ x (PRnil _)) x0).
+  exists (PRcomp x0 [x])%pr. 
   cbn; intros; now rewrite <- p, p0.
 Qed.
 
@@ -619,8 +612,7 @@ Qed.
         isPR 2 g -> isPR 1 (fun x : nat => g (f x) (f' x)).
 Proof.
   intros f [x p] f' [x0 p0] g [x1 p1]; cbn in p, p0, p1.
-  exists (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0 (PRnil _))) x1);
-    cbn in *.
+  exists (PRcomp x1 [x; x0])%pr; cbn in *.
   intros; now rewrite <- p, p0, p1.
 Qed.
 
@@ -636,10 +628,7 @@ Qed.
 Proof.
   intros f1 [x p] f2 [x0 p0] f3 [x1 p1] g [x2 p2];
     cbn in p, p0, p1, p2.
-  exists
-    (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0
-                                      (PRcons _ _ x1 (PRnil _)))) x2);
-    cbn in |- *.
+  exists (PRcomp x2 [x; x0; x1])%pr; cbn in |- *.
   intros; now rewrite <- p, p0, p1, p2.
 Qed.
 
@@ -650,8 +639,8 @@ Qed.
                            isPR 2 (fun x y : nat => g (f x y)).
 Proof.
   intros f [x p] g [x0 p0]; cbn in p, p0.
-  exists (composeFunc _ _ (PRcons _ _ x (PRnil _)) x0); cbn in *.
-  intros; now rewrite <- p   , p0.
+  exists (PRcomp x0 [x])%pr; cbn.
+  intros; now rewrite <- p, p0.
 Qed.
 
 #[export] Instance compose2_2IsPR :
@@ -663,7 +652,7 @@ Qed.
  isPR 2 h -> isPR 2 (fun x y : nat => h (f x y) (g x y)).
 Proof.
   intros f [x p] g [x0 p0] h [x1 p1]; cbn in p, p0, p1.
-  exists (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0 (PRnil _))) x1).
+  exists (PRcomp x1 [x; x0])%pr; 
   cbn in *; intros; now rewrite <- p, p0, p1. 
 Qed.
 
@@ -680,9 +669,8 @@ Qed.
 Proof.
   intros  f1 [x p] f2 [x0 p0] f3 [x1 p1] g [x2 p2]; cbn in p, p0, p1, p2.
   exists
-    (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0
-                                      (PRcons _ _ x1 (PRnil _)))) x2).
-  cbn in *; intros; now rewrite <- p, p0, p1, p2. 
+    (PRcomp x2 [x; x0; x1])%pr; cbn in *; 
+    intros; now rewrite <- p, p0, p1, p2. 
 Qed.
 
 #[export] Instance compose2_4IsPR :
@@ -695,16 +683,13 @@ Qed.
  forall f4 : nat -> nat -> nat,
  isPR 2 f4 ->
  forall g : nat -> nat -> nat -> nat -> nat,
- isPR 4 g -> isPR 2 (fun x y : nat => g (f1 x y) (f2 x y) (f3 x y) (f4 x y)).
+ isPR 4 g -> 
+ isPR 2 (fun x y : nat => g (f1 x y) (f2 x y) (f3 x y) (f4 x y)).
 Proof.
   intros  f1 [x p] f2 [x0 p0] f3 [x1 p1] f4 [x2 p2] g [x3 p3];
     cbn in p, p0, p1, p2, p3.
   exists
-    (composeFunc _ _
-                 (PRcons _ _ x
-                         (PRcons _ _ x0
-                                 (PRcons _ _ x1 (PRcons _ _ x2 (PRnil _)))))
-                 x3); cbn in *; intros.
+    (PRcomp x3 [x; x0; x1; x2])%pr; cbn in *; intros.
   now rewrite <- p, p0, p1, p2, p3.
 Qed.
 
@@ -715,7 +700,7 @@ Qed.
                            isPR 3 (fun x y z : nat => g (f x y z)).
 Proof.
   intros f [x p] g [x0 p0]; cbn in p, p0.
-  exists (composeFunc _ _ (PRcons _ _ x (PRnil _)) x0).
+  exists (PRcomp x0 [x])%pr;
   cbn in *; intros; now rewrite <- p, p0.
 Qed.
 
@@ -728,7 +713,7 @@ Qed.
         isPR 2 g -> isPR 3 (fun x y z : nat => g (f1 x y z) (f2 x y z)).
 Proof.
   intros f1 [x p] f2 [x0 p0] g [x1 p1]; cbn in p, p0, p1.
-  exists (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0 (PRnil _))) x1);
+  exists (PRcomp x1 [x; x0])%pr;
     cbn; intros;  now rewrite <- p, p0, p1.
 Qed.
 
@@ -744,9 +729,7 @@ Qed.
 Proof.
   intros  f1 [x p] f2 [x0 p0] f3 [x1 p1] g [x2 p2];
     cbn in p, p0, p1, p2.
-  exists
-    (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0
-                                           (PRcons _ _ x1 (PRnil _)))) x2).
+  exists (PRcomp x2 [x; x0; x1])%pr.
   cbn in *; intros; now rewrite <- p, p0, p1, p2.  
 Qed.
 
@@ -759,7 +742,7 @@ Qed.
  isPR 2 g -> isPR 4 (fun w x y z : nat => g (f1 w x y z) (f2 w x y z)).
 Proof.
   intros f1 [x p] f2 [x0 p0] g [x1 p1]; cbn in p, p0, p1.
-  exists (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0 (PRnil _))) x1).
+  exists (PRcomp x1 [x; x0])%pr. 
   cbn in *; intros; now rewrite <- p, p0, p1. 
 Qed.
 
@@ -776,9 +759,7 @@ Qed.
 Proof.
   intros  f1 [x p] f2 [x0 p0] f3 [x1 p1] g [x2 p2];
     cbn in p, p0, p1, p2.
-  exists
-    (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0
-                                           (PRcons _ _ x1 (PRnil _)))) x2).
+  exists (PRcomp x2 [x; x0; x1])%pr;
   cbn in *; intros; now rewrite <- p, p0, p1, p2. 
 Qed.
 
@@ -1052,8 +1033,7 @@ Proof.
     - apply notZeroIsPR.
   }
   destruct  H as (x1, p1);
-  exists (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0 (PRnil _))) x1).
-  cbn in |- *.
+  exists (PRcomp x1 [x; x0])%pr; cbn in |- *.
   apply
     extEqualTrans
     with
@@ -1090,7 +1070,7 @@ Proof.
   intros n R R' [x p]  [x0 p0];
     assert (H: isPR 2 mult) by apply multIsPR.
   destruct  H as [x1 p1].
-  exists (composeFunc _ _ (PRcons _ _ x (PRcons _ _ x0 (PRnil _))) x1).
+  exists (PRcomp x1 [x; x0])%pr; 
   cbn  in |- *;
     apply
       extEqualTrans
@@ -1131,7 +1111,7 @@ Proof.
     - apply minusIsPR.
   }
   destruct H as [x0 p0];
-    exists (composeFunc _ _ (PRcons _ _ x (PRnil _)) x0).
+    exists (PRcomp x0 [x])%pr;
   cbn in |- *; apply extEqualTrans with
     (evalComposeFunc n 1 (Vector.cons _ (charFunction n R) _ (Vector.nil  _))
        (fun x : nat => 1 - x)).
@@ -1247,11 +1227,11 @@ Section Ignore_Params.
   Definition projectionListPR (n m : nat) (p : m <= n) : PrimRecs n m.
   Proof.
   induction m as [| m Hrecm].
-    - exact (PRnil n).
+    - exact []%pr.
     - assert (H: m < n) by
         apply Compat815.lt_S_n,  Compat815.le_lt_n_Sm,  p.
       apply (PRcons _ m (projFunc _ _ H)).
-      apply Hrecm,  le_S_n, le_S,  p.
+      apply Hrecm,  le_S_n, le_S, p.
   Defined.
 
   Definition projectionList (n m : nat) (p : m <= n) : 
@@ -1573,15 +1553,11 @@ Qed.
                            isPR (S n) (fun x : nat => g (f x)).
 Proof.
   intros n g [x p] f [x0 p0].
-  exists
-    (composeFunc (S n) (S n)
-       (PRcons _ _
-          (composeFunc (S n) 1
-             (PRcons _ _ (projFunc (S n) n
-                            (Nat.lt_succ_diag_r n))
-                (PRnil _)) x0)
-          (projectionListPR (S n) n (Nat.le_succ_diag_r n))) x).
-  cbn in |- *; fold (naryFunc n) in |- *; destruct (eq_nat_dec n n).
+  exists 
+    (PRcomp x
+       (PRcomp x0 [projFunc (S n) n (Nat.lt_succ_diag_r n)]
+          :: projectionListPR (S n) n (Nat.le_succ_diag_r n))%pr).
+   cbn in |- *; fold (naryFunc n) in |- *; destruct (eq_nat_dec n n).
   - intros.
     apply
       extEqualTrans

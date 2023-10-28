@@ -8,6 +8,7 @@ Require Vector.
 Require Import Compat815.
 Import LispAbbreviations. 
 Require Import NewNotations.
+Import PRNotations.
 
 Section Code_Substitute_Term.
 
@@ -343,7 +344,7 @@ Proof.
            apply cPairPi2IsPR.
         -- apply cPairIsPR.
       * apply succIsPR.
-    + exists (composeFunc 2 0 (PRnil _) zeroFunc).
+    + exists (PRcomp zeroFunc [])%pr.
       simpl; auto.
     + apply switchIsPR.
   - apply cPairIsPR.

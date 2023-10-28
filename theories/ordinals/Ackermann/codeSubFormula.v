@@ -11,7 +11,8 @@ Require Import primRec  cPair folProp code extEqualNat.
 
 Require Import codeSubTerm codeFreeVar Compat815.
 
-Import LispAbbreviations. 
+Import LispAbbreviations.
+Import PRNotations. 
 
 From LibHyps Require Export LibHyps.
 From hydras Require Export MoreLibHyps NewNotations.
@@ -2870,7 +2871,7 @@ Proof.
            apply cPairPi2IsPR.
         -- apply cPairIsPR.
       * apply succIsPR.
-    + exists (composeFunc 2 0 (PRnil _) zeroFunc).
+    + exists (PRcomp zeroFunc [])%pr.
       simpl; auto.
     + apply switchIsPR.
   - apply cPairIsPR.

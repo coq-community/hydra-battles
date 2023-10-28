@@ -10,6 +10,7 @@ Require Import ListExt.
 Require Export codeList.
 Require Import folProp  code Compat815.
 Import LispAbbreviations.
+Import PRNotations.
 
 Section Code_Free_Vars.
 
@@ -268,7 +269,7 @@ Proof.
            ++ apply codeNthIsPR.
         -- apply cPairPi2IsPR.
       * apply codeAppIsPR.
-    + exists (composeFunc 2 0 (PRnil _) zeroFunc).
+    + exists (PRcomp zeroFunc [])%pr.
       simpl; auto.
     + apply switchIsPR.
   - apply cPairIsPR.
