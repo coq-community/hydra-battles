@@ -56,6 +56,8 @@ Module PRNotations.
   Notation PRcomp f v := (composeFunc _ _ v f).
   
   Notation PRrec f0 fS := (primRecFunc _ f0 fS).
+
+  Notation "f '=x=' g" := (extEqual _ f g) (at level 70, no associativity).
 (** Popular projections *)
 
 
@@ -235,6 +237,9 @@ Fixpoint evalPrimRec (n : nat) (f : PrimRec n) {struct f} :
     Vector.cons _ (evalPrimRec _ g) _ (evalPrimRecs _ _ gs)
   end.
 
+Notation PReval f := (evalPrimRec _ f).
+Notation PRevalN fs := (evalPrimRecs _ _ fs).
+
 (* end snippet evalPrimRecDef *)
 
 Definition extEqualVectorGeneral (n m : nat) (l : Vector.t (naryFunc n) m) :
@@ -246,12 +251,14 @@ Definition extEqualVectorGeneral (n m : nat) (l : Vector.t (naryFunc n) m) :
     + exact (extEqual n a a0 /\ Hrecl _ v).
 Defined.
 
+(** Every element of l is extensionally equal to the element of l' at the same position *)
+
 Definition extEqualVector n:
   forall m (l l' : Vector.t (naryFunc n) m), Prop.
 Proof.
   refine (@Vector.rect2 _ _ _ _ _); intros.
   - exact True.
-  - exact (extEqual n a b /\ X).
+  - exact (a =x= b /\ X).
 Defined.
 
 Lemma extEqualVectorRefl (n m: nat):
@@ -276,9 +283,8 @@ Lemma extEqualCompose :
   forall (n m : nat) (l1 l2 : Vector.t (naryFunc n) m)
          (f1 f2 : naryFunc m),
     extEqualVector n m l1 l2 ->
-    extEqual m f1 f2 ->
-    extEqual n (evalComposeFunc n m l1 f1)
-      (evalComposeFunc n m l2 f2).
+    f1 =x= f2 ->
+    evalComposeFunc n m l1 f1 =x= evalComposeFunc n m l2 f2.
 Proof.
   induction n; refine (@Vector.rect2 _ _ _ _ _); simpl; intros.
   - assumption.
@@ -292,10 +298,10 @@ Qed.
 
 Lemma extEqualCompose2 :
   forall (n : nat) (f1 f2 : naryFunc n),
-    extEqual n f1 f2 ->
+     f1 =x= f2 ->
     forall g1 g2 : naryFunc (S n),
-      extEqual (S n) g1 g2 ->
-      extEqual n (compose2 n f1 g1) (compose2 n f2 g2).
+       g1 =x= g2 ->
+       compose2 n f1 g1 =x= compose2 n f2 g2.
 Proof.
   induction n as [| n Hrecn]; simpl in |- *; intros.
   - rewrite H; apply H0.
@@ -304,9 +310,9 @@ Qed.
 
 Lemma extEqualPrimRec :
   forall (n : nat) (g1 g2 : naryFunc n) (h1 h2 : naryFunc (S (S n))),
-    extEqual n g1 g2 ->
-    extEqual (S (S n)) h1 h2 ->
-    extEqual (S n) (evalPrimRecFunc n g1 h1) (evalPrimRecFunc n g2 h2).
+     g1 =x= g2 -> h1 =x= h2 ->
+       (evalPrimRecFunc n g1 h1: naryFunc (S n)) =x=
+         evalPrimRecFunc n g2 h2.
 Proof.
   intros;  simpl in |- *;  intros.
   induction c as [| c Hrecc].
@@ -332,14 +338,16 @@ Qed.
 
 (* begin snippet isPRDef *)
 Class isPR (n : nat) (f : naryFunc n) : Set :=
-  is_pr : {p : PrimRec n | extEqual n (evalPrimRec _ p) f}.
+  is_pr : {p : PrimRec n | extEqual n (PReval p) f}.
 
-Definition fun2PR {n:nat}(f:  naryFunc n){p: isPR _ f}: PrimRec n :=
-  proj1_sig p.
-(* end snippet isPRDef *)
+Definition fun2PR {n:nat}(f:  naryFunc n)
+  {p: isPR _ f}: PrimRec n := proj1_sig p.
 
 Class isPRrel (n : nat) (R : naryRel n) : Set :=
   is_pr_rel: isPR n (charFunction n R).
+(* end snippet isPRDef *)
+
+
 
 
 
@@ -433,7 +441,7 @@ Proof.
   destruct H as [x0 p0]; cbn in p0. 
   exists (PRcomp x [x0])%pr.
   simpl in |- *; intros.
-  replace (g c0) with (g (evalPrimRec 2 x0 c c0)); auto.  
+  replace (g c0) with (g (PReval x0 c c0)); auto.  
 Qed.
 
 #[export] Instance filter10IsPR (g : nat -> nat) (H: isPR 1 g):
@@ -443,7 +451,7 @@ Proof.
   assert (H: isPR 2 (fun a b : nat => a)) by apply  pi1_2IsPR.
   destruct  H as [x0 p0]; cbn in p0.
   exists (PRcomp x [x0])%pr.
-  cbn; intros; replace (g c) with (g (evalPrimRec 2 x0 c c0)); auto. 
+  cbn; intros; replace (g c) with (g (PReval x0 c c0)); auto. 
 Qed.
 
 #[export] Instance filter100IsPR(g : nat -> nat)(H: isPR 1 g) :
@@ -454,7 +462,7 @@ Proof.
   destruct H as [x0 p0]; cbn in p0.
   exists (PRcomp x [x0])%pr.
   cbn; intros c c0 c1;
-    replace (g c) with (g (evalPrimRec 3 x0 c c0 c1)); auto. 
+    replace (g c) with (g (PReval x0 c c0 c1)); auto. 
 Qed.
 
 
@@ -465,7 +473,7 @@ Proof.
   assert (H:isPR 3 (fun a b c : nat => b)) by apply pi2_3IsPR.
   destruct H as [x0 p0]; cbn in p0.
   exists (PRcomp x [x0])%pr.
-  red; intros; replace (g c0) with (g (evalPrimRec 3 x0 c c0 c1)).
+  red; intros; replace (g c0) with (g (PReval x0 c c0 c1)).
   - rewrite <- p; auto.
   - rewrite p0; auto.
 Qed.
@@ -1901,14 +1909,14 @@ Qed.
 
 
 #[export] Instance isPRTrans (n:nat) (f g : naryFunc n):
-  extEqual n f g -> isPR n f -> isPR n g. 
+  f =x= g -> isPR n f -> isPR n g. 
 Proof.
   intros H [x Hx]; exists x; apply extEqualTrans with f; auto.
 Qed.
 
 (* begin snippet isPRextEqual:: no-out *)
 #[export] Instance isPRextEqual (n:nat) (f g : naryFunc n):
-  isPR n f -> extEqual n f g ->  isPR n g. 
+  isPR n f -> f =x= g ->  isPR n g. 
 (* end snippet isPRextEqual *)
 Proof.
   intros; eapply isPRTrans; eauto. 

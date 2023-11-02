@@ -96,104 +96,97 @@ Example Ex6 (x : PrimRec 2)(y: PrimRec 4):
 Proof. reflexivity.   Qed.                          
 (* end snippet evalPrimRecEx  *)  
 
+Section compose2Examples.
+Variables (f: naryFunc 1) (g: naryFunc 2).
+Eval simpl in compose2 1 f g.
+Variable (h: naryFunc 3). 
+Eval simpl in compose2 2 g h. 
+Variables (f': naryFunc 4) (g': naryFunc 5).
+Eval simpl in compose2 _ f' g'.
+End compose2Examples.
 
 Module MoreExamples. 
-(* begin snippet cst0 *)
+(* begin snippet FirstExamples *)
 
 (** The constant function which returns 0 *)
-Definition cst0 : PrimRec 1 := composeFunc 1 0 []%pr zeroFunc.
-
-Compute evalPrimRec _ cst0 42.
-
-(* end snippet cst0 *)
+Definition cst0 : PrimRec 1 := (PRcomp zeroFunc [])%pr.
 
 (** Addition *)
-(* begin snippet addition *)
+Definition plus : PrimRec 2 := 
+  (PRrec pi1_1 (PRcomp succFunc [pi2_3]))%pr.
 
-Check (projFunc 3 1).
+(** Multiplication *)
+Definition mult : PrimRec 2 :=
+  PRrec cst0
+    (PRcomp plus [pi2_3; pi3_3]%pr).
 
-Compute fun H : 1 < 3 => evalPrimRec _ (projFunc 3 1 H).
+(** Factorial function *)
+Definition fact : PrimRec 1 := 
+  (PRrec
+     (PRcomp succFunc [zeroFunc])
+     (PRcomp mult [pi2_2; PRcomp succFunc [pi1_2]]))%pr.
 
-Compute (evalPrimRec _ pi2_3) 1 2 3.
-(*| 
-.. coq:: no-out 
-|*)
+(* end snippet FirstExamples *)
 
-Check  [pi2_3]%pr.
 
-Definition plus := (PRrec pi1_1
-                      (PRcomp succFunc [pi2_3]))%pr.
+(* begin snippet tests *)
 
-Compute evalPrimRec _ plus 3 6.
+Compute fun H : 1 < 3 => PReval (projFunc 3 1 H).
 
+Compute PReval pi2_3 10 20 30.
+
+Compute  Vector.map (fun f => f 10 20 30)  (PRevalN [pi2_3; pi1_3]%pr).
+
+Compute PReval cst0 42.
+
+Compute PReval plus 9 4.
+
+Compute PReval mult 9 4.
+
+Compute PReval fact 5.
+
+(* end snippet tests *)
+
+(* begin snippet correctness:: no-out *)
 Lemma plus_correct: 
-  forall n p, evalPrimRec _ plus n p = n + p. (* .no-out *)
-Proof. (* .no-out *) 
-  induction n as [ | n IHn]. (* .no-out *) 
+  forall n p, PReval plus n p = n + p. 
+Proof. 
+  induction n as [ | n IHn]. 
   - reflexivity. 
   - intro p; cbn in IHn |- *; now rewrite IHn. 
 Qed. 
-(* end snippet addition *)
-
-(* begin snippet multiplication:: no-out *)
-                   
-Definition mult := PRrec cst0
-                      (PRcomp plus 
-                         [pi2_3; pi3_3]%pr).
-
-Compute evalPrimRec _ mult 4 5.
-Compute evalPrimRec _ mult 4 9.
 
 Lemma mult_eqn1 n p: 
-    evalPrimRec _ mult (S n) p = 
-      evalPrimRec _ plus (evalPrimRec _ mult n p) p.
+    PReval mult (S n) p = 
+      PReval plus (PReval mult n p) p.
 Proof. reflexivity. Qed.
 
-Lemma mult_correct n p: evalPrimRec _ mult n p = n * p.
+Lemma mult_correct n p: PReval mult n p = n * p.
 Proof. 
  revert p; induction n as [ | n IHn].
  - intro p; reflexivity. 
  - intro p; rewrite mult_eqn1, IHn, plus_correct; ring.
 Qed.      
 
-(* end snippet multiplication *)
-
-(* begin snippet factorial:: no-out *)
-Remark R23 : 2 < 3.
-Proof. auto. Qed. 
-
-Remark R02 : 0 < 2.
-Proof. auto. Qed.
-
-Remark R12 : 1 < 2. 
-Proof. auto. Qed.
-
-
-Definition fact := (PRrec
-                      (PRcomp succFunc [zeroFunc])
-                      (PRcomp mult [pi2_2; PRcomp succFunc [pi1_2]]))%pr.
-
-(** A test *)
-Compute evalPrimRec _ fact 5.
-
-(** A correction proof *)
-Fixpoint usual_fact n :=
+Fixpoint math_fact n :=
  match n with 
  | 0 => 1
- | S p => n * usual_fact p
+ | S p => n * math_fact p
 end.
 
-Lemma fact_correct n : evalPrimRec _ fact n  = usual_fact n.
+Lemma fact_correct n : PReval fact n  = math_fact n.
+(* ... *)
+(* end snippet correctness *)
 Proof. 
-  assert (fact_eqn1: forall n, evalPrimRec _ fact  (S n)  = 
-                                 evalPrimRec _ mult
-                                   (evalPrimRec _ fact n) (S n))
+  assert (fact_eqn1: forall n, PReval fact (S n)  = 
+                                 PReval mult
+                                   (PReval fact n) (S n))
     by  reflexivity. 
   induction n as [ | n IHn].
   - reflexivity. 
   - rewrite fact_eqn1, mult_correct, IHn; cbn; ring. 
 Qed. 
-(* end snippet factorial *)
+
 
 End MoreExamples.
 
