@@ -60,40 +60,47 @@ Qed.
 .. coq:: no-out
 |*)
 
-Example Ex1 : evalPrimRec 0 zeroFunc = 0.
+Example Ex1 : PReval zeroFunc = 0.
 Proof. reflexivity. Qed.
 
-Example Ex2 a : evalPrimRec 1 succFunc a = S a.
+Example Ex2 a : PReval succFunc a = S a.
 Proof. reflexivity. Qed.
 
 Example Ex3 a b c d e f: forall (H: 2 < 6),
-    evalPrimRec 6
-                (projFunc 6 2 H) a b c d e f = d.
+    PReval (projFunc 6 2 H) a b c d e f = d.
 Proof. reflexivity. Qed.
 
+Section Composition.
 
-Example Ex4 (x y z : PrimRec 2) (t: PrimRec 3):
-  let u := composeFunc 2 3 [x; y; z]%pr t                   
-  in  forall a b, evalPrimRec 2 u a b =
-                    evalPrimRec  _ t 
-                      (evalPrimRec _ x a b)
-                      (evalPrimRec _ y a b)
-                      (evalPrimRec _ z a b) .
-Proof. reflexivity. Qed.
+  Variables (x y z : PrimRec 2) (t: PrimRec 3).
+  Let u : PrimRec 2 := composeFunc 2 3 [x; y; z]%pr t.
+  Let f := PReval x.
+  Let g := PReval y.
+  Let h := PReval z.
+  Let k := PReval t.
+ Goal forall n p, PReval u n p = k (f n p) (g n p) (h n p).
+ Proof. reflexivity. Qed.
 
-Example Ex5 (x : PrimRec 2)(y: PrimRec 4):
-  let g := evalPrimRec _ x in
-  let h := evalPrimRec _ y in
-  let f := evalPrimRec _ (primRecFunc _ x y) in
-  forall a b,  f 0 a b = g a b.
-Proof. reflexivity.   Qed.                          
+  Let v := composeFunc 2 3 [ pi1_2 ; pi1_2; pi2_2 ]%pr t.
 
-Example Ex6 (x : PrimRec 2)(y: PrimRec 4):
-  let g := evalPrimRec _ x in
-  let h := evalPrimRec _ y in
-  let f := evalPrimRec _ (primRecFunc _ x y) in
-  forall n a b, f (S n) a b = h n (f n a b) a b.
-Proof. reflexivity.   Qed.                          
+  Eval simpl in PReval v. 
+
+End Composition.
+
+Section Primitive_recursion. 
+ Variables (x: PrimRec 2)(y: PrimRec 4).
+ Let z := (primRecFunc _ x y).
+ Let g := PReval x.
+ Let h := PReval y.  
+ Let f := PReval z.
+ Goal forall a b, f 0 a b = g a b.
+ Proof. reflexivity. Qed. 
+
+ Goal forall n a b, f n.+1 a b = h n (f n a b) a b.
+ Proof. reflexivity. Qed. 
+
+End Primitive_recursion. 
+
 (* end snippet evalPrimRecEx  *)  
 
 Section compose2Examples.

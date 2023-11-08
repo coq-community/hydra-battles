@@ -1484,8 +1484,8 @@ Qed.
 
 Lemma evalPrimRecParam :
   forall (n c d : nat) (g : naryFunc (S n)) (h : naryFunc (S (S (S n)))),
-    extEqual _ (evalPrimRecFunc n (g d) (fun x y : nat => h x y d) c)
-      (evalPrimRecFunc (S n) g h c d).
+     evalPrimRecFunc n (g d) (fun x y : nat => h x y d) c =x=
+      evalPrimRecFunc (S n) g h c d.
 Proof.
 induction c as [| c Hrecc].
 - intros; cbn in |- *; apply extEqualRefl.

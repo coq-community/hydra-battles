@@ -13,7 +13,7 @@ From hydras Require Import T1 E0.
 From hydras Require Paths.
 (* end snippet Requirements *)
 
-From hydras Require Import primRec PrimRecExamples. 
+From hydras Require Import primRec. 
 From hydras Require Import  F_alpha F_omega. 
 
 From gaia_hydras Require Import T1Bridge GCanon GHprime.
