@@ -44,7 +44,7 @@ with PrimRecs : nat -> nat -> Set :=
 Module PRNotations.
   Declare Scope pr_scope.
   Delimit Scope pr_scope with pr.
-  Notation "[ ]" := (PRnil _) : pr_scope.
+  (* Notation "[ ]" := (PRnil _) : pr_scope. *)
   Notation "h :: t" := (PRcons _ _ h t) (at level 60, right associativity)
   : pr_scope.
   Notation "[ x ]" := (PRcons _ _ x  (PRnil _)) : pr_scope.
@@ -366,7 +366,7 @@ Qed.
 #[export] Instance const1_NIsPR n: isPR 1 (fun _ => n).
 Proof.
   destruct (const0_NIsPR n) as [x Hx]. 
-  exists (PRcomp x [])%pr;  cbn in *; auto.
+  exists (PRcomp x (PRnil 1))%pr;  cbn in *; auto.
 Qed.
 
 (** ** Usual projections (in curried form) are primitive recursive *)
@@ -1235,7 +1235,7 @@ Section Ignore_Params.
   Definition projectionListPR (n m : nat) (p : m <= n) : PrimRecs n m.
   Proof.
   induction m as [| m Hrecm].
-    - exact []%pr.
+    - exact (PRnil n).
     - assert (H: m < n) by
         apply Compat815.lt_S_n,  Compat815.le_lt_n_Sm,  p.
       apply (PRcons _ m (projFunc _ _ H)).

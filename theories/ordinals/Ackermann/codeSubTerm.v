@@ -344,7 +344,7 @@ Proof.
            apply cPairPi2IsPR.
         -- apply cPairIsPR.
       * apply succIsPR.
-    + exists (PRcomp zeroFunc [])%pr.
+    + exists (PRcomp zeroFunc (PRnil _))%pr.
       simpl; auto.
     + apply switchIsPR.
   - apply cPairIsPR.

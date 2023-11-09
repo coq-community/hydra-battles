@@ -70,6 +70,10 @@ Example Ex3 a b c d e f: forall (H: 2 < 6),
     PReval (projFunc 6 2 H) a b c d e f = d.
 Proof. reflexivity. Qed.
 
+Example Ex4 : extEqual 4 (fun a b c d: nat => 0)
+                         (PReval (PRcomp zeroFunc (PRnil _))). 
+Proof.  simpl; reflexivity. Qed. 
+
 Section Composition.
 
   Variables (x y z : PrimRec 2) (t: PrimRec 3).
@@ -81,7 +85,7 @@ Section Composition.
  Goal forall n p, PReval u n p = k (f n p) (g n p) (h n p).
  Proof. reflexivity. Qed.
 
-  Let v := composeFunc 2 3 [ pi1_2 ; pi1_2; pi2_2 ]%pr t.
+  Let v := (PRcomp t  [ pi1_2 ; pi1_2; pi2_2 ])%pr.
 
   Eval simpl in PReval v. 
 
@@ -116,7 +120,15 @@ Module MoreExamples.
 (* begin snippet FirstExamples *)
 
 (** The constant function which returns 0 *)
-Definition cst0 : PrimRec 1 := (PRcomp zeroFunc [])%pr.
+Definition cst0 : PrimRec 1 := (PRcomp zeroFunc (PRnil _))%pr.
+
+(** The constant function which returns i *)
+Fixpoint cst (i: nat) : PrimRec 1 :=
+  match i with
+    0 => cst0
+  | S j => (PRcomp succFunc [cst j])%pr
+end.
+
 
 (** Addition *)
 Definition plus : PrimRec 2 := 
@@ -145,6 +157,10 @@ Compute PReval pi2_3 10 20 30.
 Compute  Vector.map (fun f => f 10 20 30)  (PRevalN [pi2_3; pi1_3]%pr).
 
 Compute PReval cst0 42.
+
+Compute PReval (cst 12) 7.
+
+Compute cst 12.
 
 Compute PReval plus 9 4.
 

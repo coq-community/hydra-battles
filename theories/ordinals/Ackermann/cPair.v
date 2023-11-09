@@ -603,7 +603,7 @@ Proof.
     induction H0 as (x0, p0).
     induction H1 as (x1, p1).
     exists
-      (primRecFunc n (PRcomp zeroFunc [ ])
+      (primRecFunc n (PRcomp zeroFunc (PRnil _))
        (PRcomp x0 
             [ x ;  projFunc n.+2 n
                               (Nat.lt_lt_succ_r n n.+1
@@ -871,7 +871,7 @@ Proof.
                   0))).
   { apply evalStrongRecIsPR.
     assert (H : isPR 2 (fun n recs : nat => 0)).
-    { exists (PRcomp zeroFunc [])%pr; intros ?; cbn; now reflexivity.
+    { exists (PRcomp zeroFunc (PRnil _))%pr; intros ?; cbn; now reflexivity.
     }
     apply compose2_3IsPR with
     (f1 := fun n recs : nat => n)
