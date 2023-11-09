@@ -187,7 +187,7 @@ Proof.
       + intros H; rewrite <- H; auto.
       + intros H; inversion H as [H1].
         eapply
-          inj_right_pair2 with
+          inj_pair2_eq_dec with
           (P := 
              fun f : Functions L =>
                Terms (arityF L f)); assumption.
@@ -232,7 +232,7 @@ Proof.
          rewrite <- p in H2; inversion H2; reflexivity. 
     * right; intro H2; elim b1.
       rewrite <- p in H2; inversion H2.
-      eapply inj_right_pair2 with (P := fun n : nat => Terms n).
+      eapply inj_pair2_eq_dec with (P := fun n : nat => Terms n).
       apply eq_nat_dec.
       assumption.
 Qed.
@@ -255,7 +255,7 @@ Proof.
     + right. intro H; elim b0.
       rewrite <- p in H.
       inversion H.
-      eapply inj_right_pair2 with (P := fun n : nat => Terms n).
+      eapply inj_pair2_eq_dec with (P := fun n : nat => Terms n).
       * apply eq_nat_dec.
       * assumption.
 Qed.
@@ -298,7 +298,7 @@ Proof.
         + simpl in |- *; split.
           * intros H; rewrite H; reflexivity.
           * intros H; inversion H.
-            eapply inj_right_pair2 with
+            eapply inj_pair2_eq_dec with
               (P := 
                  fun f : Relations L =>
                    Terms (arityR L f)).

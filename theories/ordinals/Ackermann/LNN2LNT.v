@@ -174,7 +174,7 @@ Proof.
   simpl; destruct (consTerms LNN 0 b) as [(a2, b1) p0].
   simpl in p; inversion p.
   assert (b = Tcons a0 b0)
-    by refine (inj_right_pair2 _ eq_nat_dec _ _ _ _ H1).
+    by refine (inj_pair2_eq_dec  _ eq_nat_dec _ _ _ _ H1).
   rewrite H in p0; simpl in p0; inversion p0; reflexivity.
 Qed.
 

@@ -658,7 +658,7 @@ Proof.
            simpl in H0.
            rewrite H2 in H0.
            apply (Hreca (n0 (interpTerm value a0)) b0).
-           ++ apply (inj_right_pair2 _ eq_nat_dec _ _ _ _ H3).
+           ++ apply (inj_pair2_eq_dec _ eq_nat_dec _ _ _ _ H3).
            ++ auto.
     + simpl in |- *.
       intros H0; apply H0.
@@ -713,7 +713,7 @@ Proof.
            inversion H.
            simpl; rewrite H1.
            apply Hreca.
-           apply (inj_right_pair2 _ eq_nat_dec _ _ _ _ H2).
+           apply (inj_pair2_eq_dec _ eq_nat_dec _ _ _ _ H2).
   - auto.
 Qed.
 

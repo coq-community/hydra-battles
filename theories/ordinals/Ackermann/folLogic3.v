@@ -475,8 +475,8 @@ Proof.
       inversion e0.
       inversion e. 
       auto.
-      rewrite (inj_right_pair2 _ eq_nat_dec _ _ _ _ H4).
-      rewrite (inj_right_pair2 _ eq_nat_dec _ _ _ _ H6).
+      rewrite (inj_pair2_eq_dec _ eq_nat_dec _ _ _ _ H4).
+      rewrite (inj_pair2_eq_dec _ eq_nat_dec _ _ _ _ H6).
       auto.
 Qed.
 
@@ -498,8 +498,8 @@ Proof.
     inversion e.
     split.
     + apply subWithEqualsTerm; auto.
-    + rewrite (inj_right_pair2 _ eq_nat_dec _ _ _ _ H2).
-      now rewrite (inj_right_pair2 _ eq_nat_dec _ _ _ _ H4).
+    + rewrite (inj_pair2_eq_dec _ eq_nat_dec _ _ _ _ H2).
+      now rewrite (inj_pair2_eq_dec _ eq_nat_dec _ _ _ _ H4).
 Qed.
 
 Lemma subWithEquals :
