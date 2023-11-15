@@ -206,9 +206,12 @@ Lemma in_remove :
   end.
 Proof.
 induction l as [ | a1 l]; simpl; auto;
-elim (eqA a a1); intro eq_a_a1; intuition.
-destruct (remove eqA a l) as [ rmv |  ]; intuition; 
-destruct (split_list eqA l a); subst; auto.
+elim (eqA a a1); intro eq_a_a1. subst; simpl; auto.
+destruct (remove eqA a l) as [ rmv |  ]. split; auto.  tauto. 
+destruct (split_list eqA l a); subst; simpl. destruct IHl; f_equal; auto.
+red; destruct 1. subst. 
+ congruence. 
+ contradiction. 
 Qed.
 
 Fixpoint remove_list (A : Set) (eqA : forall (a1 a2 : A), {a1=a2}+{a1<>a2})

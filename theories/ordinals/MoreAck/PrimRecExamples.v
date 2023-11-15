@@ -3,20 +3,23 @@ Require Import Vector.
 Require Import Utf8.
 Import VectorNotations.
 
-(* begin snippet naryFunc3 *)
-
 Require Import primRec cPair.
 Import extEqualNat.
 Import PRNotations.
+(* begin snippet naryFunc3 *)
 Compute naryFunc 3.
-
 (* end snippet naryFunc3 *)
 
 
 
 (* begin snippet naryRel2 *)
+Check leBool : naryRel 2.
 
-Compute naryRel 2.
+Compute leBool 4 5.
+
+Compute charFunction 2 leBool 4 5.
+
+Compute charFunction 2 ltBool 7 7.
 
 (* end snippet naryRel2 *)
 
@@ -40,10 +43,9 @@ Check (fun n p q : nat =>  n * p + q): naryFunc 3.
 Compute extEqual 2.
 
 
-Example extEqual_ex1: extEqual 2 mult (fun x y =>  y * x + x - x). (* .no-out *)
-Proof. (* .no-out *)
-  intros x y.
-  cbn.
+Example extEqual_ex1: extEqual 2 Nat.mul (fun x y =>  y * x + x - x). (* .no-out *)
+Proof. 
+  intros x y; cbn.
 (* end snippet extEqual2a *)
   
 (* begin snippet extEqual2b *)  
@@ -116,8 +118,9 @@ Variables (f': naryFunc 4) (g': naryFunc 5).
 Eval simpl in compose2 _ f' g'.
 End compose2Examples.
 
-Module MoreExamples. 
+
 (* begin snippet FirstExamples *)
+Module MoreExamples. 
 
 (** The constant function which returns 0 *)
 Definition cst0 : PrimRec 1 := (PRcomp zeroFunc (PRnil _))%pr.
@@ -129,6 +132,7 @@ Fixpoint cst (i: nat) : PrimRec 1 :=
   | S j => (PRcomp succFunc [cst j])%pr
 end.
 
+Compute cst 7.
 
 (** Addition *)
 Definition plus : PrimRec 2 := 
@@ -145,22 +149,20 @@ Definition fact : PrimRec 1 :=
      (PRcomp succFunc [zeroFunc])
      (PRcomp mult [pi2_2; PRcomp succFunc [pi1_2]]))%pr.
 
+End MoreExamples.
 (* end snippet FirstExamples *)
 
+Import MoreExamples.
 
 (* begin snippet tests *)
 
-Compute fun H : 1 < 3 => PReval (projFunc 3 1 H).
-
-Compute PReval pi2_3 10 20 30.
+Compute  PReval pi2_3 10 20 30.
 
 Compute  Vector.map (fun f => f 10 20 30)  (PRevalN [pi2_3; pi1_3]%pr).
 
 Compute PReval cst0 42.
 
-Compute PReval (cst 12) 7.
-
-Compute cst 12.
+Compute PReval (cst 7) 19.
 
 Compute PReval plus 9 4.
 
@@ -171,6 +173,18 @@ Compute PReval fact 5.
 (* end snippet tests *)
 
 (* begin snippet correctness:: no-out *)
+Lemma cst0_correct (i:nat) :
+  forall p:nat, PReval cst0 p = 0.
+Proof. intro p; reflexivity. Qed.
+
+Lemma cst_correct (i:nat) :
+  forall p:nat, PReval (cst i) p = i.
+Proof.
+  induction i as [| i IHi]; simpl; intros p .
+  - reflexivity. 
+  - now rewrite IHi. 
+Qed. 
+
 Lemma plus_correct: 
   forall n p, PReval plus n p = n + p. 
 Proof. 
@@ -179,7 +193,7 @@ Proof.
   - intro p; cbn in IHn |- *; now rewrite IHn. 
 Qed. 
 
-Lemma mult_eqn1 n p: 
+Remark mult_eqn1 n p: 
     PReval mult (S n) p = 
       PReval plus (PReval mult n p) p.
 Proof. reflexivity. Qed.
@@ -191,13 +205,8 @@ Proof.
  - intro p; rewrite mult_eqn1, IHn, plus_correct; ring.
 Qed.      
 
-Fixpoint math_fact n :=
- match n with 
- | 0 => 1
- | S p => n * math_fact p
-end.
 
-Lemma fact_correct n : PReval fact n  = math_fact n.
+Lemma fact_correct n : PReval fact n  = Coq.Arith.Factorial.fact n.
 (* ... *)
 (* end snippet correctness *)
 Proof. 
@@ -205,13 +214,13 @@ Proof.
                                  PReval mult
                                    (PReval fact n) (S n))
     by  reflexivity. 
-  induction n as [ | n IHn].
+  induction n as [| n IHn].
   - reflexivity. 
   - rewrite fact_eqn1, mult_correct, IHn; cbn; ring. 
 Qed. 
 
 
-End MoreExamples.
+
 
 (** ** Understanding some constructions ...
 
@@ -306,8 +315,14 @@ Proof.
   exists succFunc; cbn; reflexivity.
 Qed.
 
+#[export] Instance addIsPR : isPR 2 Nat.add. 
+Proof. exists plus; intros n p; apply plus_correct. Qed.
+
 (* end snippet SuccIsPR *)
 
+
+
+  
 (* begin snippet pi25IsPR *)
 
 (*|
@@ -333,12 +348,8 @@ Check composeFunc 0 1.
 .. coq:: no-out 
 |*)
 
-Fact compose_01 :
-    forall (x:PrimRec 0) (t : PrimRec 1),
-    let c := evalPrimRec 0 x in
-    let f := evalPrimRec 1 t in
-    evalPrimRec 0 (PRcomp t [x])%pr
-    = f c. 
+Remark compose_01  (x:PrimRec 0) (t : PrimRec 1) :
+    PReval (PRcomp t [x])%pr = PReval t (PReval x).
 Proof. reflexivity. Qed.
 (*||*)
 
@@ -346,53 +357,25 @@ Proof. reflexivity. Qed.
 
 (* begin snippet const0NIsPR  *)
 
-(*| 
-.. coq:: no-out 
-|*)
-
-
-#[export] Instance  const0_NIsPR n : isPR 0 n. 
-Proof.
-  induction n.
- - apply zeroIsPR.
- - destruct IHn as [x Hx].
-   exists (PRcomp succFunc [x])%pr.
-   cbn in *; intros; now rewrite Hx.
+#[export] Instance  const0_NIsPR n : isPR 0 n. (* .no-out *)
+Proof. (* .no-out *)
+  induction n. (* .no-out *)
+   - apply zeroIsPR. (* .no-out *)
+   - destruct IHn as [x Hx].
+     exists (PRcomp succFunc [x])%pr; cbn in *; intros; 
+       now rewrite Hx.
 Qed.
-
-(*||*)
-
 (* end snippet const0NIsPR  *)
 
-(* begin snippet plusAlt  *)
-
-(*| 
-.. coq:: no-out 
-|*)
-
-Definition plus_alt x y  :=
-              nat_rec  (fun n : nat => nat)
-                       y
-                       (fun z t =>  S t)
-                       x.
-
-Lemma plus_alt_ok:
-  extEqual 2 plus_alt Nat.add.
-Proof.
-  intro x; induction x; cbn; auto.
-  intros y; cbn; now rewrite <- (IHx y).
-Qed.
-
-(*||*)
-
-(* end snippet plusAlt *)
 
 
-(* begin snippet PrimRecExamplesSearch *)
-
+(* begin snippet PRnatRecSearch *)
 Search (isPR 2 (fun _ _ => nat_rec _ _ _ _)).
+(* end snippet PRnatRecSearch *)
 
-(* end snippet PrimRecExamplesSearch *)
+(* begin snippet isPRextEqual *)
+Check isPRextEqual.
+(* end snippet isPRextEqual *)
 
 (* begin snippet checkFilter0101IsPR *)
 
@@ -407,46 +390,57 @@ Check filter010IsPR.
 (* end snippet checkFilter0101IsPR *)
 
 (* begin snippet plusIsPRa *)
+Definition add' x y :=
+  nat_rec (fun n : nat => nat)
+    y
+    (fun z t =>  S t)
+    x.
 
-#[export] Instance plusIsPR : isPR 2 Nat.add. (* .no-out *)
-Proof. (* .no-out *)
-  apply isPRextEqual with plus_alt.
-  - (* .no-out *)  unfold plus_alt; apply ind1ParamIsPR.
-    
-(* end snippet plusIsPRa *)
-
-(* begin snippet plusIsPRb *)
-    
-(*|
+(*| 
 .. coq:: no-out 
 |*)
+Lemma add'_ok:
+  extEqual 2 add' Nat.add.
+Proof.
+  intro x; induction x; cbn; auto.
+  intro y; cbn; now rewrite <- (IHx y).
+Qed.
 
-    + apply filter010IsPR, succIsPR.
+(* end snippet plusIsPRa *)
+
+(* begin snippet plusIsPRa1 *)
+#[export] Instance addIsPR' : isPR 2 Nat.add. (* .no-out *)
+Proof. 
+(* end snippet plusIsPRa1 *)
+  
+(* begin snippet plusIsPRa2 *)
+  apply isPRextEqual with add'. 
+  - unfold add'; apply ind1ParamIsPR.
+(* end snippet plusIsPRa2 *)
+
+(* begin snippet plusIsPRa3 *)
+    + Search (isPR 1 _ -> isPR 3 _). 
+      apply filter010IsPR, succIsPR.
+(* end snippet plusIsPRa3 *)
+
+(* begin snippet plusIsPRb:: no-out *)
     + apply idIsPR.
-  - apply plus_alt_ok. 
+  - apply add'_ok. 
 Qed.
 
 (*||*)
-
 (* end snippet plusIsPRb *)
 
-
-
-Remark R02 : 1 < 2.
-Proof. auto. Qed.
-
-Definition xpred := primRecFunc 0 zeroFunc (projFunc 2 1 R02).
+(* begin snippet xpred *)
+Definition xpred := primRecFunc 0 zeroFunc pi1_2.
   
 Compute evalPrimRec 1 xpred 10.
 
-
-
-#[export] Instance predIsPR : isPR 1 pred.
-Proof.
-  exists xpred.
-  intro n; induction n; now cbn. 
+#[export] Instance predIsPR : isPR 1 Nat.pred. (* .no-out *)
+Proof. (* .no-out *)
+  exists xpred; intro n; induction n; now cbn. 
 Qed.
-
+(* end snippet xpred *)
 
 End Alt.
 

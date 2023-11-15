@@ -2,10 +2,9 @@
 \label{chapter:primrec}
 
 \section{Introduction}
-Primitive recursive functions are a small class of total functions, corresponding to the expressive power of a simple imperative programming language without \textbf{while} loops, in which every program execution terminates.
-
-\emph{Primitive recursive functions} are total functions from $\mathbb{N}^n$ to
-$\mathbb{N}$, for some $n\in\mathbb{N}$. Note that not all 
+\emph{Primitive recursive functions} are a small class of total arithmetic functions  from $\mathbb{N}^n$ to
+$\mathbb{N}$, for some $n\in\mathbb{N}$, corresponding to the expressive power of a simple imperative programming language without \textbf{while} loops, in which every program execution terminates.
+Please  note that not all 
 total $n$-ary recursive functions are primitive recursive
 (see for instance Sect.~\vref{sect:ack-not-PR}).
 
@@ -14,7 +13,7 @@ Primitive recursive \emph{relations} are boolean total functions whose \emph{cha
 \section{Mathematical definition}
 \label{sect:primrecmathdef}
 
-The traditional definition of the set of primitive recursive functions is structured as an inductive definition 
+The traditional definition of primitive recursive functions is structured as an inductive definition 
 in five rules: three base cases, and two recursive construction rules. 
 
 
@@ -41,8 +40,10 @@ Dots are not part of \gallina's syntax. Thus, the formal definition of the set o
 
 
 \subsection{A few (informal) examples}
-Before playing with primitive recursive functions in \coq{}, let us get familiar with the definition above, with the help of a few simple examples.
+\label{sect:PR-informal}
 \label{sect:primrec-examples1}
+Before playing with primitive recursive functions in \coq{}, let us get familiar with their mathematical definition, with the help of a few simple examples, which will be considered again
+as \coq terms in Section~\vref{sect:primrec-examples2}.
 
 \subsubsection{Projections}
 
@@ -61,7 +62,7 @@ The \emph{unary} function which always returns $0$ may be defined through the \e
 \subsubsection{Constant functions}
 
 Let $k$ be some natural number; the unary constant function which always returns $k$ is built through $k$ nested compositions of the 
-successor function to the  unary constant function which returns $0$.
+successor function with the  unary constant function which returns $0$.
 
 
 \subsubsection{Addition on natural natural numbers}
@@ -70,7 +71,7 @@ Addition may be defined by primitive recursion:
 
 \begin{align*}
   0 + x_1 &:= x_1 \\
-  S x_0 + x_1 &:= S (x_0 + x_1)
+  S\; x_0 + x_1 &:= S (x_0 + x_1)
 \end{align*}
 
 Both equations can be rewritten as follows:
@@ -112,20 +113,19 @@ using the constructions of  Section~\ref{sect:primrecmathdef},
 addition and multiplication.
 \end{exercise}
 
-\begin{remark}
 
-The four examples above are defined as \coq terms in Section~\vref{sect:primrec-examples2}
-
-\end{remark}
-  We present in this chapter a formalization of  primitive recursive functions, taken from  Russel O'Connor's formalization in \coq{} of
-G\"odel's incompleteness theorems~\cite{OConnor05}.
-
-This chapter contains some comments on Russel's library, as well as a few extensions.
-Contributions (under the form of comments, new examples or exercises) are welcome!. 
 
 
 
 \section{First look at the Ackermann library}
+
+  We present here a formalization of  primitive recursive functions, taken from  Russel O'Connor's formalization in \coq{} of
+G\"odel's incompleteness theorems~\cite{OConnor05}.
+
+A few additions and/or small changes (mainly notations, and adaptation to the continuously evolving practices of \coq development) have been made to
+O'Connor's original library. 
+Contributions (under the form of comments, new examples or exercises) are welcome! 
+
 
 O'Connor's library on Gödel's incompleteness theorems contains a little more 
 than 45K lines of code. The part dedicated to primitive recursive functions and Peano arithmetic is 32K lines long and is originally structured in 38 modules.
@@ -136,7 +136,7 @@ In particular, the library \href{../theories/html/hydras.MoreAck.html}{MoreAck.A
 Moreover, the library \href{../theories/html/hydras.Hydra_Theorems.html}{Hydra.Hydra\_Theorems} contains 
 a proof that the length of an hydra battle (according to the initial replication factor) is not primitive recursive in general.
 
-\section{Basic definitions}
+\section{Abstract syntax for primitive recursive functions}
 \index{maths}{Primitive recursive functions}
 
 The formal definition of primitive recursive functions lies in the library
@@ -148,9 +148,9 @@ and
 
 \subsection{Functions of arbitrary arity}
 
-The  \texttt{primRec} library allows us to consider primitive functions on \texttt{nat}, with any number of arguments, in 
-curried form. This is made possible in 
-\href{../theories/html/hydras.Ackermann.extEqualNat.html}{Ackermann.extEqualNat} by the following definition:
+The  \href{../theories/html/hydras.Ackermann.extEqualNat.html}{Ackermann.extEqualNat}
+ library allows us to consider primitive functions on \texttt{nat}, with any number of arguments, in curried form. This is made possible in 
+by the following definition:
 
 \index{ackermann}{Types!naryFunc}
 \input{movies/snippets/extEqualNat/naryFunc.tex}
@@ -166,13 +166,9 @@ to \texttt{nat -> nat -> nat -> nat}.
 \input{movies/snippets/PrimRecExamples/checknaryFunc}
 
 
-Likewise, arbitrary boolean predicates may have an arbitrary number of arguments. The dependent type
-(\texttt{naryRel $n$}), defined in the same way as \texttt{naryFunc}, is the type of $n$-ary functions from
-\texttt{nat} into \texttt{bool}.
+\subsection{Extensional equality}
 
-\input{movies/snippets/PrimRecExamples/naryRel2}
-
-The magic of dependent types makes it possible to define recursively extensional equality between functions of the same arity.
+Dependent types make it possible to define recursively extensional equality between functions of the same arity.
 
 \index{coq}{Dependent types}
 \index{coq}{Dependently typed functions}
@@ -181,8 +177,12 @@ The magic of dependent types makes it possible to define recursively extensional
 \emph{From \href{../theories/html/hydras.Ackermann.extEqualNat.html}{Ackermann.extEqualNat}}
 
 \index{ackermann}{Predicates!extEqual}
+\inputsnippets{extEqualNat/extEqualDef}
 
-\input{movies/snippets/extEqualNat/extEqualDef}
+Module \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec} defines and export  the notation ``\texttt{$f$ =x= $g$}'' for ``\texttt{extEqual $n$ $f$ $g$}'' \footnote{in parsing mode, provided $f$ has explicitely the type (\texttt{naryFunc $n$}).}
+
+
+
 
 
 \input{movies/snippets/PrimRecExamples/extEqual2a}
@@ -192,6 +192,24 @@ The magic of dependent types makes it possible to define recursively extensional
 \vspace{6pt}
 \noindent
 \input{movies/snippets/PrimRecExamples/extEqual2b}
+
+\subsection{Boolean predicates}
+
+
+Like arithmetic functions,  arbitrary boolean predicates may have an arbitrary number of arguments. The dependent type
+(\texttt{naryRel $n$}), defined in the same way as \texttt{naryFunc}, is the type of $n$-ary functions from
+\texttt{nat} into \texttt{bool}.
+
+\noindent
+\emph{From \href{../theories/html/hydras.Ackermann.extEqualNat.html}{Ackermann.extEqualNat}}
+\inputsnippets{extEqualNat/naryRelDef}
+
+\inputsnippets{primRec/ltBoolDef, primRec/leBoolDef}
+
+\noindent
+\emph{From \href{../theories/html/hydras.Ackermann.extEqualNat.html}{Ackermann.extEqualNat}}
+\input{movies/snippets/PrimRecExamples/naryRel2}
+
   
 \subsection{A Data-type for Primitive Recursive Functions}
 
@@ -199,7 +217,13 @@ O'Connor's formalization of primitive recursive functions takes the form of two 
 These two types are (\texttt{PrimRec $n$}) (primitive recursive functions of $n$ arguments), and
 (\texttt{PrimRecs $n$ $m$}) ($m$-tuples of primitive recursive functions of $n$ arguments).
 
-
+\begin{remark}
+The \texttt{PrimRec}  type family is indeed a kind of 
+programming language for writing primitive recursive functions.
+The link to the mathematical notion of such functions will be
+established in Section~\ref{primrec-semantics} when we give a semantics which maps any term of type (\texttt{PrimRec $n$}) 
+to a function of type (\texttt{naryFunc $n$}).
+\end{remark}
 \index{coq}{Dependent types}
 \index{coq}{Mutually inductive types}
 
@@ -226,9 +250,12 @@ In order to make the terms of type \texttt{Primrec $n$} more readable, we introd
 
 \inputsnippets{primRec/PRNotations}
 
-\subsection{A few arithmetic functions}
+\subsubsection{Examples}
 \label{sect:primrec-examples2}
-Let us show how the few functions presented in Section~\vref{sect:primrec-examples2} can be defined in \coq.
+
+Let us show how the functions described in \ref{sect:PR-informal} can be described by terms of type ``\texttt{PrimRec \_}''.
+
+
 
 \noindent
 \emph{From \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.primRecExamples}.}
@@ -237,34 +264,38 @@ Let us show how the few functions presented in Section~\vref{sect:primrec-exampl
 
 
 \subsection{A little bit of semantics} 
-Please note that inhabitants of type (\texttt{PrimRec $n$}) are not \coq{} functions like \texttt{Nat.mul}, or factorial, etc. The data-type (\texttt{PrimRec $n$}) is indeed an abstract syntax for the language of primitive recursive functions. The bridge between this language and the word of usual functions
+\label{primrec-semantics}
+
+Inhabitants of type (\texttt{PrimRec $n$}) are not \coq{} functions like \texttt{Nat.mul}, or \texttt{Arith.Factorial.fact}, etc. but terms of an abstract syntax for the language of primitive recursive functions. The bridge between this language and the word of usual functions
 is an interpretation function (\texttt{evalprimRec $n$})  of type
 $\texttt{PrimRec}\,n \rightarrow  \texttt{naryFunc}\,n$.
 This function is defined by mutual recursion,  together with the  function 
 (\texttt{evalprimRecS $n$ $m$}) of type 
-$\texttt{PrimRecs}\,n\,m \rightarrow  \texttt{Vector.t}\,(\texttt{naryFunc}\,n)\,m$.
+($\texttt{PrimRecs}\,n\,m \rightarrow  \texttt{Vector.t}\,(\texttt{naryFunc}\,n)\,m$).
 
 \index{ackermann}{Functions!evalPrimRec}
 \index{ackermann}{Functions!evalPrimRecs}
 
 \index{coq}{Dependent pattern matching}
 Both functions are mutually defined through dependent pattern matching. We advise the readers who 
-would feel uneasy with dependent types to consult Adam Chlipala's \emph{cpdt}  book~\cite{chlipalacpdt2011}. We leave it to the reader  to look also at the helper functions in
-\href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.
+would feel uneasy with dependent types to consult Adam Chlipala's \emph{cpdt}  book~\cite{chlipalacpdt2011}. We invite the 
+ reader  to look also at the helper functions in
+\href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}, namely \texttt{evalConstFunc}, \texttt{evalProjFunc}, \texttt{evalComposeFunc}, and \texttt{evalPrimRecFunc}, etc.
 
 \vspace{4pt}
 
 \input{movies/snippets/primRec/evalPrimRecDef}
 
-\vspace{4pt}
 
-Looks complicated? The following examples show that, when
-the arity is fixed, these definitions behave well w.r.t. 
-\coq's reduction rules. Moreover, they make the interpretation functions more ``concrete''.
 
 \subsubsection{A few tests}
-Let us consider again the functions defined in 
-previous sections. 
+
+The following examples show that the functions 
+\texttt{evalPrimRec} and \texttt{evalPrimRecs}
+ behave well w.r.t. 
+\coq's reduction rules. They can also be considered as 
+elementary tests of our definitions of \texttt{cst0}, \texttt{cst},
+\texttt{plus}, \texttt{mult} and \texttt{fact}.
 
 \vspace{4pt}
 \noindent
@@ -275,27 +306,29 @@ previous sections.
 \vspace{4pt}
 \noindent
 
-\subsubsection{A few proofs of correctness}
+\subsubsection{Correctness proofs}
 
-It is tempting to \emph{prove} that our functions \texttt{cst0},
-\texttt{plus}, \texttt{mult} and \texttt{fact} are correct implementations in \texttt{PrimRec} of the mathematical functions we
+It is now time to \emph{prove} that our functions \texttt{cst0},
+\texttt{cst}, \texttt{plus}, \texttt{mult} and \texttt{fact} are correct implementations in \texttt{PrimRec} of the mathematical functions we
 consider.
 
 \input{movies/snippets/PrimRecExamples/correctness} 
 
 
-\section{Proving that a given arithmetic function is primitive recursive}
+\section{Proving that a given \coq arithmetic function is primitive recursive}
 \label{sect:proofs-of-isPR}
 
 The example in the preceding section clearly shows that, in order to prove that a given arithmetic function
-(defined in \gallina{} as usual) is primitive recursive, trying to give  by hand a term  of type (\texttt{PrimRec $n$}) is not a good method, since such terms may be huge and complex, even for simple arithmetic functions. The method proposed in Library \texttt{primRec} is the following one:
+(defined in \gallina{} as usual) is primitive recursive, trying to \emph{type} a term  of type (\texttt{PrimRec $n$}) is not a good method, since such terms may be too large, even for simple arithmetic functions. The method proposed in the library \texttt{Ackermann.primRec} is the following one:
 
 \begin{enumerate}
-\item Define a type corresponding to the statement "the function \texttt{$f$:naryFunc $n$} is primitive recursive ''.
-\item Prove handy lemmas which may help to prove that a given function is primitive recursive.
+\item Define a type corresponding to the statements of the form  "the $n$-ary function $f$ is primitive recursive ''.
+\item Prove handy lemmas which may help to prove that a given function is primitive recursive. These lemmas can be considered as a way to build \emph{silently} large terms of 
+type (\texttt{PrimRec $n$}) in intermediate steps of the proof.
+More, we can associate \emph{tactics} with these lemmas.
+
 \end{enumerate}
 
-Thus, the proof that a function, like \texttt{factorial}, is primitive recursive may be interactive, without having to type complex terms at any step of the development.
 
 \subsection{The predicate \texttt{isPR}}
 
@@ -313,31 +346,28 @@ equal to the interpretation of some term of type \texttt{PrimRec $n$}.
 
 The library \texttt{primRec} contains a large catalogue of lemmas allowing to prove statements 
 of the form (\texttt{isPR $n$ $f$}). We won't list all these lemmas here, but give a few examples of
-how they may be applied.
+how they may be searched, then applied.
 
 \begin{remark}
-In the library \texttt{primRec}, all these lemmas are opaque (registered with \texttt{Qed}). Thus they do not allow the user to look at the witness of a proof of a \texttt{isPR} statement. Our example of page~\pageref{sect:bigfac} was built using a  copy of \texttt{primRec.v} where many \texttt{Qed}s have been replaced with
-\texttt{Defined}s.
-
-If it does not cause compatibility problems (with 
-\href{https://github.com/coq-community/goedel}{goedel library} for instance), we plan to make all theses lemmas transparent.
+In the library \texttt{primRec}, all these lemmas are opaque (registered with \texttt{Qed}). Thus they do not allow the user to look at the witness of a proof of a \texttt{isPR} statement. 
+It may be useful to make transparent all the instances of
+\texttt{isPR} in the \texttt{Ackermann} and \texttt{goedel} libraries.
 \end{remark}
 
 \subsubsection{Elementary proofs of \texttt{isPR} statements}
 
-The constructors \texttt{zeroFunc}, \texttt{succFunc},  and \texttt{projFunc} of type
-\texttt{PrimRec} allows us to write trivial proofs of primitive recursivity. 
-Some of   the following lemmas are already proven in 
-\href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}. More examples are given in 
+Simple proofs of statements (\texttt{isPR $n$ $f$}) may be just 
+applications of the constructor \texttt{is\_pr}, often
+thanks to the tactic call \texttt{exists $x$} where $x$ 
+is some (hopefully) correct term of type (\texttt{PrimRec $n$}).
+
+Let us show a few examples from
 \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}%
-{Ackermann.MoreAck.PrimRecExamples.v}, in order to illustrate the main proof patterns.
+{Ackermann.MoreAck.PrimRecExamples.v}\footnote{Some of them are also in \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.}.
 
 \input{movies/snippets/PrimRecExamples/zeroIsPR}
 
-
-Likewise, we prove that the successor function on \texttt{nat} is primitive recursive too.
-
-\input{movies/snippets/primRec/SuccIsPR}
+\input{movies/snippets/primRecExamples/SuccIsPR}
 
 
 
@@ -349,10 +379,8 @@ whilst the arguments of  \texttt{projFunc} use another convention (\emph{cf} rem
 
 \input{movies/snippets/PrimRecExamples/pi25IsPR}
 
-
-
 Please note that the projection $\pi_{1,1}$ is just the identity on \texttt{nat}, and is realized by 
-(\texttt{projFunc 1 0}).
+(\texttt{projFunc 1 0}) (see Sect.~\vref{sect:primrec-examples2}).
 
 
 \vspace{4pt}
@@ -361,11 +389,24 @@ Please note that the projection $\pi_{1,1}$ is just the identity on \texttt{nat}
 
 \input{movies/snippets/primRec/idIsPR}
 
+\subsubsection{The predecessor (total) function}
+
+The predecessor function is defined by the following equations:
+
+\begin{align*}
+\texttt{pred}(0) &= 0 \\
+\texttt{pred}(1+n) &= n = \pi_{1,2}(n,\texttt{pred}(n))
+\end{align*}
+
+This definition is easy to translate into a term of type \texttt{PrimRec 1}.
+
+\inputsnippets{PrimRecExamples/xpred}
+
 \subsubsection{Using function composition}
 
 Let us look at the proof that any constant $n$ of type \texttt{nat} has type (\texttt{PR 0})
-(lemma  \texttt{const1\_NIsPR} of \texttt{primRec}). We carry out a proof by induction on $n$, the base case of which is already proven.
-Now, let us assume $n$ is \texttt{PR $n$}, with $x:\texttt{PrimRec}\,0$ as a ``realizer''.
+(lemma  \texttt{const0\_NIsPR} of \texttt{primRec}). We carry out a proof by induction on $n$, the base case of which is already proven.
+Now, let us assume $n$ is \texttt{PR $0$}, with $x:\texttt{PrimRec}\,0$ as a ``realizer''.
 Thus we would like to compose this constant function with the unary successor function.
 
 This is exactly the role of the instance \texttt{composeFunc 0 1} of the dependently typed
@@ -376,7 +417,7 @@ function \texttt{composeFunc}, as shown by the following lemma.
 
 
 \vspace{4pt}
-Thus, we get a quite simple proof of \texttt{const1\_NIsPR}.
+Here is a quite simple proof of \texttt{const0\_NIsPR}.
 
 
 \vspace{4pt}
@@ -385,44 +426,60 @@ Thus, we get a quite simple proof of \texttt{const1\_NIsPR}.
 
 \input{movies/snippets/PrimRecExamples/const0NIsPR}
 
-\subsubsection{Proving that \texttt{plus} is primitive recursive}
+\subsubsection{Another proof that \texttt{Nat.add} is primitive recursive}
 
-The lemma \texttt{plusIsPR} is already proven in \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}. We present in 
-\href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}
-a commented version of this proof, 
+We have already proven that \texttt{Nat.add} is primitive recursive. The following alternative proof, --- more detalled  ---, 
+shows how to search and apply lemmas from
+the \texttt{Ackermann} library.
 
-First, we look for lemmas which may help to prove that a given function obtained with the recursor \texttt{nat\_rec} is primitive recursive.
 
-\input{movies/snippets/PrimRecExamples/PrimRecExamplesSearch}
 
-The following lemma shows it suffices to prove that
-Standard library's function \texttt{plus} is extensionally equal to a function defined with
-\texttt{nat\_rec}.
+Let us look for some lemma which could help to prove some 
+recursive arithmetic binary function is primitive recursive.
 
-\input{movies/snippets/primRec/isPRExtEqual}
+\inputsnippets{PrimRecExamples/PRnatRecSearch}
 
-Thus, let us define an helper and prove its equivalence with \texttt{plus}.
+Good! Let us express addition in terms of \texttt{nat\_rec}.
 
-\input{movies/snippets/PrimRecExamples/plusAlt}
+
+\inputsnippets{PrimRecExamples/plusIsPRa}
+
+The lemma \texttt{Ackermann.isPRextEqual} tells us that if a function $g$ is extensionally equal to a primitive recursive function, then $g$ is primitive recursive too.
+
+\inputsnippets{PrimRecExamples/isPRextEqual}
+
+
+% The lemma \texttt{plusIsPR} is already proven in \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}. We present in 
+% \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}
+% a commented version of this proof, 
+
+% First, we look for lemmas which may help to prove that a given function obtained with the recursor \texttt{nat\_rec} is primitive recursive.
+
+% \input{movies/snippets/PrimRecExamples/PRnatRecSearch}
+
+% Thus, let us define an helper and prove its equivalence with \texttt{Nat.add}.
+
+% \input{movies/snippets/PrimRecExamples/plusIsPRa}
+
 
 
 \vspace{4pt}
 
+Let us start our proof.
 
-We are now able to complete the proof.
-
-\input{movies/snippets/PrimRecExamples/plusIsPRa}
+\inputsnippets{PrimRecExamples/plusIsPRa1,
+  PrimRecExamples/plusIsPRa2}
 
 
 We already proved that \texttt{S} is \texttt{PR 1}, but we need to consider a function of three arguments, which ignores its first and third arguments.
 Fortunately, the library \texttt{primRec} already contains lemmas adapted to this kind of situation.
 
 \vspace{4pt}
-\input{movies/snippets/PrimRecExamples/checkFilter0101IsPR}
+\input{movies/snippets/PrimRecExamples/plusIsPRa3}
 \vspace{4pt}
 
 
-Thus, our first subgoal is solved easily. The rest of the proof 
+Thus, our first subgoal is easily solved. The rest of the proof 
 is just an application of already proven lemmas.
 
 \vspace{4pt}
@@ -430,22 +487,15 @@ is just an application of already proven lemmas.
 \input{movies/snippets/PrimRecExamples/plusIsPRb}
 
 
-\begin{todo}
-Comment more examples from   \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}.
-\end{todo}
+
 
 \index{ackermann}{Exercises}
 \begin{exercise}
-There is a lot of lemmas similar to \texttt{filter010IsPR} in the \texttt{primRec} library, useful to control the arity of functions.
-Thus, the reader may look at them, and invent simple examples of application for each lemma.
+A few lemmas similar to \texttt{filter010IsPR}, also shown  in the \texttt{primRec} library help the user to control the arity of functions.
+Thus, the reader may look at them, and invent h.er.is simple examples of application.
 \end{exercise}
 
-\index{ackermann}{Exercises}
-\begin{exercise}
-Multiplication of natural number is already proven in the \texttt{primRec} library. Write a proof of your own, then compare to the library's version.
-\end{exercise}
 
-%\input{movies/snippets/PrimRecExamples/justATest}
 
 \subsubsection{More examples}
 
@@ -460,8 +510,6 @@ multiplication with the identity and the constant function which returns $2$.
 \begin{exercise}
 Prove that the following functions are primitive recursive. 
 
-\input{movies/snippets/MorePRExamples/factDef}
-
 \input{movies/snippets/MorePRExamples/expDef}
 
 \input{movies/snippets/MorePRExamples/tower2Def}
@@ -473,17 +521,24 @@ You may start this exercise with the file
     \href{https://github.com/coq-community/hydra-battles/blob/master/exercises/primrec/MorePRExamples.v}{exercises/primrec/MorePRExamples.v}.
 \end{exercise}
 
+\subsection{More advanced examples}
 
 
-\index{ackermann}{Exercises}
-\begin{exercise}
-Show that the function \texttt{min: naryFunc\,2} is primitive
-recursive.
 
-\emph{You may start this exercise with
-    \href{https://github.com/coq-community/hydra-battles/blob/master/exercises/primrec/MinPR.v}{exercises/primrec/MinPR.v}.}
+\subsubsection{The minimum of two natural numbers}
 
-\end{exercise}
+Let $a$ and $b$ be two natural numbers. The \emph{minimum} of $a$ and $b$ is $a$ if $a \leq b$, otherwise $b$.
+
+Thus, we propose the following definition:
+
+\inputsnippets{MinPR/minAltDef}
+
+Here is a sketch of proof that standard library's \texttt{min} is
+primitive recursive. The reader is kindly invited to fill the missing steps.
+
+\inputsnippets{MinPR/minProof1, MinPR/minProof2, MinPR/minProof3}
+
+
 
 \index{ackermann}{Exercises}
 

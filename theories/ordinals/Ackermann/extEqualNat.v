@@ -17,11 +17,13 @@ Fixpoint naryFunc (n : nat) : Set :=
 
 (* end snippet naryFunc *)
 
+(* begin snippet naryRelDef *)
 Fixpoint naryRel (n : nat) : Set :=
   match n with
   | O => bool
   | S n => nat -> naryRel n
   end.
+(* end snippet naryRelDef *)
 
 (* begin snippet extEqualDef *)
 

@@ -39,39 +39,37 @@ with PrimRecs : nat -> nat -> Set :=
 
 (* end snippet PrimRecDef *)
 
+  Notation "f '=x=' g" := (extEqual _ f g) (at level 70, no associativity).
+
+
 (* begin snippet PRNotations *)
 
-Module PRNotations.
-  Declare Scope pr_scope.
-  Delimit Scope pr_scope with pr.
-  (* Notation "[ ]" := (PRnil _) : pr_scope. *)
-  Notation "h :: t" := (PRcons _ _ h t) (at level 60, right associativity)
-  : pr_scope.
-  Notation "[ x ]" := (PRcons _ _ x  (PRnil _)) : pr_scope.
+  Module PRNotations.
+    Declare Scope pr_scope.
+    Delimit Scope pr_scope with pr.
+    Notation "h :: t" := (PRcons _ _ h t) (at level 60, right associativity)
+        : pr_scope.
+    Notation "[ x ]" := (PRcons _ _ x  (PRnil _)) : pr_scope.
 
-  Notation "[ x ; y ; .. ; z ]" := 
-    (PRcons _ _ x  (PRcons _ _ y .. (PRcons _ _ z  (PRnil _)) ..)) : pr_scope.
+    Notation "[ x ; y ; .. ; z ]" := 
+      (PRcons _ _ x  (PRcons _ _ y .. (PRcons _ _ z  (PRnil _)) ..)) : pr_scope.
 
+    Notation PRcomp f v := (composeFunc _ _ v f).
+    
+    Notation PRrec f0 fS := (primRecFunc _ f0 fS).
 
-  Notation PRcomp f v := (composeFunc _ _ v f).
-  
-  Notation PRrec f0 fS := (primRecFunc _ f0 fS).
+    (** Popular projections *)
+    Notation pi1_1 := (projFunc 1 0 (le_n 1)).
 
-  Notation "f '=x=' g" := (extEqual _ f g) (at level 70, no associativity).
-(** Popular projections *)
+    Notation pi1_2 := (projFunc 2 1 (le_n 2)).
+    Notation pi2_2 := (projFunc 2 0 (le_S 1 1 (le_n 1))).
 
-
-Notation pi1_1 := (projFunc 1 0 (le_n 1)).
-
-Notation pi1_2 := (projFunc 2 1 (le_n 2)).
-Notation pi2_2 := (projFunc 2 0 (le_S 1 1 (le_n 1))).
-
-Notation pi1_3 := (projFunc 3 2 (le_n 3)).
-Notation pi2_3 := (projFunc 3 1 (le_S 2 2 (le_n 2))).
-Notation pi3_3 := (projFunc 3 0 (le_S 1 2 (le_S 1 1 (le_n 1)))).
+    Notation pi1_3 := (projFunc 3 2 (le_n 3)).
+    Notation pi2_3 := (projFunc 3 1 (le_S 2 2 (le_n 2))).
+    Notation pi3_3 := (projFunc 3 0 (le_S 1 2 (le_S 1 1 (le_n 1)))).
 
 
-End PRNotations. 
+  End PRNotations. 
 
 (* end snippet PRNotations *)
 
@@ -109,7 +107,7 @@ Fixpoint evalConstFunc (n m : nat) {struct n} : naryFunc n :=
   end.
 
 (** *** Projections 
-   The parameters are number in opposite order.
+   The parameters are numbered in opposite order.
    So proj(2,0)(a,b) = b. *)
 
 Fixpoint evalProjFunc (n : nat) :
@@ -347,14 +345,11 @@ Class isPRrel (n : nat) (R : naryRel n) : Set :=
   is_pr_rel: isPR n (charFunction n R).
 (* end snippet isPRDef *)
 
-
-
-
-
 (* begin snippet SuccIsPR:: no-out *)
 #[export] Instance succIsPR : isPR 1 S.
 Proof. exists succFunc; cbn; reflexivity. Qed.
 (* end snippet SuccIsPR *)
+
 
 #[export] Instance const0_NIsPR (n:nat): isPR 0 n.
 Proof.
@@ -923,9 +918,10 @@ Proof.
   apply const1_NIsPR.
 Qed.
 
+(* begin snippet ltBoolDef *)
 Definition ltBool (a b : nat) : bool :=
   if le_lt_dec b a then false else true. 
-
+(* end snippet ltBoolDef *)
 
 Lemma ltBoolTrue : forall a b : nat, ltBool a b = true -> a < b.
 Proof.
@@ -1191,8 +1187,10 @@ Proof.
   intros c c0; rewrite p; clear p; destruct (Nat.eqb c c0); auto.
 Qed.
 
+(* begin snippet leBoolDef *)
 Definition leBool (a b : nat) : bool :=
   if le_lt_dec a b then true else false.
+(* end snippet leBoolDef *)
 
 #[export] Instance leIsPR : isPRrel 2 leBool.
 Proof.

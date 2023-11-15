@@ -58,15 +58,15 @@ Module LO.
     match a with
       nil => false
     | cons 0 _ _ => true
-    | cons i n b => succb b
+    | cons _ _ b => succb b
     end.
   
   Fixpoint limitb (a : t) :=
     match a with
       nil => false
     | cons 0 _ _ => false
-    | cons i n nil => true
-    | cons i n b => limitb b
+    | cons _ _ nil => true
+    | cons _ _ b => limitb b
     end.
 
   Lemma succb_ref (a:t): succb a -> T1is_succ (refine a).
