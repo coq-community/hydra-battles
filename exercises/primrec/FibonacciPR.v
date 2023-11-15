@@ -65,7 +65,7 @@ Section Proof_of_FibIsPR.
   Lemma fib_alt_Ok : extEqual 1 fib fib_alt.
   Admitted.
 
-  Theorem fibIsPR : isPR 1 fib.
+  #[export] Instance fibIsPR : isPR 1 fib.
   Admitted.
 
 End Proof_of_FibIsPR.
