@@ -563,20 +563,30 @@ the associated constructor and projections are primitive recursive.
 \end{exercise}
 
 \index{ackermann}{Exercises}
-\begin{exercise}
+\begin{exercise}[The integer square root]
 
-Prove the following lemmas (which may help to solve the next  exercise).
+\mbox{}
+\vspace{4pt}
+
+\noindent
+ \textbf{1)} 
+Please consider the following specification of the function \texttt{boundedSearch} defined in 
+\href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}.
+
+\inputsnippets{isqrt/boundedSearchSpec}
+
+Prove the following lemmas.
 
 \inputsnippets{isqrt/boundedSearch3, isqrt/boundedSearch4}
 
-\textbf{Note:}  The function \texttt{boundedSearch} is defined
-in Library \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec}. 
-\end{exercise}
+\noindent
+\textbf{2)} 
+Let us consider the following definition of the relation `` $r$ is the integer square root of $n$ ''.
 
-\index{ackermann}{Exercises}
+\inputsnippets{isqrt/isqrtSpec}
 
-\begin{exercise}
-Prove that the function which returns the  integer square root of any natural number  is primitive recursive.
+Prove that the function which returns the  integer square root of any natural number  is primitive recursive (you may use 
+the function \texttt{boundedSearch} for this purpose).
 
 \emph{You may start this exercise with the file
     \href{https://github.com/coq-community/hydra-battles/blob/master/exercises/primrec/isqrt.v}{exercises/primrec/isqrt.v}.}
@@ -590,6 +600,11 @@ The best known example of a total recursive function which is not primitive recu
  is a nice opportunity to explore
 the treatment of primitive recursive functions by R. O'Connor,
 and to play with dependent types.
+
+With respect to proof methods, we will see a first \emph{proof by induction on the set of all primitive recursive functions}.
+First, we will prove a property shared by all primitive function, 
+then show that the Ackermann function doesn't satisfy this property.
+
 
 \subsection{Ackermann function}
 

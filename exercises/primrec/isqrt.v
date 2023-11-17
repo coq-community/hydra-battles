@@ -7,6 +7,11 @@
 From hydras Require Import  primRec extEqualNat.
 From Coq Require Import Min ArithRing Lia Compare_dec Arith Lia.
 
+(* begin snippet boundedSearchSpec *)
+Check boundedSearch.
+Search boundedSearch.
+(* end snippet boundedSearchSpec *)
+
 
 
 (** Please consider the following specification of the integer square root *)
@@ -19,7 +24,7 @@ Definition isqrt_spec n r := r * r <= n < S r * S r.
 Section sqrtIsPR.
   
 Let P (n r: nat) :=  Nat.ltb n (S r * S r).
-Definition isqrt  := boundedSearch P . 
+Definition isqrt  := boundedSearch P. 
 
 Lemma sqrt_correct (n: nat) : isqrt_spec n (isqrt n).
 Admitted.

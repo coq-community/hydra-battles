@@ -1,11 +1,17 @@
 (* @todo  add as an exercise *)
 
+
+
+
+From hydras Require Import  primRec extEqualNat ssrnat_extracts.
+From Coq Require Import Min ArithRing Lia Compare_dec Arith Lia.
+
 (** Returns smallest value of x less or equal than b such that (P b x). 
     Otherwise returns b  *)
-
-
-From hydras Require Import  primRec extEqualNat.
-From Coq Require Import Min ArithRing Lia Compare_dec Arith Lia.
+(* begin snippet boundedSearchSpec *)
+Check boundedSearch.
+Search boundedSearch.
+(* end snippet boundedSearchSpec *)
 
 
 (* begin snippet boundedSearch3:: no-out *)
@@ -34,8 +40,9 @@ Proof.
   now rewrite H0.
 Qed.
 
-
-Definition isqrt_spec n r := r * r <= n < S r * S r.
+(* begin snippet isqrtSpec *)
+Definition isqrt_spec n r := r * r <= n < r.+1 * r.+1.
+(* end snippet isqrtSpec *)
 
 Section sqrtIsPR.
 
@@ -48,10 +55,10 @@ Section sqrtIsPR.
     Remark R00 : P n (isqrt n) = true.
     Proof.
       apply boundedSearch4.
-      unfold P; cbn;  apply leb_correct; lia.
+      unfold P; cbn; apply leb_correct; lia.
     Qed.
 
-    Lemma R01 : n < S (isqrt n) * S (isqrt n).
+    Lemma R01 :  n < (isqrt n).+1 * (isqrt n).+1.
     Proof.
       generalize R00; intro H; apply leb_complete in H; auto.
     Qed.
@@ -108,9 +115,11 @@ Qed.
 
 End sqrtIsPR.
 
-(** slow! *)
-
 Compute isqrt 22.
+
+Compute isqrt 26.
+
+
 
 (** Extra work :
    Define a faster implementation of [sqrt_spec], and prove your function is 

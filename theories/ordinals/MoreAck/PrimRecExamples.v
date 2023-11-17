@@ -1,16 +1,12 @@
-Require Import Arith ArithRing List.
-Require Import Vector.
-Require Import Utf8.
+From Coq Require Import Arith ArithRing List Vector Utf8.
 Import VectorNotations.
 
-Require Import primRec cPair.
-Import extEqualNat.
-Import PRNotations.
+From hydras Require Import primRec cPair.
+Import extEqualNat PRNotations.
+
 (* begin snippet naryFunc3 *)
 Compute naryFunc 3.
 (* end snippet naryFunc3 *)
-
-
 
 (* begin snippet naryRel2 *)
 Check leBool : naryRel 2.
@@ -42,7 +38,6 @@ Check (fun n p q : nat =>  n * p + q): naryFunc 3.
 (* begin snippet extEqual2a *)
 Compute extEqual 2.
 
-
 Example extEqual_ex1: extEqual 2 Nat.mul (fun x y =>  y * x + x - x). (* .no-out *)
 Proof. 
   intros x y; cbn.
@@ -65,7 +60,7 @@ Qed.
 Example Ex1 : PReval zeroFunc = 0.
 Proof. reflexivity. Qed.
 
-Example Ex2 a : PReval succFunc a = S a.
+Example Ex2 a : PReval succFunc a = a.+1.
 Proof. reflexivity. Qed.
 
 Example Ex3 a b c d e f: forall (H: 2 < 6),
@@ -110,11 +105,13 @@ End Primitive_recursion.
 (* end snippet evalPrimRecEx  *)  
 
 Section compose2Examples.
-Variables (f: naryFunc 1) (g: naryFunc 2).
+Variables (f: naryFunc 1) (g: naryFunc 2) (h: naryFunc 3)
+  (f': naryFunc 4) (g': naryFunc 5). 
+
 Eval simpl in compose2 1 f g.
-Variable (h: naryFunc 3). 
+
 Eval simpl in compose2 2 g h. 
-Variables (f': naryFunc 4) (g': naryFunc 5).
+
 Eval simpl in compose2 _ f' g'.
 End compose2Examples.
 
@@ -234,10 +231,6 @@ Goal forall f g x, evalPrimRec 1 (PRcompose1 g f) x =
                  evalPrimRec 1 g (evalPrimRec 1 f x).
 reflexivity. 
 Qed.
-
-(** Note : see lemma compose1_1IsPR  *)
-
-
 
 Remark compose2_0 (a:nat) (g: nat -> nat)  : compose2 0 a g = g a.
 Proof.   reflexivity. Qed.
@@ -464,7 +457,7 @@ Qed.
 
 (* Move to MoreAck *)
 
-Section Exs. (* Todo: exercise *)
+Section Exs. 
 Let f: naryFunc 2 := fun x y => x + pred (cPairPi1 y).
 
   (* To prove !!! *)
