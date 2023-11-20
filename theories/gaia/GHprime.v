@@ -31,9 +31,9 @@ Lemma H'_eq1 (i: nat) : H'_ E0zero i = i.
 Proof. by rewrite /H'_  g2h_E0zero Epsilon0.Hprime.H'_eq1.  Qed.
 
 Lemma H'_eq2  alpha i :
-  H'_ (E0succ alpha) i = H'_ alpha (S i).
+  H'_ (E0_succ alpha) i = H'_ alpha (S i).
 Proof.
-  case alpha => ? ?; by rewrite /H'_  g2h_E0succ  H'_eq2.   
+  case alpha => ? ?; by rewrite /H'_  g2h_E0_succ H'_eq2.   
 Qed.
 
 Lemma H'_eq3 alpha i :
@@ -47,19 +47,19 @@ Qed.
 (** **  Examples *)
 
 (* begin snippet Examples:: no-out *)
-Lemma H'_omega k : H'_ E0omega k = (2 * k).+1 %nat.
+Lemma H'_omega k : H'_ E0_omega k = (2 * k).+1 %nat.
 Proof. 
   rewrite H'_eq3  ?/E0limit => //.
   (* ... *)
 (* end snippet Examples *)
-  replace (E0Canon E0omega k.+1) with (E0fin k.+1); last first.
+  replace (E0Canon E0_omega k.+1) with (E0fin k.+1); last first.
   apply gE0_eq_intro => /=;  by rewrite E0fin_cnf T1succ_nat. 
   rewrite /H'_ E0g2h_Fin H'_Fin; lia.
 Qed. 
 
 (* begin snippet Examplesb:: no-out *)
 Lemma H'_omega_double (k: nat) :
-  H'_ (E0mul E0omega (E0fin 2)) k =  (4 * k + 3)%coq_nat.
+  H'_ (E0mul E0_omega (E0fin 2)) k =  (4 * k + 3)%coq_nat.
 Proof.
   by rewrite /H'_  -H'_omega_double E0g2h_mulE E0g2h_omegaE E0g2h_Fin. 
 Qed.
@@ -99,7 +99,7 @@ Qed.
 
 Lemma H'_omega_cube_min :
 forall k : nat,
-  0 <> k -> (hyper_exp2 k.+1  <= H'_ (E0phi0 (E0fin 3)) k)%N.
+  0 <> k -> (hyper_exp2 k.+1  <= H'_ (E0_phi0 (E0fin 3)) k)%N.
 Proof.
   move => k Hk; apply /leP; transitivity (Hprime.H'_ (hE0phi0 3) k). 
   - by apply H'_omega_cube_min.

@@ -39,16 +39,27 @@ Section Proof_of_FibIsPR.
 
    *)
 
+  (* begin snippet AboutCPair *)
+  Import LispAbbreviations. 
+  Check cPair. 
+  Print car.
+  Check car.
+  Check cdr.
+  Search cPair isPR. 
+  Search car isPR.
+  Search car cdr cPair.
+  (* end snippet AboutCPair *)
 
-  Let fib_step_cPair p := cPair (cPairPi1 p + cPairPi2 p)
-                                (cPairPi1 p).
+
+  Let fib_step_cPair p := cPair (car p + cdr p)
+                                (car p).
 
   Let fib_iter_cPair n p := nat_rec (fun _ => nat)
                                     p
                                     (fun _ p => fib_step_cPair p)
                                     n.
 
-  Definition fibPR n := cPairPi2 (fib_iter_cPair n (cPair 1 1)).
+  Definition fibPR n := cdr (fib_iter_cPair n (cPair 1 1)).
 
 
   (** Let us prove that [fibPR] is PR *)

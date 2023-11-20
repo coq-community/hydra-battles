@@ -62,7 +62,7 @@ Proof.
 Qed.
 
 (* begin snippet FVsAck *)
-Lemma F_vs_Ack n : 2 <= n -> Ack n n <= F_ E0omega n. (* .no-out *)
+Lemma F_vs_Ack n : 2 <= n -> Ack n n <= F_ E0_omega n. (* .no-out *)
 (* end snippet FVsAck *)
 
 Proof.
@@ -77,7 +77,7 @@ Import primRec extEqualNat.
 
 Section F_omega_notPR.
 
-  Context (F_omega_PR : isPR 1 (F_ E0omega)).
+  Context (F_omega_PR : isPR 1 (F_ E0_omega)).
 
   Lemma F_omega_not_PR : False.
   Proof.
@@ -107,9 +107,9 @@ Section F_alpha_notPR.
   Variable alpha: E0.
   Section case_lt.
     
-    Hypothesis Halpha : E0omega o< alpha.
+    Hypothesis Halpha : E0_omega o< alpha.
 
-    Remark R5: exists N, forall k, N <= k -> F_ E0omega k < F_ alpha k.
+    Remark R5: exists N, forall k, N <= k -> F_ E0_omega k < F_ alpha k.
     Proof.
       destruct (F_mono_l _ _ Halpha) as [x Hx]; exists x; auto.
     Qed.
@@ -118,9 +118,9 @@ Section F_alpha_notPR.
 
     Remark R00 : F_ alpha >> fun n => Ack n n.
     Proof.
-      destruct (F_mono_l alpha E0omega Halpha) as [N HN];
+      destruct (F_mono_l alpha E0_omega Halpha) as [N HN];
         exists (Nat.max N 2);  intros p Hp.
-      apply Nat.le_lt_trans with (F_ E0omega p).    
+      apply Nat.le_lt_trans with (F_ E0_omega p).    
       - apply F_vs_Ack; auto; lia.
       - apply HN; lia.
     Qed.
@@ -134,7 +134,7 @@ Section F_alpha_notPR.
   End case_lt.
 
   
-  Hypothesis H : E0omega o<= alpha.
+  Hypothesis H : E0_omega o<= alpha.
   Context (H0: isPR 1 (F_ alpha)).
 
   Lemma F_alpha_not_PR: False.
@@ -164,7 +164,7 @@ Section step.
   (*  in order to use primRec's lemmas *)
   Let F := fun a b =>  nat_rec (fun _ => nat) a (fun x y  => F_ n y) b.
   
-  Remark L00: forall i,  F_ (E0succ n) i = F i (S i) .
+  Remark L00: forall i,  F_ (E0_succ n) i = F i (S i) .
   Proof.
     unfold F; intro i; rewrite F_succ_eqn.  
     now  rewrite iterate_compat3.
@@ -189,7 +189,7 @@ Section step.
 
   #[local] Instance R03 : isPR 1 (F_ (S n)). 
   Proof.
-    apply isPRTrans with (F_ (E0succ n)).
+    apply isPRTrans with (F_ (E0_succ n)).
  -  rewrite <- FinS_Succ_eq; rewrite FinS_eq.
        intro; reflexivity.
     -  eapply isPRextEqual.
@@ -210,18 +210,18 @@ Qed.
 (**  Keep in mind that [isPR] is of sort [Set], so [not] and [iff]
      cannot be used *)
 
-Lemma F_alpha_PR_inv: forall alpha,  isPR 1 (F_ alpha) -> alpha o< E0omega.
+Lemma F_alpha_PR_inv: forall alpha,  isPR 1 (F_ alpha) -> alpha o< E0_omega.
 Proof.
   intro alpha.
-  destruct (E0_lt_ge alpha E0omega); auto.
+  destruct (E0_lt_ge alpha E0_omega); auto.
   intro H0;  destruct  ( F_alpha_not_PR _ H H0).
 Qed.
 
 
 Lemma F_alpha_notPR_inv: forall alpha,
-    (isPR 1 (F_ alpha) -> False)  -> E0omega o<= alpha.
+    (isPR 1 (F_ alpha) -> False)  -> E0_omega o<= alpha.
 Proof.
-  intros alpha H; destruct (E0_lt_ge alpha E0omega); auto.
+  intros alpha H; destruct (E0_lt_ge alpha E0_omega); auto.
   destruct (lt_omega_inv  H0) as [i Hi]; subst alpha.
   destruct H; apply F_n_PR.
 Qed.

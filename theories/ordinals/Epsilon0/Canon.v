@@ -1027,14 +1027,14 @@ Defined.
 Notation CanonS alpha i := (Canon alpha (S i)).
 Notation Canon0 alpha := (Canon alpha 0).
 
-Lemma Canon_Succ beta n: Canon (E0succ beta) (S n) = beta.
+Lemma Canon_Succ beta n: Canon (E0_succ beta) (S n) = beta.
 Proof.
-  destruct beta. simpl. unfold CanonS, E0succ. simpl.
+  destruct beta. simpl. unfold CanonS, E0_succ. simpl.
   apply E0_eq_intro. simpl.
   now rewrite (canon_succ).  
 Qed.
 
-Lemma Canon_Omega k : Canon E0omega k = E0fin k.
+Lemma Canon_Omega k : Canon E0_omega k = E0fin k.
 Proof.
   destruct k; apply E0_eq_intro; reflexivity. 
 Qed.
@@ -1044,12 +1044,12 @@ Qed.
 Lemma CanonSSn (i:nat) :
   forall alpha n  , alpha <> E0zero ->
                     CanonS (Cons alpha (S n) E0zero) i =
-                    Cons alpha n (CanonS (E0phi0 alpha) i).
+                    Cons alpha n (CanonS (E0_phi0 alpha) i).
 Proof.
   intros; apply E0_eq_intro;
   unfold CanonS;repeat (rewrite cnf_rw || rewrite cnf_Cons); auto.
   - unfold canonS; rewrite canon_SSn_zero; auto with E0.
-  -  unfold lt, E0phi0; repeat rewrite cnf_rw. 
+  -  unfold lt, E0_phi0; repeat rewrite cnf_rw. 
      apply canonS_LT ; trivial. 
      apply nf_phi0;auto with E0. 
      discriminate.
@@ -1058,8 +1058,8 @@ Proof.
 Qed. 
 
 Lemma CanonS_phi0_lim alpha k : E0limit alpha ->
-                                CanonS (E0phi0 alpha) k =
-                                E0phi0 (CanonS alpha k). 
+                                CanonS (E0_phi0 alpha) k =
+                                E0_phi0 (CanonS alpha k). 
 Proof.
   intro; orefl; rewrite cnf_phi0.
   unfold CanonS, canonS; repeat   rewrite cnf_rw;  rewrite <- canonS_lim1.
@@ -1098,10 +1098,10 @@ Qed.
 #[global]
   Hint Resolve CanonS_lt Canon_lt Canon_of_limit_not_null : E0.
 
-Lemma CanonS_phi0_Succ alpha i : CanonS (E0phi0 (E0succ alpha)) i =
+Lemma CanonS_phi0_Succ alpha i : CanonS (E0_phi0 (E0_succ alpha)) i =
                                  Omega_term alpha i.
 Proof.      
-  apply E0_eq_intro;  unfold Omega_term, CanonS, E0phi0, E0succ, canonS.
+  apply E0_eq_intro;  unfold Omega_term, CanonS, E0_phi0, E0_succ, canonS.
   simpl cnf; rewrite pred_of_succ; case_eq (succ (cnf alpha)).
   - intro H; destruct (succ_not_zero _ H);  auto.
   - reflexivity. 

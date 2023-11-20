@@ -519,8 +519,8 @@ Qed.
 #[global] Notation hE0lt := E0.E0lt.
 #[global] Notation hE0le := E0.E0le.
 #[global] Notation hE0zero := E0.E0zero.
-#[global] Notation hE0omega := E0.E0omega.
-#[global] Notation hE0phi0 := E0.E0phi0.
+#[global] Notation hE0omega := E0.E0_omega.
+#[global] Notation hE0phi0 := E0.E0_phi0.
 #[global] Notation hE0fin := E0.E0fin.
 #[global] Notation hE0limit := E0.E0limit.
 #[global] Notation hE0is_succ := E0.E0is_succ.
@@ -586,25 +586,25 @@ Definition E0le  (a b: E0) := cnf a <= cnf b.
 #[global, program] Definition E0zero: E0 := @mkE0 zero _. 
 
 #[global, program]
- Definition E0succ (a: E0): E0 :=  @mkE0 (T1succ (cnf a)) _.
+ Definition E0_succ (a: E0): E0 :=  @mkE0 (T1succ (cnf a)) _.
 Next Obligation.
   rewrite nf_succ => //; case: a => ? i //=; by apply /eqP. 
 Defined.
 
 
 #[global, program]
- Definition E0pred (a:E0) : E0:=  @mkE0 (T1pred (cnf a)) _.
+ Definition E0_pred (a:E0) : E0:=  @mkE0 (T1pred (cnf a)) _.
 Next Obligation. 
   case: a => ? ?; rewrite nf_pred  => //= ; by apply /eqP.
 Defined. 
 
 
 Fixpoint E0fin (n:nat) : E0 :=
-  if n is p.+1 then E0succ (E0fin p) else E0zero. 
+  if n is p.+1 then E0_succ (E0fin p) else E0zero. 
 
-#[program] Definition E0omega: E0 := @mkE0 T1omega _. 
+#[program] Definition E0_omega: E0 := @mkE0 T1omega _. 
 
-#[program]  Definition E0phi0 (a: E0) : E0 := @mkE0 (phi0 (cnf a)) _.
+#[program]  Definition E0_phi0 (a: E0) : E0 := @mkE0 (phi0 (cnf a)) _.
 (* end snippet E0Defb *)
 Next Obligation. 
   case : a => ? ?; apply /eqP => //=. 
@@ -712,24 +712,24 @@ Proof.
   apply  E0_eq_intro=> /=;  by rewrite g2h_h2gK. 
 Qed.
 
-Lemma g2h_E0succ a : E0_g2h (E0succ a)= E0.E0succ (E0_g2h a). 
+Lemma g2h_E0_succ a : E0_g2h (E0_succ a)= E0.E0_succ (E0_g2h a). 
 Proof.
-  rewrite /E0succ; apply E0_eq_intro => /=; by rewrite g2h_succ. 
+  rewrite /E0_succ; apply E0_eq_intro => /=; by rewrite g2h_succ. 
 Qed.
 
-Lemma  E0is_succ_succ a : E0is_succ  (E0succ a).
+Lemma  E0is_succ_succ a : E0is_succ  (E0_succ a).
 Proof.
- rewrite /E0is_succ g2h_E0succ; apply Succ_Succb. 
+ rewrite /E0is_succ g2h_E0_succ; apply Succ_Succb. 
 Qed. 
 
 (* To do : clean up ! *)
 
-Lemma E0is_succE a: E0is_succ a -> {beta: E0 | a = E0succ beta}.
+Lemma E0is_succE a: E0is_succ a -> {beta: E0 | a = E0_succ beta}.
 Proof. 
  rewrite /E0is_succ => H. 
  case (Succb_Succ _ H) => beta Hbeta; exists (E0_h2g beta).
  rewrite -(E0_h2g_g2hK a) Hbeta.
- have H0:= g2h_E0succ (E0_h2g beta).
+ have H0:= g2h_E0_succ (E0_h2g beta).
  move: H0; rewrite E0_g2h_h2gK.
  move => H0;  rewrite -H0. 
 by rewrite E0_h2g_g2hK.
@@ -750,9 +750,9 @@ Qed.
 
 (* clean up!  *)
 
-Lemma E0pred_succK x : E0pred (E0succ x) = x. 
+Lemma E0_pred_succK x : E0_pred (E0_succ x) = x. 
 Proof.
-  apply E0_eqE; rewrite /E0pred. 
+  apply E0_eqE; rewrite /E0_pred. 
   apply E0_eq_intro => //=.
   rewrite pred_succ => //.
   case: x => c Hc //=.  by apply /eqP.
@@ -766,7 +766,7 @@ Lemma E0g2h_Fin i: E0_g2h (E0fin i) = E0.E0fin i.
 Proof.  apply E0_eq_intro => /=; rewrite E0fin_cnf; by case: i. Qed.
 
 
-Lemma E0g2h_phi0 a : E0_g2h (E0phi0 a) = E0.E0phi0 (E0_g2h a).
+Lemma E0g2h_phi0 a : E0_g2h (E0_phi0 a) = E0.E0_phi0 (E0_g2h a).
 Proof.  apply E0_eq_intro => //. Qed.
 
 Lemma E0g2h_mulE (a b: E0): E0_g2h (E0mul a b) = E0.E0mul (E0_g2h a) (E0_g2h b).
@@ -780,7 +780,7 @@ Proof.
          by rewrite g2h_plusE. 
 Qed.
 
-Lemma E0g2h_omegaE : E0_g2h E0omega = hE0omega. 
+Lemma E0g2h_omegaE : E0_g2h E0_omega = hE0omega. 
  Proof.  by  apply E0_eq_intro => /=.  Qed. 
 
 From Coq Require Import Relations Basics
@@ -935,7 +935,7 @@ Proof. split; [apply  E0_sto | apply E0compare_correct]. Qed.
 (* end snippet compEpsilon0 *)
 
 (* begin snippet ExampleComp *)
-Compute compare (E0phi0 (E0fin 2)) (E0mul (E0succ E0omega) E0omega).
+Compute compare (E0_phi0 (E0fin 2)) (E0mul (E0_succ E0_omega) E0_omega).
 (* end snippet ExampleComp *)
 
 (* begin snippet gEpsilon0:: no-out *)

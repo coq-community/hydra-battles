@@ -25,7 +25,7 @@ Equations  L_ (alpha: E0) (i:nat) : nat by wf alpha E0lt :=
       | right _nonzero
           with Utils.dec (E0limit alpha) :=
           { | left _limit =>  L_ (Canon alpha i)  (S i) ;
-            | right _successor =>  L_ (E0pred alpha) (S i)}}.
+            | right _successor =>  L_ (E0_pred alpha) (S i)}}.
 
 (*| .. coq:: in messages |*)
 Solve All Obligations with auto with E0. 
@@ -46,7 +46,7 @@ Lemma L_zero_eqn : forall i, L_ E0zero i = i.
 Proof. intro i; now rewrite L__equation_1. Qed.
 
 Lemma L_eq2 alpha i :
-  E0is_succ alpha -> L_ alpha i = L_ (E0pred alpha) (S i).
+  E0is_succ alpha -> L_ alpha i = L_ (E0_pred alpha) (S i).
 (* end snippet Paraphrasesa *)
 
 Proof.
@@ -59,7 +59,7 @@ Qed.
 
 (* begin snippet Paraphrasesb:: no-out *)
 Lemma L_succ_eqn alpha i :
-  L_ (E0succ alpha) i = L_ alpha (S i).
+  L_ (E0_succ alpha) i = L_ alpha (S i).
 (* end snippet Paraphrasesb *)
 
 Proof.
@@ -99,11 +99,11 @@ Proof.
 Qed.
 (*||*)
 
-Lemma L_omega : forall k, L_ E0omega k = S (2 * k)%nat. (* .no-out *)
+Lemma L_omega : forall k, L_ E0_omega k = S (2 * k)%nat. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   intro k; rewrite L_lim_eqn.
-  - replace (Canon  E0omega  k) with (E0fin k).
+  - replace (Canon  E0_omega k) with (E0fin k).
     + rewrite L_finite; abstract lia.
     +  cbn; unfold Canon; cbn.
        apply E0_eq_intro.
@@ -176,7 +176,7 @@ Section L_correct_proof.
   Lemma L_ok0 : P E0zero.
   Proof. red; simpl. left. intro k; now rewrite L_zero_eqn. Qed.
 
-  Lemma L_ok_succ beta  : P beta -> P (E0succ beta).
+  Lemma L_ok_succ beta  : P beta -> P (E0_succ beta).
   Proof with auto with E0.
     intro H; red;  rewrite Succ_rw.
     destruct (E0_eq_dec beta E0zero).
@@ -184,7 +184,7 @@ Section L_correct_proof.
        replace one with (T1nat 1); [simpl | trivial].
        intro; eapply L_spec_compat;  eauto.
        intros; rewrite L_eq2; auto with E0.
-       rewrite E0pred_of_Succ, L_zero_eqn; trivial.
+       rewrite E0_pred_of_Succ, L_zero_eqn; trivial.
     -  apply L_spec_compat  with (L_succ (L_ beta));
          auto.
        + apply L_succ_ok; auto.

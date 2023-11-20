@@ -553,6 +553,12 @@ $(\texttt{fib}(n+1),\texttt{fib}(n))$.
 Library \href{../theories/html/hydras.Ackermann.cPair.html}{Ackermann.cPair} contains
 the definition of the encoding of $\mathbb{N}^2$ into $\mathbb{N}$, and the proofs that 
 the associated constructor and projections are primitive recursive.  
+
+Please find here some definitions and lemmas you may use 
+in order to solve this exercise (non-exhaustive list).
+
+\inputsnippets{FibonacciPR/AboutCPair}
+
 \emph{You may start this exercise with the file
   \href{https://github.com/coq-community/hydra-battles/blob/master/exercises/primrec/FibonacciPR.v}{exercises/primrec/FibonacciPR.v}.}
 
@@ -593,18 +599,17 @@ the function \texttt{boundedSearch} for this purpose).
 
 \end{exercise}
 
-\section{Proving that a given function is \emph{not} primitive recursive}
-\label{sect:ack-not-PR}
+\section{Proofs by induction over all primitive recursive functions}
 
-The best known example of a total recursive function which is not primitive recursive is the Ackermann function. We show how to adapt the classic proof (see for instance~\cite{planetmath}) to the constraints of \gallina. We hope this formal proof 
+We may want to prove properties shared with all the set of
+primitive function, for instance that any primitive recursive function is representable by a predicate in Peano Arithmetics (see Chap~›\vref{chap:PRRep}).
+In this chapter, we will prove by induction that every primitive recursive function has a given property which is not satisfied by  Ackermann function, and deduce that this function is not PR.
+We show how to adapt the classic proof (see for instance~\cite{planetmath}) to the constraints of \gallina. We hope this formal proof 
  is a nice opportunity to explore
 the treatment of primitive recursive functions by R. O'Connor,
 and to play with dependent types.
 
-With respect to proof methods, we will see a first \emph{proof by induction on the set of all primitive recursive functions}.
-First, we will prove a property shared by all primitive function, 
-then show that the Ackermann function doesn't satisfy this property.
-
+First, let us define Ackermann function in \coq, then look at a few properties of this function.
 
 \subsection{Ackermann function}
 
@@ -721,10 +726,6 @@ Please note also that for any given $n$, the unary function
 
 
 
-
-
-\subsection{A proof by induction on all primitive recursive functions}
-
 In order to prove that \texttt{Ack} (considered as a function of two arguments) is not primitive recursive, the usual method consists in two steps:
 
 
@@ -734,10 +735,13 @@ $f\,x\,y \leq \texttt{Ack}\,n\,(\textrm{max}\,x\,y)$ (we say that $f$ is \emph{`
 \item Show that \texttt{Ack} fails to satisfy this property.
 \end{enumerate}
 
-First, we prove that any primitive function of two arguments is majorized by \texttt{Ack}.
+First, we have to prove that any primitive function of two arguments is majorized by \texttt{Ack}.
+Let us look at the induction principles generated for the types
+\texttt{PrimRec $n$}. % and \texttt{PrimRecs $n$ $m$} 
+
 If we look at the inductive definition of primitive recursive functions, page~\pageref{def:Primrec}, it is obvious that a proof by induction on the construction of primitive recursive functions must consider functions of any arity.
 
-The following scheme allows us to write proofs by induction on the class of primitive recursive functions. 
+
 
 \vspace{4pt}
 \noindent
@@ -748,7 +752,6 @@ The following scheme allows us to write proofs by induction on the class of prim
  
 \inputsnippets{primRec/SchemePrimRecInd,
 primRec/SchemePrimRecInda}
-
 
 
 Please note that, in order to prove a property shared by any primitive recursive function of, say, arity 2, this induction scheme  leads you to consider an extension of the considered property to primitive recursive function of any arity.
@@ -768,8 +771,8 @@ Thus the lemma we will have to prove is the following one:
 But dots don't belong to \gallina's syntax! So, we may use \coq's vectors for denoting arbitrary tuples.
 
 First, we extend \texttt{max} to vectors of natural numbers (using the notations of module \texttt{VectorNotations} and some more definitions from 
-\href{../theories/html/hydras.Prelude.MoreVectors.html}{Prelude.MoreVectors}). So, (\texttt{t\,$A$\,$n$}) is the type of vectors of $n$ elements of type $A$, and the constants \texttt{cons}, \texttt{nil}, \texttt{map}, etc., refer to vectors and not to lists. Likewise, the notation \texttt{x::v} is an abbreviation for
-\texttt{VectorDef.cons x \_ v}.
+\href{../theories/html/hydras.Prelude.MoreVectors.html}{Prelude.MoreVectors}). So, (\texttt{t $A$ $n$}) is the type of vectors of $n$ elements of type $A$, and the constants \texttt{cons}, \texttt{nil}, \texttt{map}, etc., refer to vectors and not to lists. Likewise, the notation \texttt{$x$::$v$} is an abbreviation for
+\texttt{VectorDef.cons $x$ \_ $v$}.
 
 \index{coq}{Dependently typed functions}
 
@@ -819,7 +822,7 @@ The three base cases  are as follows:
 
 
 
-The remaining cases are proved within a mutual  induction.
+The remaining cases are proved within the main  mutual  induction.
 
 \index{coq}{Mutual induction}
 
@@ -873,7 +876,8 @@ It is easy to prove that any unary function which dominates \texttt{fun n => Ack
 
 \input{movies/snippets/AckNotPR/majorPR1}
 
-Then, we write  a short proof by contradiction.
+Then, we write  a short proof by contradiction, using a 
+\emph{diagonalized} version of Ackermann function.
 
 \input{movies/snippets/AckNotPR/domAckNotPR}
 

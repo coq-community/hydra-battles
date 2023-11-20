@@ -29,19 +29,19 @@ Proof. by rewrite /L_. Qed.
 
 (* begin snippet Leq2:: no-out *)
 Lemma L_eq2 alpha i :
-  E0is_succ alpha -> L_ alpha i = L_ (E0pred alpha) (S i).
+  E0is_succ alpha -> L_ alpha i = L_ (E0_pred alpha) (S i).
 (* end snippet Leq2 *)
 Proof.
   move => H;  case (E0is_succE H) => x Hx; subst.
-  rewrite E0pred_succK /L_ L_alpha.L_eq2 => //. 
-  congr L_alpha.L_; rewrite g2h_E0succ; by rewrite E0pred_of_Succ. 
+  rewrite E0_pred_succK /L_ L_alpha.L_eq2 => //. 
+  congr L_alpha.L_; rewrite g2h_E0_succ; by rewrite E0_pred_of_Succ. 
 Qed. 
 
 (* begin snippet Leq3:: no-out *)
-Lemma L_succE alpha i : L_ (E0succ alpha) i = L_ alpha i.+1.
+Lemma L_succE alpha i : L_ (E0_succ alpha) i = L_ alpha i.+1.
 (* end snippet Leq3 *)
 Proof. 
-  rewrite L_eq2 ?E0pred_succK => //; apply E0is_succ_succ.
+  rewrite L_eq2 ?E0_pred_succK => //; apply E0is_succ_succ.
 Qed.
 
 (* begin snippet Leq4:: no-out *)
@@ -57,7 +57,7 @@ Qed.
 Lemma L_finite : forall i k :nat, L_ (E0fin  i) k = (i+k)%nat.
 Proof.  move => i k. by rewrite /L_ E0g2h_Fin L_alpha.L_finite. Qed.
 
-Lemma L_omega : forall k, L_ E0omega k = S (2 * k)%nat.
+Lemma L_omega : forall k, L_ E0_omega k = S (2 * k)%nat.
 Proof.  move => k; by rewrite /L_ E0g2h_omegaE L_alpha.L_omega. Qed.
 
 

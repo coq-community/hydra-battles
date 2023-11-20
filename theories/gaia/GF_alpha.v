@@ -48,18 +48,18 @@ Proof.
 Qed.
 
 Lemma F_alpha_dom alpha:
-  dominates_from 1 (F_ (E0succ alpha)) (F_ alpha).
+  dominates_from 1 (F_ (E0_succ alpha)) (F_ alpha).
 Proof.
-  rewrite /dominates_from /F_ g2h_E0succ => p Hp.
+  rewrite /dominates_from /F_ g2h_E0_succ => p Hp.
   apply /ltP; apply F_alpha_dom; by apply /leP.
 Qed.
 
 (* end snippet FAlphaProps *)
 
 Lemma F_alpha_Succ_le alpha:
- fun_le (F_ alpha) (F_ (E0succ alpha)).
+ fun_le (F_ alpha) (F_ (E0_succ alpha)).
 Proof.
-  rewrite /fun_le /F_ g2h_E0succ => n;  apply /leP; apply F_alpha_Succ_le. 
+  rewrite /fun_le /F_ g2h_E0_succ => n;  apply /leP; apply F_alpha_Succ_le. 
 Qed. 
 
 Lemma F_alpha_positive (alpha : hE0) (n : nat): (0 < F_alpha.F_ alpha n)%N.
@@ -95,7 +95,7 @@ Proof. by  rewrite /F_ F_alpha_0_eq. Qed.
 
 (* begin snippet FSuccEqn:: no-out *)
 Lemma F_succE alpha i :
-  F_ (E0succ alpha) i = Iterates.iterate (F_ alpha) i.+1 i.
+  F_ (E0_succ alpha) i = Iterates.iterate (F_ alpha) i.+1 i.
 (* end snippet FSuccEqn *)
 Proof.
   rewrite (Iterates.iterate_ext _  (F_alpha.F_ (E0_g2h alpha))); last first.
@@ -161,24 +161,24 @@ Qed.
 
 
 (* begin snippet HprimeF:: no-out *)
-Lemma H'_F alpha n : (F_ alpha n.+1 <= H'_ (E0phi0 alpha) n.+1)%N.
+Lemma H'_F alpha n : (F_ alpha n.+1 <= H'_ (E0_phi0 alpha) n.+1)%N.
 (* end snippet HprimeF *)
 Proof. 
  apply /leP; rewrite /F_ /H'_. 
- replace (E0_g2h (E0phi0 alpha)) with (hE0phi0 (E0_g2h alpha)). 
+ replace (E0_g2h (E0_phi0 alpha)) with (hE0phi0 (E0_g2h alpha)). 
  - apply H'_F; apply E0_eq_intro; destruct alpha => /=.
- - apply E0_eq_intro; rewrite /E0phi0 => //.
+ - apply E0_eq_intro; rewrite /E0_phi0 => //.
 Qed.
 
 (* begin snippet FAlphaNotPR:: no-out *)
 Lemma F_alpha_not_PR_E0  alpha:
-  E0le E0omega alpha -> isPR 1 (F_ alpha) -> False. 
+  E0le E0_omega alpha -> isPR 1 (F_ alpha) -> False. 
 (* end snippet FAlphaNotPR *)
 Proof. 
   move => Halpha HPR;  have H0: isPR 1 (F_alpha.F_ (E0_g2h alpha)).
   eapply isPRextEqual with  (F_ alpha) => //.
   eapply F_alpha_not_PR with (E0_g2h alpha) => //.
-  replace E0.E0omega with (E0_g2h E0omega); last first.
+  replace E0.E0_omega with (E0_g2h E0_omega); last first.
   - by apply E0_eq_intro. 
   - by rewrite -gE0le_iff. 
 Qed.

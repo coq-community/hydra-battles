@@ -38,7 +38,7 @@ Fail Equations F_ (alpha: E0) (i:nat) :  nat  by wf  alpha E0lt :=
       | right _nonzero
           with Utils.dec (E0limit alpha) :=
           { | left _limit =>  F_ (Canon alpha i)  i ;
-          | right _notlimit =>  iterate (F_ (E0pred alpha)) (S i) i}}.
+          | right _notlimit =>  iterate (F_ (E0_pred alpha)) (S i) i}}.
 *)
 (* end snippet FailDemo *)
 
@@ -74,7 +74,7 @@ Equations  F_star (c: E0 * nat) (i:nat) :  nat by wf  c call_lt :=
           with Utils.dec (E0limit alpha) :=
           { | left _limit => F_star (Canon alpha i,1) i ;
             | right _notlimit =>
-              F_star (E0pred alpha, S i)  i}};
+              F_star (E0_pred alpha, S i)  i}};
   F_star (alpha,(S (S n))) i :=
     F_star (alpha, 1) (F_star (alpha, (S n)) i).
 (* end snippet goodDefa *)
@@ -117,7 +117,7 @@ Qed.
 
 Lemma F_eq2 : forall alpha i,
     E0is_succ alpha -> 
-    F_ alpha i = F_star (E0pred alpha, S i) i.
+    F_ alpha i = F_star (E0_pred alpha, S i) i.
 Proof.
   unfold F_; intros; rewrite F_star_equation_2.
   destruct (E0_eq_dec alpha E0zero).
@@ -176,11 +176,11 @@ Qed.
 (*||*)
 
 Lemma F_succ_eqn : forall alpha i,
-    F_ (E0succ alpha) i = iterate (F_ alpha) (S i) i. (* .no-out *)
+    F_ (E0_succ alpha) i = iterate (F_ alpha) (S i) i. (* .no-out *)
 (*| .. coq:: none |*)
 Proof with auto with E0.
   intros;rewrite F_eq2,  F_star_iterate ...
-  -  now rewrite E0pred_of_Succ.
+  -  now rewrite E0_pred_of_Succ.
 Qed.
 (*||*)
 (* end snippet FEquations *)
@@ -212,7 +212,7 @@ Qed.
 Lemma LF2 : forall i, exp2 i * i < F_ 2 i. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
-  intro i; ochange (E0fin 2) (E0succ 1); rewrite F_succ_eqn.
+  intro i; ochange (E0fin 2) (E0_succ 1); rewrite F_succ_eqn.
   undiag2 i 1 3.
   -  intros. cbn;  intros; cbn.  repeat rewrite LF1. abstract lia. 
   - intros; simpl exp2; ring_simplify. simpl (2+n)%nat.
@@ -255,8 +255,8 @@ Section Properties.
     mkP {
         PA : strict_mono (F_ alpha);
         PB : forall n, n < F_ alpha n;
-        PC : F_ alpha <<= F_ (E0succ alpha);
-        PD : dominates_from 1 (F_ (E0succ alpha)) (F_ alpha);
+        PC : F_ alpha <<= F_ (E0_succ alpha);
+        PD : dominates_from 1 (F_ (E0_succ alpha)) (F_ alpha);
         PE : forall beta n, Canon_plus n alpha beta -> 
                             F_ beta n <= F_ alpha n}.
 
@@ -291,7 +291,7 @@ Section Properties.
 
     Lemma PZero : P E0zero.
     Proof. 
-      split; auto with T1; ord_eq  (E0succ E0zero) (E0fin 1).
+      split; auto with T1; ord_eq  (E0_succ E0zero) (E0fin 1).
       all: try (rewrite H;auto with T1).
       unfold Canon_plus; intros beta n H0;
         unfold E0zero in H0; simpl in H0.
@@ -306,7 +306,7 @@ Section Properties.
     Ltac hdecomp := destruct Halpha.
     Section alpha_Succ.
       Variable beta: E0.
-      Hypothesis alpha_def : alpha = E0succ beta.
+      Hypothesis alpha_def : alpha = E0_succ beta.
 
       Remark R1 : strict_mono (F_ alpha).
       Proof.
@@ -349,21 +349,21 @@ Section Properties.
         apply iterate_lt;auto with arith.
       Qed.
       
-      Remark RD : dominates_from 1 (F_ (E0succ alpha)) (F_ alpha).
+      Remark RD : dominates_from 1 (F_ (E0_succ alpha)) (F_ alpha).
         generalize RB; intro RB'.
         rewrite alpha_def .
         
         destruct (Halpha beta).
         rewrite alpha_def ;apply Lt_Succ.
         intros n Hn.
-        rewrite (F_succ_eqn (E0succ beta)).
-        apply Nat.lt_le_trans with (F_ (E0succ beta) (F_ (E0succ beta) n)).
+        rewrite (F_succ_eqn (E0_succ beta)).
+        apply Nat.lt_le_trans with (F_ (E0_succ beta) (F_ (E0_succ beta) n)).
         
         rewrite <- alpha_def.
         apply RB'.
         rewrite iterate_S_eqn2.
-        change (F_ (E0succ beta) (F_ (E0succ beta) n)) with
-            (iterate (F_ (E0succ beta)) 1 (F_ (E0succ beta) n)).
+        change (F_ (E0_succ beta) (F_ (E0_succ beta) n)) with
+            (iterate (F_ (E0_succ beta)) 1 (F_ (E0_succ beta) n)).
         apply iterate_le.
 
         generalize R1; intro R1'.
@@ -397,7 +397,7 @@ Section Properties.
           auto with arith.
       Qed.
 
-      Remark RC : F_ alpha <<= F_ (E0succ alpha).
+      Remark RC : F_ alpha <<= F_ (E0_succ alpha).
       Proof.
         intro n; destruct n.
         repeat rewrite F_alpha_0_eq. auto with arith.
@@ -479,7 +479,7 @@ Section Properties.
 
 
 
-      Remark RClim : F_ alpha <<= F_ (E0succ alpha).
+      Remark RClim : F_ alpha <<= F_ (E0_succ alpha).
       Proof.
         intro n; destruct n.
         - repeat rewrite F_alpha_0_eq; auto with arith.
@@ -491,7 +491,7 @@ Section Properties.
            +  auto with arith.
       Qed.
 
-      Remark RDlim : dominates_from 1 (F_ (E0succ alpha)) (F_ alpha).
+      Remark RDlim : dominates_from 1 (F_ (E0_succ alpha)) (F_ alpha).
       Proof.
         red;intros; rewrite F_succ_eqn.
         change (F_ alpha p) with (iterate (F_ alpha) 1 p);
@@ -569,14 +569,14 @@ Proof.
   apply F_alpha_gt.
 Qed.
 
-Theorem F_alpha_Succ_le alpha : F_ alpha <<= F_ (E0succ alpha). 
+Theorem F_alpha_Succ_le alpha : F_ alpha <<= F_ (E0_succ alpha). 
 (*| .. coq:: none |*)
 Proof. now  destruct  (TH_packed alpha). Qed.
 (*||*)
 
 
 Theorem F_alpha_dom alpha :
-  dominates_from 1 (F_ (E0succ alpha)) (F_ alpha). (* .no-out *)
+  dominates_from 1 (F_ (E0_succ alpha)) (F_ alpha). (* .no-out *)
 (*| .. coq:: none |*)
 Proof. now  destruct  (TH_packed alpha). Qed.
 (*||*)
@@ -603,7 +603,7 @@ Qed.
 Lemma LF3_2  : dominates_from 2  (F_ 3) (fun  n => iterate exp2 (S n) n).
 Proof.  
   intros p H; assert (H0:= LF2_0).
-  ochange (E0fin 3) (E0succ 2); rewrite F_succ_eqn.
+  ochange (E0fin 3) (E0_succ 2); rewrite F_succ_eqn.
   eapply iterate_dom_prop; eauto with arith. 
   - apply exp2_ge_S.
   - apply exp2_mono.
@@ -628,7 +628,7 @@ Section F_monotony_l.
   
   (* begin hide *)
   Section case_eq.
-    Hypothesis Heq : alpha = E0succ beta.
+    Hypothesis Heq : alpha = E0_succ beta.
 
     Fact F2 : forall i, (1 <= i ->  F_ beta i < F_ alpha i)%nat.
     Proof.
@@ -640,17 +640,17 @@ Section F_monotony_l.
 
   Section case_lt.
     Variable n: nat.
-    Hypothesis Hlt :  E0lt (E0succ beta) alpha.
+    Hypothesis Hlt :  E0lt (E0_succ beta) alpha.
     
     Hypothesis Hd : Canon_plus (S n) alpha beta.
 
-    Fact F5 : Canon_plus (S (S n)) alpha (E0succ beta).
+    Fact F5 : Canon_plus (S (S n)) alpha (E0_succ beta).
     Proof.
       destruct alpha, beta; cbn;  now apply L2_6_2.  
     Qed.
 
     
-    Fact F6 : forall i, (S n < i)%nat ->  Canon_plus i alpha (E0succ beta).
+    Fact F6 : forall i, (S n < i)%nat ->  Canon_plus i alpha (E0_succ beta).
     Proof.
       destruct alpha, beta; unfold lt, Canon_plus in *; simpl in *.
       intros i H; destruct i.
@@ -661,12 +661,12 @@ Section F_monotony_l.
           apply L2_6_2; auto.
     Qed.   
 
-    Fact F7 : forall i, (S n < i -> F_ (E0succ beta) i <= F_ alpha i)%nat.
+    Fact F7 : forall i, (S n < i -> F_ (E0_succ beta) i <= F_ alpha i)%nat.
     Proof.
       intros; apply  F_restricted_mono_l; apply F6; auto.
     Qed.
 
-    Fact F8 : forall i, (S n < i -> F_ beta i < F_ (E0succ beta) i)%nat.
+    Fact F8 : forall i, (S n < i -> F_ beta i < F_ (E0_succ beta) i)%nat.
     Proof.
       intros i H; apply  (F_alpha_dom beta i); abstract lia.
     Qed.
@@ -686,8 +686,8 @@ Section F_monotony_l.
       Canon_plus (S n) alpha beta ->
       forall i, (S n < i -> F_ beta i < F_ alpha i)%nat.
   Proof.
-    assert (H: E0le (E0succ beta) alpha) by (now apply Lt_Succ_Le).
-    assert (H0: {alpha = E0succ beta} + {E0lt (E0succ  beta) alpha}).
+    assert (H: E0le (E0_succ beta) alpha) by (now apply Lt_Succ_Le).
+    assert (H0: {alpha = E0_succ beta} + {E0lt (E0_succ  beta) alpha}).
     {
       rewrite <- lt_Succ_inv in H.
       apply Lt_Succ_Le in H; destruct (E0.le_lt_eq_dec  H); auto.
@@ -721,7 +721,7 @@ End  F_monotony_l.
 Section H'_F.
   
   Let P (alpha: E0) :=
-        forall n,  (F_ alpha (S n) <= H'_ (E0phi0 alpha) (S n))%nat.
+        forall n,  (F_ alpha (S n) <= H'_ (E0_phi0 alpha) (S n))%nat.
 
  Variable alpha: E0.
 
@@ -730,7 +730,7 @@ Section H'_F.
  Lemma HF0 : P E0zero.
  Proof.
    intro n; rewrite F_zero_eqn.
-   replace (E0phi0 E0zero) with (E0fin 1).
+   replace (E0_phi0 E0zero) with (E0fin 1).
    - now rewrite H'_Fin.
    - now apply E0_eq_intro.
  Qed.
@@ -759,7 +759,7 @@ Section H'_F.
     intros Halpha n; rewrite H'_eq3.
     - rewrite CanonS_phi0_lim; [| trivial].
       rewrite F_lim_eqn; auto.
-      + transitivity (H'_ (E0phi0 (Canon alpha (S n))) (S n)).
+      + transitivity (H'_ (E0_phi0 (Canon alpha (S n))) (S n)).
         *  apply IHalpha.
            apply CanonS_lt.
            now apply Limit_not_Zero.
@@ -791,7 +791,7 @@ End H'_F.
 
 (* begin snippet HprimeF:: no-out  *)
 
-Lemma H'_F alpha : forall n,  F_ alpha (S n) <= H'_ (E0phi0 alpha) (S n).
+Lemma H'_F alpha : forall n,  F_ alpha (S n) <= H'_ (E0_phi0 alpha) (S n).
 Proof.
   pattern alpha; apply well_founded_induction with E0lt.
 (* end snippet HprimeF *)
@@ -819,7 +819,7 @@ Equations  f_star (c: E0 * nat) (i:nat) :  nat by wf c call_lt :=
           with Utils.dec (E0limit alpha) :=
           { | left _limit => f_star (Canon alpha i,1) i ;
             | right _successor =>
-              f_star (E0pred alpha, i)  i}};
+              f_star (E0_pred alpha, i)  i}};
   f_star (alpha,(S (S n))) i :=
     f_star (alpha, 1) (f_star (alpha, (S n)) i).
 
@@ -861,7 +861,7 @@ Qed.
 
 Lemma f_eq2 : forall alpha i,
     E0is_succ alpha -> 
-    f_ alpha i = f_star (E0pred alpha,  i) i.
+    f_ alpha i = f_star (E0_pred alpha,  i) i.
 Proof.
   unfold f_; intros; rewrite f_star_equation_2.
   destruct (E0_eq_dec alpha E0zero).
@@ -916,10 +916,10 @@ Qed.
 
 
 Lemma f_succ_eqn : forall alpha i,
-    f_ (E0succ alpha) i = iterate (f_ alpha) i i.
+    f_ (E0_succ alpha) i = iterate (f_ alpha) i i.
 Proof with auto with E0.
   intros;rewrite f_eq2,  f_star_iterate ...
-  -  now rewrite E0pred_of_Succ.
+  -  now rewrite E0_pred_of_Succ.
 Qed.
 
 
@@ -945,7 +945,7 @@ Section Properties_of_f_alpha.
 Record  Q (alpha:E0) : Prop :=
     mkQ {
         QA : strict_mono (f_ alpha);
-        QD : dominates_from 2 (f_ (E0succ alpha)) (f_ alpha);
+        QD : dominates_from 2 (f_ (E0_succ alpha)) (f_ alpha);
         QE : forall beta n, Canon_plus n alpha beta -> 
                             f_ beta n <= f_ alpha n}.
 
@@ -958,7 +958,7 @@ Section The_induction.
 
 
 
-  Lemma QD0 : dominates_from 2 (f_ (E0succ E0zero)) (f_ E0zero).
+  Lemma QD0 : dominates_from 2 (f_ (E0_succ E0zero)) (f_ E0zero).
   Proof. 
     intros p Hp; rewrite f_succ_eqn, f_zero_eqn. 
     apply Nat.lt_le_trans with (iterate S p p).

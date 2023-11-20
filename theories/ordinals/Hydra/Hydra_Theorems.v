@@ -125,7 +125,7 @@ Section battle_length_notPR.
 
   (* begin snippet battleLengthNotPRb *)
 
-  Let alpha := E0phi0 E0omega.
+  Let alpha := E0_phi0 E0_omega.
   Let h := iota (cnf alpha).
 
    (* end snippet battleLengthNotPRb *)
@@ -173,7 +173,7 @@ Section battle_length_notPR.
 
   (* begin snippet mGeFOmega *)
   
-  Remark m_ge_F_omega k: F_ E0omega (S k) <= m (S k). (* .no-out *)
+  Remark m_ge_F_omega k: F_ E0_omega (S k) <= m (S k). (* .no-out *)
   (* end snippet mGeFOmega *)
   
   Proof.
@@ -186,7 +186,7 @@ Section battle_length_notPR.
   
   Remark m_ge_Ack:  forall n, 2 <= n -> Ack (S n) (S n) <= m (S n).
   Proof.
-    intros n H0; transitivity (F_ E0omega (S n)).
+    intros n H0; transitivity (F_ E0_omega (S n)).
     - apply F_vs_Ack; auto.
     - apply m_ge_F_omega.
   Qed.

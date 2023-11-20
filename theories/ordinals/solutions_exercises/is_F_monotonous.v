@@ -11,16 +11,16 @@ Section S1.
                                                     F_ alpha i <= F_ beta i.
 
  
-  Remark R1 : 3 o<= E0omega.
+  Remark R1 : 3 o<= E0_omega.
   rewrite Le_iff; repeat split; left; reflexivity.
   Qed.
 
   Remark R2 : 2 <= 2.
   Proof (le_n 2).
 
- Let instance_H := H (E0fin 3) E0omega R1 _ R2.
+ Let instance_H := H (E0fin 3) E0_omega R1 _ R2.
  
-  Remark R3 : F_ E0omega 2 = F_ 2 2.
+  Remark R3 : F_ E0_omega 2 = F_ 2 2.
   Proof.
     rewrite F_lim_eqn.
     - unfold Canon, CanonS; cbn; f_equal.
@@ -32,7 +32,7 @@ Section S1.
  
   Remark R4 : F_ 3 2 = F_ 2 (F_ 2 (F_ 2 2)).
   Proof.
-    ochange (E0fin 3) (E0succ 2).
+    ochange (E0fin 3) (E0_succ 2).
     rewrite F_succ_eqn.
     do 3 rewrite iterate_S_eqn.
     reflexivity. 
@@ -44,7 +44,7 @@ Section S1.
  Qed.
 
   Lemma Fake_thm : False.
-    assert( F_ E0omega 2 < F_ 3 2). {
+    assert(F_ E0_omega 2 < F_ 3 2). {
       rewrite R3, R4.
       generalize (R6 (F_ 2 2)); intro.
       generalize (R6 (F_ 2 (F_ 2 2))); intro.

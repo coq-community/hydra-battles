@@ -2,7 +2,7 @@ From hydras Require Export Iterates Exp2.
 From Coq Require Import Lia.
 Require Import Coq.Program.Wf.
 Require Import Coq.Arith.Arith.
-
+From hydras Require Import ssrnat_extracts.
 
 
 (** The famous Ackermann function *)
@@ -18,8 +18,8 @@ Fail
   Fixpoint Ack (m n : nat) : nat :=
   match m, n with
   | 0, n => S n
-  | S m, 0 => Ack m 1
-  | S m0, S p => Ack m0 (Ack m p)
+  | m.+1, 0 => Ack m 1
+  | m0.+1, p.+1 => Ack m0 (Ack m p)
   end.
 
 (* end snippet AckFixpointFail *)
@@ -32,8 +32,8 @@ Module Alt.
   
   Fixpoint Ack (m n : nat) : nat :=
     match m with
-    | O => S n
-    | S p => let fix Ackm (n : nat) :=
+    | O => n.+1
+    | p.+1 => let fix Ackm (n : nat) :=
                  match n with
                  | O => Ack p 1
                  | S q => Ack p (Ackm q)
@@ -60,7 +60,7 @@ Allows to infer monotony properties of [Ack (S m)] from [Ack m].
 Fixpoint Ack (m:nat) : nat -> nat :=
   match m with
   | 0 => S
-  | S n => fun k =>  iterate (Ack n) (S k) 1
+  | n.+1 => fun k =>  iterate (Ack n) k.+1 1
   end.
 
 Compute Ack 3 2.
@@ -103,11 +103,7 @@ Compute Ack 3 2.
   constructor; intros (m', n') [G | [-> G]].
     - now apply H1.
     - now apply H2.
-    (*  constructor. intros (m', n') [G | [G1 G]].
-    - now apply H1.
-    - rewrite -> G1; now apply H2.
-    *)  
-  Defined.
+   Defined.
 
  
   
@@ -115,9 +111,9 @@ Module Alt2.
 
   Program Fixpoint Ack (ab : nat * nat) {wf lex_nat ab} : nat :=
     match ab with
-    | (0, b) => b + 1
-    | (S a, 0) => Ack (a, 1)
-    | (S a, S b) => Ack (a, Ack (S a, b))
+    | (0, b) => b.+1
+    | (a.+1, 0) => Ack (a, 1)
+    | (a.+1, b.+1) => Ack (a, Ack (a.+1, b))
     end.
   Next Obligation.
     injection Heq_ab; intros; subst.
@@ -128,8 +124,7 @@ Module Alt2.
   Defined.
   Example test1 : Ack (1, 2) = 4 := refl_equal.  
 
-
-  Example test2 : Ack (3, 4) = 125 := eq_refl.
+  Example test2 : Ack (3, 4) = 125 := refl_equal.
   (* this may take several seconds *)
   
 End Alt2.
@@ -148,9 +143,9 @@ Defined.
 Module Alt3.
 
   Equations ack (p : nat * nat) : nat by wf p lex_nat :=
-    ack (0, n) := S n ;
-    ack (S m, 0) := ack (m, 1);
-    ack (S m, S n) := ack (m, ack (S m, n)).
+    ack (0, n) := n.+1 ;
+    ack (m.+1, 0) := ack (m, 1);
+    ack (m.+1, n.+1) := ack (m, ack (m.+1, n)).
 
 End Alt3.
 
@@ -176,13 +171,12 @@ End Alt3.
 Lemma Ack_0 : Ack 0 = S.
 Proof refl_equal.
 
-Lemma Ack_S_0 m : Ack (S m) 0 = Ack m 1. 
+Lemma Ack_S_0 m : Ack m.+1 0 = Ack m 1. 
 Proof. reflexivity. Qed.
 
 Lemma Ack_S_S : forall m p,
-    Ack (S m) (S p) = Ack m (Ack (S m) p).
+    Ack m.+1 p.+1 = Ack m (Ack m.+1 p).
 Proof. reflexivity. Qed.
-
 (*||*)
 
 (* end snippet AckRewrite *)
@@ -191,7 +185,7 @@ Proof. reflexivity. Qed.
 
 (* begin snippet Ack1N *)
 
-Lemma Ack_1_n n : Ack 1 n = S (S n). (* .no-out *)
+Lemma Ack_1_n n : Ack 1 n = n.+2. (* .no-out *)
 
 (* end snippet Ack1N *)
 
@@ -213,7 +207,7 @@ Qed.
 
 (* begin snippet Ack3N *)
 
-Lemma Ack_3_n n: Ack 3 n = exp2 (S (S (S n))) - 3. (* .no-out *)
+Lemma Ack_3_n n: Ack 3 n = exp2 n.+3 - 3. (* .no-out *)
 
 (* end snippet Ack3N *)
 
@@ -221,9 +215,8 @@ Proof.
   induction n.
   -  reflexivity.
   - rewrite Ack_S_S, Ack_2_n, IHn.
-    change (exp2 (S (S (S (S n)))))
-      with (2 * exp2 (S (S (S n)))).
-    assert (3 <= exp2 (S (S (S n)))).
+    change (exp2 n.+4) with (2 * exp2 n.+3).
+    assert (3 <= exp2 n.+3).
     { clear IHn;induction n; cbn.
       - auto with arith.
       - cbn in IHn; lia.
@@ -233,21 +226,20 @@ Qed.
 
 (* begin snippet Ack4N *)
 
-Lemma Ack_4_n n : Ack 4 n = hyper_exp2 (S (S (S n))) - 3. (* .no-out *)
+Lemma Ack_4_n n : Ack 4 n = hyper_exp2 n.+3 - 3. (* .no-out *)
 
 (* end snippet Ack4N *)
 
 Proof.
   induction n.
   - reflexivity. 
-  -  assert (3 <= hyper_exp2 (S (S (S n)))).
+  -  assert (3 <= hyper_exp2 n.+3).
      {
        clear IHn; induction n.
        - cbn;  auto with arith.
        - rewrite hyper_exp2_S; 
-       transitivity (hyper_exp2 (S (S (S n)))); auto.
-       generalize (hyper_exp2 (S (S (S n))));
-         intro n0; induction  n0.
+       transitivity (hyper_exp2 n.+3); auto.
+       generalize (hyper_exp2 n.+3); intro n0; induction  n0.
        + auto with arith.
        +  assert (0 < exp2 n0).
           { clear IHn0; induction n0.
@@ -257,9 +249,8 @@ Proof.
           cbn; lia.
      }
      rewrite Ack_S_S, IHn.
-     rewrite Ack_3_n; rewrite (hyper_exp2_S  (S (S (S n)))).
-     replace (S (S (S (hyper_exp2 (S (S (S n))) - 3))))
-       with (hyper_exp2 (S (S (S n)))); auto.
+     rewrite Ack_3_n; rewrite (hyper_exp2_S  n.+3).
+     replace  (hyper_exp2 n.+3 - 3).+3  with (hyper_exp2 n.+3); auto.
      lia.
 Qed.
 
@@ -275,7 +266,7 @@ Section Ack_Properties.
   
   Let P (m:nat) := strict_mono (Ack m) /\
                    S <<=  (Ack m) /\
-                   (forall n,  Ack m n <= Ack (S m) n).
+                   (forall n,  Ack m n <= Ack m.+1 n).
 
   Remark P0 : P 0.
   Proof.
@@ -291,7 +282,7 @@ Section Ack_Properties.
     Variable m:nat.
     Hypothesis Hm : P m.
     
-    Remark  Rem1 : strict_mono (Ack (S m)).
+    Remark  Rem1 : strict_mono (Ack m.+1).
     Proof.
       intros n p H; cbn.
       destruct Hm as [H1 H2]; apply H1.
@@ -299,7 +290,7 @@ Section Ack_Properties.
       destruct H2;  auto.
     Qed.
 
-    Remark Rem2 : S <<= Ack (S m).
+    Remark Rem2 : S <<= Ack m.+1.
     Proof.
       intros p; destruct Hm as [H1 [H2 H3]]; transitivity (Ack m p); auto.
     Qed.
@@ -314,15 +305,15 @@ Section Ack_Properties.
       - subst; now left. 
     Qed.
 
-    Remark Rem3 : forall n, Ack (S m) n <= Ack (S (S m)) n.
+    Remark Rem3 : forall n, Ack m.+1 n <= Ack m.+2 n.
     Proof.
       destruct Hm as [H1 [H2 H3]].
-      intro n; simpl (Ack (S (S m)) n); simpl (Ack (S m) n).  
+      intro n; simpl (Ack m.+2 n); simpl (Ack m.+1 n).  
       apply Ack_m_mono_weak.
       apply iterate_le_np_le.
-      - intro p; transitivity (S p); auto.
-      - transitivity (S n); auto.
-        replace (S n) with (iterate S n 1).
+      - intro p; transitivity p.+1; auto.
+      - transitivity n.+1; auto.
+        replace n.+1 with (iterate S n 1).
         +  apply iterate_mono_1 with 0; auto.
            * intros x y H; auto with arith.
            * intro x; auto.
@@ -330,14 +321,14 @@ Section Ack_Properties.
         + induction n; cbn; auto.
     Qed.
 
-    Lemma L5: P (S m).
+    Lemma L5: P m.+1.
     Proof.
       repeat split.
       - apply Rem1.
       - apply Rem2.
       - apply Rem3.
     Qed. 
-
+ 
   End Induc_step.
 
   Lemma Ack_properties : forall m, P m.
@@ -400,25 +391,25 @@ Section Proof_of_nested_Ack_bound.
       intro n; transitivity (Ack (2 + m) n); auto.
   Qed.
 
-  Remark R1 : forall m n, Ack (S m) (S n) <= Ack (2 + m) n.
+  Remark R1 : forall m n, Ack m.+1 n.+1 <= Ack (2 + m) n.
   Proof. 
     intro; destruct n; simpl (2 + m).
     -  rewrite Ack_S_0; left.
-    -  rewrite (Ack_S_S  (S m));
+    -  rewrite (Ack_S_S  m.+1);
          generalize (R0 m n ); intro H; apply Ack_mono_r; auto.
   Qed.
 
-  Remark R2 (m n:nat) : Ack m (Ack m n) <= Ack (S m) (S n) .
+  Remark R2 (m n:nat) : Ack m (Ack m n) <= Ack m.+1 n.+1.
   Proof.
     destruct (Ack_properties m) as [H1 [H2 H3]].
-    transitivity (Ack m (Ack (S m) n)); auto.
+    transitivity (Ack m (Ack m.+1 n)); auto.
     - apply Ack_mono_r.  
       + apply H3; rewrite <- Ack_S_S; auto.
   Qed.
 
-  Remark R3 (m n:nat) : Ack m (Ack m n) <= Ack (S (S m)) n.
+  Remark R3 (m n:nat) : Ack m (Ack m n) <= Ack m.+2 n.
   Proof.
-    transitivity (Ack (S m) (S n)).
+    transitivity (Ack m.+1 n.+1).
     - apply R2.
     - apply R1.
   Qed.
@@ -446,7 +437,7 @@ Section Proof_of_nested_Ack_bound.
 
 End Proof_of_nested_Ack_bound.
 
-Lemma Ack_Sn_plus : forall n p, S n + p < Ack (S n) p.
+Lemma Ack_Sn_plus : forall n p, n.+1 + p < Ack n.+1 p.
 Proof.
   induction n.
   -  intro; rewrite Ack_1_n; lia.
@@ -454,23 +445,21 @@ Proof.
      + rewrite Ack_S_0.
        specialize (IHn 1); lia.
      + rewrite Ack_S_S.
-       assert   (Ack (S (S n)) p < Ack (S n) (Ack (S (S n)) p)).
+       assert   (Ack n.+2 p < Ack n.+1 (Ack n.+2 p)).
        {
-         destruct (Ack_properties (S n)) as [H [H0 H1]];  apply H0.
+         destruct (Ack_properties n.+1) as [H [H0 H1]];  apply H0.
        }
        eapply Nat.le_lt_trans with (2:= H).
-       replace (S (S n) + S p) with (S (S (S n) + p)) by lia.
+       replace (n.+2 + p.+1) with (n.+3 + p) by lia.
        apply IHp.
 Qed.
 
 (** **  [Ack] is (partially) strictly monotonous in its first argument  *)
 
-
-
-Remark R5 m n :  Ack m (S n) < Ack (S m) (S n).
+Remark R5 m n :  Ack m n.+1 < Ack m.+1 n.+1.
 Proof.
   rewrite Ack_S_S; apply Ack_strict_mono.
-  apply Nat.le_lt_trans with (S m + n).
+  apply Nat.le_lt_trans with (m.+1 + n).
   - lia.
   - apply Ack_Sn_plus.
 Qed.
@@ -478,14 +467,14 @@ Qed.
 (* begin snippet AckStrictMonoL *)
 
 Lemma Ack_strict_mono_l : forall n m p, n < m ->
-                                        Ack n (S p) < Ack m (S p). (* .no-out *)
+                                        Ack n p.+1 < Ack m p.+1. (* .no-out *)
 (* end snippet AckStrictMonoL *)
 
 
 Proof.
   induction 1.
   -  apply R5.
-  -  transitivity (Ack m (S p)); auto.
+  -  transitivity (Ack m p.+1); auto.
      apply R5.
 Qed.
 

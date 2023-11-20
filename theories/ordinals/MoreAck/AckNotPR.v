@@ -190,8 +190,7 @@ Qed.
 
 (* begin snippet majorProjection *)
 
-Lemma majorProjection (n m:nat)(H: m < n):
-  majorizedPR (projFunc n m H) Ack. (* .no-out *)
+Lemma majorProjection (n m:nat)(H: m < n): majorizedPR (projFunc n m H) Ack. (* .no-out *)
 
 (* end snippet majorProjection *)
 
@@ -335,8 +334,6 @@ Proof.
 Qed.
 
 
-
-
 (** Let us specialize Lemma [majorAnyPR] to unary and binary  functions 
  *)
 
@@ -361,7 +358,6 @@ Qed.
 
 Lemma majorPR2 (f: naryFunc 2)(Hf : isPR 2 f)
   : exists (n:nat), forall x y,  f x y <= Ack n (max x  y). (* .no-out *)
-
 (* end snippet majorPR2 *)
 
 Proof. 
@@ -433,13 +429,12 @@ Section dom_AckNotPR.
 
   Lemma dom_AckNotPR: isPR 1 f -> False.
   Proof.
-    intros H;  destruct Hf as [N HN].
-    destruct  (majorPR1 _ H) as [M HM].
-    pose (X := Nat.max N M).
-    specialize (HN X  (Nat.le_max_l N M)); (* for 8.13.dev's lia *)
-      cbn in HN.
-    specialize (HM X). 
-      assert (Ack M X <= Ack X X) by (apply Ack_mono_l; subst; lia).
+    intros H;  destruct Hf as [n Hn].
+    destruct  (majorPR1 _ H) as [m Hm].
+    pose (x := Nat.max n m).
+    specialize (Hn x  (Nat.le_max_l n m)); (* for 8.13.dev's lia *)
+      cbn in Hn; specialize (Hm x). 
+      assert (Ack m x <= Ack x x) by (apply Ack_mono_l; subst; lia).
     lia.    
   Qed.
 
