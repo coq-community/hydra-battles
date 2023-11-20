@@ -395,18 +395,13 @@ Section Impossibility_Proof.
   Context (HAck : isPR 2 Ack).
 
   Lemma Ack_not_PR : False. (* .no-out *)
-  (*|
-.. coq:: no-out
-|*)    
-  Proof. 
-    destruct (majorPR2_strict Ack HAck) as [m Hm].
-    pose (X := max 2 m); specialize (Hm X X).
-    rewrite Nat.max_idempotent in Hm;
-      assert (H0: Ack m X <= Ack X X) by (apply Ack_mono_l; lia).
+  Proof. (* .no-out *)
+    destruct (majorPR2_strict Ack HAck) as [m Hm]; 
+    set (x := max 2 m).  
+    specialize (Hm x x); rewrite Nat.max_idempotent in Hm.
+    assert (H0: Ack m x <= Ack x x) by (apply Ack_mono_l; lia). 
     lia.
   Qed.
-  (*||*)
-
   
 End Impossibility_Proof.
 
