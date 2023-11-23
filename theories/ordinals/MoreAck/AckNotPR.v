@@ -396,8 +396,8 @@ Section Impossibility_Proof.
 
   Lemma Ack_not_PR : False. (* .no-out *)
   Proof. (* .no-out *)
-    destruct (majorPR2_strict Ack HAck) as [m Hm]; 
-    set (x := max 2 m).  
+    destruct (majorPR2_strict Ack HAck) as [m Hm].
+    set (x := Nat.max 2 m).  
     specialize (Hm x x); rewrite Nat.max_idempotent in Hm.
     assert (H0: Ack m x <= Ack x x) by (apply Ack_mono_l; lia). 
     lia.

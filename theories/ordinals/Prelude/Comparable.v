@@ -1,7 +1,7 @@
 From Coq Require Import Relations RelationClasses Setoid.
 Require Export MoreOrders STDPP_compat.
 
-(* begin snippet ComparableDef *)
+(* begin snippet ComparableDef:: no-out *)
 Class Compare (A:Type) := compare : A -> A -> comparison.
 
 Class Comparable {A:Type} (lt: relation A) (cmp : Compare A) :=

@@ -20,7 +20,7 @@ Delimit Scope ON_scope with on.
   Ordinal notation system on type [A] :
 *)
 
-(* begin snippet ONDef *)
+(* begin snippet ONDef:: no-out *)
 Class ON {A:Type} (lt: relation A) (cmp: Compare A) :=
   {
   ON_comp :> Comparable lt cmp;

@@ -712,6 +712,7 @@ to overcome the difficulty raised by nested recursion, by climbing up the hierar
 \input{movies/snippets/Ack/nestedAckBound}
 
 
+\label{sect:AcknPR}
 
 Please note also that for any given $n$, the unary function
 (\texttt{Ack\,$n$}) is primitive recursive.
@@ -864,6 +865,10 @@ If the Ackermann function were primitive recursive, then there would exist some 
 $\texttt{Ack}\,x\,y\leq \texttt{Ack}\,n\,(\texttt{max}\,x\,y)$ holds.
 Thus, our impossibility proof is just a sequence of easy small steps.
 
+\begin{todo}
+Fix the display the local definition of \texttt{x} in the following proof.
+\end{todo}
+
 \input{movies/snippets/AckNotPR/AckNotPR}
 
 \begin{remark}
@@ -884,11 +889,12 @@ Then, we write  a short proof by contradiction, using a
 \end{remark}
 
 \begin{remark}
-Note that the Ackermann function is a counter-example to the (false) statement:
-\begin{quote}
-{\color{red}
-  ``Let $f$ be a function of type \texttt{naryFunc\,2}. If, for any $n$, the function $f(n)$ is primitive recursive, then f is primitive recursive.''}
-\end{quote}
+  It may be interesting to compare the following statements:
+
+  \begin{itemize}
+  \item Ackermann function is not primitive recursive.
+  \item For any $n$, the function \texttt{Ack $n$ \_} is primitive recursive (see~\vref{sect:AcknPR}).
+  \end{itemize}
 \end{remark}
 
 \subsection{Related work}
