@@ -4,12 +4,11 @@ Pierre Casteran, LaBRI, University of Bordeaux
 
 *)
 
-Require Export Monoid_instances Pow Lia List.
-Require Import Relations RelationClasses.
-
+From additions Require Export Monoid_instances Pow.
+From Coq Require Import Relations RelationClasses Lia List.
 From Param Require Import Param.
  
-Require Import More_on_positive.
+From additions Require Import More_on_positive.
 Generalizable Variables A op one Aeq.
 Infix "==" := Monoid_def.equiv (at level 70) : type_scope.
 Open Scope nat_scope.

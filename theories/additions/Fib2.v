@@ -1,6 +1,8 @@
 
 
-Require Import NArith Ring Monoid_instances Euclidean_Chains Pow
+From Coq Require Import NArith Ring.
+
+From additions Require Import Monoid_instances Euclidean_Chains Pow
         Strategies Dichotomy BinaryStrat.
 Import Addition_Chains. 
 Open Scope N_scope.
@@ -135,7 +137,8 @@ Time Compute fib_eucl half 153.
 Finished transaction in 0.002 secs (0.002u,0.s) (successful)
 *)
 
-Require Import AM.
+From additions Require Import AM.
+
 Definition fib_with_chain c :=
   match chain_apply c  Mul2 (1,0) with
     Some ((a,b), nil) => Some (a+b) | _ => None end.

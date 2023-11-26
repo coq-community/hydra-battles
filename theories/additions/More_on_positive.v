@@ -1,8 +1,8 @@
 
-Require Import Arith NArith Pow Compatibility Lia.
+From Coq Require Import Arith NArith  Lia Recdef.
+From additions Require Import Pow Compatibility Wf_transparent. 
 Open Scope positive_scope.
 Import Monoid_def.
-Require Import Recdef  Wf_transparent. 
 
 (** * Basic lemmas about positive and N *)
 

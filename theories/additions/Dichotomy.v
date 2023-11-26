@@ -9,8 +9,9 @@
 *)
  
 
-Require Import Arith NArith Pow Compatibility More_on_positive.
-Require Export Strategies.
+From Coq Require Import Arith NArith.
+From additions Require Export Strategies Pow Compatibility 
+  More_on_positive.
 
 Open Scope positive_scope.
 
@@ -170,8 +171,7 @@ Proof.
 intros p H; unfold dicho; generalize (dicho_aux_lt p H).
 intro H0; assert (2 <= N.pos p / (N.pos (dicho_aux p)) )%N.
 - replace 2%N with (2%N * Npos (dicho_aux p) / Npos (dicho_aux p))%N.
-  + apply N.div_le_mono.
-    * discriminate.
+  + apply N.Div0.div_le_mono. 
     * replace 2%N with (Npos 2%positive); cbn;auto.
   + rewrite N.div_mul; [auto | discriminate].
 - case_eq (N.pos p / N.pos (dicho_aux p))%N.

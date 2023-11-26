@@ -7,9 +7,9 @@ equivalence theorems with functions defined in our module [Pow].
 
  *)
 
-Require Import Monoid_def Lia Monoid_instances
-     ArithRing  Pow.
-
+From additions Require Import Monoid_def Monoid_instances
+       Pow.
+From Coq Require Import Lia ArithRing.
 
 (** ** really logarithmic versions of N.pow, Pos.pow and Z.pow 
  

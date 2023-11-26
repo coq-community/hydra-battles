@@ -4,16 +4,19 @@
 (** Work in progress 
 
 *)
-
-Require Import Monoid_def Monoid_instances List PArith Relations.
-Require Import Strategies Lia.
-Generalizable All Variables.
+From Coq Require Import List PArith Relations Lia.
 Import Morphisms.
+
+From additions Require Import Monoid_def Monoid_instances Strategies.
 Import Monoid_def.
-Require Import Recdef Wf_nat.
-Require Import More_on_positive.
-Require  Import Pow.
-Require Import Euclidean_Chains.
+
+From Coq Require Import Recdef Wf_nat.
+From additions Require Import More_on_positive Pow  Euclidean_Chains
+  Dichotomy BinaryStrat.
+Generalizable All Variables.
+
+
+
 
 (** basic instructions *)
 (* begin snippet AMDef *)
@@ -137,7 +140,7 @@ Compute chain_apply C31_7 Natplus 1%nat.
 
 (* end snippet AMSemb *)
 
-Require Import NArith.
+From Coq Require Import NArith.
 
 Compute chain_apply C31_7 NMult 2%N.
 
@@ -521,8 +524,6 @@ Section CompositionProofs.
   End CompositionProofs.
 
 (** *  Euclidean chain generation *)
-
-Require Import Dichotomy BinaryStrat.
 
 Definition  OK (s: signature) 
   := fun c: code => correctness_statement s c.
