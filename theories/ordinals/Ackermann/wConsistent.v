@@ -1,8 +1,6 @@
-Require Import folProof.
-Require Import Arith.
-Require Import folProp.
-Require Import LNN.
-Require Import Coq.Lists.List.
+From hydras.Ackermann Require Import folProof folProp LNN.
+From Coq Require Import Arith List.
+
 Import NNnotations. 
 
 Definition wConsistent (T : System) :=

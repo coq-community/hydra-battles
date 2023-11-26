@@ -2,7 +2,7 @@
     (Originally  Russel O'Connors [goedel] contrib  *)
 
 
-Require Import Arith Coq.Lists.List Lia.
+From Coq Require Import Arith Lists.List Lia.
 From hydras Require Import extEqualNat primRec.
 From hydras Require Export Compat815 ssrnat_extracts.
 Import PRNotations.

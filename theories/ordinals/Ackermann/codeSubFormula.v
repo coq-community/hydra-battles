@@ -7,15 +7,17 @@
 From Coq Require Import Arith Vector Lia.
 From  Coq Require Vector.
 
-Require Import primRec  cPair folProp code extEqualNat.
 
-Require Import codeSubTerm codeFreeVar Compat815.
+From hydras.Ackermann 
+  Require Import primRec  cPair folProp code extEqualNat codeSubTerm 
+  codeFreeVar.
 
 Import LispAbbreviations.
 Import PRNotations. 
 
 From LibHyps Require Export LibHyps.
-From hydras Require Export MoreLibHyps NewNotations.
+From hydras Require Export MoreLibHyps NewNotations Compat815.
+Import Bool.
 
 Section Code_Substitute_Formula.
 

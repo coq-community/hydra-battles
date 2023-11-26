@@ -108,7 +108,7 @@ Fixpoint T1limit alpha :=
   match alpha with
     | zero => false
     | cons zero _ _ => false
-    | cons alpha _ zero => true
+    | cons _ _ zero => true
     | cons _ _ beta => T1limit beta
   end.
 
@@ -636,7 +636,7 @@ Fixpoint minus (alpha beta : T1) :T1 :=
      then zero
      else  cons zero (Peano.pred (n-n')) zero
  |  cons zero n _, zero =>  cons zero n zero
- |  cons zero n _, y =>  zero
+ |  cons zero _ _, y =>  zero
  |  cons a n b, zero =>  cons a n b
  |  cons a n b, cons a' n' b' =>
      (match compare a a' with

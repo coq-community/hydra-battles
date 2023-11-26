@@ -2,14 +2,11 @@
 
 (** New implementation as a refinement of epsilon0 *)
 
-Require Import T1 E0.
-Require Import Arith  Coq.Logic.Eqdep_dec Coq.Arith.Peano_dec
+From hydras Require Import T1 E0 Comparable.
+From Coq Require Import Arith  Logic.Eqdep_dec Peano_dec
   List Bool
-  Recdef Lia  Coq.Wellfounded.Inverse_Image
-  Coq.Wellfounded.Inclusion RelationClasses  Logic.Eqdep_dec.
-
-
-Require Import Comparable.
+  Recdef Lia Wellfounded.Inverse_Image
+  Wellfounded.Inclusion RelationClasses .
 
 (** * Representation by lists of pairs of integers *)
 

@@ -5,9 +5,9 @@
 *)
 
 From Coq Require Import Arith Lia Ensembles Decidable.
-Require Import folProp subAll folLogic3.
-Require Export Languages LNT.
-Require Import NewNotations.
+From hydras.Ackermann Require Import folProp subAll folLogic3.
+From hydras.Ackermann Require Export Languages LNT.
+From hydras.Ackermann Require Import NewNotations.
 
 
 

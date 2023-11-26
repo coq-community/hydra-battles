@@ -6,9 +6,11 @@
 
 From Coq Require Import Ensembles List Arith Lia.
 From Coq Require Vector.
+Import Bool.
 
-Require Import primRec  cPair folProp code  codeList  codeFreeVar  
-extEqualNat prLogic  Compat815 codeNatToTerm.
+From hydras
+  Require Import primRec  cPair folProp code  codeList  codeFreeVar  
+  extEqualNat prLogic  codeNatToTerm Compat815. 
 
 Import LispAbbreviations. 
 
@@ -133,8 +135,7 @@ Qed.
 
 End close.
 
-Require Import PA.
-Require Import codeSubFormula.
+From hydras.Ackermann Require Import PA codeSubFormula.
 
 Section Code_PA.
 

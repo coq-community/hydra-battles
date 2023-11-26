@@ -1,11 +1,7 @@
-Require Import Ensembles.
-Require Import Coq.Lists.List.
-Require Import Peano_dec.
+From Coq Require Import Ensembles Lists.List Peano_dec.
 
-Require Import ListExt.
-Require Import folProof.
-Require Import folLogic.
-Require Import folProp.
+From hydras.Ackermann 
+  Require Import ListExt folProof folLogic folProp.
 
 Section Replacement.
 

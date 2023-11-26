@@ -1,9 +1,9 @@
 From LibHyps Require Export LibHyps.
-Require Export MoreLibHyps. 
+From hydras Require Export MoreLibHyps. 
 
 (*  move to experimental file (not to export *)
 
-Require Import List.
+From Coq Require Import List.
 Import ListNotations. 
 #[local] Open Scope autonaming_scope.
 
@@ -21,7 +21,7 @@ Goal forall n p , n <= p -> forall q, p <= q -> n <= q.
   - intros /n.  apply h_all_le_n_; transitivity (S m); auto.
 Qed.
 
-Require Import Arith. 
+From Coq Require Import Arith. 
 Parameters f g h : nat -> nat.
 Parameter P : nat->nat->nat-> Prop.
 Goal forall x y ,  f (g (h x)) = h (g (f y)) -> x = y -> x < y ->

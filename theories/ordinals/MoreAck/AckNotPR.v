@@ -7,10 +7,9 @@ and
  *)
 
 Set Apply With Renaming.
-
-Require Import primRec Arith ArithRing List Ack MoreVectors Lia.
-Require Import Compare_dec.
-Import extEqualNat  VectorNotations.
+From hydras Require Import primRec Ack MoreVectors.
+From Coq Require Import  Arith ArithRing List Lia Compare_dec.
+Import extEqualNat  VectorNotations Vector.
 
 
 
@@ -27,15 +26,15 @@ Import extEqualNat  VectorNotations.
 
 Notation "'v_apply' f v" := (evalList _ v f) (at level 10, f at level 9).
 
-
+Check [4].
 Example Ex2 : forall (f: naryFunc 2) x y,
-    v_apply f (x::y::nil) = f x y.
+    v_apply f [x;y] = f x y.
 Proof.
   intros; now cbn.
 Qed.
 
 Example Ex4 : forall (f: naryFunc 4) x y z t,
-    v_apply f (x::y::z::t::nil) = f x y z t.
+    v_apply f [x;y;z;t] = f x y z t.
 Proof.
   intros; now cbn.
 Qed.
@@ -59,7 +58,7 @@ Definition majorizedPR {n} (x: PrimRec n) A :=
 Definition majorizedS {n m} (fs : Vector.t (naryFunc n) m)
            (A : naryFunc 2):=
   exists N, forall (v: t nat n),
-      max_v (map (fun f => v_apply f v) fs) <= A N (max_v v).
+      max_v (Vector.map (fun f => v_apply f v) fs) <= A N (max_v v).
 
 Definition majorizedSPR {n m} (x : PrimRecs n m) :=
   majorizedS (evalPrimRecs _ _ x).
@@ -73,7 +72,7 @@ Section evalList.
     v_apply (evalConstFunc n x) v = x.
     Proof.
     induction n; cbn.
-    - intros; cbn ; replace v with (@nil nat).
+    - intros; cbn ; replace v with (@Vector.nil nat).
       + now  cbn.
       +  symmetry; apply t_0_nil.
     - intros; cbn; rewrite (decomp _ _ v); cbn; auto.

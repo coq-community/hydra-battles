@@ -5,7 +5,8 @@ From hydras Require Import DecPreOrder ON_Generic.
 From hydras Require Import T1 E0 Hessenberg.
 From gaia Require Export ssete9.
 
-Require Import T1Bridge GCanon GHessenberg GLarge_Sets. 
+From gaia_hydras Require Import T1Bridge GCanon GHessenberg 
+  GLarge_Sets. 
 Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.

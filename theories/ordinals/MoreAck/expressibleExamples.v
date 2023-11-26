@@ -1,7 +1,6 @@
 From hydras.Ackermann Require Import expressible.
 
-Require Import NN. 
-Require Import NewNotations NNtheory. 
+From hydras.Ackermann Require Import NN NewNotations NNtheory. 
 Import NNnotations.
 From Coq Require Import Lia. 
 

@@ -5,7 +5,7 @@ Original script by Russel O'Connor
  *)
 
 From Coq Require Import Arith.
-Require Import fol folProof cPair.
+From hydras.Ackermann Require Import fol folProof cPair.
 
 Section Code_Term_Formula_Proof.
 

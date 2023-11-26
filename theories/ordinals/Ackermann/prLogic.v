@@ -6,7 +6,7 @@
      are JUST  helpers to prove that the encoding of basic FOL connectives are PR *)
 
 
-Require Import primRec code cPair.
+From hydras.Ackermann Require Import primRec code cPair.
 From Coq Require Import Arith.
 
 Lemma codeForallIsPR : isPR 2 (fun a b : nat => cPair 3 (cPair a b)).

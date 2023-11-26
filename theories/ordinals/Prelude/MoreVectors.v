@@ -1,4 +1,4 @@
-Require Export Bool Arith Vector Lia.
+From Coq Require Export Bool Arith Vector Lia.
 Import Vector VectorNotations.
 
 (** generalities on vectors *)

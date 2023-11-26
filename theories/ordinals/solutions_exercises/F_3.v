@@ -1,8 +1,8 @@
-Require Import Arith.
-Require Import Iterates F_alpha E0.
-Require Import ArithRing Lia   Max.
+From Coq Require Import Arith.
+From hydras Require Import Iterates F_alpha E0.
+From Coq Require Import ArithRing Lia   Max.
 Import Exp2.
-Require Import Compat815.
+From hydras Require Import Compat815.
 Open Scope nat_scope.
 
 Lemma LF3 : dominates_from 2 (F_ 3) (fun  n => iterate exp2 n n).

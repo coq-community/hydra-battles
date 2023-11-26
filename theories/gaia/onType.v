@@ -205,7 +205,7 @@ Compute tricho om67 om12.
 
 (** To do :  Notation for epsilon0 *)
 
-Require Import T1Bridge.
+From gaia_hydras Require Import T1Bridge.
 
 Section ONEpsilon0Def. 
 

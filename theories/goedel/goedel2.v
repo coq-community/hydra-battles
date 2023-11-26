@@ -7,21 +7,15 @@ From hydras.Ackermann Require Import folReplace.
 From hydras.Ackermann Require Import folLogic3.
 From hydras.Ackermann Require Import subProp.
 From hydras.Ackermann Require Import ListExt.
-(*
-Require Import NNtheory.
-*)
+
 From Goedel Require Import fixPoint.
 From hydras.Ackermann Require Import NN2PA.
 From Goedel Require Import codeSysPrf.
 From hydras.Ackermann Require Import PAtheory.
 From hydras.Ackermann Require Import code.
-(*
-Require Import PRrepresentable.
-Require Import expressible.
-*)
 From hydras.Ackermann Require Import checkPrf.
 From hydras.Ackermann Require Import codeNatToTerm.
-Require Import rosserPA.
+From Goedel Require Import rosserPA.
 
 Section Goedel's_2nd_Incompleteness.
 

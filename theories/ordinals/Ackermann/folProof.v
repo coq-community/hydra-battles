@@ -8,8 +8,8 @@
 From Coq Require Import Ensembles Lists.List Arith. 
 Import ListNotations. 
 
-Require Export fol.
-Require Import folProp.
+From hydras.Ackermann Require Export fol.
+From hydras.Ackermann Require Import folProp.
 Import FolNotations.
 
 

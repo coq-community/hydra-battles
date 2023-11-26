@@ -1,6 +1,6 @@
 (** Pierre Casteran, Univ. Bordeaux and LaBRI  *)
 
- Require Import Hydra_Definitions Hydra_Lemmas.
+ From hydras Require Import Hydra_Definitions Hydra_Lemmas.
 
 (** The hydra from page 286 of [KP] *)
 

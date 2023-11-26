@@ -1,22 +1,17 @@
-Require Import primRec.
-Require Import cPair.
-Require Import Arith.
-Require Import code.
-Require Import folProp.
-Require Import folProof.
-Require Import Languages.
-Require LNN. 
-Require LNT.
+From hydras.Ackermann Require Import primRec cPair code folProp folProof
+                      Languages.
+From Coq Require Import Arith.
+From hydras.Ackermann Require LNN LNT.
 
 Definition natToTermLNN := LNN.natToTerm.
 
 Definition natToTermLNT := LNT.natToTerm.
 
 Fixpoint codeNatToTerm (n: nat) : nat :=
- match n with
-  0 => cPair 4 0
-| S p => cPair 3 (S (cPair (codeNatToTerm p) 0))
-end. 
+  match n with
+    0 => cPair 4 0
+  | S p => cPair 3 (S (cPair (codeNatToTerm p) 0))
+  end. 
 
 #[global] Instance LcodeLNN : Lcode LNN codeLNTFunction codeLNNRelation.
 Proof.

@@ -6,8 +6,8 @@ From hydras Require Import DecPreOrder ON_Generic.
 From hydras Require Import T1 E0 Hessenberg.
 
 From gaia Require Export ssete9.
+From gaia_hydras Require Import T1Bridge. 
 
-Require Import T1Bridge. 
 Set Implicit Arguments.
 Unset Strict Implicit.
 

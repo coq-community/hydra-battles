@@ -7,10 +7,11 @@ Original version by Russel O'Connor
 
 From Coq Require Import Ensembles List Arith.
 
-Require Import folProp  folProof  subProp  folLogic3  folReplace  NN
+From hydras.Ackermann 
+  Require Import folProp  folProof  subProp  folLogic3  folReplace  NN
   PAtheory.
-Require Export LNN2LNT.
-Require Import subAll ListExt.
+From hydras.Ackermann Require Export LNN2LNT.
+From hydras.Ackermann Require Import subAll ListExt.
 Import NNnotations.
 
 Lemma NN2PA (f : fol.Formula LNN):

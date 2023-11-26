@@ -6,8 +6,7 @@
 
 From Coq Require Import Ensembles List.
 
-Require Import folProof.
-Require Import folProp.
+From hydras.Ackermann Require Import folProof folProp.
 Import FolNotations.
 
 Section Deduction_Theorem.

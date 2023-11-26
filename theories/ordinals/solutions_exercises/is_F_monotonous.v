@@ -1,7 +1,7 @@
-Require Import Iterates F_alpha E0.
-Require Import ArithRing Lia   Max.
+From hydras Require Import Iterates F_alpha E0.
+From Coq Require Import ArithRing Lia   Max.
 Import Exp2 Canon.
-Require Import Mult.
+From Coq Require Import Mult.
 Open Scope nat_scope.
 
 

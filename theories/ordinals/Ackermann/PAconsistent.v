@@ -3,7 +3,7 @@
     Original file by Russel O' Connor *)
 
 From Coq Require Import Arith.
-Require Import folProof  folProp  PA model.
+From hydras.Ackermann Require Import folProof  folProp  PA model.
 
 Definition natModel : Model LNT :=
   model LNT nat
