@@ -29,7 +29,7 @@ From hydras Require Export MoreLibHyps NewNotations.
 Import NNnotations. 
 #[local] Arguments apply _ _ _ : clear implicits.
 Import LispAbbreviations. 
-Require Import Utf8.
+From Coq Require Import Utf8.
 
 Coercion natToTerm : nat >-> Term.
 

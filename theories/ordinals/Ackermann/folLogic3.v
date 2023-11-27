@@ -7,11 +7,11 @@
 From Coq Require Import Ensembles List Arith Lia.
 From LibHyps Require Export LibHyps.
 
-Require Import ListExt folProp folProof.
-Require Export folLogic folLogic2.
-Require Import subProp folReplace subAll misc.
-Require Import Compat815.
-Require Export MoreLibHyps. 
+From hydras.Ackermann Require Import ListExt folProp folProof.
+From hydras.Ackermann Require Export folLogic folLogic2.
+From hydras.Ackermann Require Import subProp folReplace subAll misc.
+From hydras Require Import Compat815.
+From hydras Require Export MoreLibHyps. 
 Import FolNotations.
 
 Section Equality_Logic_Rules.

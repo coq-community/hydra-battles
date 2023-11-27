@@ -1,7 +1,6 @@
 (** Polymorphic versions of exponentiation functions *)
 
-Require Import Arith ZArith.
-Require Import String.
+From Coq Require Import Arith ZArith String.
 
 (** 
   Polymorphic exponentiation functions 

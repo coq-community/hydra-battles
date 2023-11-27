@@ -1,7 +1,7 @@
 
 (* Robert Krebbers's trick  *)
 
-Require Import FunInd Recdef Wf_nat Lia.
+From Coq Require Import FunInd Recdef Wf_nat Lia.
 
 Function zero (n:nat)  {wf lt n} : nat :=
   match n with

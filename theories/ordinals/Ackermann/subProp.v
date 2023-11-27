@@ -1,13 +1,9 @@
-Require Import Ensembles.
-Require Import Coq.Lists.List.
-Require Import Peano_dec.
-Require Import ListExt.
-Require Import Arith.
+From Coq Require Import Ensembles List Peano_dec.
+From hydras.Ackermann Require Import ListExt.
+From Coq Require Import Arith.
 
-Require Import folProof.
-Require Import folLogic.
-Require Import folProp.
-Require Import folReplace.
+From hydras.Ackermann 
+  Require Import folProof folLogic folProp folReplace.
 
 From LibHyps Require Export LibHyps.
 From hydras Require Export MoreLibHyps NewNotations.

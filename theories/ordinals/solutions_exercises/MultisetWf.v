@@ -1,7 +1,7 @@
 Set Implicit Arguments.
 Require Import Relations List Sorted Arith.
 From hydras Require Import Restriction.
-Require Import Lia.
+From Coq Require Import Lia.
 
 
 (* begin snippet tDef *)

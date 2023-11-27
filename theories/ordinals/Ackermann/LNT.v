@@ -7,7 +7,8 @@ Original version by Russel O'Connor
 
 From Coq Require Import Arith Ensembles List.
 
-Require Import Languages  folProof  folProp  folLogic3.
+From hydras.Ackermann 
+ Require Import Languages  folProof  folProp  folLogic3.
 
 (** * Instantiations of a few generic constructs 
 

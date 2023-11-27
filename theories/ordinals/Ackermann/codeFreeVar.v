@@ -4,11 +4,11 @@
 
 
 
-Require Import primRec  cPair.
+From hydras.Ackermann Require Import primRec  cPair.
 From Coq Require Import List Arith.
-Require Import ListExt.
-Require Export codeList.
-Require Import folProp  code Compat815.
+From hydras.Ackermann Require Import ListExt.
+From hydras.Ackermann Require Export codeList.
+From hydras Require Import folProp  code Compat815.
 Import LispAbbreviations.
 Import PRNotations.
 

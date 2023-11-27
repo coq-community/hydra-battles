@@ -1,7 +1,8 @@
 (* Trace of a chain *)
 (** Solution to an exercise *)
 
-
+From Coq Require Import List.
+Import ListNotations.
 Require Import Addition_Chains PArith.
 
 

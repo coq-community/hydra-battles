@@ -1,8 +1,8 @@
 (******************************************************************************)
 From Coq Require Import Wf_nat Arith Lists.List Peano_dec. 
 
-Require Import ListExt. 
-Require Export fol.
+From hydras.Ackermann Require Import ListExt. 
+From hydras.Ackermann Require Export fol.
 Import FolNotations.
 
 Section Fol_Properties.

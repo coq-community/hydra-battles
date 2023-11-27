@@ -1,8 +1,7 @@
 (** author Yves Bertot, Inria  *)
 
 
-Require Import Extraction.
-Require Import ZArith Lia.
+From Coq Require Import Extraction ZArith Lia.
 
 From mathcomp Require Import all_ssreflect all_algebra.
 

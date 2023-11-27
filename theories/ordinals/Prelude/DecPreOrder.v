@@ -9,7 +9,7 @@ From Coq Require Export Relations RelationClasses Setoid.
 Class Total {A:Type}(R: relation A) :=
   totalness : forall a b:A, R a b \/ R b a.
 
-Require Export STDPP_compat.
+From hydras Require Export STDPP_compat.
 
 
 #[ global ] Instance comparison_eq_dec : EqDecision comparison.

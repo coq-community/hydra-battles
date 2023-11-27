@@ -3,12 +3,12 @@
      Original script by Russel O'Connor 
 *)
 
-Require Import primRec  cPair.
-Require Export Coq.Lists.List.
-Require Import ListExt.
+From hydras.Ackermann Require Import primRec  cPair.
+From Coq Require Export Lists.List.
+From hydras.Ackermann Require Import ListExt.
 From Coq Require Import Arith.
-Require Vector.
-Require Import extEqualNat Compat815.
+From Coq Require Vector.
+From hydras Require Import extEqualNat Compat815.
 
 Definition codeLength : nat -> nat :=
   evalStrongRec 0

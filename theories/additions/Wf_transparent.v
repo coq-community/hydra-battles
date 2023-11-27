@@ -2,7 +2,7 @@
 *)
 
 
-Require Export Relation_Definitions.
+From Coq Require Export Relation_Definitions.
 
 Lemma wf_incl_transparent  :
 forall (A : Type) (R1 R2 : A -> A -> Prop),

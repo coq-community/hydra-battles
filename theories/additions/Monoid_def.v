@@ -1,6 +1,4 @@
-Require Import RelationClasses.
-Require Import Relations Morphisms.
-Require Import String.
+From Coq Require Import RelationClasses Relations Morphisms String.
 
 Set Implicit Arguments.
 

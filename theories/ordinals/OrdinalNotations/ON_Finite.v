@@ -8,7 +8,7 @@ From Coq Require Import Arith Relations Lia Logic.Eqdep_dec Ensembles
         RelationClasses.
 From hydras Require Import ON_Generic.
 
-Require Wf_nat.
+From Coq Require Wf_nat.
 
 
 

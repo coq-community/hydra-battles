@@ -5,7 +5,7 @@
 
 From mathcomp Require Import all_ssreflect zify.
 From hydras Require Import Canon Paths.
-Require Import T1Bridge GCanon.
+From gaia_hydras Require Import T1Bridge GCanon.
 
 
 From hydras Require Import T1.

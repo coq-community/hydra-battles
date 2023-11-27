@@ -1,5 +1,5 @@
 From Coq Require Import Ensembles. 
-Require Import folProp. 
+From hydras.Ackermann Require Import folProp. 
 
 Notation "'SetAdds' E0  x1 .. xn" := 
   (Ensembles.Add _ (.. (Ensembles.Add _ E0 x1) .. ) xn) 

@@ -5,7 +5,7 @@
 (** TO do : reorganize Alectryon snippets *)
 
 From Coq Require Import Arith List.
-Require Import fol primRec code.
+From hydras.Ackermann Require Import fol primRec code.
 
 (**  * Language of Number Theory: [LNT] *)
 

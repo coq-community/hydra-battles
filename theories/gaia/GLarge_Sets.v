@@ -7,7 +7,7 @@
 From mathcomp Require Import all_ssreflect zify.
 From hydras Require Import T1.
 From hydras Require Import Canon Paths Large_Sets.
-Require Import T1Bridge GCanon GPaths.
+From gaia_hydras Require Import T1Bridge GCanon GPaths.
 
 From gaia Require Import ssete9.
 Import CantorOrdinal. 

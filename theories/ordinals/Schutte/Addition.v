@@ -4,7 +4,7 @@ From ZornsLemma Require Import CountableTypes.
 From hydras Require Export Schutte_basics  Ordering_Functions
      PartialFun  Countable  MoreEpsilonIota.
 Set Implicit Arguments.
-Require Export STDPP_compat.
+From hydras Require Export STDPP_compat.
 
 (** * Definitions *)
 

@@ -255,6 +255,6 @@ Proof with auto with E0.
        rewrite H'_eq2, L_succ_eqn ...
 Qed.
 
-Require Import Extraction.
+From Coq Require Import Extraction.
 
 Recursive Extraction L_.

@@ -1,7 +1,6 @@
 From hydras Require Export Iterates Exp2.
 From Coq Require Import Lia.
-Require Import Coq.Program.Wf.
-Require Import Coq.Arith.Arith.
+From Coq Require Import Program.Wf Arith.
 From hydras Require Import ssrnat_extracts.
 
 

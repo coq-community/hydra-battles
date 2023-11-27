@@ -6,13 +6,11 @@
 
 From Coq Require Import Ensembles List Vector Arith.
 
-Require Import ListExt.
-Require Import folProof.
-Require Import folProp.
-Require Import Peano_dec.
-Require Import misc.
+From hydras.Ackermann Require Import ListExt folProof folProp.
+From Coq Require Import Peano_dec.
+From hydras.Ackermann Require Import misc.
 Import FolNotations.
-Require Import NewNotations.
+From hydras.Ackermann Require Import NewNotations.
 
 Section Model_Theory.
 

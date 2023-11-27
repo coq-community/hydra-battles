@@ -2,9 +2,9 @@
 
 From Coq Require Import Arith Lists.List.
 
-Require Import fol folProp folProof  Languages folLogic 
-  folLogic2 folLogic3 subAll Deduction.
-Require Import primRec.
+From hydras.Ackermann 
+  Require Import fol folProp folProof  Languages folLogic 
+  folLogic2 folLogic3 subAll Deduction primRec.
 Import ListNotations. 
 Import FolNotations. 
 

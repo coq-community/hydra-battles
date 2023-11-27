@@ -5,9 +5,10 @@
 *)
 
 From Coq Require Import Arith Lia. 
-Require Import primRec codeFreeVar codeSubFormula  cPair.
-Require Import code  folProp extEqualNat  wellFormed  folProof.
-Require Import prLogic  Compat815.
+From hydras.Ackermann Require Import primRec codeFreeVar 
+  codeSubFormula  cPair code  folProp extEqualNat  wellFormed 
+  folProof prLogic.
+From hydras Require Import  Compat815.
 From LibHyps Require Export LibHyps.
 From hydras Require Export MoreLibHyps NewNotations.
 Import LispAbbreviations. 

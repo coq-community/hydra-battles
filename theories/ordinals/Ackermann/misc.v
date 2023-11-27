@@ -1,4 +1,4 @@
-Require Export Eqdep_dec.
+From Coq Require Export Eqdep_dec.
 
 #[global] Set Asymmetric Patterns. 
 
