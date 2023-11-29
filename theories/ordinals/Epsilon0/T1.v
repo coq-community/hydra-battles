@@ -636,7 +636,7 @@ Fixpoint minus (alpha beta : T1) :T1 :=
      then zero
      else  cons zero (Peano.pred (n-n')) zero
  |  cons zero n _, zero =>  cons zero n zero
- |  cons zero n _, y =>  zero
+ |  cons zero _ _, _ =>  zero
  |  cons a n b, zero =>  cons a n b
  |  cons a n b, cons a' n' b' =>
      (match compare a a' with
