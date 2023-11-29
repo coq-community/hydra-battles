@@ -1,6 +1,6 @@
 (** provisionally fixes some compatibilty issues 8.15 -> 8.16 *)
 
-Require Import Arith Lia.
+From Coq Require Import Arith Lia.
 Import Nat.
 
 

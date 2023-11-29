@@ -5,7 +5,7 @@
      
 
 
-Require Import Arith.
+From Coq Require Import Arith.
 
 (* begin snippet naryFunc *)
 

@@ -6,7 +6,7 @@
    since it appears in many composed tactics. 
 *)
 
-Require Import Coq.Lists.List.
+From Coq Require Import Lists.List.
 
 Section List_Remove.
 

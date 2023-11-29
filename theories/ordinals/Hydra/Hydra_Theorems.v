@@ -108,8 +108,8 @@ Print Assumptions battle_length_std.
 
 (** ** Battle length is not PR *)
 
-Require Import primRec F_alpha  AckNotPR PrimRecExamples.
-Require Import F_omega.
+From hydras Require Import primRec F_alpha  AckNotPR 
+  PrimRecExamples F_omega.
 Import E0.
 
 (* begin snippet battleLengthNotPRa *)

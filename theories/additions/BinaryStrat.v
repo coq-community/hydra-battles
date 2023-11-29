@@ -6,8 +6,9 @@
 *)
  
 
-Require Import Arith NArith Pow Compatibility More_on_positive Lia.
-Require Export Strategies.
+From Coq Require Import Arith NArith Lia.
+From additions Require Import  Pow Compatibility More_on_positive.
+From additions Require Export Strategies.
 
 Open Scope positive_scope.
 

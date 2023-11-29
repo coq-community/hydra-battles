@@ -20,7 +20,7 @@ From Coq Require Import ArithRing Lia.
 From hydras Require Import  E0    Canon Paths.
 From hydras Require Import Exp2 Iterates Simple_LexProd.
 Import RelationClasses Relations.
-Require Import Compat815. 
+From hydras Require Import Compat815. 
 From Equations Require Import Equations.
 
  Open Scope E0_scope.

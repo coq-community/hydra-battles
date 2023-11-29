@@ -14,13 +14,12 @@ small computation may be parameterized by the context in which it will be
 
 
 
-Require Import Inverse_Image  Inclusion  Wf_nat.
-Require Import Addition_Chains  NArith  Arith PArith  Compatibility.  
-Require Import More_on_positive.
-Import Monoid_def  Pow.
-Require Import Recdef Wf_nat.
-Require Import  More_on_positive .
-Require Import Wf_transparent Lexicographic_Product  Dichotomy BinaryStrat.
+From Coq Require Import Inverse_Image  Inclusion  Wf_nat 
+  NArith  Arith PArith Recdef Wf_nat Lexicographic_Product Lia.
+From additions Require Import Addition_Chains    Compatibility 
+  More_on_positive Wf_transparent   Dichotomy BinaryStrat.
+From Coq Require Import Lia.
+
 Generalizable All Variables.
 Import Morphisms.
 Import Monoid_def.
@@ -1538,7 +1537,7 @@ Arguments big_chain _%type_scope.
 Remark RM : (1 < 56789)%N. 
 Proof. reflexivity. Qed.
 
-Definition M := Nmod_Monoid _ RM.
+Definition M := Nmod_Monoid  _ RM.
 
 Definition exp56789 x := chain_apply big_chain (M:=M) x.
 

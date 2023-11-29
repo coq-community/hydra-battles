@@ -1,7 +1,7 @@
 (** Compatibility between primRec.iterate and Iterates.iterate *)
 
-Require primRec Iterates.
-Require Import extEqualNat.
+From hydras Require primRec Iterates.
+From hydras.Ackermann Require Import extEqualNat.
 
 (*
 

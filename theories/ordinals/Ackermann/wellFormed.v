@@ -1,13 +1,11 @@
 
-Require Import primRec.
-Require Import cPair.
-Require Import Arith Lia.
-Require Import code.
-Require Import folProp.
-Require Import extEqualNat.
-Require Import codeList.
-Require Import Compat815.
+From hydras.Ackermann Require Import primRec cPair.
+From Coq Require Import Arith Lia.
+From hydras.Ackermann Require Import code folProp 
+  extEqualNat codeList.
+From hydras Require Import Compat815.
 Import LispAbbreviations. 
+
 Section Well_Formed_Term.
 
 Variable L : Language.

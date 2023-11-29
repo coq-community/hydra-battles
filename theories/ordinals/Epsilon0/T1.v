@@ -108,7 +108,7 @@ Fixpoint T1limit alpha :=
   match alpha with
     | zero => false
     | cons zero _ _ => false
-    | cons alpha _ zero => true
+    | cons _ _ zero => true
     | cons _ _ beta => T1limit beta
   end.
 

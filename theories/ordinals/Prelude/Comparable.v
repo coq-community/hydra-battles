@@ -1,5 +1,5 @@
 From Coq Require Import Relations RelationClasses Setoid.
-Require Export MoreOrders STDPP_compat.
+From hydras Require Export MoreOrders STDPP_compat.
 
 (* begin snippet ComparableDef:: no-out *)
 Class Compare (A:Type) := compare : A -> A -> comparison.

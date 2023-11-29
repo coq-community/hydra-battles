@@ -1,4 +1,4 @@
-Require Import primRec cPair extEqualNat.
+From hydras Require Import primRec cPair extEqualNat.
 
 (** The famous Fibonacci function *)
 

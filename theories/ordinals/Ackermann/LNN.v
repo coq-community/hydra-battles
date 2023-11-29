@@ -8,9 +8,10 @@ Original version by Russel O'Connor
 
 From Coq Require Import Arith Ensembles List.
 
-Require Export Languages folProof  folProp  folLogic3.
+From hydras.Ackermann Require Export Languages folProof  
+  folProp  folLogic3.
 From LibHyps Require Import LibHyps. 
-Require Import MoreLibHyps NewNotations.
+From hydras Require Import MoreLibHyps NewNotations.
 
 (** * Instantiations of a few generic constructs 
 

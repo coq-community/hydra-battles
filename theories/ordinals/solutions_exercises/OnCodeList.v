@@ -1,5 +1,6 @@
 (* begin snippet membersDef:: no-out *)
-Require Import primRec cPair Arith.
+From hydras.Ackermann Require Import primRec cPair.
+From Coq Require Import Arith.
 From Equations Require Import  Equations.
 
 Equations members (a:nat): list nat by wf a:=

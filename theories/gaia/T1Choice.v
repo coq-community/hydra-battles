@@ -12,7 +12,7 @@ From mathcomp Require Import all_ssreflect zify.
 From Coq Require Import Logic.Eqdep_dec.
 From hydras Require Import DecPreOrder ON_Generic  T1 E0.
 From gaia Require Export ssete9.
-Require Import T1Bridge.
+From gaia_hydras Require Import T1Bridge.
 
 Set Implicit Arguments.
 Unset Strict Implicit.

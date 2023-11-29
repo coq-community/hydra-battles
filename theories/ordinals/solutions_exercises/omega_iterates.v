@@ -3,7 +3,7 @@
 (** Old stuff 
 *)
 
-Require Import ArithRing Lia Arith.
+From Coq Require Import ArithRing Lia Arith.
 Import Nat.
 
 Definition id_nat (n:nat) := n.

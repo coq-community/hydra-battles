@@ -1,6 +1,4 @@
-Require Import Monoid_def 
-               Monoid_instances
-               Pow.
+From additions Require Import Monoid_def Monoid_instances Pow.
 (* begin snippet DemoPower *)
 Open Scope M_scope.
 

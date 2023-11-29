@@ -9,8 +9,8 @@ Original version by Russel O'Connor
 
 From Coq Require Import Arith Lia  Ensembles List.
 
-Require Import folProp subAll  folLogic3 Languages.
-Require Export LNN.
+From hydras.Ackermann Require Import folProp subAll  folLogic3 Languages.
+From hydras.Ackermann Require Export LNN.
 From hydras Require Import Compat815 NewNotations.
 Import NNnotations. 
 (** * Axioms of [NN] *)

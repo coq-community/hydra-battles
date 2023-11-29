@@ -7,7 +7,7 @@ Tactic Notation (at level 4) tactic4(Tac) "/" "r?" :=
   Tac ; {< fun h  => try revert h }.
 
 
-Require Import List.
+From Coq Require Import List.
 Import ListNotations. 
 #[local] Open Scope autonaming_scope.
 

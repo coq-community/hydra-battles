@@ -1,18 +1,10 @@
 (** Primitive Recursive functions *)
 (** Russel O'Connor *)
 
-Require Import Arith.
-Require Import Peano_dec.
-Require Import Compare_dec.
-Require Import Coq.Lists.List.
-Require Import Eqdep_dec.
-Require Import Utf8.
+From Coq Require Import Arith Peano_dec Compare_dec List Eqdep_dec Utf8.
 From hydras Require Import extEqualNat misc Compat815.
-Require Vector.
-
-Require Export Bool.
-Require Export EqNat.
-Require Import Lia. 
+From Coq Require Vector Bool EqNat.
+From  Coq Require Import Lia. 
 
 
 (** * Definitions *)
@@ -1019,7 +1011,7 @@ Qed.
 Definition orRel (n : nat) (R S : naryRel n) : naryRel n.
 Proof. 
   induction n as [| n Hrecn].
-  - apply (R || S).
+  - apply (R || S)%bool.
   - cbn in |- *;intros H; apply Hrecn.
     + apply (R H).
     + apply (S H).
@@ -1061,7 +1053,7 @@ Qed.
 Definition andRel (n : nat) (R S : naryRel n) : naryRel n.
 Proof. 
   induction n as [| n Hrecn].
-  - exact (R && S).
+  - exact (R && S)%bool.
   - simpl in |- *; intros; apply Hrecn.
     + apply (R H).
     + apply (S H).

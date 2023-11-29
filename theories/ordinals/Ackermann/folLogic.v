@@ -5,7 +5,7 @@
 
 From Coq Require Import Ensembles List.
 
-Require Import ListExt folProof folProp Deduction.
+From hydras.Ackermann Require Import ListExt folProof folProp Deduction.
 Import FolNotations.
 
 Section Logic_Rules.

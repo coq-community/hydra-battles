@@ -1,9 +1,8 @@
 From Coq Require Import Arith Lia.
 
-Require Import folLogic3.
-Require Import folProp.
-Require Import subProp.
-Require Export NN.
+From hydras.Ackermann Require Import folLogic3 folProp subProp.
+From hydras.Ackermann Require Import folLogic3 folProp subProp. 
+From hydras.Ackermann Require Export NN.
 From hydras Require Import Compat815.
 Import NNnotations. 
 

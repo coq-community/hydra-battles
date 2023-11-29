@@ -9,7 +9,7 @@ From hydras Require Import  OrdNotations Schutte_basics.
 From Coq Require Export Wellfounded.Inverse_Image Wellfounded.Inclusion.
 Import Relation_Definitions.
 From hydras Require Export MoreOrders.
-Require Export Comparable.
+From hydras Require Export Comparable.
   
 Generalizable All Variables.
 Declare Scope ON_scope.

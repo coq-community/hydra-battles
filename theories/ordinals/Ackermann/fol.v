@@ -10,7 +10,7 @@ This file is Public Domain
 From Coq Require Import Lists.List  Ensembles  Peano_dec  Eqdep_dec
   Arith Compare_dec Utf8.
 
-Require Import misc  Compat815 (* provisional *).
+From hydras Require Import Ackermann.misc  Compat815 (* provisional *).
 (* end hide *)
 
 (** *  First Order Formulas over a language *)

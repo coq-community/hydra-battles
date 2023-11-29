@@ -1,5 +1,5 @@
-Require Import fol folProp folProof  Languages folLogic Arith.
-Require Import primRec.
+From hydras Require Import fol folProp folProof  Languages folLogic primRec.
+From Coq Require Import Arith.
 
 Import FolNotations. 
 
@@ -25,7 +25,7 @@ Module BadSubst.
 End BadSubst. 
 (* end snippet BadSubstFdef *)
 
-Require Import List.
+From Coq Require Import List.
 Import ListNotations.
 
 Module BadSubstF2. 
@@ -46,7 +46,7 @@ Fail Fixpoint substF L (F : Formula L) v (t: Term L) :=
 
 End BadSubstF2.
 
-Require Import FolExamples. 
+From hydras Require Import FolExamples. 
 Import Toy. 
 
 (* begin snippet BadSubstFexample *)

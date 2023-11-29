@@ -6,9 +6,9 @@
 
 From Coq Require Import Ensembles List Arith Lia.
 
-Require Import subAll folReplace folProp folLogic3 NN LNN2LNT.
-Require Export PA.
-Require Import NewNotations.
+From hydras.Ackermann Require Import subAll folReplace folProp folLogic3 NN LNN2LNT.
+From hydras.Ackermann Require Export PA.
+From hydras.Ackermann Require Import NewNotations.
 Import NNnotations.
 
 #[local] Arguments apply _ _ _ : clear implicits.

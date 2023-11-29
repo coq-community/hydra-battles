@@ -4,7 +4,7 @@
 
 
 From Coq  Require Export List Arith Relations Lia.
-Require Import Sorting.Sorted  Compare_dec  Sorting.Sorted.
+From Coq Require Import Sorting.Sorted  Compare_dec  Sorting.Sorted.
 
 (** *  Sets of natural numbers as lists *)
 

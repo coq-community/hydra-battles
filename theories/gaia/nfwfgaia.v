@@ -9,7 +9,7 @@
 
 
 From mathcomp
-Require Import ssreflect ssrfun ssrbool eqtype ssrnat.
+  Require Import ssreflect ssrfun ssrbool eqtype ssrnat.
 From mathcomp Require Import fintype bigop.
 
 Set Implicit Arguments.

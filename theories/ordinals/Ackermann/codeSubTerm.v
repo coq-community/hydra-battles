@@ -1,11 +1,8 @@
-Require Import primRec.
-Require Import cPair.
-Require Import Arith.
-Require Import folProp.
-Require Import code.
-Require Import extEqualNat.
-Require Vector.
-Require Import Compat815.
+From hydras.Ackermann Require Import  primRec cPair folProp code 
+                        extEqualNat.
+From Coq Require Import Arith.
+From Coq  Require Vector.
+From hydras Require Import Compat815.
 Import LispAbbreviations. 
 Require Import NewNotations.
 Import PRNotations.

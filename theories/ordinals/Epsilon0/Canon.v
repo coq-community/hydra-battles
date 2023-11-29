@@ -980,7 +980,7 @@ Lemma canonS_LE alpha n :
   
   (** exercise  after Guillaume Melquiond   *)
   
-  Require Import Fuel. 
+ From hydras  Require Import Fuel. 
 
 Fixpoint  approx alpha beta fuel i :=
   match fuel with
