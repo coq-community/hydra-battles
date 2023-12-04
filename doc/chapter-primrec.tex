@@ -865,9 +865,11 @@ If the Ackermann function were primitive recursive, then there would exist some 
 $\texttt{Ack}\,x\,y\leq \texttt{Ack}\,n\,(\texttt{max}\,x\,y)$ holds.
 Thus, our impossibility proof is just a sequence of easy small steps.
 
-\begin{todo}
-  Fix the display of the local definition of \texttt{x} in the following proof: \emph{Alectryon} prints a \emph{declaration} \texttt{x: nat}, but forgets to print the definition \texttt{x := Nat.max 2 m},  which is  important to complete the proof.
-\end{todo}
+\begin{remark}
+In the following snippet,  \emph{Alectryon}'s \texttt{Latex} generator  prints the \emph{local definition} of $x$ (as the maximum of $2$ and $m$) as a simple \emph{declaration} \texttt{x: nat}.
+Thus the proof script is correct, but the three last sub-goals are not correctly displayed, since 
+they do not show how the inequalities $2\leq x$ and $m \leq x$ could be inferred by \texttt{lia}.
+\end{remark}
 
 \input{movies/snippets/AckNotPR/AckNotPR}
 
