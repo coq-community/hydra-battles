@@ -601,15 +601,26 @@ the function \texttt{boundedSearch} for this purpose).
 
 \section{Proofs by induction over all primitive recursive functions}
 
-We may want to prove properties shared with all the set of
-primitive function, for instance that any primitive recursive function is representable by a predicate in Peano Arithmetics (see Chap~›\vref{chap:PRRep}).
-In this chapter, we will prove by induction that every primitive recursive function has a given property which is not satisfied by  Ackermann function, and deduce that this function is not PR.
+Let us consider the following theorem (see for instance ~\cite{planetmath}).
+
+\begin{quote}
+   There exists at least a total arithmetic function, \emph{e.g.} the \emph{Ackermann function},  which is not primitive recursive.
+\end{quote}
+
+We can prove this theorem in three successive steps:
+
+\begin{itemize}
+\item Define Ackermann function in \gallina.
+\item Define and prove a property shared by any primitive recursive functions.
+\item Prove that  Ackermann function does not satisfy this property.
+\end{itemize}
+
+
 We show how to adapt the classic proof (see for instance~\cite{planetmath}) to the constraints of \gallina. We hope this formal proof 
  is a nice opportunity to explore
 the treatment of primitive recursive functions by R. O'Connor,
 and to play with dependent types.
 
-First, let us define Ackermann function in \coq, then look at a few properties of this function.
 
 \subsection{Ackermann function}
 
@@ -636,7 +647,9 @@ This way, both functions \texttt{Ack} and \texttt{Ackm} have a (structurally) st
 We preferred to define a variant which uses explicitly
  the functional \texttt{iterate},
 where (\texttt{iterate\,$f$\,$n$})
-is the $n$-th iteration of $f$\,\footnote{Please not confuse with \texttt{primRec.iterate}, which is monomorphic and does not share the same order of arguments.}. It makes it possible to apply a few lemmas proved in 
+is the $n$-th iteration of $f$\,\footnote{Please do not mistake
+  \texttt{iterate} (\emph{i.e.} \texttt{Prelude.iterate}) for
+  the monomorphic \texttt{primRec.iterate}, which does not share the same order of arguments.}. It makes it possible to apply a few lemmas proved in 
 \href{../theories/html/hydras.Prelude.Iterates.html}{Prelude.Iterates}, for instance about the monotony of the $n$-th iterate of a given function. 
 
 
