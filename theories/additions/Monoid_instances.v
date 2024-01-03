@@ -120,7 +120,7 @@ The type [int63] is defined in Standard Library in Module
 Proof.
    split;unfold int63_mult_op, mult_op; intros; ring.
 Qed.
-(* end snippet int63 *)
+(* end snippet int31 *)
 
 
 
