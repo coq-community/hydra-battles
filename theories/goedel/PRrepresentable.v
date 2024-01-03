@@ -1545,7 +1545,7 @@ Proof.
               ** elim closedNN with v. exists x0; auto.
               ** destruct H6. destruct H5 as [H5 | H5]; try congruence.
                  fold (freeVarT (n2t a)) in H5. simpl in H5.
-                 rewrite <- app_nil_end in H5. elim (closedNatToTerm _ _ H5).
+                 rewrite  app_nil_r in H5. elim (closedNatToTerm _ _ H5).
               ** apply impE with (LT (var x) (n2t a)).
                  --- apply sysWeaken. apply boundedLT. intros n H5.
                      rewrite (subFormulaNot LNN).

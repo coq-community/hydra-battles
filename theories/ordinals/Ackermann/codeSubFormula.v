@@ -4817,7 +4817,7 @@ Proof.
                  apply Nat.le_max_l.
                  simpl; apply maxLemma.
                  apply le_n.
-                 rewrite ass_app.
+                 rewrite app_assoc.
                  apply maxLemma2.
            ++ apply Nat.le_trans with
                 (evalStrongRec 1 A (codeFormula f1)

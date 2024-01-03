@@ -87,7 +87,7 @@ intros R l1 l2 l H; destruct H as [l1 l2 l12 la a H P1 P2].
 apply (@rmv_case R (l++l1) (l++l2) (l++l12) la a); trivial.
 apply list_permut_trans with (l ++ la ++ l12).
 apply context_list_permut_app1; trivial.
-do 2 rewrite <- app_ass; apply context_list_permut_app2; trivial.
+do 2 rewrite app_assoc; apply context_list_permut_app2; trivial.
 apply list_permut_app_app.
 apply list_permut_trans with (l ++ a :: l12).
 apply context_list_permut_app1; trivial.
@@ -111,7 +111,7 @@ Lemma context_multiset_extension_step_app2 :
 Proof.
 intros R l1 l2 l H; destruct H as [l1 l2 l12 la a H P1 P2].
 apply (@rmv_case R (l1++l) (l2++l) (l12++l) la a); trivial.
-rewrite <- app_ass; apply context_list_permut_app2; trivial.
+rewrite app_assoc; apply context_list_permut_app2; trivial.
 rewrite app_comm_cons; apply context_list_permut_app2; trivial.
 Qed.
 
@@ -231,10 +231,10 @@ generalize (split_list_app_cons eq_elt_dec _ _ a_in_q');
 destruct (split_list eq_elt_dec q' a) as [q1' q2']; intro; subst.
 exists (la ++ q1' ++ q2'); exists r'; exists qr; split.
 refine (list_permut_trans Pp _).
-do 2 rewrite app_ass; apply context_list_permut_app1.
+do 2 rewrite <- app_assoc; apply context_list_permut_app1.
 apply list_permut_remove_hd with a.
 refine (list_permut_trans (list_permut_sym Pq) _).
-rewrite app_comm_cons; rewrite <- app_ass; trivial.
+rewrite app_comm_cons; rewrite app_assoc; trivial.
 split; trivial.
 split; trivial.
 intros b b_in_la_q1'_q2'; 
@@ -250,14 +250,14 @@ generalize (split_list_app_cons eq_elt_dec _ _ a_in_qr);
 destruct (split_list eq_elt_dec qr a) as [qr1 qr2]; intro; subst.
 exists (la ++ q'); exists (a :: r'); exists (qr1 ++ qr2); split.
 refine (list_permut_trans Pp _).
-rewrite app_ass; apply context_list_permut_app1.
-rewrite <- app_ass; apply list_permut_remove_hd with a.
+rewrite <- app_assoc; apply context_list_permut_app1.
+rewrite app_assoc; apply list_permut_remove_hd with a.
 refine (list_permut_trans (list_permut_sym Pq) _).
-rewrite app_ass; trivial.
+rewrite <- app_assoc; trivial.
 split.
-refine (list_permut_trans Pr _); rewrite <- app_ass;
+refine (list_permut_trans Pr _); rewrite app_assoc;
 apply list_permut_sym; simpl; apply list_permut_add_cons_inside;
-rewrite ass_app; apply list_permut_refl.
+rewrite app_assoc; apply list_permut_refl.
 split.
 discriminate.
 intros b b_in_la_q'; 

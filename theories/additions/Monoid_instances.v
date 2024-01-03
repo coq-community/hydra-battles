@@ -10,7 +10,7 @@ Require Import RelationClasses Morphisms.
 Require Import ZArith PArith.
 Require Import Arith.
 Require Import NArith.
-Require Import Ring31.
+Require Import Ring63.
 
 Open Scope Z_scope.
 
@@ -100,52 +100,52 @@ Proof.
 Qed.
 
 
-Import Int31.
-Open Scope int31_scope.
+Import Uint63.
+Open Scope int63_scope.
 
-(** ***  Multiplicative monoid on 31-bits integers 
+(** ***  Multiplicative monoid on 63-bits integers 
 
 Cyclic numeric types are  good candidates for testing exponentiations
 with big exponents, since the size of data is bounded.
 
 
-The type [int31] is defined in Standard Library in Module
-[Coq.Numbers.Cyclic.Int31.Int31].
+The type [int63] is defined in Standard Library in Module
+[Coq.Numbers.Cyclic.Int63.Uint63].
 *)
 
 (* begin snippet int31:: no-out *)
-#[ global ] Instance int31_mult_op : Mult_op int31 := mul31.
+#[ global ] Instance int63_mult_op : Mult_op int := mul.
 
-#[ global ] Instance  Int31mult : Monoid int31_mult_op  1.
+#[ global ] Instance  Int63mult : Monoid int63_mult_op  1.
 Proof.
-   split;unfold int31_mult_op, mult_op; intros; ring.
+   split;unfold int63_mult_op, mult_op; intros; ring.
 Qed.
-(* end snippet int31 *)
+(* end snippet int63 *)
 
 
 
   (* begin snippet BadFact *)
 Module Bad.
   
-  Fixpoint int31_from_nat (n:nat) :=
+  Fixpoint int63_from_nat (n:nat) :int :=
     match n with
     | O => 1
-    | S p => 1 + int31_from_nat p
+    | S p => 1 + int63_from_nat p
     end.
   
-  Coercion int31_from_nat : nat >-> int31.
+  Coercion int63_from_nat : nat >-> int.
   
-  Fixpoint fact (n:nat) := match n with
+  Fixpoint fact (n:nat) : int := match n with
                              O => 1
                            | S p => n * fact p
                            end.
-  Compute fact 40. 
+  Compute fact 160. 
 
 End Bad. 
 (* end snippet BadFact *)
 
 
-Close Scope int31_scope.
+Close Scope int63_scope.
 
 
 (** *** Monoid of 2x2 matrices 
@@ -262,9 +262,9 @@ Section Nmodulo.
   Proof.
     unfold mod_equiv, mod_op, mult_mod, mod_eq.
     intros x y Hxy z t Hzt.
-    repeat rewrite N.mod_mod; auto with chains.
-    rewrite (N.mul_mod x z);auto with chains.
-    rewrite (N.mul_mod y t);auto with chains.
+    repeat rewrite N.Div0.mod_mod; auto with chains.
+    rewrite (N.Div0.mul_mod x z);auto with chains.
+    rewrite (N.Div0.mul_mod y t);auto with chains.
     rewrite Hxy, Hzt; reflexivity.
   Qed.
 
@@ -277,8 +277,8 @@ Section Nmodulo.
   Proof.
     intros  x y z.
     unfold mod_op, mult_op, mult_mod.
-    rewrite N.mul_mod_idemp_r;auto with chains.
-    rewrite N.mul_mod_idemp_l;auto with chains.
+    rewrite N.Div0.mul_mod_idemp_r;auto with chains.
+    rewrite N.Div0.mul_mod_idemp_l;auto with chains.
     now rewrite  N.mul_assoc.
   Qed.
 
@@ -287,14 +287,14 @@ Section Nmodulo.
   (* end snippet Nmoduloe *)
   Proof.
     unfold equiv, mod_equiv, mod_eq, mult_op, mod_op, mult_mod.
-    intro x; rewrite N.mul_1_l, N.mod_mod; auto with chains.
+    intro x; rewrite N.mul_1_l, N.Div0.mod_mod; auto with chains.
   Qed.
   (* begin snippet Nmodulof:: no-out *)
   Lemma one_mod_neutral_r  : forall x, x * 1 == x.
   (* end snippet Nmodulof *)
   Proof.
     unfold equiv, mod_equiv, mod_eq, mult_op, mod_op, mult_mod.
-    intro x; rewrite N.mul_1_r, N.mod_mod; auto with chains.
+    intro x; rewrite N.mul_1_r, N.Div0.mod_mod; auto with chains.
   Qed.
   
 

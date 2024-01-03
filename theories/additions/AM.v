@@ -552,9 +552,9 @@ Function chain_gen  (s:signature) {measure signature_measure}
           | (q, 0%N) => 
             (chain_gen (gen_F (gamma i))) ++
                                           (chain_gen (gen_F (N2pos q)))
-          | (q,r)  => KFF (chain_gen
-                             (gen_K (N2pos r)
-                                    (gamma i - N2pos r)))
+          | (q,_r)  => KFF (chain_gen
+                             (gen_K (N2pos _r)
+                                    (gamma i - N2pos _r)))
                           (chain_gen (gen_F (N2pos q)))
                           
           end 
@@ -565,8 +565,8 @@ Function chain_gen  (s:signature) {measure signature_measure}
       match N.pos_div_eucl (p + d)  (Npos p) with
       | (q, 0%N) => FFK (chain_gen (gen_F p))
                           (chain_gen (gen_F (N2pos q)))
-      | (q,r)  => KFK (chain_gen (gen_K (N2pos r)
-                                        (p - N2pos r)))
+      | (q, _r)  => KFK (chain_gen (gen_K (N2pos _r)
+                                        (p - N2pos _r)))
                       (chain_gen (gen_F (N2pos q)))
       end
   end.
@@ -601,20 +601,20 @@ Proof.
     + apply IHc.
     + apply IHc0.
   - cbn; pattern i at 1;
-      replace i with (gamma i * (N2pos q) + N2pos r).
+      replace i with (gamma i * (N2pos q) + N2pos _r).
     + cbn in *. 
       *  apply KFF_correct;auto.
          replace (gamma i) with  
-             (N2pos r + (gamma i - N2pos r)) at 1.
+             (N2pos _r + (gamma i - N2pos _r)) at 1.
          -- apply IHc.
          -- rewrite Pplus_minus;auto with chains.
             apply Pos.lt_gt;   rewrite  N2pos_lt_switch2. 
             generalize 
            (N.pos_div_eucl_remainder i (N.pos (gamma i) )); 
            rewrite e3;  simpl;auto with chains.
-            destruct r; [ contradiction | auto with chains].
+            destruct _r; [ contradiction | auto with chains].
     + apply  N_pos_div_eucl_rest; auto with chains.
-      destruct r;try contradiction; auto with chains. 
+      destruct _r;try contradiction; auto with chains. 
       apply (div_gamma_pos   _ _ _ e3); auto with chains.
       apply pos_gt_3;auto with chains.
       destruct (exact_log2 i); [contradiction | reflexivity].
@@ -630,15 +630,15 @@ Proof.
        N2pos_destruct q q.
        injection H4;auto with chains.
        rewrite  Pos.mul_comm;  auto with chains.
-  - cbn; red; replace (p+d) with (p * N2pos q + N2pos r).
+  - cbn; red; replace (p+d) with (p * N2pos q + N2pos _r).
       + apply KFK_correct;auto with chains.
-        cbn in *; replace (N2pos r + (p - N2pos r))%positive with p in IHc.
+        cbn in *; replace (N2pos _r + (p - N2pos _r))%positive with p in IHc.
         apply IHc.  
         rewrite Pplus_minus;  auto.
         generalize  (N.pos_div_eucl_remainder (p + d) (N.pos p));
           rewrite e1; cbn;  intro H3.
         apply Pos.lt_gt;  rewrite  N2pos_lt_switch2;auto with chains.
-        destruct r; [contradiction | auto with chains].
+        destruct _r; [contradiction | auto with chains].
 
       + generalize  (N.pos_div_eucl_spec   (p + d) (N.pos p)). 
           rewrite e1; intros H3. 
@@ -647,7 +647,7 @@ Proof.
            destruct 1;auto with chains.
            rewrite pos2N_inj_add;  apply N.le_add_r.
           }
-          { intros p0 Hp0;subst q; cbn; destruct r; [ contradiction | ].
+          { intros p0 Hp0;subst q; cbn; destruct _r; [ contradiction | ].
             simpl;  simpl in H3;  injection H3.
             rewrite Pos.mul_comm; auto with chains.
           }
@@ -701,4 +701,5 @@ Definition F197887 := chain_gen  dicho (gen_F 197887).
 Time Compute chain_apply   F197887  NPlus 1%N.
 
 Time Compute chain_apply   F197887  NPlus 1%N.
+
 

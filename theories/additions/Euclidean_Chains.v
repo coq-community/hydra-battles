@@ -162,6 +162,7 @@ Compute the_exponent (F2C F9).
 
 
 
+
 (** A first attempt to define Fchain correctness *)
 
 (* begin snippet BadDefa *)
@@ -1369,9 +1370,9 @@ Function chain_gen  (s:signature) {measure signature_measure}
                 | (q, 0%N) => 
                   Fcompose  (chain_gen (gen_F (gamma i)))
                             (chain_gen (gen_F (N2pos q)))
-                | (q,r)  => KFF (chain_gen
-                                   (gen_K (N2pos r)
-                                          (gamma i - N2pos r)))
+                | (q,_r)  => KFF (chain_gen
+                                   (gen_K (N2pos _r)
+                                          (gamma i - N2pos _r)))
                                 (chain_gen (gen_F (N2pos q)))
               end end
     | gen_K p d =>
@@ -1380,8 +1381,8 @@ Function chain_gen  (s:signature) {measure signature_measure}
         match N.pos_div_eucl (p + d)  (Npos p) with
           | (q, 0%N) => FFK   (chain_gen (gen_F p))
                               (chain_gen (gen_F (N2pos q)))
-          | (q,r)  => KFK (chain_gen (gen_K (N2pos r)
-                                            (p - N2pos r)))
+          | (q, _r)  => KFK (chain_gen (gen_K (N2pos _r)
+                                            (p - N2pos _r)))
                           (chain_gen (gen_F (N2pos q)))
         end
   end.
@@ -1426,23 +1427,23 @@ Proof.
 
 
   -  pattern i at 1;
-       replace i with (gamma i * (N2pos q) + N2pos r).
+       replace i with (gamma i * (N2pos q) + N2pos _r).
      + destruct IHc, IHc0;split.
        *  apply KFF_correct;auto.
           simpl; simpl in H.
           replace (gamma i) with  
-              (N2pos r + (gamma i - N2pos r)) at 1.
+              (N2pos _r + (gamma i - N2pos _r)) at 1.
           apply H.
           rewrite Pplus_minus;auto with chains.
           apply Pos.lt_gt;   rewrite  N2pos_lt_switch2. 
           generalize 
             (N.pos_div_eucl_remainder i (N.pos (gamma i) )); 
             rewrite e3;  simpl;auto with chains.
-          destruct r; [ contradiction | auto with chains].
+          destruct _r; [ contradiction | auto with chains].
        *  apply KFF_proper;auto with chains.
 
      + apply  N_pos_div_eucl_rest; auto with chains.
-       destruct r;try contradiction; auto with chains. 
+       destruct _r;try contradiction; auto with chains. 
        apply (div_gamma_pos   _ _ _ e3); auto with chains.
        apply pos_gt_3;auto with chains.
        destruct (exact_log2 i); [contradiction | reflexivity].
@@ -1468,15 +1469,15 @@ Proof.
     +   apply FFK_proper;auto with chains.
 
   -   destruct IHc, IHc0; split.
-      + red; replace (p+d) with (p * N2pos q + N2pos r).
+      + red; replace (p+d) with (p * N2pos q + N2pos _r).
         * apply KFK_correct;auto with chains.
-          red in H;   replace (N2pos r + (p - N2pos r))%positive with p in H.
+          red in H;   replace (N2pos _r + (p - N2pos _r))%positive with p in H.
           apply H.  
           rewrite Pplus_minus;  auto.
           generalize  (N.pos_div_eucl_remainder (p + d) (N.pos p));
             rewrite e1; cbn;  intro H3.
           apply Pos.lt_gt;  rewrite  N2pos_lt_switch2;auto with chains.
-          destruct r; [contradiction | auto with chains].
+          destruct _r; [contradiction | auto with chains].
 
         *   generalize  (N.pos_div_eucl_spec   (p + d) (N.pos p));
               rewrite e1; intros H3; clear H H0 H1 H2.
@@ -1486,7 +1487,7 @@ Proof.
              rewrite pos2N_inj_add;  apply N.le_add_r.
             }
             {
-              intros p0 Hp0;subst q; cbn; destruct r; [ contradiction | ].
+              intros p0 Hp0;subst q; cbn; destruct _r; [ contradiction | ].
               simpl;  simpl in H3;  injection H3.
               rewrite Pos.mul_comm; auto with chains.
             }
@@ -1508,23 +1509,26 @@ Arguments make_chain gamma {_} _ _ _ .
 Compute the_exponent (make_chain  dicho 87).
 (* end snippet C87Dicho *)
 
-(** cf Coq workshop 2014 by Jason Grosss *)
 
+Require Import Int63.Uint63. 
+Require Import Monoid_instances.
+
+Check cpower (make_chain dicho) 10.
 Module  Examples.
-
-Import Int31.
 Compute cpower (make_chain dicho) 10 12.
 Compute cpower (make_chain dicho) 87 12.
+Search (int -> Z).
+Search (positive -> int).
 
-Definition fast_int31_power (x :positive)(n:N) : Z :=
-  Int31.phi (cpower (make_chain dicho) n (snd (positive_to_int31 x))).
+
+Definition fast_int63_power (x :positive)(n:N) : Z :=
+  to_Z (cpower (make_chain dicho) n (of_pos x)).
 
 Definition slow_int31_power (x :positive)(n:N) : Z :=
-  Int31.phi (power (snd (positive_to_int31 x)) (N.to_nat n) ).
+  to_Z (power (of_pos x) (N.to_nat n) ).
 
 Definition binary_int31_power (x :positive)(n:N) : Z :=
-Int31.phi (N_bpow (snd (positive_to_int31 x)) n ).
-
+  to_Z (N_bpow (of_pos x) n). 
 
 (** long computations ... *)
 
@@ -1537,7 +1541,7 @@ Arguments big_chain _%type_scope.
 Remark RM : (1 < 56789)%N. 
 Proof. reflexivity. Qed.
 
-Definition M := Nmod_Monoid  _ RM.
+Definition M := Nmod_Monoid  56789%N. 
 
 Definition exp56789 x := chain_apply big_chain (M:=M) x.
 
@@ -1549,12 +1553,6 @@ Eval cbv iota  match delta [big_chain chain_apply computation_eval  ]  zeta beta
 
 Definition C87' := ltac:( compute_chain C87 ).
 
-
-Time   Compute  Int31.phi
-   (chain_apply big_chain (snd (positive_to_int31  67777))) .
-
-
-Compute  Int31.phi (chain_apply big_chain (snd (positive_to_int31  67777))) .
 
 Compute chain_length  big_chain.
 
