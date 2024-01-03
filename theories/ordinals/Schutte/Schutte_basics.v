@@ -475,7 +475,8 @@ Proof. (* .no-out *)
   (*| .. coq:: no-out |*)
   destruct (@AX3 (Singleton alpha)).
   - apply countable_singleton.
-  - unfold succ_spec; apply the_least_unicity; exists x; intuition.
+  - unfold succ_spec; apply the_least_unicity; exists x. 
+    apply H; split. 
 Qed.
 (*||*)
 (* end snippet succOkb *)

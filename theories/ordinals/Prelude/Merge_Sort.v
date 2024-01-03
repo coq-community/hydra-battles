@@ -244,15 +244,18 @@ Section Generic.
         - rewrite <- (LocallySorted_cons' A le).
           split.
           + apply (merge_Forall (le a1) l0 (a2::l3)).
-            * rewrite <- LocallySorted_cons' in H1; intuition.
-            * rewrite <- LocallySorted_cons' in H2; intuition.
-              apply forall_weak with a2 ...
+            * rewrite <- LocallySorted_cons' in H1. 
+              now destruct H1.
               apply le_total.
-              now constructor.
+            * rewrite <- LocallySorted_cons' in H2. 
+              intuition.
+              apply forall_weak with a2 ...
+              apply le_total. intuition.
+              apply le_total.
           + eapply H0 ...
             rewrite <- LocallySorted_cons' in H1; intuition.
           + apply le_total.
-- rewrite <- LocallySorted_cons'.
+        - rewrite <- LocallySorted_cons'.
           split.
           +  apply (merge_Forall (le a2) (a1::l0) l3).
              * rewrite <- LocallySorted_cons' in H1; intuition.
@@ -264,8 +267,8 @@ Section Generic.
              * rewrite <- LocallySorted_cons' in H2; intuition.
           +  eapply H0 ...
              rewrite <- LocallySorted_cons' in H2; intuition.
-      + apply le_total.
-Qed.
+          + apply le_total.
+      Qed.
 
       Lemma merge_permutation:
         forall l1 l2, Permutation (l1++l2) (merge (fun x y => bool_decide (x <= y)) l1 l2).
