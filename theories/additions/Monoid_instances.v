@@ -261,12 +261,13 @@ Section Nmodulo.
   (* end snippet Nmoduloc *)
   Proof.
     unfold mod_equiv, mod_op, mult_mod, mod_eq.
-    intros x y Hxy z t Hzt.
-    repeat rewrite N.Div0.mod_mod; auto with chains.
-    rewrite (N.Div0.mul_mod x z);auto with chains.
-    rewrite (N.Div0.mul_mod y t);auto with chains.
+    intros x y Hxy z t Hzt. rewrite N.mod_mod.
+    repeat rewrite N.mod_mod; auto with chains.
+    rewrite (N.mul_mod x z);auto with chains.
+    rewrite (N.mul_mod y t);auto with chains.
     rewrite Hxy, Hzt; reflexivity.
-  Qed.
+    intros ?; subst. inversion m_gt_1.
+Qed.
 
   (* begin snippet Nmodulod:: no-out *)
   #[local]  Open Scope M_scope.
@@ -277,8 +278,8 @@ Section Nmodulo.
   Proof.
     intros  x y z.
     unfold mod_op, mult_op, mult_mod.
-    rewrite N.Div0.mul_mod_idemp_r;auto with chains.
-    rewrite N.Div0.mul_mod_idemp_l;auto with chains.
+    rewrite N.mul_mod_idemp_r;auto with chains.
+    rewrite N.mul_mod_idemp_l;auto with chains.
     now rewrite  N.mul_assoc.
   Qed.
 
@@ -287,14 +288,14 @@ Section Nmodulo.
   (* end snippet Nmoduloe *)
   Proof.
     unfold equiv, mod_equiv, mod_eq, mult_op, mod_op, mult_mod.
-    intro x; rewrite N.mul_1_l, N.Div0.mod_mod; auto with chains.
+    intro x; rewrite N.mul_1_l, N.mod_mod; auto with chains.
   Qed.
   (* begin snippet Nmodulof:: no-out *)
   Lemma one_mod_neutral_r  : forall x, x * 1 == x.
   (* end snippet Nmodulof *)
   Proof.
     unfold equiv, mod_equiv, mod_eq, mult_op, mod_op, mult_mod.
-    intro x; rewrite N.mul_1_r, N.Div0.mod_mod; auto with chains.
+    intro x; rewrite N.mul_1_r, N.mod_mod; auto with chains.
   Qed.
   
 

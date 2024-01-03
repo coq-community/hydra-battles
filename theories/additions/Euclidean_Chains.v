@@ -1541,7 +1541,7 @@ Arguments big_chain _%type_scope.
 Remark RM : (1 < 56789)%N. 
 Proof. reflexivity. Qed.
 
-Definition M := Nmod_Monoid  56789%N. 
+Definition M := Nmod_Monoid  56789%N RM.
 
 Definition exp56789 x := chain_apply big_chain (M:=M) x.
 
