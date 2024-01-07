@@ -237,7 +237,7 @@ Proof.
     rewrite <- (nilTerms _ b0).
     unfold freeVarTs in |- *.
     fold (@freeVarT LNN) in |- *.
-    rewrite <- app_nil_end.
+    rewrite app_nil_r.
     split.
     + intros H; decompose record (freeVarSubAllFormula1 _ _ _ _ H) /r.
       intros H x [H0| H0] H2.
@@ -617,7 +617,7 @@ Proof.
     + exists x; destruct H0 as [H0 H1].
       split.
       * apply H0.
-      * intros v H2; simpl; rewrite <- app_nil_end.
+      * intros v H2; simpl; rewrite app_nil_r.
         apply H1, H2.
   - assert (H0: forall g : fol.Formula LNN,
                In g Axm2 -> mem (fol.Formula LNN) U g).

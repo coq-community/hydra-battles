@@ -4,11 +4,11 @@ Open Scope M_scope.
 
 Compute 22%Z ^ 20.
 
-Import Int31.
+Import Uint63.
+Search (Z -> int).
+Coercion of_Z : Z >-> int.
 
-Coercion phi_inv : Z >-> int31.
-
-Compute 22%int31 ^ 20.
+Compute 22%int63 ^ 50.
 
 (* end snippet DemoPower *)
 

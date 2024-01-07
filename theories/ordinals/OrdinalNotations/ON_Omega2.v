@@ -371,7 +371,7 @@ Definition  plus (alpha beta : t) : t :=
   | (0, b), (0, b') => (0, b + b')
   | (0,0), y  => y
   | x, (0,0)  => x
-  | (0, b), (S n', b') => (S n', b')
+  | (0, _b), (S n', b') => (S n', b')
   | (S n, b), (S n', b') => (S n + S n', b')
   | (S n, b), (0, b') => (S n, b + b')
    end.

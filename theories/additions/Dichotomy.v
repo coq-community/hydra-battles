@@ -171,7 +171,7 @@ Proof.
 intros p H; unfold dicho; generalize (dicho_aux_lt p H).
 intro H0; assert (2 <= N.pos p / (N.pos (dicho_aux p)) )%N.
 - replace 2%N with (2%N * Npos (dicho_aux p) / Npos (dicho_aux p))%N.
-  + apply (* N.Div0.div_le_mono. *) N.div_le_mono; try discriminate. 
+  + apply N.div_le_mono; try discriminate. 
     * replace 2%N with (Npos 2%positive); cbn;auto.
   + rewrite N.div_mul; [auto | discriminate].
 - case_eq (N.pos p / N.pos (dicho_aux p))%N.

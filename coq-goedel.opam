@@ -18,7 +18,7 @@ depends: [
   "dune" {>= "2.5"}
   "coq" {>= "8.14"}
   "coq-hydra-battles" {= version}
-  "coq-coqprime" {= "dev"}
+  "coq-coqprime" {>= "1.3.0"}
 ]
 
 tags: [

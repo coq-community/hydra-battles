@@ -19,7 +19,7 @@ build: ["dune" "build" "-p" name "-j" jobs]
 depends: [
   "dune" {>= "2.5"}
   "coq" {>= "8.14"}
-  "coq-equations" {(>= "1.2" & < "1.4~") | (= "dev")}
+  "coq-equations" {>= "1.2"}
   "coq-zorns-lemma" {>= "10.2.0"}
   "coq-libhyps"
 ]

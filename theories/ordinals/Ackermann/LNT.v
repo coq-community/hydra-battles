@@ -110,19 +110,19 @@ Section Free_Variables.
 Lemma freeVarPlus (x y: Term) :
  freeVarT (Plus x y) = freeVarT x ++ freeVarT y.
 Proof.
-  now rewrite (app_nil_end (freeVarT y)).
+  now rewrite <- (app_nil_r (freeVarT y)).
 Qed.
 
 Lemma freeVarTimes (x y : Term) :
  freeVarT (Times x y) = freeVarT x ++ freeVarT y.
 Proof.
-  now rewrite (app_nil_end (freeVarT y)).
+  now rewrite <- (app_nil_r (freeVarT y)).
 Qed.
 
 Lemma freeVarSucc (x : Term):
   freeVarT (S_ x)%nt = freeVarT x.
 Proof.
-  now rewrite (app_nil_end (freeVarT x)).
+  now rewrite <- (app_nil_r (freeVarT x)).
 Qed.
 
 Lemma freeVarZero : freeVarT Zero = nil.

@@ -114,9 +114,9 @@ Compute List.nodup Nat.eq_dec (freeVarF f3).
 
 Compute close _ f3.
 
-Compute freeVarFormula  f3.
+Compute freeVarF f3.
 
-Compute freeVarFormula  (close _ f4).
+Compute freeVarF (close _ f4).
 
 Compute substF f4 0 (natToTerm 0).
 (* end snippet freeVarExamples *)

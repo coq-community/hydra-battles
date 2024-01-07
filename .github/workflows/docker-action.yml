@@ -15,6 +15,7 @@ jobs:
     strategy:
       matrix:
         image:
+          - 'mathcomp/mathcomp:1.18.0-coq-8.18'
           - 'mathcomp/mathcomp:1.17.0-coq-8.17'
           - 'mathcomp/mathcomp:1.15.0-coq-8.16'
           - 'mathcomp/mathcomp:1.14.0-coq-8.15'

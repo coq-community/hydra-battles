@@ -472,11 +472,11 @@ intros lsg H'; elim H'; clear H';
 intros P1 H'; elim H'; clear H';
 intros P2 H'; elim H'; clear H';
 intros P3 P4; apply (List_mul a (lg ++ lcg) (ls0 ++ lsc) lcc).
-rewrite <- ass_app; apply list_permut_trans with (ls0 ++ lc0); trivial;
+rewrite <- app_assoc; apply list_permut_trans with (ls0 ++ lc0); trivial;
 apply context_list_permut_app1; trivial.
 apply list_permut_trans with (lcc ++ lsc); trivial; apply list_permut_app_app.
 apply list_permut_trans with (a :: lg ++ lc); trivial;
-apply context_list_permut_cons; rewrite <- ass_app; 
+apply context_list_permut_cons; rewrite <- app_assoc; 
 apply context_list_permut_app1;
 apply list_permut_trans with (lcc ++ lcg); trivial; apply list_permut_app_app.
 intros b In_b; elim (in_app_or _ _ _ In_b); clear In_b; intro In_b.
@@ -565,11 +565,11 @@ intros lsg H'; elim H'; clear H';
 intros P1 H'; elim H'; clear H';
 intros P2 H'; elim H'; clear H';
 intros P3 P4; apply (List_mul a (lg ++ lcg) (ls0 ++ lsc) lcc).
-rewrite <- ass_app; apply list_permut_trans with (ls0 ++ lc0); trivial;
+rewrite <- app_assoc; apply list_permut_trans with (ls0 ++ lc0); trivial;
 apply context_list_permut_app1; trivial;
 apply list_permut_trans with (lcc ++ lsc); trivial; apply list_permut_app_app.
 apply list_permut_trans with (a :: lg ++ lc); trivial;
-apply context_list_permut_cons; rewrite <- ass_app; 
+apply context_list_permut_cons; rewrite <- app_assoc; 
 apply context_list_permut_app1;
 apply list_permut_trans with (lcc ++ lcg); trivial; apply list_permut_app_app.
 intros b In_b; elim (in_app_or _ _ _ In_b); clear In_b; intro In_b.
@@ -840,7 +840,7 @@ intros ls1 H; elim H; clear H;
 intros ls2 H; apply t_trans with (a0 :: ls2 ++ lc). 
 apply t_step; apply (List_mul_rest_step a0 ls1 (ls2 ++ lc)).
 apply list_permut_trans with (map tt (ls ++ lc)); trivial.
-rewrite <- app_ass; do 2 rewrite map_app; apply context_list_permut_app2; intuition.
+rewrite  app_assoc; do 2 rewrite map_app; apply context_list_permut_app2; intuition.
 apply list_permut_refl.
 intuition.
 apply (IHlg (a0 :: ls2 ++ lc) l a ls2 (a0 :: lc)).
@@ -887,16 +887,16 @@ apply list_permut_trans with ((map tt ls) ++ tt1 :: (map tt lc)).
 apply list_permut_add_cons_inside; rewrite map_app; apply list_permut_refl.
 apply list_permut_trans with (map tt ls ++ (tt0 :: l ++ tt1 :: l0)).
 apply context_list_permut_app1; apply list_permut_sym; rewrite <- H2; trivial.
-rewrite app_comm_cons; rewrite <- app_ass; apply list_permut_sym;
+rewrite app_comm_cons; rewrite app_assoc; apply list_permut_sym;
 apply list_permut_add_cons_inside;
-rewrite app_ass; rewrite <- app_comm_cons; simpl;
+rewrite <- app_assoc; rewrite <- app_comm_cons; simpl;
 apply list_permut_add_cons_inside;
 do 2 rewrite map_app; do 2 rewrite projection_list_of_SN_terms;
-do 2 rewrite <- app_ass; apply context_list_permut_app2;
+do 2 rewrite app_assoc; apply context_list_permut_app2;
 apply list_permut_app_app.
 apply (List_mul_rest_step (mk_sn tt1 sn1) ls 
 (build_list_of_SN_terms l H3 ++ build_list_of_SN_terms l0 H4)); intuition.
-do 2 rewrite ass_app; do 4 rewrite map_app; 
+do 2 rewrite app_assoc; do 4 rewrite map_app; 
 apply context_list_permut_app2; apply list_permut_app_app.
 rewrite H2; simpl; rewrite map_app; do 2 rewrite projection_list_of_SN_terms;
 apply list_permut_sym; apply list_permut_add_cons_inside; 

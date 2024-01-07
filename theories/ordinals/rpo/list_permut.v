@@ -379,9 +379,9 @@ intros l2 l3 l4 P; rewrite <- app_comm_cons in P;
 elim (in_app_or l3 l4 a (cons_permut_in P)); intro In_a;
 generalize (split_list_app_cons eq_elt_dec a _ In_a).
 destruct (split_list eq_elt_dec l3 a); intro; subst l3;
-rewrite app_ass in P; rewrite <- app_comm_cons in P;
+rewrite <- app_assoc in P; rewrite <- app_comm_cons in P;
 generalize (list_permut_remove_hd _ _ P); clear P; 
-intro P; rewrite <- app_ass in P; 
+intro P; rewrite app_assoc in P; 
 elim (IHl1 l2 (l ++ l0) l4 P); clear IHl1 P;
 intros u1 H; elim H; clear H; 
 intros u2 H; elim H; clear H;
@@ -397,9 +397,9 @@ apply list_permut_sym; apply list_permut_add_cons_inside;
 apply list_permut_sym; trivial.
 
 destruct (split_list eq_elt_dec l4 a); intro; subst l4;
-rewrite <- app_ass in P; 
+rewrite  app_assoc in P; 
 generalize (list_permut_remove_hd _ _ P); clear P;
-intro P; rewrite app_ass in P; 
+intro P; rewrite <- app_assoc in P; 
 elim (IHl1 l2 l3 (l ++ l0) P); clear IHl1 P;
 intros u1 H; elim H; clear H; 
 intros u2 H; elim H; clear H;

@@ -18,8 +18,8 @@ build: ["dune" "build" "-p" name "-j" jobs]
 depends: [
   "dune" {>= "2.5"}
   "coq" {>= "8.14"}
-  "coq-paramcoq" {(>= "1.1.3" & < "1.2~") | (= "dev")}
-  "coq-mathcomp-ssreflect" {>= "1.13.0" & < "1.18"}
+  "coq-paramcoq" {>= "1.1.3"}
+  "coq-mathcomp-ssreflect" {>= "1.13.0" & < "1.19"}
   "coq-mathcomp-algebra"
 ]
 

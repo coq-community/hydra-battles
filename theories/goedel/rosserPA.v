@@ -425,7 +425,7 @@ Proof.
         exists x0; intros g H1; apply extendsPA.
         fold mem; auto.
       + exists (LNN2LNT_formula x :: nil); split.
-        * simpl; repeat rewrite <- app_nil_end.
+        * simpl; repeat rewrite app_nil_r.
           apply (LNN2LNT_freeVarF1 x).
         * exists (AXM _ (LNN2LNT_formula x)).
           intros g H1; induction H1 as [H1| H1].

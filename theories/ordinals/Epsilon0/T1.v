@@ -99,7 +99,7 @@ Fixpoint T1is_succ alpha :=
   match alpha with
     | zero => false
     | cons zero _ _ => true
-    | cons alpha n beta => T1is_succ beta
+    | cons _alpha _n beta => T1is_succ beta
   end.
 
 
