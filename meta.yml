@@ -120,6 +120,8 @@ supported_coq_versions:
   opam: '{>= "8.14"}'
 
 tested_coq_opam_versions:
+- version: '1.18.0-coq-8.18'
+  repo: 'mathcomp/mathcomp'
 - version: '1.17.0-coq-8.17'
   repo: 'mathcomp/mathcomp'
 - version: '1.15.0-coq-8.16'
@@ -132,28 +134,28 @@ tested_coq_opam_versions:
 dependencies:
 - opam:
     name: coq-equations
-    version: '{(>= "1.2" & < "1.4~") | (= "dev")}'
+    version: '{>= "1.2"}'
   description: |-
     [Equations](https://github.com/mattam82/Coq-Equations) 1.2 or later
 - opam:
     name: coq-paramcoq
-    version: '{(>= "1.1.3" & < "1.2~") | (= "dev")}'
+    version: '{>= "1.1.3"}'
   description: |-
     [Paramcoq](https://github.com/coq-community/paramcoq) 1.1.3 or later
 - opam:
     name: coq-mathcomp-ssreflect
-    version: '{(>= "1.13.0" & < "1.18~")}'
+    version: '{>= "1.13.0" & < "1.19"}'
   description: |-
-    [MathComp SSReflect](https://github.com/math-comp/math-comp) 1.13 or later
+    [MathComp SSReflect](https://github.com/math-comp/math-comp) 1.13 to 1.18
 - opam:
     name: coq-mathcomp-algebra
   description: |-
     [MathComp Algebra](https://github.com/math-comp/math-comp)
 - opam:
     name: coq-gaia-schutte
-    version: '{(>= "1.14" & < "1.18~") | (= "dev")}'
+    version: '{>= "1.14" & < "1.18"}'
   description: |-
-    [Gaia's Schütte ordinals](https://github.com/coq-community/gaia) 1.14 or later
+    [Gaia's Schütte ordinals](https://github.com/coq-community/gaia) 1.14 to 1.17
 - opam:
     name: coq-mathcomp-zify
     version: '{< "2~"}'
@@ -165,7 +167,7 @@ dependencies:
     [LibHyps](https://github.com/Matafou/LibHyps)
 - opam:
     name: coq-coqprime
-    version: '{= "dev"}'
+    version: '{>= "1.3.0"}'
   description: |-
     [CoqPrime](https://github.com/thery/coqprime)
 - opam:

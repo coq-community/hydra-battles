@@ -18,9 +18,9 @@ depends: [
   "dune" {>= "2.5"}
   "coq" {>= "8.14"}
   "coq-hydra-battles" {= version}
-  "coq-mathcomp-ssreflect" {>= "1.13.0" & < "1.18"}
+  "coq-mathcomp-ssreflect" {>= "1.13.0" & < "1.19"}
   "coq-mathcomp-zify" {< "2"}
-  "coq-gaia-schutte" {>= "1.14" & < "1.18~"}
+  "coq-gaia-schutte" {>= "1.14" & < "1.18"}
 ]
 
 tags: [
