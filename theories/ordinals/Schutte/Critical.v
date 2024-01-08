@@ -28,9 +28,8 @@ Definition Cr_fun : forall alpha : Ord,
     (forall beta : Ord, beta < alpha -> Ensemble Ord) ->
     Ensemble Ord
   :=
-    fun (alpha :Ord)
-        (Cr : forall beta,
-            beta < alpha -> Ensemble Ord)
+    fun (alpha: Ord)
+        (Cr : forall beta, beta < alpha -> Ensemble Ord)
         (x : Ord) => (
         (alpha = zero /\ AP x) \/
         (zero < alpha /\
@@ -61,11 +60,9 @@ Definition Gamma0 := the_least strongly_critical.
 
 (* begin snippet phiDef *)
 
-Definition phi (alpha : Ord) : Ord -> Ord
-    :=  ord (Cr alpha).
+Definition phi (alpha : Ord) : Ord -> Ord := ord (Cr alpha).
 
-Definition A_ (alpha : Ord) : Ensemble Ord :=
-  the_ordering_segment (Cr alpha).
+Definition A_ (alpha : Ord) : Ensemble Ord := the_ordering_segment (Cr alpha).
 
 (* end snippet phiDef *)
 
@@ -212,7 +209,7 @@ Proof.
   intro alpha;unfold phi, finite;  now  rewrite Cr_zero_AP.
 Qed.
 
-Lemma Cr_1_equiv (alpha : Ord):
+Lemma Cr_1_iff (alpha : Ord):
   Cr 1 alpha <->  AP alpha /\ phi0 alpha = alpha.
 Proof.
   generalize (Cr_pos_inv  (alpha := F 1)).
@@ -256,7 +253,7 @@ Qed.
 Lemma epsilon0_Cr1 : In (Cr 1) epsilon0. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
-  red;rewrite Cr_1_equiv; split.
+  red;rewrite Cr_1_iff; split.
   - apply epsilon0_AP.
   - apply epsilon0_fxp.
 Qed.
