@@ -624,6 +624,7 @@ and to play with dependent types.
 
 \subsection{Ackermann function}
 
+
 Ackermann function is traditionally defined as a function from 
 $\mathbb{N}\times \mathbb{N}$ into $\mathbb{N}$, through
 three equations:
@@ -738,7 +739,9 @@ Please note also that for any given $n$, the unary function
 
 \input{movies/snippets/AckNotPR/AckNIsPR}
 
+\section{Ackermann function is not primitive recursive}
 
+\label{sect:ack-not-PR}
 
 In order to prove that \texttt{Ack} (considered as a function of two arguments) is not primitive recursive, the usual method consists in two steps:
 
@@ -879,7 +882,7 @@ $\texttt{Ack}\,x\,y\leq \texttt{Ack}\,n\,(\texttt{max}\,x\,y)$ holds.
 Thus, our impossibility proof is just a sequence of easy small steps.
 
 \begin{remark}
-In the following snippet,  some versions \emph{Alectryon}'s \texttt{Latex} generator  print the \emph{local definition} of $x$ (as the maximum of $2$ and $m$) as a simple \emph{declaration} \texttt{x: nat}.
+In the following snippet,  some versions of \emph{Alectryon}'s \texttt{Latex} generator  print the \emph{local definition} of $x$ (as the maximum of $2$ and $m$) as a simple \emph{declaration} \texttt{x: nat}.
 Thus the proof script is correct, but the three last sub-goals are not correctly displayed, since 
 they do not show how the inequalities $2\leq x$ and $m \leq x$ could be inferred by \texttt{lia}.
 

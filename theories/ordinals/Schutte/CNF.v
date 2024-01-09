@@ -9,6 +9,7 @@ From Coq Require Import Arith List Sorting.Sorted
 From hydras Require Export Schutte_basics  Ordering_Functions
      PartialFun  Countable Schutte.Addition AP.
 From Coq Require Export  Classical.
+Import ListNotations.
 
 Set Implicit Arguments.
 
@@ -312,8 +313,7 @@ Qed.
 
 Lemma cnf_unicity l alpha:
   is_cnf_of alpha l ->
-  forall l', is_cnf_of alpha l' ->
-             l = l'. (* .no-out *)
+  forall l', is_cnf_of alpha l' -> l = l'. (* .no-out *)
 (*| .. coq:: none |*)
 Proof.
   revert alpha; induction l.
@@ -407,12 +407,10 @@ Qed.
 
 (*| .. coq:: no-out |*)
 
-Lemma cnf_of_epsilon0 : is_cnf_of epsilon0 (epsilon0 :: nil).
-Proof.
-  split.
-  - constructor.
-  - simpl; now rewrite alpha_plus_zero, epsilon0_fxp.
+Lemma cnf_of_epsilon0 : is_cnf_of epsilon0 [epsilon0].
+Proof. (*||*)
+  split; [constructor | cbn]. 
+  now rewrite alpha_plus_zero, epsilon0_fxp.
 Qed.
-(*||*)
 
 (* end snippet cnfOfEpsilon0 *)
