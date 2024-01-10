@@ -418,10 +418,14 @@ and~\ref{chapter-powers}.
 \inputsnippets{Fib2/fibEuclDemo}
 
 \subsubsection{Verbatim quotations}
+In some situations, we replace \alectr snippets with
+verbatim blocks.
 
-Quotations of \coq{} source  from other libraries (\coq's standard library, borrowed plug-ins)  are displayed as follows.
-
-\begin{Coqsrc}
+\begin{itemize}
+\item When the quoted source belongs to some library on which we do not have the write permission, we cannot include
+  directives for generating snippets.
+ For instance, the following code belongs to \coq's standard library.
+  \begin{Coqsrc}
   Inductive CompareSpec (Peq Plt Pgt : Prop) :
   comparison -> Prop :=
     CompEq : Peq -> CompareSpec Peq Plt Pgt Eq
@@ -429,7 +433,10 @@ Quotations of \coq{} source  from other libraries (\coq's standard library, borr
   | CompGt : Pgt -> CompareSpec Peq Plt Pgt Gt.
 \end{Coqsrc}
 
-We use also verbatim code inclusions when the examples lead to too long computations.
+
+\item 
+We use also verbatim code inclusions when the examples would lead to too long computations during the compilation and the
+documentation generation.
 
 \begin{Coqbad}
 Example C87_ok_slow : chain_correct 87 C87.
@@ -444,7 +451,7 @@ Finished transaction in 49.927 secs (49.445u,0.079s) (successful)
 \begin{Coqbad}
 Qed.
 \end{Coqbad}
-
+\end{itemize}
  \subsection{Remark}
  
 In general, we do not include full proof scripts in this document. The only exceptions are very short proofs (\emph{e.g.}, proofs by computation, or by application of automatic tactics). Likewise, we may display only the important steps on a long interactive proof, for instance, in the following lemma (\vref{lemma:L-2_6-1}):
