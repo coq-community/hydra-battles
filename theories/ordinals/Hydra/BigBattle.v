@@ -73,8 +73,7 @@ Qed.
 (* end snippet L23L03 *)
 
 (** From now on, we abstract the configurations of the battle
-  as tuples (round number, n2, n1, nh) where n2 (resp. n1, nh) is the number of 
-  sub-hydras h2 [resp. h1, heads] *)
+  as tuples (round number, n2, n1, nh) where n2 (resp. n1, nh) is the number of daughters of type h2 [resp. h1, heads] *)
 
 (* begin snippet stateDef *)
 
