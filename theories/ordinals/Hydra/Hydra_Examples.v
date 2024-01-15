@@ -167,7 +167,7 @@ Module Bad.
     (* end snippet BadInductionc *)
 
     (* begin snippet BadInductiond *)
-    -  (* .no-in .unfold *)
+    -  (* .no-in .unfold *)  cbn. 
       (* end snippet BadInductiond *)
       (* begin snippet BadInductione *)
   Abort.  
@@ -183,10 +183,11 @@ Proof. (*||*)
 (*| .. coq:: none |*)
   -  destruct h as [ | h s']. 
      + cbn; auto with arith.
-     +  simpl.  destruct IHh; assert (lheight s' <= lhsize s').
+     +  cbn;  destruct IHh as [H H0]; 
+          assert (H1: lheight s' <= lhsize s').
         { clear H; induction s'. 
-          -     cbn; auto with arith. 
-          -     simpl.  destruct (lheight s').
+          - cbn; auto with arith. 
+          - cbn; destruct (lheight s') as [ | n].
                 + cbn in H0; destruct H0; apply IHs' in H0 .
                   red in H;  transitivity (hsize h0); auto.
                   auto with arith. 

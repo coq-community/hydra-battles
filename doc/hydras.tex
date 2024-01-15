@@ -207,6 +207,13 @@ studying  which hypotheses are really needed, and which proof patterns are usefu
 necessary. Since the development of a theory is represented as a bunch of computer files,
 everyone is able to read the proofs with an arbitrary level of detail, or to play with the theory by writing alternate proofs or definitions.
 
+If a formal development is large (at least 10 KLOCs), we believe that a human-readable document containing explanations, diagrams, code snippets, examples, exercises, etc.) would be useful
+for a better understanding of both the mathematical contents
+and the formalization techniques used in the
+development~\cite{Chiplunkar23}.
+
+This document has been generated with \alectr (see Sect.~\vref{sect:alectryon-intro}), which ensures the \texttt{pdf} is consistent with the last compiled version of the \coq project.
+ 
 
 Among all the theorems proved with the help of proof assistants like \coq{}~\cite{Coq,BC04}, \hol{}~\cite{HOL}, \isabelle{}~\cite{isabelle},  etc.,
 several statements and proofs  share some interesting features:
@@ -331,6 +338,7 @@ or  \emph{Certified Programming with Dependent Types} ~\cite{chlipalacpdt2011} w
  
  
 \subsection{Documenting theories with \alectr}
+\label{sect:alectryon-intro}
 
 Quotations of \coq source and answers are progressively replaced from copy-pasted \emph{verbatim} to automatically generated \emph{LaTeX} blocks, using Clément Pit-Claudel's \alectr  tool~\cite{alectryonpaper, alectryongithub}.
 Many thanks to Jérémy Damour, Clément Pit-Claudel  and Théo Zimmermann who designed tools for maintaining consistency between the always evolving \coq{} modules and documentation written in \emph{LaTeX}.
@@ -341,8 +349,8 @@ Besides the guarantee of consistency between theories and documentation, we hope
 \label{sect:trust-in-proofs}
 
 Unlike mathematical literature, where definitions and proofs are spread out over many articles and books,
-the whole proof is now inside your computer. It is composed from the \texttt{.v} files you downloaded and
-parts of \coq's standard library. Thus, there is no ambiguity in our definitions and the premises of the theorems. Furthermore, you will be able to navigate through the development, using your favorite text editor or IDE, and some commands like \texttt{Search}, \texttt{Locate},  etc.
+the whole proof is now inside your computer. It is composed from the \texttt{.v} files you downloaded,
+parts of \coq's standard library, and required \coq packages (see Fig.~\vref{fig:genealogy}).  Thus, there is no ambiguity in our definitions and the premises of the theorems. Furthermore, you will be able to navigate through the development, using your favorite text editor or IDE, and some commands like \texttt{Search}, \texttt{Locate},  etc.
 
 
 
@@ -356,7 +364,8 @@ In order to discuss which assumptions are really needed for proving a theorem, w
 several aborted proofs.
 Of course, do not hesitate to contribute nice proofs or alternative definitions!
 
-It may also happen that some proof looks to be useless, because the proven theorem is a trivial consequence of another (also proven) result.
+It may also happen that some direct proof looks to be useless,
+because the proven theorem is a trivial consequence of another (also proven) result.
 For instance, let us consider the three following statements:
 \begin{enumerate}
 \item There is no measure into $\mathbb{N}$ for proving the termination of all hydra battles (Sect~\vref{omega-case}).
@@ -398,7 +407,6 @@ Library~\href{../theories/html/hydras.Epsilon0.F_alpha.html}{hydras.Epsilon0.F\_
 
 \subsubsection{Using \alectr}
 Whenever possible, we use \alectr to display \coq code (definition, proof scripts) and answers.
-
 Here are two  examples from Chapters~\ref{chapter:primrec}
 and~\ref{chapter-powers}.
 
@@ -410,10 +418,14 @@ and~\ref{chapter-powers}.
 \inputsnippets{Fib2/fibEuclDemo}
 
 \subsubsection{Verbatim quotations}
+In some situations, we replace \alectr snippets with
+verbatim blocks.
 
-Quotations of \coq{} source  from others libraries (\coq's standard library, borrowed plug-ins)  are displayed as follows.
-
-\begin{Coqsrc}
+\begin{itemize}
+\item When the quoted source belongs to some library on which we do not have the write permission, we cannot include
+  directives for generating snippets.
+ For instance, the following code belongs to \coq's standard library.
+  \begin{Coqsrc}
   Inductive CompareSpec (Peq Plt Pgt : Prop) :
   comparison -> Prop :=
     CompEq : Peq -> CompareSpec Peq Plt Pgt Eq
@@ -421,7 +433,10 @@ Quotations of \coq{} source  from others libraries (\coq's standard library, bor
   | CompGt : Pgt -> CompareSpec Peq Plt Pgt Gt.
 \end{Coqsrc}
 
-We use also verbatim code inclusions when the examples lead to very long computations.
+
+\item 
+We use also verbatim code inclusions when the examples would lead to too long computations during the compilation and the
+documentation generation.
 
 \begin{Coqbad}
 Example C87_ok_slow : chain_correct 87 C87.
@@ -436,7 +451,7 @@ Finished transaction in 49.927 secs (49.445u,0.079s) (successful)
 \begin{Coqbad}
 Qed.
 \end{Coqbad}
-
+\end{itemize}
  \subsection{Remark}
  
 In general, we do not include full proof scripts in this document. The only exceptions are very short proofs (\emph{e.g.}, proofs by computation, or by application of automatic tactics). Likewise, we may display only the important steps on a long interactive proof, for instance, in the following lemma (\vref{lemma:L-2_6-1}):
@@ -479,7 +494,7 @@ Likewise, alternative, but still unexplored definitions will be presented in mod
 
 \section{How to install the libraries}
 \label{sec:orgheadline4}
- The present distribution has been checked with version 8.14.1 of the Coq proof assistant, with a few plug-ins. \emph{Please refer to \href{https://github.com/coq-community/hydra-battle\#readme}{the README file of the project}.}
+ The present distribution has been checked with versions up to 8.18 of the Coq proof assistant, with a few plug-ins. \emph{Please refer to \href{https://github.com/coq-community/hydra-battle\#readme}{the README file of the project}.}
 
 
 \section{Comments on exercises and projects}
