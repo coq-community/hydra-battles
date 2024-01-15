@@ -112,7 +112,7 @@ Moreover, we note that this description is in \emph{imperative} terms. In order 
 Thus, the replication process will be represented as a binary relation on a data type \texttt{Hydra},
 linking the state of the hydra \emph{before} and \emph{after} the transformation.
 A battle will thus be represented as a sequence of terms of type \texttt{Hydra}, respecting the rules of the game.
-
+ In other terms, we consider hydra battles as \emph{transition systems}.
 
 
 
@@ -154,7 +154,7 @@ Next, assume Hercules chooses to chop off one of the two highest heads of \textt
 \end{figure}
 
 
-\begin{figure}[hp]
+\begin{figure}[h]
 \centering
 \begin{tikzpicture}[very thick, scale=0.5]
 
@@ -179,7 +179,7 @@ Next, assume Hercules chooses to chop off one of the two highest heads of \textt
 \label{fig:Hy2}
 \end{figure}
 
-\begin{figure}[hp]
+\begin{figure}[h]
 \centering
 \begin{tikzpicture}[very thick, scale=0.6]
 
@@ -221,7 +221,7 @@ Next, assume Hercules chooses to chop off one of the two highest heads of \textt
 
 Figs.~\ref{fig:Hy4} and~\vref{fig:Hy5} represent a possible third round of the battle, with a replication factor equal to $2$. Let us call \texttt{Hy'''} the state of the hydra after that third round.
 
-\begin{figure}[hp]
+\begin{figure}[h]
 \centering
 \begin{tikzpicture}[very thick, scale=0.6]
 
@@ -262,7 +262,7 @@ Figs.~\ref{fig:Hy4} and~\vref{fig:Hy5} represent a possible third round of the b
 \caption{A third beheading (wounded part in red) \label{fig:Hy4}}
 \end{figure}
 
-\begin{figure}[hp]
+\begin{figure}[h]
 \centering
 \begin{tikzpicture}[very thick, scale=0.4]
 
@@ -415,9 +415,7 @@ type \texttt{Hydrae}:
 \input{movies/snippets/Hydra_Definitions/HydraAlt}
 
 Using this representation, one can re-define all the constructions of this chapter, which is left as an exercise.
-You will probably have to use patterns described for instance in~\cite{BC04} or the archives of the \coq communication channels (please consult~\url{https://coq.inria.fr/community.html}).
-
-  
+You will probably have to use patterns described for instance in~\cite{BC04, BC04ch14} or the archives of the \coq communication channels (please consult~\url{https://coq.inria.fr/community.html}).
 \end{remark}
 
 
@@ -552,8 +550,8 @@ Let us look now at the second subgoal of the induction.
 
 \input{movies/snippets/Hydra_Examples/BadInductiond}
 
-We notice that this sub-goal does not contain any hypothesis
-on the height and size of the hydra \texttt{h}. So, it looks hard to prove the conclusion. Let's stop.
+We notice immediately that the context of this sub-goal does not allow to infer its conclusion.
+ Let's stop.
 
 \input{movies/snippets/Hydra_Examples/BadInductione}
 
@@ -611,7 +609,7 @@ is  (\texttt{h\_forall $P$}).  Design a tactic for induction on hydras that free
 
 
 In this section, we represent the rules of hydra battles as a binary relation associated with
-a \emph{round}, i.e., an interaction composed of the two following actions:
+a \emph{round}\footnote{usually called a \emph{small step semantics}}, i.e., an interaction composed of the two following actions:
 \begin{enumerate}
 \item Hercules chops off one head of the hydra.
 \item Then, the  hydra replicates the wounded part (if the head is at distance $\geq 2$ from the foot).
@@ -635,7 +633,7 @@ The mutually exclusive cases we consider are the following:
 
 \subsection{Chopping off a head at distance 1 from the foot (relation  R1)}
 
-If Hercules chops off a head close to the root, there is no replication at all. We use an auxiliary 
+If Hercules chops off a head next to the root, there is no replication at all. We use an auxiliary 
 predicate \texttt{S0}, associated with the removing of one head from a sequence of hydras.
 
 
@@ -648,7 +646,7 @@ predicate \texttt{S0}, associated with the removing of one head from a sequence 
 \label{sec:orgheadline45}
 
 Let us represent in \coq{}   the transformation of the hydra of Fig.~\vref{fig:Hy} into
-the configuration represented in Fig.~\ref{fig:Hy-prime}.
+the configuration represented in Fig.~\vref{fig:Hy-prime}.
 
 \vspace{4pt}
 \emph{From Module~\href{../theories/html/hydras.Hydra.Hydra_Examples.html}{Hydra.Hydra\_Examples}}
@@ -697,7 +695,7 @@ The reader is encouraged to look at all the successive subgoals of this example.
 
 \subsection{Binary relation associated with a round}
 
-Let us merge \texttt{R1} and \texttt{R1}  into a single relation.
+Let us merge \texttt{R1} and \texttt{R2}  into a single relation.
 First,  we define the  relation \texttt{(round\_n n h h')} where \texttt{n} is the expected number of  replications (irrelevant in the case of an \texttt{R1}-transformation).
 Then, we define a \emph{round} (small step) of a battle
 by abstraction over \texttt{n}, 
@@ -731,13 +729,6 @@ Using library \href{https://coq.inria.fr/distrib/current/stdlib/Coq.Relations.Re
 
 \input{movies/snippets/Hydra_Definitions/roundPlus}
 
-\index{hydras}{Exercises}
-
-\begin{exercise}
-  Prove that if \texttt{$h$ -+-> $h'$}, then
-  the height of $h'$ is less or equal than the height of $h$.
-
-\end{exercise}
 
 \begin{remark}
 \label{remark:transitive-closure}
@@ -763,6 +754,12 @@ to convert any one of the three closures into another one before applying the co
 The same remark also holds for reflexive and transitive closures. 
 \end{remark}
 
+\index{hydras}{Exercises}
+\begin{exercise}
+  Prove that if \texttt{$h$ -+-> $h'$}, then
+  the height of $h'$ is less or equal than the height of $h$.
+
+\end{exercise}
 \index{hydras}{Exercises}
 
 \begin{exercise}
@@ -1007,9 +1004,9 @@ With these notations, we get a formal description of the first three rounds.
 
 \subsection{Testing  \dots}
 \label{sect:testing}
-In order to study \emph{experimentally} the different  configurations of the  battle, we will use a simple data type for representing the states as tuples composed of
-the round number, and the respective number of daughters  \texttt{h2}, \texttt{h1}, and heads
-of the current hydra.
+In order to make the study of this battle easier,  we will use a simple data type for representing a configuration 
+$(\textit{round}, \texttt{hyd}\;n_2\;n_1\; n_h)$ as the $4$-tuple
+
 
 
 \input{movies/snippets/BigBattle/stateDef}
@@ -1039,7 +1036,7 @@ The following function computes the state of the battle at the $n$-th round.
 \input{movies/snippets/BigBattle/testDefTests}
 
 The battle we are studying looks to be awfully long. Let us concentrate our
-tests on some particular events : the states where $\texttt{nh}=0$.
+tests on some particular events : the states where $n_h=0$.
 From the value of \texttt{test 5},  it is obvious that at the 10-th round, the counter \texttt{nh} is equal to zero.
 
 
@@ -1068,7 +1065,8 @@ It looks like the next ``\texttt{nh}=0'' event will happen at the $192=2(95+1)$-
 We are now able to reason about the sequence of transitions defined by our hydra battle. 
 
 Let us define a binary relation associated with every round of the battle.
-In the following definition \texttt{i} is associated with the round number (or date, if we consider a discrete time), and \texttt{a}, \texttt{b}, \texttt{c} respectively associated with the number of occurrences of \texttt{h2}, \texttt{h1} and heads connected to the hydra's foot. For convenience, we do not use the type \texttt{state} of the preceding section, but consider the round numbers and the number of hydras \texttt{h2}, \texttt{h1} and heads as separate arguments of the relation (which is no more ---formally--- ``binary'').
+In the following definition \texttt{i} is associated with the round number (or date, if we consider a discrete time), and \texttt{a}, \texttt{b}, \texttt{c} respectively associated with the number of occurrences of \texttt{h2}, \texttt{h1} and heads connected to the hydra's foot. For convenience\footnote{In a few words, the type \texttt{state} was designed for performing \emph{computations}, and \texttt{steps} for writing \emph{interactive proofs}, inspired by the aforementionned computations.},
+we do not use the type \texttt{state} of the preceding section, but consider the round numbers and the number of hydras \texttt{h2}, \texttt{h1} and heads as separate arguments of the relation (which is no more ---formally--- ``binary'').
 
 \input{movies/snippets/BigBattle/oneStep}
 
@@ -1088,7 +1086,7 @@ and reachability (from the initial configuration of figure~\ref{fig:hinit} at ti
 
 
 
-The following lemma establishes a relation between \texttt{steps} and the predicate \texttt{battle}.
+The following lemma establishes a relation between \texttt{steps} and the predicate \texttt{rounds}.
 
 \input{movies/snippets/BigBattle/stepsBattle}
 
@@ -1248,7 +1246,7 @@ Using a few facts (proven in
 \vspace{4pt}
 
 
-The number $N$ is greater than or  equal to $2^{2^{95}\times 95}.$ If we wrote $N$ in base $10$, $N$ would require at least $10^{30}$ digits!
+The number $N$ is greater than or  equal to $2^{2^{95}\times 95}.$ If we write $N$ in base $10$, $N$ would require at least $10^{30}$ digits!
 
 
 \section{Generic properties}
@@ -1331,7 +1329,7 @@ When one wants to prove a termination theorem with the help of a variant,
 one has to consider first a well-founded set $(A,<)$, then a strictly decreasing measure on this set.  The following  lemma shows that,  if  the order structure $(A,<)$ is too simple, it is useless to look for a convenient measure, which simply no exists. Such kind of result is useful, because it saves you time and effort.
 
 
-The best known well-founded order is the natural order on the set $\mathbb{N}$ of natural numbers (the type \texttt{nat} of Standard library). It would be interesting to look for some measure $m:\texttt{nat}\arrow\texttt{nat}$ and prove it is a variant.
+The best known well-founded order is the natural order on the set $\mathbb{N}$ of natural numbers (the type \texttt{nat} of Standard Library). It would be interesting to look for some measure $m:\texttt{nat}\arrow\texttt{nat}$ and prove it is a variant.
 
 Unfortunately, we can prove that 
 \emph{no} instance of class (\texttt{WfVariant round Peano.lt $m$}) can be built, where

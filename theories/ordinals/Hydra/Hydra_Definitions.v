@@ -9,6 +9,8 @@
 
 From Coq Require Export Relations.
 From hydras Require Import T1 Epsilon0.
+From Coq Require Import List.
+Import ListNotations.
 
 (* begin snippet HydraDef *)
 
@@ -59,7 +61,33 @@ Proof.
  all: decide equality.  
 Defined. 
 
+(** For list usage *)
 
+Fixpoint hs2l (s: Hydrae): list Hydra :=
+match s with
+  hnil => []
+| hcons h s' => h :: hs2l s'
+end.
+
+Fixpoint l2hs (l: list Hydra): Hydrae :=
+match l with
+  [] => hnil
+| h :: l' => hcons h (l2hs l')
+end.
+
+Lemma hs2lK (s: Hydrae) : l2hs (hs2l s) = s. 
+Proof. 
+ induction s as [| h s IHs].
+ - reflexivity. 
+ - cbn; now rewrite IHs.  
+Qed.
+
+Lemma l2hsK (l: list Hydra) : hs2l (l2hs  l) = l. 
+Proof. 
+ induction l as [| h l IHl].
+ - reflexivity. 
+ - cbn; now rewrite IHl.  
+Qed.
 
 (**   Number of nodes (a.k.a. size)
  *)
@@ -119,8 +147,7 @@ Fixpoint hcons_mult (h:Hydra)(n:nat)(s:Hydrae):Hydrae :=
 
 (** *** Hydra with n equal daughters *)
 
-Definition hyd_mult h n :=
-  node (hcons_mult h n hnil).
+Definition hyd_mult h n := node (hcons_mult h n hnil).
 (* end snippet hconsMult *)
 
 (** ** Managing sequences of hydras
@@ -331,12 +358,13 @@ Ltac S1_nth i :=
   end.
 
 
-(** Notifies we are at distance 2 from the expected head 
-    goto to [i]-th dauchter, then chop off the [j]-th head *)
+(** chops off a head which is the [j]-th daughter of the 
+    [i]-th dauchter
+*)
 
 Ltac r2_d2 i j :=
  match goal with
-      |- R2 ?n ?h ?h' =>  eleft; S1_nth i; split; chop_off j
+      |- R2 ?n ?h ?h' => eleft; S1_nth i; split; chop_off j
  end.
 
 (** End of the battle *)
@@ -408,19 +436,19 @@ Arguments battle_rel : clear implicits.
  *)
 
 
-(* begin snippet freeDef *)
-#[ global ] Program Instance free : Battle 
+(* begin snippet freeDef:: no-out *)
+#[ global, refine ] Instance free : Battle 
   := Build_Battle (fun _  h h' => round h h') _.
+Proof. easy. Defined.
 (* end snippet freeDef *)
 
   
-(* begin snippet standardDef *)
-#[ global ] Program Instance standard : Battle :=
+(* begin snippet standardDef:: no-out *)
+#[ global, refine] Instance standard : Battle :=
   Build_Battle round_n  _. 
-Next Obligation.
-  now exists i.  
+Proof. 
+  intros i h h' H; now exists i.  
 Defined.
-
 (* end snippet standardDef *)
 
 (**  The following relation allows us to consider sequences of rounds in a given  class  of battles 
@@ -447,7 +475,6 @@ Definition battle_length B k h l :=
 
 #[deprecated(note="use rounds")]
   Notation battle := rounds (only parsing).
-
 
 (** *** Uniform termination *)
 
