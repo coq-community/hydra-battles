@@ -26,6 +26,7 @@ Class ON {A:Type} (lt: relation A) (cmp: Compare A) :=
   ON_comp :> Comparable lt cmp;
   ON_wf : well_founded lt;
   }.
+#[global] Existing Instance ON_comp.
 (* end snippet ONDef *)
 
 (* begin snippet ONDefsa:: no-out  *)
@@ -329,6 +330,8 @@ Section SubON_properties.
   Qed.
   
 End SubON_properties.
+
+
 
 
 

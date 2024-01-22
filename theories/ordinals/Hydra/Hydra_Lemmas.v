@@ -206,10 +206,10 @@ Qed.
 (** ** Properties of [battle] *)
 
 (* begin snippet battleTrans *)
-Lemma rounds_trans {b:Battle} :
-  forall i h j h', rounds b i h j h' ->
-                   forall k h0,  rounds b k h0 i h ->
-                                 rounds b k h0 j h'. (* .no-out *)
+Lemma rounds_trans {B:Battle} :
+  forall i h j h', rounds B i h j h' ->
+                   forall k h0,  rounds B k h0 i h ->
+                                 rounds B k h0 j h'. (* .no-out *)
 (*| .. coq:: no-out |*)
 Proof. 
   intros i h j h' H k h0. induction 1 /dr. 

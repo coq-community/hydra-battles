@@ -35,7 +35,7 @@ Section Defs.
   Definition lt : relation t := lexico ltB ltA.
   Definition le := clos_refl _ lt. 
 
-  #[global] Instance compare_t : Compare t :=
+  #[global] Instance compare_mult : Compare t :=
     fun (alpha beta: t) =>
     match compare (fst alpha) (fst beta) with
     | Eq => compare (snd alpha) (snd beta)
@@ -66,7 +66,7 @@ Section Defs.
     | Gt => lt beta  alpha
     end.
   Proof.
-    destruct alpha, beta; cbn. unfold compare, compare_t; cbn.
+    destruct alpha, beta; cbn. unfold compare, compare_mult; cbn.
     destruct (comparable_comp_spec b b0).
     - subst; destruct (comparable_comp_spec a a0).
       + now subst.
@@ -86,25 +86,23 @@ Section Defs.
 
   (* begin snippet multComp:: no-out *)
 
-  #[global] Instance mult_comp:  Comparable lt compare_t.
-  (* end snippet multComp *)
-
-  Proof.
+  #[global] Instance mult_comp:  Comparable lt compare_mult.
+   Proof.
     split.
     - apply lt_strorder.
     - apply compare_correct.
   Qed. 
+  (* end snippet multComp *)
+
 
   (* begin snippet ONMult:: no-out *)
-  #[global] Instance ON_mult: ON lt compare_t.
-  (* end snippet ONMult *)
-
-  Proof.
-    split.
+  #[global] Instance ON_mult: ON lt compare_mult. 
+  Proof. 
+    split. 
     - apply mult_comp.
     - apply lt_wf.
   Qed.
-
+  (* end snippet ONMult *)
 
   Lemma lt_eq_lt_dec alpha beta :
     {lt alpha  beta} + {alpha = beta} + {lt beta alpha}.

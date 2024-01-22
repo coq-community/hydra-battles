@@ -46,8 +46,7 @@ Let us comment some features of this figure:
 \item Dots : ``$\ldots$'' stand for  infinite sequences of ordinals, not shown for lack of space. For instance, the ordinal $42$ is not shown in the first line, but it exists, somewhere between $17$ and $\omega$.
 \item Each ordinal printed in black is the immediate successor of another ordinal. We call it a \emph{successor} ordinal. For instance, $12$ is the successor of $11$, and $\omega^4+1$ the successor of $\omega^4$.
 \item Ordinals (displayed in red)  that  follow immediately dots are called \emph{limit ordinals}. With respect to the order induced by this sequence, any limit ordinal $\alpha$ is the least upper bound of  the set $\mathbb{O}_\alpha$ of all ordinals strictly less than $\alpha$.
-\item
-For instance $\omega$ is the least upper bound of the set of all finite ordinals (in the first line). It is also the first limit ordinal, and the first infinite ordinal, in the sense that 
+For instance,$\omega$ is the least upper bound of the set of all finite ordinals (in the first line). It is also the first limit ordinal, and the first \emph{infinite ordinal number}, in the sense that 
 the set $\mathbb{O}_\omega$ is infinite.
 \item The ordinal $\epsilon_0$ is the first number which is equal to its own exponential of base $\omega$. It plays an important role in proof theory, and is particularly studied in chapters~\ref{chap:T1} to \ref{chap:alpha-large}.
 \item Any ordinal is  either the ordinal \textcolor{blue}{$0$},
@@ -58,6 +57,15 @@ a successor ordinal, or a \textcolor{red}{limit ordinal}.
 
 
 \section{The mathematical point of view}
+
+
+
+We cannot cite all the literature published on ordinals since Cantor's book
+\cite{cantorbook}, and 
+leave it to the reader to explore the bibliography.
+The introduction of Jos\'e Grimm's report~\cite{grimm:hal-00911710} contains also a nice presentation of the main properties of ordinals.
+
+For simplicity's sake, we will only give the definitions which are useful for understanding our \coq development.
 
 \subsection{Well-ordered sets}
 Let us start with some definitions.
@@ -88,20 +96,14 @@ Let $(A,<_A)$ and $(B,<_B)$ two well-ordered sets. $A$ and $B$ are said to have 
 there exists a strictly monotonous bijection $b$ from $A$ to $B$, \emph{i.e.} which verifies the proposition
 $\forall x\,y\in A,\, x <_A y \Rightarrow b(x) <_B  b(y)$.
 
-Having the same order type is an equivalence relation between well-ordered sets. Ordinal numbers (in short: \emph{ordinals})  are descriptions (\emph{names}) of the equivalence classes.
+Having the same order type is an equivalence relation between well-ordered sets. Ordinal numbers (in short: \emph{ordinals})  are descriptions (\emph{names}) of the associated equivalence classes.
 For instance, the order type of $(\mathbb{N},<)$ is associated with the ordinal called  $\omega$, and the order we considered on 
-the disjoint union of $\mathbb{N}$ and itself is named $\omega+\omega$.
+the disjoint union of two copies of $\mathbb{N}$ is associated with  $\omega \times 2$ (a.k.a. $\omega+\omega$).
 
 In a set-theoretic framework, one can consider any ordinal $\alpha$ as a well-ordered set, whose  elements are just the ordinals strictly less than $\alpha$, \emph{i.e.} the \emph{segment} $\mathbb{O}_\alpha=[0, \alpha)$. So, one can speak about \emph{finite}, \emph{infinite}, \emph{countable}, etc., ordinals. Nevertheless, since we work within type theory, 
 we do not identify ordinals as sets of ordinals, but consider the correspondence between ordinals and sets of ordinals as the function that maps $\alpha$ to $\mathbb{O}_\alpha$.
 For instance $\mathbb{O}_\omega=\mathbb{N}$, and $\mathbb{O}_7=\{0,1,2,3,4,5,6\}$.
 
-
-We cannot cite all the literature published on ordinals since Cantor's book
-\cite{cantorbook}, and 
-leave it to the reader to explore the bibliography.
-
-The introduction of Jos\'e Grimm's report~\cite{grimm:hal-00911710} contains a nice presentation of the main properties of ordinals.
 
 
 \section{Ordinal numbers in Coq}
@@ -139,7 +141,7 @@ of Schütte or \gaia.
 Fortunately, the ordinals we need for  studying hydra battles are much simpler than Schütte's, and can be represented as quite simple data types in \gallina. 
 
 Let $\alpha$ be some (countable) ordinal; 
-in \coq{} terms, we call \emph{ordinal notation for $\alpha$} a structure composed 
+we call \emph{ordinal notation for $\alpha$} any structure composed 
 of:
 \begin{itemize}
 \item A data type $A$ for representing all ordinals strictly below $\alpha$,
@@ -163,7 +165,7 @@ a structure allowing to compare two ordinals by computation, and proving by well
 
 The \texttt{Comparable} class, contributed by Jérémy Damour and Théo Zimmermann, allows us to apply generic lemmas and tactics about decidable strict orders.
 The correctness of the comparison function is expressed through Stdlib's type 
-\texttt{Datatypes.CompareSpec} as specialized by \texttt{Datatypes.CompSpec}.
+\texttt{Datatypes.CompareSpec} and predicate \texttt{Datatypes.CompSpec}.
 
 \begin{Coqsrc}
   Inductive CompareSpec (Peq Plt Pgt : Prop) :
@@ -291,13 +293,16 @@ In order to build an instance of \texttt{Comparable}, we have to define a correc
 Standard library's lemma \texttt{Wellfounded.Disjoint\_Union.wf\_disjoint\_sum} 
 is applied  to prove that our order \texttt{lt} is well-founded, allowing us to build an instance of \texttt{ON}:
 
-\inputsnippets{ON_plus/ltWf, ON_plus/OnPlus}
+\inputsnippets{ON_plus/ltWf}
 
-\subsection{The ordinal \texorpdfstring{$\omega+\omega$}{omega + omega}}
+\inputsnippets{ON_plus/OnPlus}
+
+\subsection{Example: The ordinal \texorpdfstring{$\omega+\omega$}{omega + omega}}
 
 The ordinal $\omega+\omega$ (also known as $\omega\times 2$) may be represented as the concatenation 
 of two copies of $\omega$ (Figure~\ref{fig:omega-plus-omega}).
 It is also represented by the two first lines of Figure~\ref{fig:ordinal-sequence}.
+We define this notation in \coq{} as an instance of \texttt{ON\_plus}.
 
 \begin{figure}[h]
    \centering
@@ -324,7 +329,7 @@ It is also represented by the two first lines of Figure~\ref{fig:ordinal-sequenc
    \label{fig:omega-plus-omega}
  \end{figure}
 
-We can define this notation in \coq{} as an instance of \texttt{ON\_plus}.
+
 
 
 \vspace{4pt}
@@ -523,7 +528,9 @@ This function is proved to be correct w.r.t. the \texttt{Successor} predicate.
 
 We can define on \texttt{Omega2} an addition which extends the addition on \texttt{nat}. Please note that this operation is not commutative:
 
-\inputsnippets{ON_Omega2/plusDef, ON_Omega2/plusExamples}
+\inputsnippets{ON_Omega2/plusDef}
+
+\inputsnippets{ON_Omega2/plusExamples}
 
 
 \subsubsection{Finite multiplication}

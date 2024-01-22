@@ -31,7 +31,7 @@ Definition le {a:A} : relation (t a) :=
   clos_refl (t a) lt.
 
 #[global]
-Instance compare_t {a:A} : Compare (t a) :=
+Instance compare_O {a:A} : Compare (t a) :=
 fun (alpha beta : t a) =>
   compare (proj1_sig alpha) (proj1_sig beta).
 
@@ -39,7 +39,7 @@ Lemma compare_correct {a} (alpha beta : t a) :
   CompSpec eq lt alpha beta (compare alpha beta).
 Proof.
  unfold CompSpec, compare.
-  - destruct alpha, beta; unfold compare,compare_t; cbn.
+  - destruct alpha, beta; unfold compare,compare_O; cbn.
     case_eq (compare x x0); unfold lt; cbn.
     + constructor 1.
       destruct (comparable_comp_spec x x0); try discriminate.
