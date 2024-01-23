@@ -24,9 +24,11 @@ Delimit Scope ON_scope with on.
 Class ON {A:Type} (lt: relation A) (cmp: Compare A) :=
   {
   ON_comp :> Comparable lt cmp;
-  ON_wf : well_founded lt;
+  ON_wf :> well_founded lt;
   }.
 #[global] Existing Instance ON_comp.
+Coercion ON_wf :  ON >-> well_founded.
+
 (* end snippet ONDef *)
 
 (* begin snippet ONDefsa:: no-out  *)

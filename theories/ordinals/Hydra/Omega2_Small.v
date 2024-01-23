@@ -21,7 +21,7 @@ Section Impossibility_Proof.
   
   Variable m : Hydra -> ON_Omega2.t.
   Context
-    (Hvar: Hvariant (ON_Generic.ON_wf (ON:=Omega2)) free m).
+    (Hvar: Hvariant Omega2 free m).
 
   (* end snippet Impossibilitya *)
 

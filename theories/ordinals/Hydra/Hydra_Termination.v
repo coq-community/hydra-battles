@@ -7,6 +7,7 @@ Set Program Cases.
 
 From hydras Require Export Hydra_Lemmas.
 From hydras Require Import E0 Hessenberg.
+Import ON_Generic. 
 
 (** ***  Converting any hydra into an ordinal less than 
   #epsilon0# $\epsilon_0$  
@@ -194,8 +195,7 @@ Qed.
 #[ global, program ] Instance var (h:Hydra) : E0:= @mkord (m h) _.
 Next Obligation. apply m_nf. Defined.
 
-
-#[global] Instance HVariant_0 : @Hvariant _ _ T1_wf free m.
+#[global] Instance HVariant_0 : Hvariant T1_wf free m.
 Proof.
  split; intros; eapply round_decr; eauto.
 Qed.
@@ -204,8 +204,7 @@ Qed.
 (* begin snippet FinalThm *)
 
 (*| .. coq:: no-out |*)
-
-#[global] Instance HVariant : Hvariant E0lt_wf free var.
+#[global] Instance HVariant : Hvariant Epsilon0 free var.
 Proof.
  split; intros; eapply round_decr; eauto.
 Qed.

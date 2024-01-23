@@ -3,12 +3,10 @@
 
 
 From Coq Require Import   Arith Lia.
-From hydras Require Import Hydra_Lemmas.
+From hydras Require Import Hydra_Lemmas ON_Generic ON_Omega.
 Open Scope nat_scope.
 
-
-
-#[ global ] Instance height_var : @Hvariant  _ _ lt_wf free height.
+#[global] Instance height_var : Hvariant Omega free height.
 Proof.
   split;intros.
 (*
@@ -28,7 +26,7 @@ Proof.
 Abort.
 (* end show *)
 
-Lemma height_bad :  ~ @Hvariant _ _ lt_wf free height.
+Lemma height_bad :  ~ Hvariant Omega free height.
 Proof.
   intros [H];
   specialize (H 1 (hyd1 (hyd2 head head))  (hyd1 (hyd1 head)));
@@ -51,7 +49,7 @@ Section Impossibility_Proof.
       for proving the termination of all hydra battles *)
  
   Variable m : Hydra -> nat.
-  Context (Hvar : @Hvariant _ _ lt_wf free m).
+  Context (Hvar : Hvariant lt_wf free m).
   
 (* end snippet omegaSmalla *)
   
