@@ -86,7 +86,7 @@ Module LO.
   Qed.
 
   (* begin snippet compareDef:: no-out  *)
-  #[ global ] Instance compare_t : Compare t :=
+  #[ global ] Instance compare_oo : Compare t :=
   fix cmp (a b : t) :=
     match a, b with
     | nil, nil => Eq
@@ -500,7 +500,7 @@ Module OO.
   Definition lt (alpha beta: OO) := LO.lt (data alpha) (data beta).
   Definition le := leq lt.
   #[ global ] Instance compare_OO : Compare OO := 
-    fun (alpha beta: OO) => LO.compare_t (data alpha) (data beta).
+    fun (alpha beta: OO) => LO.compare_oo (data alpha) (data beta).
   (*  end snippet OODef *)
 
   #[ global ] Instance Zero : OO := @mkord nil refl_equal.
@@ -598,7 +598,8 @@ Module OO.
     - destruct a, b; cbn.
       destruct (comparable_comp_spec data0 data1).
       + subst.
-        assert (compare_t data1 data1 = compare data1 data1) by reflexivity.
+        assert (compare_oo data1 data1 = compare data1 data1) 
+          by reflexivity.
         rewrite H.
         rewrite compare_refl.
         constructor.

@@ -43,7 +43,7 @@ Abort.
 
 (* begin snippet compareDef:: no-out *)
 
-#[global] Instance compare_t {n:nat} : Compare (t n) :=
+#[global] Instance compare_fin {n:nat} : Compare (t n) :=
   fun (alpha beta : t n) => Nat.compare (proj1_sig alpha) (proj1_sig beta).
 
 Lemma compare_correct {n} (alpha beta : t n) :

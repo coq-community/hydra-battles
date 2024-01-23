@@ -23,14 +23,14 @@ Section Defs.
           (NB: ON ltB cmpB).
 
   Definition t := (A + B)%type.
-  Arguments inl  {A B} _.
-  Arguments inr  {A B} _.
+  Arguments inl {A B} _.
+  Arguments inr {A B} _.
 
   Definition lt : relation t := le_AsB _ _ ltA ltB.
 (* end snippet Defs *)
 
 (* begin snippet compareDef *)
-#[global] Instance compare_t : Compare t :=
+#[global] Instance compare_plus : Compare t :=
 fun (alpha beta: t) =>
    match alpha, beta with
      inl _, inr _ => Lt
@@ -53,21 +53,20 @@ Proof.
      subst.
      destruct (StrictOrder_Irreflexive _ H2).
   - intros x y z H H0.  inversion H; inversion H0; subst; try discriminate.
-    + injection H5;constructor.  subst.
-      now transitivity y0.    
+    + injection H5;constructor; subst; now transitivity y0.    
     + constructor.
     + constructor.
     + constructor.
-      injection H5; intro; subst.  now transitivity y0.
+      injection H5; intro; subst; now transitivity y0.
 Qed.
     
 
 Lemma compare_reflect alpha beta :
   match (compare alpha beta)
   with
-    Lt => lt alpha  beta
+    Lt => lt alpha beta
   | Eq => alpha = beta
-  | Gt => lt beta  alpha
+  | Gt => lt beta alpha
   end.
   destruct alpha, beta; cbn; auto.
   destruct (comparable_comp_spec a a0); (now subst || constructor; auto).
@@ -88,7 +87,7 @@ Qed.
 
 (* begin snippet plusComp:: no-out *)
 
-#[global] Instance plus_comp : Comparable lt compare_t.
+#[global] Instance plus_comp : Comparable lt compare_plus.
 Proof.  split; [apply lt_strorder | apply compare_correct]. Qed.
 (* end snippet plusComp *)
 
@@ -115,7 +114,7 @@ Qed.
 .. coq:: no-out 
 |*)
 
-#[global] Instance ON_plus : ON lt compare_t.
+#[global] Instance ON_plus : ON lt compare_plus.
 Proof. split; [apply plus_comp | apply lt_wf]. Qed.
 
 (*||*)

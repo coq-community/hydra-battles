@@ -15,15 +15,17 @@ Open Scope opo_scope.
 (* begin snippet OmegaPlusOmegaDef:: no-out *)
 
 #[global] Instance compare_nat_nat : Compare t :=
- compare_t compare_nat compare_nat.
+ compare_plus compare_nat compare_nat.
 
 #[global] Instance Omega_plus_Omega: ON _ compare_nat_nat :=
  ON_plus Omega Omega.
 
 Definition t := ON_t.
 
-Example ex1 : inl 7 o< inr 0. 
-Proof. now apply compare_lt_iff. Qed.
+Compute inl 42 o?= inr 0.
+
+Example ex1 : inl 7 o< inr 8. 
+Proof. apply compare_lt_iff. trivial. Qed.
 
 (* end snippet OmegaPlusOmegaDef *)
 

@@ -13,10 +13,10 @@ Open Scope ON_scope.
 
 (* begin snippet Omega2Def:: no-out *)
 
-#[ global ] Instance compare_nat_nat : Compare t :=
- compare_t compare_nat compare_nat.
+#[ global ] Instance compare_omega2 : Compare ON_mult.t :=
+ compare_mult compare_nat compare_nat.
 
-#[ global ] Instance Omega2: ON _ compare_nat_nat := ON_mult Omega Omega.
+#[ global ] Instance Omega2: ON _ compare_omega2 := ON_mult Omega Omega.
 
 Definition t := ON_t.
 (* end snippet Omega2Def *)
@@ -89,6 +89,7 @@ Qed.
 
 Lemma lt_succ_le alpha beta :
   alpha o< beta <-> succ alpha o<= beta. (* .no-out *)
+(* ... *)
 (*|
 .. coq:: none
 |*)
@@ -241,6 +242,7 @@ Qed.
 
 Lemma succ_ok alpha beta :
   Successor beta alpha <-> beta = succ alpha. (* .no-out *)
+(* ... *)
 (*|
 .. coq:: none 
 |*)
@@ -380,9 +382,8 @@ Infix "+" := plus : ON_scope.
 
 Lemma plus_compat (n p: nat) :
   fin  (n + p )%nat =  fin n + fin p. (* .no-out *)
-Proof. (* .no-out *)
-  destruct n; now cbn. 
-Qed.
+Proof. (* .no-out *) destruct n; reflexivity. Qed.
+
 (* end snippet plusDef *)
 
 
@@ -391,12 +392,10 @@ Qed.
 Compute 3 + omega.
 
 Compute omega + 3.
+
+Example non_commutativity_of_plus: omega + 3 <> 3 + omega. (* .no-out *)
+Proof.  (* .no-out *) discriminate. Qed.
 (* end snippet plusExamples *)
-
-
-Example non_commutativity_of_plus :  omega + 3 <> 3 + omega. 
-Proof.  discriminate. Qed.
-
 
 (* begin snippet multFinDef *)
 
@@ -436,16 +435,14 @@ Proof. reflexivity. Qed.
 
 #[global] Instance plus_assoc: Assoc eq  plus. 
 Proof.
-  intros alpha beta gamma; destruct alpha, beta, gamma.
+  intros (n,n0) (n1, n2) (n3,n4); cbn. 
   destruct n,  n0, n1, n2, n3, n4; cbn; auto; f_equal; abstract lia.
 Qed.
 
-
 Lemma succ_is_plus_1  alpha : alpha + 1 = succ alpha.
 Proof.
- unfold succ ;
-simpl; 
- destruct alpha; cbn; destruct n, n0; try f_equal; abstract lia.
+ unfold succ ; cbn; destruct alpha; cbn; destruct n, n0; 
+   try f_equal; abstract lia.
 Qed.
 
 Lemma lt_omega alpha : alpha o< omega <-> exists n:nat,  alpha = fin n.
