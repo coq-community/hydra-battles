@@ -24,8 +24,9 @@ Delimit Scope ON_scope with on.
 Class ON {A:Type} (lt: relation A) (cmp: Compare A) :=
   {
   ON_comp :> Comparable lt cmp;
-  ON_wf :> well_founded lt;
+  ON_wf : well_founded lt;
   }.
+
 #[global] Existing Instance ON_comp.
 Coercion ON_wf :  ON >-> well_founded.
 
@@ -94,8 +95,8 @@ Class  SubON
   {
     SubON_compare: forall x y : A,
       compareB (iota x) (iota y) = compareA x y;
-  SubON_incl : forall x, ltB (iota x) alpha;
-  SubON_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
+    SubON_incl : forall x, ltB (iota x) alpha;
+    SubON_onto : forall y, ltB y alpha  -> exists x:A, iota x = y}.
 
 (* end snippet SubONDef *)
 
