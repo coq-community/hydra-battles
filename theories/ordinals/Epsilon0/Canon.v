@@ -1033,7 +1033,7 @@ Lemma CanonSSn (i:nat) :
                     Cons alpha n (Canon (E0_phi0 alpha) (S i)).
 Proof.
   intros; apply E0_eq_intro;
-  unfold Canon;repeat (rewrite cnf_rw || rewrite cnf_Cons); auto.
+   unfold Canon;repeat (rewrite cnf_rw || rewrite cnf_Cons); auto.
   - rewrite canon_SSn_zero; auto with E0.
   -  unfold lt, E0_phi0; repeat rewrite cnf_rw. 
      apply canonS_LT ; trivial. 
