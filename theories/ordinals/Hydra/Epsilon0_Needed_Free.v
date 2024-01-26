@@ -23,7 +23,7 @@ Section Impossibility_Proof.
   Context (mu: T1)
           (Hmu: nf mu)
           (m : Hydra -> T1)
-          (Var : Hvariant  T1_wf free m)
+          (Var : Hvariant T1_wf free m)
           (Hy : BoundedVariant Var mu).
 
   Let big_h := big_h mu.
