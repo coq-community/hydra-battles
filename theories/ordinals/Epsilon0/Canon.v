@@ -1046,9 +1046,9 @@ Lemma CanonSSn (i:nat) :
                     CanonS (Cons alpha (S n) E0zero) i =
                     Cons alpha n (CanonS (E0_phi0 alpha) i).
 Proof.
-  intros; apply E0_eq_intro;
-  unfold CanonS;repeat (rewrite cnf_rw || rewrite cnf_Cons); auto.
-  - unfold canonS; rewrite canon_SSn_zero; auto with E0.
+  intros; apply E0_eq_intro.
+  unfold Canon;  repeat (rewrite cnf_rw || rewrite cnf_Cons); auto.
+  -  rewrite canon_SSn_zero; auto with E0.
   -  unfold lt, E0_phi0; repeat rewrite cnf_rw. 
      apply canonS_LT ; trivial. 
      apply nf_phi0;auto with E0. 
