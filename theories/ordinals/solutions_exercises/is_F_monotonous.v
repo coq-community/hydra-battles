@@ -23,7 +23,7 @@ Section S1.
   Remark R3 : F_ E0_omega 2 = F_ 2 2.
   Proof.
     rewrite F_lim_eqn.
-    - unfold Canon, CanonS; cbn; f_equal.
+    - unfold Canon; cbn; f_equal.
          apply E0_eq_intro; reflexivity.
     -  reflexivity.
   Qed.

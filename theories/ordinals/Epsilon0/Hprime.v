@@ -160,7 +160,7 @@ Lemma H'_omega_double k :
   H'_ (E0_omega * 2)%e0 k =  (4 * k + 3)%nat.
 Proof.
   rewrite H'_eq3; simpl Canon; [ | now compute]. 
-  ochange  (CanonS  (E0_omega * E0finS 1)%e0 k)  (E0_omega + (S k))%e0;
+  ochange  (Canon (E0_omega * E0finS 1)%e0 (S k))  (E0_omega + (S k))%e0;
       rewrite H'_Plus_Fin, H'_omega;  abstract lia.
 Qed.
 (* end snippet HprimeExamplesa:: no-out  *)
@@ -243,16 +243,16 @@ Proof with auto with E0.
   -  intros beta Hbeta H;  destruct (Zero_Limit_Succ_dec beta).
      destruct s.
      + subst; intro k. autorewrite with H'_rw E0_rw using trivial. 
-     + intro k;  assert (CanonS  (Omega_term alpha i + beta)%e0 k =
-                          (Omega_term alpha  i + (CanonS beta k))%e0).
+     + intro k;  assert (Canon (Omega_term alpha i + beta)%e0 (S k) =
+                          (Omega_term alpha  i + (Canon beta (S k)))%e0).
        {  rewrite CanonS_plus_1; auto with E0.           
           intro; subst alpha; red in H;  simpl in H;  apply LT_one in H.
           unfold E0limit in e; rewrite H in e; discriminate e.
        }
        rewrite H'_eq3, H0.
-       specialize (Hbeta (CanonS beta k)).
-       assert (CanonS beta k o< beta)%e0 by auto with E0.
-       assert (CanonS beta k o< E0_phi0 alpha)%e0 by (eapply Lt_trans; eauto).
+       specialize (Hbeta (Canon beta (S k))).
+       assert (Canon beta (S k) o< beta)%e0 by auto with E0.
+       assert (Canon beta (S k) o< E0_phi0 alpha)%e0 by (eapply Lt_trans; eauto).
        now rewrite (Hbeta H1 H2 k), (H'_eq3 beta).
        apply T1limit_plus; auto.
      +   intro k; destruct s as [gamma Hgamma]; subst.
@@ -279,12 +279,12 @@ Lemma H'_Omega_term_1 : alpha <> E0zero -> forall  k,
 
 Proof with auto with E0.
   intros  H k;  rewrite H'_eq3 ...
-  - ochange (CanonS (Omega_term alpha (S i)) k)
-          (Cons alpha i (CanonS  (E0_phi0 alpha) k)).
+  - ochange (Canon (Omega_term alpha (S i)) (S k))
+          (Cons alpha i (Canon (E0_phi0 alpha) (S k))).
   +  rewrite H'_cons ...
      *  f_equal; rewrite (H'_eq3 (E0_phi0 alpha)) ...
   +  rewrite cnf_Cons ...
-           * unfold CanonS.  repeat rewrite cnf_rw.
+           * unfold Canon.  repeat rewrite cnf_rw.
              rewrite cnf_Omega_term, cnf_phi0.
              unfold Omega_term; simpl. 
              destruct (cnf alpha) ...

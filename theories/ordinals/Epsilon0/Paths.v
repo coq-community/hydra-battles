@@ -3005,8 +3005,8 @@ Qed.
 Lemma CanonS_plus_1 alpha beta k i :
   beta  <> E0zero -> alpha <> E0zero  ->
   (beta o< E0_phi0 alpha)%e0 ->
-  (CanonS (Omega_term alpha i + beta)%e0 k =
-   (Omega_term alpha  i + (CanonS beta k))%e0).
+  (Canon (Omega_term alpha i + beta)%e0 (S k) =
+   (Omega_term alpha  i + (Canon beta (S k)))%e0).
 Proof.
   intros;  apply E0_eq_intro.
   rewrite  Omega_term_plus; auto.
@@ -3040,9 +3040,9 @@ Proof.
 Qed.
 
 Lemma CanonS_Phi0_Succ_eqn i gamma:
-  CanonS (E0_phi0 (E0_succ gamma)) i = Omega_term gamma i.
+  Canon (E0_phi0 (E0_succ gamma)) (S i) = Omega_term gamma i.
 Proof.
-  apply E0_eq_intro;  unfold CanonS.
+  apply E0_eq_intro;  unfold Canon.
   rewrite cnf_rw, cnf_Omega_term, cnf_phi0, cnf_Succ.
   rewrite canonS_phi0_succ_eqn; auto with E0.
 Qed.  
@@ -3082,7 +3082,7 @@ Proof.
   destruct alpha, beta.
   unfold Canon_plus, const_path; simpl.
   intros H H0; destruct (const_pathS_first_step H0).
-  -  left;  unfold CanonS; f_equal; f_equal; simpl; subst cnf0.
+  -  left;  unfold Canon; f_equal; f_equal; simpl; subst cnf0.
      f_equal; apply nf_proof_unicity.
   - right; auto.
 Qed.
