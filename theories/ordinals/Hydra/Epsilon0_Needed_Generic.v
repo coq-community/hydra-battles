@@ -18,7 +18,7 @@ Section Bounded.
           (mu: T1)
           (Hmu: nf mu)
           (m : Hydra -> T1)
-          (Var : Hvariant  T1_wf B m)
+          (Var : Hvariant T1_wf B m)
           (Hy : BoundedVariant  Var mu).
 
   Hypothesis m_decrease : forall  i h h', round_n i h h'-> m h' t1< m h.

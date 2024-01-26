@@ -725,7 +725,7 @@ Definition L_omega_cube  := L_lim  L_omega_square_times .
 Lemma L_omega_cube_ok : L_spec (T1.phi0 3) L_omega_cube.
 Proof.
   unfold L_omega_cube; apply L_lim_ok; auto with T1.
-  - intro k; simpl canonS; apply L_omega_square_times_ok.
+  - intro k; simpl canon; apply L_omega_square_times_ok.
 Qed.
 
 Lemma L_omega_cube_eqn i :

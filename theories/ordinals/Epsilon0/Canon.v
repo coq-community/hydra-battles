@@ -84,14 +84,6 @@ End Canon_examples.
 
 (* compatibility with older versions *)
 
-(* begin snippet canonS0 *)
-
-Definition  canonS alpha (i:nat) : T1 := canon alpha (S i).
-
-Definition  canon0 alpha  : T1 := canon alpha 0.
-
-(* end snippet canonS0 *)
-
 (** * Properties of canonical sequences *)
 
 Lemma canon_zero i :  canon zero i = zero.
@@ -227,13 +219,14 @@ Proof. (* .no-out *)
 Qed.
 
 
-(** should be deprecated later *)
-Lemma canonS_succ i alpha : nf alpha -> canonS (succ alpha) i = alpha.
+
+Lemma canonS_succ i alpha : nf alpha -> 
+                            canon (succ alpha) (S i) = alpha.
 Proof.
    intros; now apply canon_succ.
 Qed.
 
-Lemma canon0_succ  alpha : nf alpha -> canon0 (succ alpha)  = alpha.
+Lemma canon0_succ  alpha : nf alpha -> canon (succ alpha) 0 = alpha.
 Proof.
   intros; now apply canon_succ.
 Qed.
@@ -683,7 +676,7 @@ Proof.
         -- destruct s.
            ++ subst; assert (False) by (eapply not_LT_zero; eauto).
               contradiction. 
-           ++ assert {i :nat | (beta1 t1< canonS lambda1 i)%t1}.         
+           ++ assert {i :nat | (beta1 t1< canon lambda1 (S i))%t1}.         
               { apply Hrec.
                 apply head_LT_cons; auto with T1.
                 all: auto.
@@ -723,7 +716,7 @@ Proof.
              }
              { eapply nf_inv1, Hlambda. }
              
-             assert {i: nat |  beta2 t1< (canonS (cons lambda1 0 zero) i)}%t1.
+             assert {i: nat |  beta2 t1< (canon (cons lambda1 0 zero) (S i))}%t1.
              { apply Hrec.
                -- apply LT3;auto with arith.
                -- cbn;  destruct lambda1.
@@ -741,7 +734,7 @@ Proof.
              }
              subst;
                assert
-                 ({i: nat |  beta2 t1< (canonS (cons lambda1 0 zero) i)})%t1.
+                 ({i: nat |  beta2 t1< (canon (cons lambda1 0 zero) (S i))})%t1.
              { apply Hrec.
                - apply LT3;auto with arith.
                - cbn;  destruct lambda1.
@@ -802,7 +795,7 @@ Proof.
                  apply nf_helper_intro with n; eauto with T1.
              }
              all: auto. 
-      --  subst; assert ({i: nat |  beta2 t1< (canonS lambda2 i)})%t1.
+      --  subst; assert ({i: nat |  beta2 t1< (canon lambda2 (S i))})%t1.
       { apply Hrec.
         { apply tail_LT_cons; auto. }
         1,2: eauto with T1.
@@ -840,7 +833,7 @@ Defined.
 (* begin snippet canonSLimitLub *)
 
 Lemma canonS_limit_lub (lambda : T1) :
-  nf lambda -> T1limit lambda  -> strict_lub (canonS lambda) lambda. (* .no-out *) (*| .. coq:: none |*)
+  nf lambda -> T1limit lambda  -> strict_lub (fun i => canon lambda( S i)) lambda. (* .no-out *) (*| .. coq:: none |*)
 Proof.
   split.
   - intros; split.
@@ -859,7 +852,7 @@ Proof.
       destruct (canonS_limit_strong H H0 H2).
       specialize (Hl' x).
       assert (l' t1< l')%t1.
-      { apply LT_LE_trans with  (canonS lambda x); auto. }
+      { apply LT_LE_trans with  (canon lambda (S x)); auto. }
       now destruct (@LT_irrefl l' ).
 Qed. 
 (*||*)
@@ -955,9 +948,9 @@ Qed.
 
 Lemma canonS_limit_mono alpha i j : nf alpha -> T1limit alpha  ->
                                     i < j ->
-                                    canonS alpha i t1< canonS alpha j.
+                                    canon alpha (S i) t1< canon alpha (S j).
 Proof. 
-  intros; unfold canonS; eapply canon_limit_mono; eauto.
+  intros;  eapply canon_limit_mono; eauto.
   auto with arith. 
 Qed.
 
@@ -986,7 +979,7 @@ Fixpoint  approx alpha beta fuel i :=
   match fuel with
           FO => None
         | Fuel.FS f =>
-          let gamma := canonS alpha i in
+          let gamma := canon alpha (S i) in
           if decide (lt beta gamma)
           then Some (i,gamma)
           else approx alpha beta  (f tt) (S i)
@@ -995,12 +988,12 @@ Fixpoint  approx alpha beta fuel i :=
 
 Lemma approx_ok alpha beta :
   forall fuel i j gamma, approx alpha beta fuel i = Some (j,gamma) ->
-                         gamma = canonS alpha j /\ lt beta gamma.
+                         gamma = canon alpha (S j) /\ lt beta gamma.
 Proof.
   induction fuel as [| f IHfuel ].
   - cbn; discriminate. 
   - intros i j gamma H0;  cbn in H0.
-    destruct (decide (lt beta (canonS alpha i))) as [H1|H1].
+    destruct (decide (lt beta (canon alpha (S i)))) as [H1|H1].
     + injection H0; intros; subst; split;auto.
     + now specialize (IHfuel tt (S i) _ _ H0).
 Qed.
@@ -1020,16 +1013,9 @@ Next Obligation.
   apply nf_canon; destruct alpha;auto.
 Defined.
 
-(** This is a helper which should be deprecated later :
-    [CanonS alpha i] should be replaced by [Canon alpha (S i)] *)
-
-
-Notation CanonS alpha i := (Canon alpha (S i)).
-Notation Canon0 alpha := (Canon alpha 0).
-
 Lemma Canon_Succ beta n: Canon (E0_succ beta) (S n) = beta.
 Proof.
-  destruct beta. simpl. unfold CanonS, E0_succ. simpl.
+  destruct beta. simpl. unfold E0_succ. simpl.
   apply E0_eq_intro. simpl.
   now rewrite (canon_succ).  
 Qed.
@@ -1043,12 +1029,12 @@ Qed.
 
 Lemma CanonSSn (i:nat) :
   forall alpha n  , alpha <> E0zero ->
-                    CanonS (Cons alpha (S n) E0zero) i =
-                    Cons alpha n (CanonS (E0_phi0 alpha) i).
+                    Canon (Cons alpha (S n) E0zero) (S i) =
+                    Cons alpha n (Canon (E0_phi0 alpha) (S i)).
 Proof.
   intros; apply E0_eq_intro;
-  unfold CanonS;repeat (rewrite cnf_rw || rewrite cnf_Cons); auto.
-  - unfold canonS; rewrite canon_SSn_zero; auto with E0.
+   unfold Canon;repeat (rewrite cnf_rw || rewrite cnf_Cons); auto.
+  - rewrite canon_SSn_zero; auto with E0.
   -  unfold lt, E0_phi0; repeat rewrite cnf_rw. 
      apply canonS_LT ; trivial. 
      apply nf_phi0;auto with E0. 
@@ -1058,20 +1044,21 @@ Proof.
 Qed. 
 
 Lemma CanonS_phi0_lim alpha k : E0limit alpha ->
-                                CanonS (E0_phi0 alpha) k =
-                                E0_phi0 (CanonS alpha k). 
+                                Canon (E0_phi0 alpha) (S k) =
+                                E0_phi0 (Canon alpha (S k)). 
 Proof.
   intro; orefl; rewrite cnf_phi0.
-  unfold CanonS, canonS; repeat   rewrite cnf_rw;  rewrite <- canonS_lim1.
+  unfold Canon; repeat   rewrite cnf_rw;  rewrite <- canonS_lim1.
   -  now rewrite cnf_phi0.
   - apply cnf_ok.
   - destruct alpha; cbn; assumption. 
 Qed.
 
 
-Lemma CanonS_lt : forall i alpha, alpha <> E0zero -> CanonS alpha i o< alpha.
+Lemma CanonS_lt : forall i alpha, alpha <> E0zero -> 
+                                  Canon alpha (S i) o< alpha.
 Proof.
-  destruct alpha. unfold E0lt, CanonS. cbn.
+  destruct alpha. unfold E0lt. cbn.
   intro;apply canonS_LT; auto.
   intro H0; subst. apply H. unfold E0zero; f_equal.
   apply nf_proof_unicity.
@@ -1091,17 +1078,17 @@ Qed.
 Lemma Canon_of_limit_not_null : forall i alpha, E0limit alpha ->
                                        Canon alpha (S i) <> E0zero.
 Proof.
-  destruct alpha;simpl;unfold CanonS; simpl;  rewrite E0_eq_iff.
+  destruct alpha;simpl; unfold Canon; simpl;  rewrite E0_eq_iff.
   simpl;   apply T1limit_canonS_not_zero; auto.
 Qed.
 
 #[global]
   Hint Resolve CanonS_lt Canon_lt Canon_of_limit_not_null : E0.
 
-Lemma CanonS_phi0_Succ alpha i : CanonS (E0_phi0 (E0_succ alpha)) i =
+Lemma CanonS_phi0_Succ alpha i : Canon (E0_phi0 (E0_succ alpha)) (S i) =
                                  Omega_term alpha i.
 Proof.      
-  apply E0_eq_intro;  unfold Omega_term, CanonS, E0_phi0, E0_succ, canonS.
+  apply E0_eq_intro;  unfold Omega_term, E0_phi0, E0_succ.
   simpl cnf; rewrite pred_of_succ; case_eq (succ (cnf alpha)).
   - intro H; destruct (succ_not_zero _ H);  auto.
   - reflexivity. 
