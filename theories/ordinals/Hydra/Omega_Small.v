@@ -45,11 +45,14 @@ of all hydra battles *)
 
 Section Impossibility_Proof.
 
-  (** Let us assume there is a variant from Hydra  into nat 
-      for proving the termination of all hydra battles *)
+  (** Let us assume there exists a variant from Hydra  into nat 
+      for proving the termination of all hydra battles 
+      [Omega] is an ordinal notation for the least infinite ordinal
+      [omega], whose members are the natural numbers.
+*)
  
   Variable m : Hydra -> nat.
-  Context (Hvar : Hvariant lt_wf free m).
+  Context (Hvar : Hvariant Omega free m).
   
 (* end snippet omegaSmalla *)
   
