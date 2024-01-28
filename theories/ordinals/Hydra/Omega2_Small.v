@@ -19,7 +19,7 @@ Section Impossibility_Proof.
   
   (* begin snippet Impossibilitya *)
   
-  Variable m : Hydra -> ON_Omega2.t.
+  Variable m : Hydra -> rep Omega2.
   Context
     (Hvar: Hvariant Omega2 free m).
 

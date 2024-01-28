@@ -498,7 +498,6 @@ Proof.
  - abstract lia.
 Qed.
 
-
 Lemma ap_cases alpha : ap alpha -> alpha = 1 \/ alpha = omega.
 Proof.
   destruct (zero_limit_succ_dec alpha) as [[Hzero |  Hlim] | Hsucc].
