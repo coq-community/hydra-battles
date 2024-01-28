@@ -30,6 +30,10 @@ Class ON {A:Type} (lt: relation A) (cmp: Compare A) :=
 #[global] Existing Instance ON_comp.
 Coercion ON_wf :  ON >-> well_founded.
 
+Definition rep {A:Type} {lt: relation A} {cmp: Compare A}
+                (on : ON lt cmp) := A. 
+
+#[global] Coercion rep : ON >-> Sortclass.
 (* end snippet ONDef *)
 
 (* begin snippet ONDefsa:: no-out  *)
