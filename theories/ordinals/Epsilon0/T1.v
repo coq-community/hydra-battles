@@ -543,7 +543,8 @@ Fixpoint nf_b (alpha : T1) : bool :=
       (nf_b a && nf_b b && (bool_decide (lt a' a)))%bool
   end.
 
-Definition nf alpha :Prop := nf_b alpha. 
+(** For compatibility with the Ensembles library *)
+Definition nf alpha : Prop := nf_b alpha. 
 (* end snippet nfDef *)
 
 (* begin snippet badTerm *)
