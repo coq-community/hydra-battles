@@ -5,8 +5,8 @@
 \label{cnf-math-def}
 \label{chap:T1}
 
-In this chapter, we adapt to \coq{} the well-known~\cite{KP82}  proof that Hercules eventually wins every battle, whichever the strategy  of each player.
-In other words, we present  a formal and self contained proof of termination  of all [free] hydra battles.
+In this chapter, we adapt to \coq{} the well-known proof~\cite{KP82} that Hercules eventually wins every battle, whichever the strategy  of each player.
+In other words, we present  a formal and self-contained proof of termination  of all [free] hydra battles.
 First, we take from Manolios and Vroon~\cite{Manolios2005} a representation of the ordinal $\epsilon_0$ as terms in Cantor normal form. Then, we define a variant for hydra battles as a measure that maps any hydra to some ordinal strictly less than $\epsilon_0$.
 
 
@@ -16,7 +16,7 @@ First, we take from Manolios and Vroon~\cite{Manolios2005} a representation of t
 
 The ordinal \(\epsilon_0\) is the least ordinal number that satisfies 
 the equation \(\alpha = \omega^\alpha\), where \(\omega\) is 
-the least infinite ordinal.
+the least infinite ordinal\footnote{For a precise ---\,\emph{i.e.} mathematical\,--- definition of $\omega^\alpha$, please see Sect.~\vref{sect:AP-and-phi0}.} .
 Thus, we can intuitively consider \(\epsilon_0\) as an
 \emph{infinite} \(\omega\)-tower.
 
@@ -28,10 +28,10 @@ Thus, we can intuitively consider \(\epsilon_0\) as an
 
 Any ordinal strictly less that \(\epsilon_0\) 
 can be finitely represented by a unique  \emph{Cantor normal form}, 
-that is, an expression  which is either  the ordinal \(0\) or 
+that is, an expression  which is 
 a sum  \(\omega^{\alpha_1} \times n_1 + \omega^{\alpha_2} \times n_2 + 
-  \dots + \omega^{\alpha_p} \times n_p\) where all the \(\alpha_i\) 
-are ordinals in Cantor  normal form, \(\alpha_1 > \alpha_2 > \alpha_p\), 
+  \dots + \omega^{\alpha_p} \times n_p\) where $p\in\mathbb{N}$, all the \(\alpha_i\) 
+are ordinals in Cantor  normal form, \(\alpha_1 > \alpha_2 > \alpha_p\)
 and all the \(n_i\) are positive integers.
 
 An example of Cantor normal form is displayed in Fig \ref{fig:cnf-example}:
@@ -55,8 +55,7 @@ all the ordinals strictly  less than  \(\epsilon_0\), then extend some arithmeti
 to this type, and finally prove that our representation fits well with 
 the expected mathematical properties: the order we define is a well order, 
 and the decomposition into Cantor normal form  is consistent 
-with the implementation of the arithmetic operations of exponentiation of base \(\omega\) 
-and addition.
+with usual definition of ordinals, for instance in \gaia~\cite{Gaia}, Schütte's book~\cite{schutte}, or larger ordinal notations~\vref{chap:gamma0}.
 
 \paragraph*{Remark}
 \label{sec:orgheadline65}
@@ -131,7 +130,7 @@ level 3/.style={sibling distance=17mm}]
 \paragraph{Remark}
 For simplicity's sake, we chose to forbid  expressions of the form $\omega^\alpha\times 0 + \beta$. Thus, the construction (\texttt{cons $\alpha$ $n$ $\beta$}) is intended to represent the
 ordinal $\omega^\alpha\times(n+1)+\beta$ and not $\omega^\alpha\times n+\beta$.
-In a future version, we should replace  the type \texttt{nat} with \texttt{positive} in \texttt{T1}'s 
+In a future version, we would like to replace  the type \texttt{nat} with standard library's type \texttt{positive} in \texttt{T1}'s 
 definition. But this replacement would take a lot of time \dots{}
 
 
@@ -210,11 +209,11 @@ i.e. \(\omega^{\omega^0}\times 1+ 0\), we can define the following abbreviation:
 
 \input{movies/snippets/T1/omegaDef}
 
-Note that \texttt{omega} is not an identifier in \HydrasLib, thus any tactic like \texttt{unfold omega} would fail.
+Note that \texttt{T1omega} is not an identifier in \HydrasLib, thus any tactic like \texttt{unfold T1omega} would fail.
 
 \index{gaiabridge}{The ordinal $\omega$}
 \paragraph*{\gaiasign}
-In \texttt{gaia.ssete9}, the ordinal $\omega$ is bound to the \emph{constant}  \texttt{T1omega}.
+In \texttt{gaia.ssete9}, the ordinal $\omega$ is bound to the \emph{constant}  \texttt{T1omega} (not a notation).
 
 
 
@@ -292,7 +291,7 @@ we define a variant of \texttt{pp} for pretty-printing terms of type \texttt{sse
 
 \index{hydras}{Projects}
 \begin{project}
-Design  (in \ocaml?) a set of tools for systematically pretty printing ordinal terms in Cantor normal form.
+Design tools for systematically pretty printing ordinal terms in Cantor normal form.
 \end{project}
 
 
@@ -315,6 +314,8 @@ contains three constructors:  \texttt{Lt} (less than), \texttt{Eq} (equal), and
 
 \input{movies/snippets/T1/compareDef}
 
+\input{movies/snippets/T1/Instances}
+
 
 \label{Predicates:lt-T1}
 Please note that this definition of \texttt{lt} makes it easy to write proofs by computation, as shown by the following examples.
@@ -325,11 +326,11 @@ Please note that this definition of \texttt{lt} makes it easy to write proofs by
 \input{movies/snippets/T1/ltExamples}
 
 
-Links between the function \texttt{compare} and the relations
-\texttt{lt} and \texttt{eq} are established through the following lemmas (~\vref{sect:comparable-def}).
-\vspace{4pt}
+% Links between the function \texttt{compare} and the relations
+% \texttt{lt} and \texttt{eq} are established through the following lemmas (~\vref{sect:comparable-def}).
+% \vspace{4pt}
 
-\input{movies/snippets/T1/Instances}
+
 
 \paragraph*{\gaiasign}
 \index{gaiabridge}{Strict order on ordinals below $\epsilon_0$}
