@@ -121,21 +121,19 @@ The following function provides us with a more readable  printing of Cantor norm
 
 
 Functions \texttt{h2g} and \texttt{g2h} allow us to define
-a notion of ``data-refinement''  for constants, functions, predicates and relations. The following definitions express that some
+a notion of ``data-refinement''  for constants, functions, predicates and relations. The following definitions express that a given
 constant, function, relation defined in \HydrasLib ``implements'' the same concept of \gaia.
 
-
-
-
-
-
-
+From~\href{../theories/html/gaia_hydras/T1Bridge.html}%
+{\texttt{gaia\_hydras.T1Bridge}}.
 
 \inputsnippets{T1Bridge/refineDefs}
 
 Refinement lemmas can be easily ``reversed''.
 
-\inputsnippets{T1Bridge/refines1R, T1Bridge/refines2R}
+\inputsnippets{T1Bridge/refines1R}
+
+\inputsnippets{T1Bridge/refines2R}
 
 \subsection{Examples of refinement}
 Both of our libraries define constants like $0$, $1$, $\omega$, and arithmetic functions: successor, addition, multiplication, and exponential of base $\omega$ (function $\phi_0$). We prove that these definitions are mutually consistent. Finally, we prove that the boolean predicates `` to be in normal form'' are equivalent.
@@ -202,10 +200,10 @@ For instance, let us look for lemmas whose conclusion is
 $\alpha \times \beta=\beta$.
 
 The following command lists us `gaia's lemmas (thanks to
-\gaia's  \texttt{cantor\_scope}.
+\gaia's  \texttt{cantor\_scope}).
 \inputsnippets{T1Bridge/SearchDemoa}
 
-With \texttt{t1\_scope}:
+Within \texttt{t1\_scope}:
 \inputsnippets{T1Bridge/SearchDemob}
 
 \section{Importing Definitions and theorems from \HydrasLib}

@@ -35,6 +35,8 @@ Class E0 : Type := mkord {cnf : T1; cnf_ok : nf cnf}.
 
 Arguments cnf : clear implicits.
 
+Coercion cnf : E0 >-> T1.
+
 #[export] Hint Resolve cnf_ok : E0.
 
 (* end snippet E0Def *)
@@ -66,9 +68,9 @@ Infix "o<=" := E0le : E0_scope.
  Notation _Omega := E0_omega (only parsing).
 
 (* begin snippet SuccOnE0:: no-out *)
-#[global, program] Instance E0_succ (alpha : E0) : E0 :=
+#[export, refine] Instance E0_succ (alpha : E0) : E0 :=
 @mkord (T1.succ (@cnf alpha)) _. 
-Next Obligation.  apply succ_nf, cnf_ok. Defined.
+Proof. apply succ_nf, cnf_ok. Defined.
 (* end snippet SuccOnE0 *)
 
 #[deprecated(note="use E0_succ")]
@@ -85,8 +87,8 @@ Definition E0is_succ (alpha : E0) : bool :=
 #[deprecated(note="use E0is_succ")]
  Notation E0succb := E0is_succ (only parsing).
 
-#[global, program] Instance E0one : E0:= @mkord (T1.succ zero) _.
-Next Obligation. now compute. Defined.
+#[export, refine] Instance E0one : E0:= @mkord (T1.succ zero) _.
+Proof. now compute. Defined.
 
 (* begin snippet plusE0 *)
 
@@ -94,9 +96,9 @@ Next Obligation. now compute. Defined.
 .. coq:: no-out
 |*)
 
-#[global, program] Instance E0add (alpha beta : E0) : E0 :=
+#[export, refine] Instance E0add (alpha beta : E0) : E0 :=
   @mkord (T1add (@cnf alpha) (@cnf beta))_ . 
-Next Obligation.  apply plus_nf; apply cnf_ok. Defined.
+Proof.  apply plus_nf; apply cnf_ok. Defined.
 
 Infix "+" := E0add : E0_scope.
 
@@ -114,25 +116,25 @@ Check E0_omega + E0_omega.
 (* end snippet CheckPlus *)
 
 
-#[global, program] Instance E0_phi0 (alpha: E0) : E0 :=
+#[export, refine] Instance E0_phi0 (alpha: E0) : E0 :=
  @mkord (T1.phi0 (cnf alpha)) _. 
-Next Obligation. apply nf_phi0; apply cnf_ok. Defined.
+Proof. apply nf_phi0; apply cnf_ok. Defined.
 
 Notation "'E0_omega^'" := E0_phi0 (only parsing) : E0_scope.
 
-#[global, program] Instance Omega_term (alpha: E0) (n: nat) : E0 :=
+#[export, refine] Instance Omega_term (alpha: E0) (n: nat) : E0 :=
    @mkord (cons (cnf alpha) n zero) _.
-Next Obligation.  apply nf_phi0; apply cnf_ok. Defined.
+Proof.  apply nf_phi0; apply cnf_ok. Defined.
 
-#[global] Instance Cons (alpha : E0) (n: nat) (beta: E0) : E0
+#[export] Instance Cons (alpha : E0) (n: nat) (beta: E0) : E0
   := (Omega_term alpha n + beta)%e0.                                                          
 
-#[global, program] Instance E0finS (i:nat) : E0:= @mkord (FS i)%t1 _.
-Next Obligation. apply T1.nf_FS. Defined.
+#[export, refine] Instance E0finS (i:nat) : E0:= @mkord (FS i)%t1 _.
+Proof. apply T1.nf_FS. Defined.
 
 
 
-#[global, program] Instance E0fin (i:nat) : E0:=
+#[export] Instance E0fin (i:nat) : E0:=
   match i with
     0 => E0zero
   | S i => E0finS i
@@ -144,18 +146,18 @@ Next Obligation. apply T1.nf_FS. Defined.
 
 Coercion E0fin : nat >-> E0.
 
-#[global, program] Instance E0mul (alpha beta : E0) : E0 :=
+#[export, refine] Instance E0mul (alpha beta : E0) : E0 :=
   @mkord (cnf alpha * cnf beta)%t1 _.
-Next Obligation. apply mult_nf; apply cnf_ok. Defined.
+Proof. apply mult_nf; apply cnf_ok. Defined.
 
 #[deprecated(note="use E0mul")]
  Notation Mult := E0mul (only parsing).
 
 Infix "*" := E0mul : E0_scope.
 
-#[global, program] Instance Mult_i  (alpha: E0) (n: nat) : E0 :=
+#[export, refine] Instance Mult_i  (alpha: E0) (n: nat) : E0 :=
   @mkord (cnf alpha * n)%t1  _.
-Next Obligation.  apply mult_nf_fin, cnf_ok. Defined.
+Proof. apply mult_nf_fin, cnf_ok. Defined.
 
 (** ** Lemmas *)
 
@@ -310,12 +312,12 @@ Definition E0_pred (alpha: E0) : E0 :=
 
 Tactic Notation "mko" constr(alpha) := refine (@mkord alpha eq_refl).
 
-#[global] Instance Two : E0 :=  ltac:(mko (\F 2)).
+#[export] Instance Two : E0 :=  ltac:(mko (\F 2)).
 
-#[global] Instance Omega_2 : E0 :=ltac:(mko (T1omega * T1omega)%t1).
+#[export] Instance Omega_2 : E0 :=ltac:(mko (T1omega * T1omega)%t1).
 
 
-#[global] Instance E0_sto : StrictOrder E0lt.
+#[export] Instance E0_sto : StrictOrder E0lt.
 Proof.
   split.
   - intro x ; destruct x; unfold E0lt; red.
@@ -324,7 +326,7 @@ Proof.
     apply LT_trans.
  Qed.
 
-#[ global ] Instance compare_E0 : Compare E0 :=
+#[ export ] Instance compare_E0 : Compare E0 :=
  fun (alpha beta:E0) => compare (cnf alpha) (cnf beta).
 
 Lemma compare_correct (alpha beta : E0) :
@@ -495,10 +497,10 @@ Qed.
 .. coq:: no-out
  *)
 
-#[global] Instance E0_comp: Comparable E0lt compare.
+#[export] Instance E0_comp: Comparable E0lt compare.
 Proof. split; [apply E0_sto | apply compare_correct]. Qed.
 
-#[global] Instance Epsilon0 : ON E0lt compare.
+#[export] Instance Epsilon0 : ON E0lt compare.
 Proof. split; [apply E0_comp | apply E0lt_wf]. Qed.
 
 (*||*)
@@ -668,13 +670,13 @@ Proof.
 Qed.
 
 
-#[global, program] Instance Oplus (alpha beta : E0) : E0 :=
+#[export, refine] Instance Oplus (alpha beta : E0) : E0 :=
 @mkord (oplus (cnf alpha) (cnf beta)) _.
-Next Obligation. apply oplus_nf; apply cnf_ok. Defined.
+Proof. apply oplus_nf; apply cnf_ok. Defined.
 
 Infix "O+" := Oplus (at level 50, left associativity): E0_scope.
 
-#[global] Instance Oplus_assoc : Assoc eq Oplus.
+#[export] Instance Oplus_assoc : Assoc eq Oplus.
 Proof. 
  red;  destruct x,y, z. unfold Oplus.  cbn.
   apply E0_eq_intro; cbn; now rewrite oplus_assoc.
@@ -812,7 +814,7 @@ Proof.
 Qed.
 
 
-#[global] Instance plus_assoc : Assoc eq E0add . 
+#[export] Instance plus_assoc : Assoc eq E0add . 
 Proof.
   intros alpha beta gamma; destruct alpha, beta, gamma; apply E0_eq_intro; cbn;
   apply  T1.T1addA.
