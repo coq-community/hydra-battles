@@ -826,7 +826,7 @@ Ltac nf_decomp H :=
      end.
 
 (**  lt alpha (phi0 beta)  *)
-(** Should be deprecated *)
+
 
 
 Inductive nf_helper : T1 -> T1 -> Prop :=
@@ -838,6 +838,8 @@ Inductive nf_helper : T1 -> T1 -> Prop :=
 
 #[global] Hint Constructors nf_helper : T1.
 
+Reserved Notation "x '<_phi0' y" (at level 70, no associativity).
+Infix "<_phi0" := nf_helper.
 
 (* A tactic for decomposing a non zero ordinal *)
 (* use : H : lt zero ?c ; a n b : names to give to the constituents of 
@@ -1147,16 +1149,12 @@ Proof.
 Qed.
 
 Lemma nf_helper_inv1 :
-  forall a n b a',
-  nf_helper (cons a n b) a' -> lt a a'.
+  forall a n b a', cons a n b <_phi0 a'-> lt a a'.
 Proof. now inversion 1. Qed.
 
 Lemma nf_intro : 
-  forall a n b,
-  nf a ->
-  nf b ->
-  nf_helper b a ->
-  nf (cons a n b).
+  forall a n b, nf a -> nf b -> b <_phi0 a ->
+                nf (cons a n b).
 Proof. destruct 3; eauto with T1. Qed.
 
 Lemma nf_intro' :
@@ -1174,7 +1172,7 @@ Qed.
 
 
 Lemma nf_helper_intro :
-  forall a n b, nf (cons a n b) -> nf_helper b a.
+  forall a n b, nf (cons a n b) -> b <_phi0 a.
 Proof.
   intros a n b H; unfold nf in H; cbn in H.
   destruct b.
@@ -1196,7 +1194,7 @@ Proof.
 Qed.
 
 Lemma nf_helper_phi0 :
-  forall a b, nf_helper b a -> lt b ( phi0 a).
+  forall a b, b <_phi0 a -> lt b ( phi0 a).
 Proof.
   induction 1; auto with T1.
 Qed.
@@ -1211,7 +1209,7 @@ Qed.
 
 Lemma nf_helper_iff :
   forall a b, nf a -> nf b ->
-              (nf_helper b a <-> forall n, nf (cons a n b)).
+              (b <_phi0 a <-> forall n, nf (cons a n b)).
 Proof.
   split.
   - intros; now apply nf_intro.
@@ -1229,7 +1227,7 @@ Definition nf_rect : forall P : T1 -> Type,
     (forall n: nat,  P (cons zero n zero)) ->
     (forall a n b n' b', nf (cons a n b) ->
                          P (cons a n b)->
-                         nf_helper b' (cons a n b) ->
+                         b' <_phi0 (cons a n b) ->
                          nf b' ->
                          P b' ->
                          P (cons (cons a n b) n' b')) ->
@@ -1640,7 +1638,7 @@ Module Direct_proof.
     Lemma Acc_strong_stronger : forall alpha,
         nf alpha -> Acc_strong alpha -> Acc LT alpha.
     Proof.
-      intros alpha H H0.  apply acc_impl with (phi0 alpha).
+      intros alpha H H0; apply acc_impl with (phi0 alpha).
       - repeat split; trivial.
         + now apply lt_a_phi0_a.
       -  apply H0;  now apply single_nf.
@@ -1654,11 +1652,12 @@ Module Direct_proof.
     Lemma Acc_implies_Acc_strong : forall alpha,
         Acc LT  alpha -> Acc_strong alpha. (* .no-out *)
     Proof. (* .no-out *)
-      (*  main induction (on a's accessibility)   *)
+      (*  main induction (on alpha's accessibility)   *)
+      unfold Acc_strong; intros alpha Aalpha. 
       (*|
 .. coq:: -.h#Acc_strong
 |*)
-      unfold Acc_strong; intros alpha Aalpha; pattern alpha;
+      pattern alpha;
       eapply Acc_ind with (R:= LT);[| assumption];
         clear alpha Aalpha; intros alpha Aalpha IHalpha.
       (*||*)
@@ -1671,10 +1670,11 @@ Module Direct_proof.
        *)
 
       assert(beta_Acc:
-             forall beta, nf_helper beta alpha -> nf alpha -> nf beta  -> Acc LT beta).
+             forall beta, beta <_phi0 alpha -> nf alpha -> nf beta  
+                          -> Acc LT beta).
       (*  Proof of beta_Acc:
           Since beta is  less than omega ^ alpha, 
-          beta  is of the form omega^alpha'*(p+1)+beta' where
+          beta  is of the form omega ^ alpha'*(p+1)+beta' where
           LT alpha' alpha, so the inductive hypothesis IHalpha can be used 
        *)
       {  intros b H H' H'';  assert (H0 : LT b (phi0 alpha)).
@@ -1833,7 +1833,7 @@ Ltac transfinite_induction alpha :=
 
 (* begin hide *)
 Lemma succ_nf_helper :
-  forall c a n b, nf_helper c (cons a n b) -> nf_helper (succ c) (cons a n b).
+  forall c a n b, c <_phi0 (cons a n b) -> succ c <_phi0 (cons a n b).
 Proof.
   induction c.
   -  simpl; repeat constructor.
@@ -2830,7 +2830,7 @@ Proof.
   split.
   intros H.
   repeat split; eauto with T1.
-  apply    nf_helper_phi0.
+  apply nf_helper_phi0.
   eapply nf_helper_intro; eauto.
   intro H; decompose [and] H.
   apply nf_intro; eauto.
