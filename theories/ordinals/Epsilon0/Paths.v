@@ -553,7 +553,7 @@ Proof.
       apply nf_intro; [auto | | ].
       * destruct H1; subst.
         apply nf_canon; now apply nf_phi0.
-      * apply nf_helper_phi0R.
+      * apply lt_a_phi0_b_phi0R.
         destruct H1; subst.
         generalize (@canonS_LT i0 (T1.phi0 alpha) (nf_phi0 H)).
         destruct 1.
@@ -732,11 +732,11 @@ Proof.
         destruct (IHs alpha n (canon beta (S a))); auto.
         * apply nf_intro; auto.
           apply nf_canon;auto.
-          apply nf_helper_phi0R.
+          apply lt_a_phi0_b_phi0R.
           apply T1.lt_trans with beta.
           apply canon_lt;auto.
-          apply nf_helper_phi0.
-          eapply nf_helper_intro; eauto.
+          apply lt_a_phi0_b_phi0.
+          eapply lt_a_phi0_b_intro; eauto.
         * destruct H3 as [s2 [H4 [H5 H6]]];  exists (a::x), s2.
           subst s; split;auto.
 Qed.
@@ -1798,7 +1798,7 @@ Proof.
             apply nf_intro. 
             eauto with T1.
             apply nf_canon; eauto with T1.
-            apply nf_helper_phi0R.
+            apply lt_a_phi0_b_phi0R.
             destruct (@canonS_LT p (T1.cons alpha1 0 zero)).
             eauto with T1.
             discriminate. 

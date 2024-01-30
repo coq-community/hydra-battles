@@ -299,8 +299,8 @@ Proof.
                    auto with arith rpo.
                    auto with rpo.
                    apply lt_le_trans with (cons o'1 0 zero).
-                   apply nf_helper_phi0.
-                   eapply nf_helper_intro. 
+                   apply lt_a_phi0_b_phi0.
+                   eapply lt_a_phi0_b_intro. 
                    eauto. 
                    auto with T1 rpo.
                    auto with T1 rpo.
