@@ -701,19 +701,23 @@ is strongly accessible.
 \label{sec:orgheadline79}
 
 First, we prove that, for  any \texttt{LT}-accessible term $\alpha$, $\alpha$ is 
-strongly accessible too (\emph{i.e.} any well formed
-term (\texttt{cons $\alpha$ $n$ $\beta$})  is accessible).
-
-The proof is structured as an induction on $\alpha'$s accessibility. Let us consider
+strongly accessible too.
+The following proof is structured as an induction on $\alpha'$s accessibility. Let us consider
 any  accessible term $\alpha$.
 
 \input{movies/snippets/T1/AccImpAccStrong}
 
 
+First, we prove that, for any $n$ and $\beta$, if (\texttt{cons $\alpha$ $n$ $\beta$}) is in normal form, then
+ $\beta$ is accessible.
 
-Let \texttt{n:nat} and \texttt{beta:T1} such that (\texttt{cons alpha n beta}) is in normal form. 
-We prove first that \texttt{beta} is accessible,  which allows us to prove by well-founded induction on \texttt{beta}, 
-and natural induction on \texttt{n}, that (\texttt{cons alpha n beta}) is accessible.
+\inputsnippets{T1/betaAcc}
+
+The lemma \texttt{betaAcc} allows us to prove by well-founded induction on $\beta$, 
+and natural induction on $n$ that (\texttt{cons $\alpha$ $n$ $\beta$}) is accessible.
+
+\inputsnippets{T1/useBetaAcc}
+
 The proof, quite long, can be consulted in \href{../theories/html/hydras.Epsilon0.T1.html}{Epsilon0.T1}.
 
 \paragraph{Accessibility of any well-formed ordinal term}

@@ -425,11 +425,9 @@ Proof.
   now apply Nat.compare_lt_iff in H as ->.
 Qed.
 
-
-
 Lemma tail_lt :
   forall alpha n beta beta',
-  lt beta  beta' ->
+  lt beta beta' ->
   lt (cons alpha n beta)  (cons alpha n beta').
 Proof.
   unfold lt.
@@ -702,7 +700,7 @@ Proof. reflexivity. Qed.
 
 Lemma single_nf :
   forall a n, nf a -> nf (cons a n zero).
-Proof.   unfold nf; now cbn. Qed. 
+Proof. unfold nf; now cbn. Qed. 
 
 Lemma cons_nf :
   forall a n a' n' b, 
@@ -753,8 +751,6 @@ Proof.
   intro H; red in H; repeat rewrite andb_true_iff in H; 
   decompose [and] H; apply (bool_decide_eq_true _); auto.
 Qed.
-
-
 
 Lemma nf_cons_inv a n b : nf (cons a n b) -> nf a /\ nf b /\ lt b (phi0 a).
 Proof. 
@@ -827,13 +823,11 @@ Ltac nf_decomp H :=
 
 
 (**  lt alpha (phi0 beta)  *)
-
 Inductive lt_a_phi0_b : T1 -> T1 -> Prop :=
 | lt_a_phi0_b_z : forall alpha, lt_a_phi0_b zero alpha
 | lt_a_phi0_b_c : forall alpha alpha' n' beta',
                   lt alpha' alpha ->
                   lt_a_phi0_b (cons alpha' n' beta') alpha.
-
 
 #[global] Hint Constructors lt_a_phi0_b : T1.
 
@@ -893,8 +887,7 @@ Qed.
 (** ** Second part on [lt] and [le] *)
 
 Lemma finite_lt :
-  forall n p : nat,
-  (n < p)%nat -> lt (FS n) (FS p).
+  forall n p : nat, (n < p)%nat -> lt (FS n) (FS p).
 Proof.
  intros; auto with T1.
 Qed.
@@ -1199,11 +1192,21 @@ Proof.
 Qed.
 
 Lemma lt_a_phi0_b_phi0R :
-  forall a b, lt b  (phi0 a) -> lt_a_phi0_b b a.
+  forall a b, lt b  (phi0 a) -> b <_phi0 a.
 Proof.
   induction b.
   - constructor.
   - intro H; apply lt_a_phi0_b_inv in H; constructor; auto.
+Qed.
+
+
+
+Lemma lt_a_phi0_b_def :
+  forall a b, b <_phi0 a <-> lt b (phi0 a).
+Proof.
+  split.
+  - intros; now apply lt_a_phi0_b_phi0.
+  - intros; now apply lt_a_phi0_b_phi0R.
 Qed.
 
 Lemma lt_a_phi0_b_iff :
@@ -1226,7 +1229,7 @@ Definition nf_rect : forall P : T1 -> Type,
     (forall n: nat,  P (cons zero n zero)) ->
     (forall a n b n' b', nf (cons a n b) ->
                          P (cons a n b)->
-                         b' <_phi0 (cons a n b) ->
+                         lt b' (phi0 (cons a n b)) ->
                          nf b' ->
                          P b' ->
                          P (cons (cons a n b) n' b')) ->
@@ -1239,7 +1242,8 @@ Proof.
      + intros c n0 c0 IHc0 H2; apply Hcons.
         * eapply nf_inv1;eauto.
         * apply IHc0; eapply nf_inv1; eauto.
-        * eapply lt_a_phi0_b_intro;  eauto.
+        * rewrite <- lt_a_phi0_b_def;
+            eapply lt_a_phi0_b_intro;  eauto.
         * eapply nf_inv2;eauto.
         * apply IHa2; eapply nf_inv2;eauto.
 Defined.
@@ -1652,66 +1656,69 @@ Module Direct_proof.
         Acc LT  alpha -> Acc_strong alpha. (* .no-out *)
     Proof. (* .no-out *)
       (*  main induction (on alpha's accessibility)   *)
-      unfold Acc_strong; intros alpha Aalpha. 
       (*|
 .. coq:: -.h#Acc_strong
 |*)
+      unfold Acc_strong; intros alpha Aalpha. 
       pattern alpha;
-      eapply Acc_ind with (R:= LT);[| assumption];
+        eapply Acc_ind with (R:= LT);[| assumption];
         clear alpha Aalpha; intros alpha Aalpha IHalpha.
-      (*||*)
-      (*|
-.. coq:: none
-|*)
-
-      (*  for any n and b, such that (cons a n b) is well formed,
+(* end snippet AccImpAccStrong *)
+       (*  for any n and b, such that (cons a n b) is well formed,
         b is accessible 
        *)
-
+(* begin snippet betaAcc:: -.h#Acc_strong -.g#* .g#2*)
       assert(beta_Acc:
-             forall beta, beta <_phi0 alpha -> nf alpha -> nf beta  
-                          -> Acc LT beta).
-      (*  Proof of beta_Acc:
+             forall beta, lt beta (phi0 alpha) -> nf alpha -> nf beta  
+                          -> Acc LT beta). 
+      (* ... *) (* .no-out *)
+ (* end snippet betaAcc *)
+ (*  Proof of beta_Acc:
           Since beta is  less than omega ^ alpha, 
           beta  is of the form omega ^ alpha'*(p+1)+beta' where
           LT alpha' alpha, so the inductive hypothesis IHalpha can be used 
-       *)
-      {  intros b H H' H'';  assert (H0 : LT b (phi0 alpha)).
-         { repeat split;auto; apply lt_a_phi0_b_phi0; auto. }
-         generalize H0; pattern b; case b.
-         - intro;apply Acc_zero.
-         -  intros t n t0 H1; case H1;  destruct 2;
-              case (lt_inv H3).
-            + intro H5;generalize H2;case n.
-              { inversion 1.
-                - intros; apply IHalpha.
-                  + split.
-                    * apply nf_inv1 in H2. auto. 
-                    * split;auto.
-                  + auto. 
-              }
-              intros;apply IHalpha.
-              split;auto.
-              eapply nf_inv1;eauto.
-              auto.
-            + destruct 1.
-              case H5;intros H6 H7; abstract lia.  
-              case H5;intros _ (_,H6);destruct (not_lt_zero H6).
-      }
-
-      (* end of proof of beta_Acc *)
-      (* we can now use a nested induction on n (Peano induction)
-          then on b (well_founded induction using b_Acc) *)
-      induction n.
+  *)
+     {
+       intros beta H H' H'';  assert (H0 : LT beta (phi0 alpha)).
+       { repeat split;auto; apply lt_a_phi0_b_phi0; auto. }
+       generalize H0; pattern beta; case beta.
+       - intro;apply Acc_zero.
+       -  intros t n t0 H1; case H1;  destruct 2;
+            case (lt_inv H3).
+          + intro H5;generalize H2;case n.
+            { inversion 1.
+              - intros; apply IHalpha.
+                + split.
+                  * apply nf_inv1 in H2. auto. 
+                  * split;auto.
+                + auto. 
+            }
+            intros;apply IHalpha.
+            split;auto.
+            eapply nf_inv1;eauto.
+            auto.
+          + destruct 1.
+            case H5;intros H6 H7; abstract lia.  
+            case H5;intros _ (_,H6);destruct (not_lt_zero H6).
+            (* begin snippet useBetaAcc:: no-in unfold -.h#Acc_strong *)
+     }
+     (* end snippet useBetaAcc *)
+     
+     
+     (* end of proof of beta_Acc *)
+     
+     (* we can now use a nested induction on n (Peano induction)
+        then on b (well_founded induction using b_Acc) *)
+     induction n.
       -    (* n=0 : let's use b's accessibility for doing an induction on b *)
         intros b Hb; assert (H : Acc LT  b).
         {  apply beta_Acc.
-           -  eapply lt_a_phi0_b_intro; eauto.
+           -  rewrite <- lt_a_phi0_b_def; eapply lt_a_phi0_b_intro; eauto.
            -  eapply nf_inv1;eauto.
            -  eapply nf_inv2;eauto.
         }
         (* let's prove that every predecessor of (cons a 0 b) 
-            is accessible *)
+           is accessible *)
         { 
           pattern b;eapply Acc_ind;[|eexact H].
           intros; split; intro y; case y.
@@ -1750,14 +1757,12 @@ Module Direct_proof.
               *  subst n0 c;apply H1; auto.
                  case H3;auto.
           - apply beta_Acc. 
-            + eapply lt_a_phi0_b_intro;eauto.
+            + rewrite <- lt_a_phi0_b_def. eapply lt_a_phi0_b_intro;eauto.
             + eapply nf_inv1;eauto.
             + eapply nf_inv2;eauto.
         }
     Qed.
-    (*||*)
-
-    (* end snippet AccImpAccStrong *)
+ 
     
     (** ***  A (last) structural induction *)
 
@@ -1768,7 +1773,7 @@ Module Direct_proof.
       induction alpha. (* .no-out *)
       -  (* .no-out *) intro; apply Acc_zero. (* .no-out *)
       -  (* .no-out *) intros; eapply Acc_implies_Acc_strong;auto. (* .no-out *)
-         apply IHalpha1; eauto.
+         apply IHalpha1; eauto. (* -.h#Acc_strong *)
          apply nf_inv1 in H; auto.
     Qed.
 
