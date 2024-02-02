@@ -659,7 +659,7 @@ Unfortunately, it won't work. Let us consider some well-formed term
  $\alpha=\texttt{cons $\beta\;n\;\gamma$}$, and assume that \(\beta\) and \(\gamma\) are \texttt{LT}-accessible.
 In order to prove the accessibility of $\alpha$, we have to consider
 any well formed term \(\delta\) such that \(\delta<\alpha\). 
-But nothing guarantees that \(\delta\)  is strictly  less than \(\beta\) nor \(\gamma\), and we cannot use the induction hypotheses on   \(\beta\) nor \(\gamma\).
+% But nothing guarantees that \(\delta\)  is strictly  less than \(\beta\) nor \(\gamma\), and we cannot use the induction hypotheses on   \(\beta\) nor \(\gamma\).
 
 \input{movies/snippets/T1/wfLTBada}
 
@@ -713,7 +713,7 @@ First, we prove that, for any $n$ and $\beta$, if (\texttt{cons $\alpha$ $n$ $\b
 
 \inputsnippets{T1/betaAcc}
 
-The lemma \texttt{betaAcc} allows us to prove by well-founded induction on $\beta$, 
+The new hypothesis  \texttt{beta\_Acc} allows us to prove by well-founded induction on $\beta$, 
 and natural induction on $n$ that (\texttt{cons $\alpha$ $n$ $\beta$}) is accessible.
 
 \inputsnippets{T1/useBetaAcc}
@@ -730,6 +730,7 @@ Thanks to our previous lemmas, we are almost done (by a simple structural induct
 
 \input{movies/snippets/T1/T1Wf}
 
+\subsection{Transfinite induction}
 \index{maths}{Transfinite induction}
 
 
