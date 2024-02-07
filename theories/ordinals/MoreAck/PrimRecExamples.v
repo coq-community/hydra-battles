@@ -38,7 +38,7 @@ Check (fun n p q : nat =>  n * p + q): naryFunc 3.
 (* begin snippet extEqual2a *)
 Compute extEqual 2.
 
-Example extEqual_ex1: extEqual 2 Nat.mul (fun x y =>  y * x + x - x). (* .no-out *)
+Example extEqual_ex1: (Nat.mul: naryFunc 2) =x= fun x y =>  y * x + x - x. (* .no-out *)
 Proof. 
   intros x y; cbn.
 (* end snippet extEqual2a *)
@@ -119,10 +119,10 @@ End compose2Examples.
 (* begin snippet FirstExamples *)
 Module MoreExamples. 
 
-(** The constant function which returns 0 *)
+(** The unary constant function which returns 0 *)
 Definition cst0 : PrimRec 1 := (PRcomp zeroFunc (PRnil _))%pr.
 
-(** The constant function which returns i *)
+(** The unary constant function which returns i *)
 Fixpoint cst (i: nat) : PrimRec 1 :=
   match i with
     0 => cst0
@@ -170,23 +170,21 @@ Compute PReval fact 5.
 (* end snippet tests *)
 
 (* begin snippet correctness:: no-out *)
-Lemma cst0_correct (i:nat) :
-  forall p:nat, PReval cst0 p = 0.
-Proof. intro p; reflexivity. Qed.
+Lemma cst0_correct : (PReval cst0) =x= (fun _ => 0).
+Proof. intros ?; reflexivity. Qed.
 
-Lemma cst_correct (i:nat) :
-  forall p:nat, PReval (cst i) p = i.
+Lemma cst_correct (k:nat) : PReval (cst k) =x= (fun _ => k).
 Proof.
-  induction i as [| i IHi]; simpl; intros p .
+  induction k as [| k IHk]; simpl; intros p.
   - reflexivity. 
-  - now rewrite IHi. 
+  - now rewrite IHk. 
 Qed. 
 
 Lemma plus_correct: 
-  forall n p, PReval plus n p = n + p. 
+  PReval plus =x= Nat.add.
 Proof. 
-  induction n as [ | n IHn]. 
-  - reflexivity. 
+  intros n; induction n as [ | n IHn]. 
+  - intro; reflexivity. 
   - intro p; cbn in IHn |- *; now rewrite IHn. 
 Qed. 
 
@@ -195,19 +193,19 @@ Remark mult_eqn1 n p:
       PReval plus (PReval mult n p) p.
 Proof. reflexivity. Qed.
 
-Lemma mult_correct n p: PReval mult n p = n * p.
+Lemma mult_correct: PReval mult =x= Nat.mul.
 Proof. 
- revert p; induction n as [ | n IHn].
+ intro n; induction n as [ | n IHn].
  - intro p; reflexivity. 
- - intro p; rewrite mult_eqn1, IHn, plus_correct; ring.
+ - intro p; rewrite mult_eqn1, (IHn p) , plus_correct. cbn. ring.
 Qed.      
 
 
-Lemma fact_correct n : PReval fact n  = Coq.Arith.Factorial.fact n.
+Lemma fact_correct : PReval fact =x= Coq.Arith.Factorial.fact.
 (* ... *)
 (* end snippet correctness *)
 Proof. 
-  assert (fact_eqn1: forall n, PReval fact (S n)  = 
+  intro n;  assert (fact_eqn1: forall n, PReval fact (S n)  = 
                                  PReval mult
                                    (PReval fact n) (S n))
     by  reflexivity. 
@@ -228,9 +226,8 @@ Definition PRcompose1 (g f : PrimRec 1) : PrimRec 1 :=
   PRcomp g [f]%pr.  
 
 Goal forall f g x, evalPrimRec 1 (PRcompose1 g f) x =
-                 evalPrimRec 1 g (evalPrimRec 1 f x).
-reflexivity. 
-Qed.
+                     evalPrimRec 1 g (evalPrimRec 1 f x).
+Proof. reflexivity. Qed.
 
 Remark compose2_0 (a:nat) (g: nat -> nat)  : compose2 0 a g = g a.
 Proof.   reflexivity. Qed.
