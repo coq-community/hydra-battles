@@ -50,19 +50,25 @@ as \coq terms in Section~\vref{sect:primrec-examples2}.
 For instance, the projection $\pi_{2,3}$ satisfies the equation
 $\pi_{2,3}(x,y,z)=y$ for any natural numbers $x$, $y$ and $z$.
 
-\subsubsection{The constant function of value 0}
+\subsubsection{Constant functions}
 \label{sect:k0}
 
-The \emph{unary} function which always returns $0$ may be defined through the \emph{composition} construction (with $n=1$, $m=0$, and $h=\texttt{zero}$).
+The \emph{nullary} constant function which returns $0$ is
+simply the \texttt{zero} construction.
 
-% If we consider any value of $n$, the same construction
-% builds the constant function of type $\mathbb{N}^n \arrow \mathbb{N}$ which returns $0$.
+If we want to consider the \emph{unary} function which
+maps any natural number $i$ to $0$, we may built it
+through the \emph{composition} construction, instanciated
+with $n=1$, $m=0$, and $h=\texttt{zero}$.
 
 
-\subsubsection{Constant functions}
+\index{hydras}{Exercises}
 
-Let $k$ be some natural number; the unary constant function which always returns $k$ is built through $k$ nested compositions of the 
-successor function with the  unary constant function which returns $0$.
+\begin{exercise}
+Let $m$ and $k$ be two natural numbers; please build the primitive recursive function which maps any
+tuple $t\in \mathbb{N}^m$ to $k$.
+\end{exercise}
+
 
 
 \subsubsection{Addition on natural natural numbers}
@@ -179,10 +185,11 @@ Dependent types make it possible to define recursively extensional equality betw
 \index{ackermann}{Predicates!extEqual}
 \inputsnippets{extEqualNat/extEqualDef}
 
-Module \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec} defines and export  the notation ``\texttt{$f$ =x= $g$}'' for ``\texttt{extEqual $n$ $f$ $g$}'' \footnote{in parsing mode, provided $f$ has explicitely the type (\texttt{naryFunc $n$}).}
+Module \href{../theories/html/hydras.Ackermann.primRec.html}{Ackermann.primRec} defines and export  the notation ``\texttt{$f$ =x= $g$}'' for ``\texttt{extEqual $n$ $f$ $g$}'' \footnote{in parsing mode, the provided $f$ should be explicitely typed as  (\texttt{naryFunc $n$}).}
 
-
-
+\vspace{6pt}
+\noindent
+\emph{From \href{../theories/html/hydras.MoreAck.PrimRecExamples.html}{MoreAck.PrimRecExamples}}
 
 
 \input{movies/snippets/PrimRecExamples/extEqual2a}
@@ -266,11 +273,11 @@ Let us show how the functions described in \ref{sect:PR-informal} can be describ
 \subsection{A little bit of semantics} 
 \label{primrec-semantics}
 
-Inhabitants of type (\texttt{PrimRec $n$}) are not \coq{} functions like \texttt{Nat.mul}, or \texttt{Arith.Factorial.fact}, etc. but terms of an abstract syntax for the language of primitive recursive functions. The bridge between this language and the word of usual functions
+Inhabitants of type (\texttt{PrimRec $n$}) are not \coq{} functions like \texttt{Nat.mul}, \linebreak \texttt{Arith.Factorial.fact}, etc. but terms of an abstract syntax for the language of primitive recursive functions. The bridge between this language and the word of usual functions
 is an interpretation function (\texttt{evalprimRec $n$})  of type
 $\texttt{PrimRec}\,n \rightarrow  \texttt{naryFunc}\,n$.
 This function is defined by mutual recursion,  together with the  function 
-(\texttt{evalprimRecS $n$ $m$}) of type 
+(\texttt{evalprimRecS $n$ $m$}) of type \linebreak
 ($\texttt{PrimRecs}\,n\,m \rightarrow  \texttt{Vector.t}\,(\texttt{naryFunc}\,n)\,m$).
 
 \index{ackermann}{Functions!evalPrimRec}
