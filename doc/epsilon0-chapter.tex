@@ -1,6 +1,6 @@
 %------------------------------------------------------------------------
 
-\chapter[A proof of termination, using epsilon0]{A proof of termination, using ordinals below \texorpdfstring{$\epsilon_0$}{Epsilon0}}
+\chapter[The ordinal epsilon0]{The Ordinal  \texorpdfstring{$\epsilon_0$}{Epsilon0}}
 
 \label{cnf-math-def}
 \label{chap:T1}
@@ -659,7 +659,7 @@ Unfortunately, it won't work. Let us consider some well-formed term
  $\alpha=\texttt{cons $\beta\;n\;\gamma$}$, and assume that \(\beta\) and \(\gamma\) are \texttt{LT}-accessible.
 In order to prove the accessibility of $\alpha$, we have to consider
 any well formed term \(\delta\) such that \(\delta<\alpha\). 
-But nothing guarantees that \(\delta\)  is strictly  less than \(\beta\) nor \(\gamma\), and we cannot use the induction hypotheses on   \(\beta\) nor \(\gamma\).
+% But nothing guarantees that \(\delta\)  is strictly  less than \(\beta\) nor \(\gamma\), and we cannot use the induction hypotheses on   \(\beta\) nor \(\gamma\).
 
 \input{movies/snippets/T1/wfLTBada}
 
@@ -701,19 +701,23 @@ is strongly accessible.
 \label{sec:orgheadline79}
 
 First, we prove that, for  any \texttt{LT}-accessible term $\alpha$, $\alpha$ is 
-strongly accessible too (\emph{i.e.} any well formed
-term (\texttt{cons $\alpha$ $n$ $\beta$})  is accessible).
-
-The proof is structured as an induction on $\alpha'$s accessibility. Let us consider
+strongly accessible too.
+The following proof is structured as an induction on $\alpha'$s accessibility. Let us consider
 any  accessible term $\alpha$.
 
 \input{movies/snippets/T1/AccImpAccStrong}
 
 
+First, we prove that, for any $n$ and $\beta$, if (\texttt{cons $\alpha$ $n$ $\beta$}) is in normal form, then
+ $\beta$ is accessible.
 
-Let \texttt{n:nat} and \texttt{beta:T1} such that (\texttt{cons alpha n beta}) is in normal form. 
-We prove first that \texttt{beta} is accessible,  which allows us to prove by well-founded induction on \texttt{beta}, 
-and natural induction on \texttt{n}, that (\texttt{cons alpha n beta}) is accessible.
+\inputsnippets{T1/betaAcc}
+
+The new hypothesis  \texttt{beta\_Acc} allows us to prove by well-founded induction on $\beta$, 
+and natural induction on $n$ that (\texttt{cons $\alpha$ $n$ $\beta$}) is accessible.
+
+\inputsnippets{T1/useBetaAcc}
+
 The proof, quite long, can be consulted in \href{../theories/html/hydras.Epsilon0.T1.html}{Epsilon0.T1}.
 
 \paragraph{Accessibility of any well-formed ordinal term}
@@ -726,6 +730,7 @@ Thanks to our previous lemmas, we are almost done (by a simple structural induct
 
 \input{movies/snippets/T1/T1Wf}
 
+\subsection{Transfinite induction}
 \index{maths}{Transfinite induction}
 
 
@@ -812,7 +817,8 @@ Define on \texttt{Omega2} an addition compatible with the addition on \texttt{Ep
  
 
     \section{An ordinal notation for \texorpdfstring{$\omega^\omega$}{omega\^omega}}
-
+    \label{sect:omegaomega}
+    
     In Module   \href{https://github.com/coq-community/hydra-battles/blob/master/theories/
       ordinals/OrdinalNotations/OmegaOmega.v}{theories/ordinals/OrdinalNotations/OmegaOmega.v},
     we represent ordinals below $\omega^\omega$ by lists of pairs of natural numbers (with the same coefficient shift as in \texttt{T1}).

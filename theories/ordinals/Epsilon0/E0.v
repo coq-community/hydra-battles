@@ -651,7 +651,7 @@ Proof.
   destruct H1.
   rewrite cnf_phi0 in H1.
   apply nf_intro; auto.
-  now apply nf_helper_phi0R. 
+  now apply lt_a_phi0_b_phi0R. 
   red.  
   apply succ_lt_limit.
   rewrite cnf_phi0.

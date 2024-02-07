@@ -31,6 +31,7 @@ with PrimRecs : nat -> nat -> Set :=
 
 (* end snippet PrimRecDef *)
 
+
   Notation "f '=x=' g" := (extEqual _ f g) (at level 70, no associativity).
 
 

@@ -199,8 +199,8 @@ Proof with eauto with T1.
          * apply T1.lt_trans with  (T1.cons gamma1 n0 gamma2) ...
       +  apply lt_trans with (inject (T1.phi0 beta1)).
          *   eapply IHbeta2 ...
-             apply T1.nf_helper_phi0.
-             apply T1.nf_helper_intro with n; auto.
+             apply T1.lt_a_phi0_b_phi0.
+             apply T1.lt_a_phi0_b_intro with n; auto.
              apply Comparable.le_lt_trans with (T1.cons beta1 n beta2); auto with T1.
              apply T1.le_phi0 ; eauto with T1.
              eapply T1.lt_trans ...
@@ -213,8 +213,8 @@ Proof with eauto with T1.
         subst;  apply coeff_lt.
         + replace  (AP._phi0 (inject gamma1)) with (inject (T1.phi0 gamma1)).
           *  apply IHbeta2.
-             apply T1.nf_helper_phi0.
-             eapply T1.nf_helper_intro; eauto.
+             apply T1.lt_a_phi0_b_phi0.
+             eapply T1.lt_a_phi0_b_intro; eauto.
              apply Comparable.le_lt_trans with (T1.cons gamma1 n0 gamma2); auto.
              destruct n0.
              apply T1.le_tail ...

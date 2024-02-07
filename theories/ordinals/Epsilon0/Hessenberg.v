@@ -180,10 +180,10 @@ Proof.
 Qed.
 
 
-Lemma nf_helper_oplus : forall gamma alpha beta,
-                        nf_helper alpha gamma ->
-                        nf_helper beta gamma ->
-                        nf_helper (alpha o+ beta) gamma.
+Lemma lt_a_phi0_b_oplus : forall gamma alpha beta,
+                        alpha <_phi0 gamma ->
+                        beta <_phi0 gamma ->
+                        alpha o+ beta <_phi0 gamma.
 Proof with auto.
   induction gamma; destruct alpha, beta.  
   -     simpl; constructor.
@@ -195,8 +195,8 @@ Proof with auto.
   -  simpl; auto.
   -   rewrite oplus_eqn;  case_eq (compare alpha1 beta1).
       + constructor; now inversion H0.
-      + right; eapply nf_helper_inv1;eauto.
-      + right; eapply nf_helper_inv1;eauto.
+      + right; eapply lt_a_phi0_b_inv1;eauto.
+      + right; eapply lt_a_phi0_b_inv1;eauto.
 Qed.
 
 
@@ -207,11 +207,11 @@ Lemma oplus_bounded_phi0 alpha beta gamma :
   lt (alpha o+ beta) (phi0 gamma).
 Proof.  
   intros H H0 H1 H2 H3.
-  apply nf_helper_phi0; auto.
-  apply nf_helper_oplus; auto.
-  eapply nf_helper_intro with 0; auto.
+  apply lt_a_phi0_b_phi0; auto.
+  apply lt_a_phi0_b_oplus; auto.
+  eapply lt_a_phi0_b_intro with 0; auto.
   eapply nf_intro;auto.
-  1,2 :now apply nf_helper_phi0R.
+  1,2 :now apply lt_a_phi0_b_phi0R.
 Qed.
 
 Section Proof_of_plus_nf.
@@ -233,28 +233,28 @@ Section Proof_of_plus_nf.
           repeat split; auto with T1. 
           -- apply le_lt_trans with (cons alpha1 n alpha2); auto.
              now apply le_phi0.
-          -- apply nf_helper_phi0, nf_helper_intro with n, Hnf_1.
-          -- apply nf_helper_phi0, nf_helper_intro with n, Hnf_2.
-        * apply nf_helper_oplus; eapply nf_helper_intro; eauto.
+          -- apply lt_a_phi0_b_phi0, lt_a_phi0_b_intro with n, Hnf_1.
+          -- apply lt_a_phi0_b_phi0, lt_a_phi0_b_intro with n, Hnf_2.
+        * apply lt_a_phi0_b_oplus; eapply lt_a_phi0_b_intro; eauto.
       + apply nf_intro; auto.
         * eapply IHgamma with (phi0 beta1); auto with T1.
           -- repeat split; auto with T1.
              apply le_lt_trans with (cons beta1 n0 beta2); auto.
              apply le_phi0.
-          -- now apply nf_helper_phi0, nf_helper_intro with n.
-        * apply nf_helper_oplus; auto.
-          -- now apply nf_helper_phi0R, head_lt.
-          -- now apply nf_helper_intro with n.
+          -- now apply lt_a_phi0_b_phi0, lt_a_phi0_b_intro with n.
+        * apply lt_a_phi0_b_oplus; auto.
+          -- now apply lt_a_phi0_b_phi0R, head_lt.
+          -- now apply lt_a_phi0_b_intro with n.
       + apply nf_intro; trivial.
         * eapply IHgamma with (phi0 alpha1); trivial.
           -- repeat split; auto with T1.
              apply le_lt_trans with (cons alpha1 n alpha2); auto.
              apply le_phi0; eauto with T1.
-          -- apply  nf_helper_phi0.
-             eapply nf_helper_intro; eauto.
+          -- apply  lt_a_phi0_b_phi0.
+             eapply lt_a_phi0_b_intro; eauto.
           -- now apply head_lt.
-        * apply nf_helper_oplus; auto.
-          eapply nf_helper_intro; eauto.
+        * apply lt_a_phi0_b_oplus; auto.
+          eapply lt_a_phi0_b_intro; eauto.
           now constructor 2.
 Qed.
 
@@ -304,7 +304,7 @@ Section Proof_of_oplus_comm.
     - apply compare_eq_iff in Hcomp as <-.
       repeat rewrite (Nat.add_comm n n0); f_equal.
       + apply H0 with (phi0 alpha1); trivial.
-        2-3: apply nf_helper_phi0, nf_helper_intro with n; eauto.
+        2-3: apply lt_a_phi0_b_phi0, lt_a_phi0_b_intro with n; eauto.
         apply LE_LT_trans with (cons alpha1 n0 beta2).
         * now apply LE_phi0.
         * now repeat split.
@@ -316,14 +316,14 @@ Section Proof_of_oplus_comm.
         apply LE_phi0; auto.
         repeat split; trivial.
       + now apply head_lt, compare_lt_iff.
-      + now apply nf_helper_phi0, nf_helper_intro with n.
+      + now apply lt_a_phi0_b_phi0, lt_a_phi0_b_intro with n.
     - rewrite <- oplus_compare_Gt; auto.
       rewrite oplus_compare_Gt; auto.
       f_equal; apply H0 with (phi0 alpha1); trivial.
       apply LE_LT_trans with (cons alpha1 n alpha2); trivial.
       + now apply LE_phi0.
-      + repeat split; eauto with T1; apply nf_helper_phi0.
-      + apply nf_helper_phi0, nf_helper_intro with n; eauto.
+      + repeat split; eauto with T1; apply lt_a_phi0_b_phi0.
+      + apply lt_a_phi0_b_phi0, lt_a_phi0_b_intro with n; eauto.
       + now apply head_lt, compare_gt_iff.
   Qed.
  
@@ -348,14 +348,14 @@ Section Proof_of_oplus_comm.
 End Proof_of_oplus_comm.
 
 Lemma oplus_lt_rw2 : forall a n b x, nf (cons a n b) -> nf x ->
-                                     nf_helper x a ->
+                                     x <_phi0 a ->
                                      cons a n b o+  x  =
                                      cons a n (b o+ x).
 Proof.
   destruct x.
   - now (intros; repeat rewrite oplus_0_r).
   - intros; rewrite (oplus_eqn  (cons a n b) (cons x1 n0 x2)).
-    apply nf_helper_phi0 in H1.
+    apply lt_a_phi0_b_phi0 in H1.
     destruct (lt_inv H1).
     + unfold T1.lt in H2.
       rewrite compare_rev, H2.
@@ -404,17 +404,17 @@ Section Proof_of_oplus_assoc.
           + f_equal; abstract lia.
           + apply tail_lt_cons; auto.
           + apply lt_le_trans with (phi0 a1).
-            * now apply nf_helper_phi0, nf_helper_intro with n0.
+            * now apply lt_a_phi0_b_phi0, lt_a_phi0_b_intro with n0.
             * now apply le_phi0.
           + apply lt_le_trans with (phi0 a1).
-            * now apply nf_helper_phi0, nf_helper_intro with n0.
+            * now apply lt_a_phi0_b_phi0, lt_a_phi0_b_intro with n0.
             * now apply le_phi0.
         - apply compare_eq_iff in Hbc as <-.
           ass_rw Hrec (cons b1 n0 b2) (cons a1 n a2) b2 c2; trivial.
           + now apply head_lt.
           + now apply tail_lt_cons.
           + apply lt_le_trans with (phi0 b1).
-            * now apply nf_helper_phi0, nf_helper_intro with n1.
+            * now apply lt_a_phi0_b_phi0, lt_a_phi0_b_intro with n1.
             * now apply le_phi0.
         - apply compare_eq_iff in Hbc as <-.
           f_equal.
@@ -445,7 +445,7 @@ Section Proof_of_oplus_assoc.
             * now apply head_lt, compare_gt_iff.
             * apply lt_le_trans with (phi0 a1).
               -- apply compare_eq_iff in Hac as ->.
-                 now apply nf_helper_phi0, nf_helper_intro with n1.
+                 now apply lt_a_phi0_b_phi0, lt_a_phi0_b_intro with n1.
               -- now apply le_phi0.
           + ass_rw  Hrec (cons c1 n1 c2) (cons a1 n a2)
                          (cons b1 n0 b2) c2 ; trivial.
@@ -463,7 +463,7 @@ Section Proof_of_oplus_assoc.
           + now apply tail_lt_cons.
           + apply lt_le_trans with (phi0 a1).
             * apply compare_eq_iff in Hab as ->.
-              now apply nf_helper_phi0, nf_helper_intro with n0.
+              now apply lt_a_phi0_b_phi0, lt_a_phi0_b_intro with n0.
             * now apply le_phi0.
           + now apply head_lt, compare_gt_iff.
         - ass_rw_rev  Hrec (cons b1 n0 b2) (cons a1 n a2) b2
@@ -601,10 +601,10 @@ Proof with eauto with T1.
        apply le_lt_trans with (cons a1 n a2) ; trivial.
        apply le_phi0. 
        auto with T1.
-       apply nf_helper_phi0.
-       eapply nf_helper_intro; auto with T1.
-       apply nf_helper_phi0.
-       eapply nf_helper_intro ; auto with T1.
+       apply lt_a_phi0_b_phi0.
+       eapply lt_a_phi0_b_intro; auto with T1.
+       apply lt_a_phi0_b_phi0.
+       eapply lt_a_phi0_b_intro ; auto with T1.
      }
      {
        intro Ha1b1; rewrite compare_lt_iff in Ha1b1.
@@ -666,8 +666,8 @@ Proof with eauto with T1.
              apply le_phi0.
              eapply nf_inv2, nf2.
              eapply nf_inv2, nf4.
-             apply nf_helper_phi0. eapply nf_helper_intro; eauto with T1.
-             apply nf_helper_phi0. eapply nf_helper_intro; eauto with T1.
+             apply lt_a_phi0_b_phi0. eapply lt_a_phi0_b_intro; eauto with T1.
+             apply lt_a_phi0_b_phi0. eapply lt_a_phi0_b_intro; eauto with T1.
            }
            {
              apply compare_eq_iff in H6 as <-.
@@ -719,8 +719,8 @@ Proof with eauto with T1.
              apply le_lt_trans with   (cons a1 n a2).  
              apply le_phi0; info_eauto with T1.
              auto with T1.
-             apply nf_helper_phi0.
-             eapply nf_helper_intro, Ha.
+             apply lt_a_phi0_b_phi0.
+             eapply lt_a_phi0_b_intro, Ha.
              apply head_lt; now rewrite compare_gt_iff in H4.
            }
          }
@@ -750,8 +750,8 @@ Proof with eauto with T1.
        apply Hrec with (phi0 a1) ; trivial.
        apply le_lt_trans with   (cons a1 n a2) ; trivial. 
        apply le_phi0 ; info_eauto with T1.
-       apply nf_helper_phi0.
-       eapply nf_helper_intro;eauto with T1.
+       apply lt_a_phi0_b_phi0.
+       eapply lt_a_phi0_b_intro;eauto with T1.
        auto with T1.
      }
      Unshelve.
