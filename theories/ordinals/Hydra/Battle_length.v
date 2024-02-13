@@ -76,33 +76,30 @@ Section Battle_length.
     apply R5.    
   Qed.
 
-  (* begin snippet battleLengthStd *)
-  
-  Lemma battle_length_std:
-    battle_length  standard k (iota (cnf alpha)) (l-k)%nat. (* .no-out *)
-  (*| .. coq:: none |*)
+   Lemma battle_length_std:
+    battle_length  standard k (iota (cnf alpha)) (l-k)%nat.  
   Proof.
     red; generalize L06.
     replace (l-1)%nat with (Init.Nat.pred (k + (l - k )))%nat; auto.
     generalize R0; abstract lia.
   Qed.
-  (*||*)
-  (* end snippet battleLengthStd *)
-  
 End Battle_length.
-
-(* begin snippet BattleLength  *)
-
+(* begin snippet BattleLength *)
+Check battle_length_std.
+(* end snippet BattleLength *)
+(* begin snippet BattleLengtha:: no-out  *)
 Definition l_std alpha k := (L_ alpha (S k) - k)%nat.
 
 Lemma l_std_ok : forall alpha : E0,
     alpha <> E0zero ->
     forall k : nat,
       1 <= k -> battle_length standard k (iota (cnf alpha))
-                              (l_std alpha k). (* .no-out *)
-(* end snippet BattleLength  *)
-
+                              (l_std alpha k). 
+(* ... *)
+(* end snippet BattleLengtha *)
 Proof. apply battle_length_std. Qed.
+
+
 
 
 

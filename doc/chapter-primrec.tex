@@ -326,13 +326,13 @@ consider.
 \label{sect:proofs-of-isPR}
 
 The example in the preceding section clearly shows that, in order to prove that a given arithmetic function
-(defined in \gallina{} as usual) is primitive recursive, trying to \emph{type} a term  of type (\texttt{PrimRec $n$}) is not a good method, since such terms may be too large, even for simple arithmetic functions. The method proposed in the library \texttt{Ackermann.primRec} is the following one:
+(defined in \gallina{} as usual) is primitive recursive, trying to \emph{type} a term  of type (\texttt{PrimRec $n$}) is not always a good method, since such terms may be too large, even for simple arithmetic functions. The interactive method proposed in the library \texttt{Ackermann.primRec} is the following one:
 
 \begin{enumerate}
 \item Define a type corresponding to the statements of the form  "the $n$-ary function $f$ is primitive recursive ''.
 \item Prove handy lemmas which may help to prove that a given function is primitive recursive. These lemmas can be considered as a way to build \emph{silently} large terms of 
-type (\texttt{PrimRec $n$}) in intermediate steps of the proof.
-More, we can associate \emph{tactics} with these lemmas.
+type (\texttt{PrimRec $p$})\footnote{Beware that $p$ is not always equal to $n$.} in intermediate steps of the proof.
+More, we will be able to associate \emph{tactics} with these lemmas.
 
 \end{enumerate}
 
@@ -939,10 +939,12 @@ This proof is  a little more complex than the preceding one.
 
 \subsection{Definitions}
 
-The function we consider is defined and proven correct in
-Module~\href{../theories/html/hydras.Hydra.Battle_length.html}{Hydra.Battle\_length}.
+The following lemma (from 
+Module~\href{../theories/html/hydras.Hydra.Battle_length.html}{Hydra.Battle\_length}) relates the length of standard hydra battles with the $L_\alpha$ rapidly growing hierarchy (please see Sect.~\vref{sect:lalpha-section}). 
 
-\input{movies/snippets/Battle_length/BattleLength}
+\inputsnippets{Battle_length/BattleLengtha}
+
+
 
 \subsection{Proof steps}
 

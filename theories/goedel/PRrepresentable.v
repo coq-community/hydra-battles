@@ -4494,7 +4494,8 @@ Proof.
   intros n f p.
   assert
    (H: Representable n (evalPrimRec n (proj1_sig p))
-      (primRecFormula n (proj1_sig p))) by apply primRecRepresentable1.
+      (primRecFormula n (proj1_sig p)))
+    by apply primRecRepresentable1.
   destruct H as [H H0]; split.
   - assumption.
   - destruct p as (x, p);
