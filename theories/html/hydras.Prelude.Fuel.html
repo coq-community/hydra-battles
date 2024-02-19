@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Prelude.Fuel</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Prelude.Fuel</h1>
+
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.funind.FunInd.html#"><span class="id" title="library">FunInd</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.funind.Recdef.html#"><span class="id" title="library">Recdef</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Wf_nat.html#"><span class="id" title="library">Wf_nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.micromega.Lia.html#"><span class="id" title="library">Lia</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Function</span> <span class="id" title="var">zero</span> (<a id="n:10" class="idref" href="#n:10"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>)  {<span class="id" title="keyword">wf</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#lt"><span class="id" title="definition">lt</span></a> <span class="id" title="var">n</span>} : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Prelude.Fuel.html#n:1"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;0 ⇒ 0<br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n'</span> <span class="id" title="keyword">as</span> <span class="id" title="var">p</span> ⇒ <a class="idref" href="hydras.Prelude.Fuel.html#zero:2"><span class="id" title="definition">zero</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Nat.html#div2"><span class="id" title="definition">Nat.div2</span></a> <span class="id" title="var">p</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">About</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Wf_nat.html#lt_wf"><span class="id" title="lemma">lt_wf</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Let's see whqat happens if lt_wf was opaque 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <a id="OpaqueWf" class="idref" href="#OpaqueWf"><span class="id" title="module">OpaqueWf</span></a>.<br/>
+
+<br/>
+&nbsp;<span class="id" title="keyword">Lemma</span> <a id="OpaqueWf.lt_wf" class="idref" href="#OpaqueWf.lt_wf"><span class="id" title="lemma">lt_wf</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#well_founded"><span class="id" title="definition">well_founded</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#lt"><span class="id" title="definition">lt</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Function</span> <span class="id" title="var">zero</span> (<a id="n:29" class="idref" href="#n:29"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>)  {<span class="id" title="keyword">wf</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#lt"><span class="id" title="definition">lt</span></a> <span class="id" title="var">n</span>} : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Prelude.Fuel.html#n:20"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 ⇒ 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <a class="idref" href="hydras.Prelude.Fuel.html#zero:21"><span class="id" title="definition">zero</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Nat.html#div2"><span class="id" title="definition">Nat.div2</span></a> <a class="idref" href="hydras.Prelude.Fuel.html#n:20"><span class="id" title="variable">n</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+From Init.Wf 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">About</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#Acc_intro_generator"><span class="id" title="definition">Acc_intro_generator</span></a>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Function</span> <span class="id" title="var">zero'</span> (<a id="n:49" class="idref" href="#n:49"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>)  {<span class="id" title="keyword">wf</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#lt"><span class="id" title="definition">lt</span></a> <span class="id" title="var">n</span>} : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Prelude.Fuel.html#n:40"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;0 ⇒ 0<br/>
+&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <a class="idref" href="hydras.Prelude.Fuel.html#zero':41"><span class="id" title="definition">zero'</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Nat.html#div2"><span class="id" title="definition">Nat.div2</span></a> <a class="idref" href="hydras.Prelude.Fuel.html#n:40"><span class="id" title="variable">n</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Prelude.Fuel.html#OpaqueWf"><span class="id" title="module">OpaqueWf</span></a>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="fuel" class="idref" href="#fuel"><span class="id" title="inductive">fuel</span></a> :=<br/>
+&nbsp;| <a id="FO" class="idref" href="#FO"><span class="id" title="constructor">FO</span></a> : <a class="idref" href="hydras.Prelude.Fuel.html#fuel:60"><span class="id" title="inductive">fuel</span></a><br/>
+&nbsp;| <a id="FS" class="idref" href="#FS"><span class="id" title="constructor">FS</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#unit"><span class="id" title="inductive">unit</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Prelude.Fuel.html#fuel:60"><span class="id" title="inductive">fuel</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Prelude.Fuel.html#fuel:60"><span class="id" title="inductive">fuel</span></a>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="foo" class="idref" href="#foo"><span class="id" title="definition">foo</span></a> (<a id="n:62" class="idref" href="#n:62"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) <a id="x:63" class="idref" href="#x:63"><span class="id" title="binder">x</span></a> :=<br/>
+&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Prelude.Fuel.html#n:62"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">n</span> ⇒ <a class="idref" href="hydras.Prelude.Fuel.html#FS"><span class="id" title="constructor">FS</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="hydras.Prelude.Fuel.html#foo:64"><span class="id" title="definition">foo</span></a> <a class="idref" href="hydras.Prelude.Fuel.html#n:62"><span class="id" title="variable">n</span></a> (<a class="idref" href="hydras.Prelude.Fuel.html#foo:64"><span class="id" title="definition">foo</span></a> <a class="idref" href="hydras.Prelude.Fuel.html#n:62"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Prelude.Fuel.html#x:63"><span class="id" title="variable">x</span></a>))<br/>
+&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#O"><span class="id" title="constructor">O</span></a> ⇒ <a class="idref" href="hydras.Prelude.Fuel.html#x:63"><span class="id" title="variable">x</span></a><br/>
+&nbsp;<span class="id" title="keyword">end</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

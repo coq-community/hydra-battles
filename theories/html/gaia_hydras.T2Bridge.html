@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>gaia_hydras.T2Bridge</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library gaia_hydras.T2Bridge</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a id="lab471"></a><h1 class="section">Bridge between Hydra-battle's and Gaia's <span class="inlinecode"><span class="id" title="var">T1</span></span>  (Experimental)</h1>
+
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">mathcomp</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="library">all_ssreflect</span> <span class="id" title="library">zify</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Eqdep_dec.html#"><span class="id" title="library">Logic.Eqdep_dec</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Prelude.DecPreOrder.html#"><span class="id" title="library">DecPreOrder</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_Generic.html#"><span class="id" title="library">ON_Generic</span></a>  <a class="idref" href="hydras.Gamma0.T2.html#"><span class="id" title="library">T2</span></a> <a class="idref" href="hydras.Gamma0.Gamma0.html#"><span class="id" title="library">Gamma0</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">gaia</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <span class="id" title="library">ssete9</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="module">Gamma0</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Hydra-Battles' type for ordinal terms below <span class="inlinecode"><span class="id" title="var">Gamma00</span></span> 
+</div>
+<div class="code">
+<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Gamma0.T2.html#T2"><span class="id" title="inductive">Gamma0.T2.T2</span></a>.<br/>
+<span class="id" title="keyword">Print</span> <a class="idref" href="hydras.Gamma0.T2.html#T2"><span class="id" title="inductive">Gamma0.T2.T2</span></a>.<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Notation</span> <a id="hT2" class="idref" href="#hT2"><span class="id" title="abbreviation">hT2</span></a> := <a class="idref" href="hydras.Gamma0.T2.html#T2"><span class="id" title="inductive">hydras.Gamma0.T2.T2</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Gaia's type for ordinal terms below <span class="inlinecode"><span class="id" title="var">epsilon0</span></span> 
+</div>
+<div class="code">
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Notation</span> <a id="T2" class="idref" href="#T2"><span class="id" title="abbreviation">T2</span></a> := <span class="id" title="inductive">ssete9.Gamma0.T2</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Notation</span> <a id="hcons" class="idref" href="#hcons"><span class="id" title="abbreviation">hcons</span></a> := <a class="idref" href="hydras.Gamma0.T2.html#gcons"><span class="id" title="constructor">gcons</span></a>.<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Notation</span> <a id="hzero" class="idref" href="#hzero"><span class="id" title="abbreviation">hzero</span></a> := <a class="idref" href="hydras.Gamma0.T2.html#zero"><span class="id" title="constructor">hydras.Gamma0.T2.zero</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="h2g" class="idref" href="#h2g"><span class="id" title="definition">h2g</span></a> (<a id="alpha:1" class="idref" href="#alpha:1"><span class="id" title="binder">alpha</span></a> : <a class="idref" href="gaia_hydras.T2Bridge.html#hT2"><span class="id" title="abbreviation">hT2</span></a>) : <a class="idref" href="gaia_hydras.T2Bridge.html#T2"><span class="id" title="abbreviation">T2</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="gaia_hydras.T2Bridge.html#alpha:1"><span class="id" title="variable">alpha</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="gaia_hydras.T2Bridge.html#hzero"><span class="id" title="abbreviation">hzero</span></a> ⇒ <span class="id" title="constructor">zero</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="gaia_hydras.T2Bridge.html#hcons"><span class="id" title="abbreviation">hcons</span></a> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">n</span> <span class="id" title="var">c</span> ⇒ <span class="id" title="constructor">cons</span> (<a class="idref" href="gaia_hydras.T2Bridge.html#h2g:2"><span class="id" title="definition">h2g</span></a> <span class="id" title="var">a</span>) (<a class="idref" href="gaia_hydras.T2Bridge.html#h2g:2"><span class="id" title="definition">h2g</span></a> <span class="id" title="var">b</span>) <span class="id" title="var">n</span> (<a class="idref" href="gaia_hydras.T2Bridge.html#h2g:2"><span class="id" title="definition">h2g</span></a> <span class="id" title="var">c</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="g2h" class="idref" href="#g2h"><span class="id" title="definition">g2h</span></a> (<a id="alpha:4" class="idref" href="#alpha:4"><span class="id" title="binder">alpha</span></a> : <a class="idref" href="gaia_hydras.T2Bridge.html#T2"><span class="id" title="abbreviation">T2</span></a>) : <a class="idref" href="gaia_hydras.T2Bridge.html#hT2"><span class="id" title="abbreviation">hT2</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="gaia_hydras.T2Bridge.html#alpha:4"><span class="id" title="variable">alpha</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="constructor">zero</span> ⇒ <a class="idref" href="gaia_hydras.T2Bridge.html#hzero"><span class="id" title="abbreviation">hzero</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="constructor">cons</span> <span class="id" title="var">a</span> <span class="id" title="var">b</span> <span class="id" title="var">n</span> <span class="id" title="var">c</span> ⇒ <a class="idref" href="gaia_hydras.T2Bridge.html#hcons"><span class="id" title="abbreviation">hcons</span></a> (<a class="idref" href="gaia_hydras.T2Bridge.html#g2h:5"><span class="id" title="definition">g2h</span></a> <span class="id" title="var">a</span>)(<a class="idref" href="gaia_hydras.T2Bridge.html#g2h:5"><span class="id" title="definition">g2h</span></a> <span class="id" title="var">b</span>)  <span class="id" title="var">n</span> (<a class="idref" href="gaia_hydras.T2Bridge.html#g2h:5"><span class="id" title="definition">g2h</span></a> <span class="id" title="var">c</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="h2g_g2hK" class="idref" href="#h2g_g2hK"><span class="id" title="lemma">h2g_g2hK</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssrfun.html#cancel"><span class="id" title="definition">cancel</span></a> <a class="idref" href="gaia_hydras.T2Bridge.html#g2h"><span class="id" title="definition">g2h</span></a> <a class="idref" href="gaia_hydras.T2Bridge.html#h2g"><span class="id" title="definition">h2g</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="g2h_h2gK" class="idref" href="#g2h_h2gK"><span class="id" title="lemma">g2h_h2gK</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssrfun.html#cancel"><span class="id" title="definition">cancel</span></a> <a class="idref" href="gaia_hydras.T2Bridge.html#h2g"><span class="id" title="definition">h2g</span></a> <a class="idref" href="gaia_hydras.T2Bridge.html#g2h"><span class="id" title="definition">g2h</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="g2h_eqE" class="idref" href="#g2h_eqE"><span class="id" title="lemma">g2h_eqE</span></a> (<a id="a:7" class="idref" href="#a:7"><span class="id" title="binder">a</span></a> <a id="b:8" class="idref" href="#b:8"><span class="id" title="binder">b</span></a>: <a class="idref" href="gaia_hydras.T2Bridge.html#T2"><span class="id" title="abbreviation">T2</span></a>) :  <a class="idref" href="gaia_hydras.T2Bridge.html#g2h"><span class="id" title="definition">g2h</span></a> <a class="idref" href="gaia_hydras.T2Bridge.html#a:7"><span class="id" title="variable">a</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="gaia_hydras.T2Bridge.html#g2h"><span class="id" title="definition">g2h</span></a> <a class="idref" href="gaia_hydras.T2Bridge.html#b:8"><span class="id" title="variable">b</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="gaia_hydras.T2Bridge.html#a:7"><span class="id" title="variable">a</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="gaia_hydras.T2Bridge.html#b:8"><span class="id" title="variable">b</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="h2g_eqE" class="idref" href="#h2g_eqE"><span class="id" title="lemma">h2g_eqE</span></a> (<a id="a:9" class="idref" href="#a:9"><span class="id" title="binder">a</span></a> <a id="b:10" class="idref" href="#b:10"><span class="id" title="binder">b</span></a> :<a class="idref" href="gaia_hydras.T2Bridge.html#hT2"><span class="id" title="abbreviation">hT2</span></a>) :  <a class="idref" href="gaia_hydras.T2Bridge.html#h2g"><span class="id" title="definition">h2g</span></a> <a class="idref" href="gaia_hydras.T2Bridge.html#a:9"><span class="id" title="variable">a</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="gaia_hydras.T2Bridge.html#h2g"><span class="id" title="definition">h2g</span></a> <a class="idref" href="gaia_hydras.T2Bridge.html#b:10"><span class="id" title="variable">b</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="gaia_hydras.T2Bridge.html#a:9"><span class="id" title="variable">a</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="gaia_hydras.T2Bridge.html#b:10"><span class="id" title="variable">b</span></a>.<br/>
+ 
+<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> (<span class="id" title="keyword">fun</span> <a id="a:11" class="idref" href="#a:11"><span class="id" title="binder">a</span></a> <a id="b:12" class="idref" href="#b:12"><span class="id" title="binder">b</span></a> : <a class="idref" href="gaia_hydras.T2Bridge.html#hT2"><span class="id" title="abbreviation">hT2</span></a> ⇒ <a class="idref" href="hydras.Prelude.Comparable.html#compare"><span class="id" title="definition">compare</span></a> <a class="idref" href="gaia_hydras.T2Bridge.html#a:11"><span class="id" title="variable">a</span></a> <a class="idref" href="gaia_hydras.T2Bridge.html#b:12"><span class="id" title="variable">b</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">About</span> <span class="id" title="definition">T2lt</span>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

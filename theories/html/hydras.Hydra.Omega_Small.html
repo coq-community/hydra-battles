@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Hydra.Omega_Small</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Hydra.Omega_Small</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+Pierre Castéran, University of Bordeaux and LaBRI 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span>   <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Arith</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.micromega.Lia.html#"><span class="id" title="library">Lia</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Hydra.Hydra_Lemmas.html#"><span class="id" title="library">Hydra_Lemmas</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_Generic.html#"><span class="id" title="library">ON_Generic</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_Omega.html#"><span class="id" title="library">ON_Omega</span></a>.<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Instance</span> <a id="height_var" class="idref" href="#height_var"><span class="id" title="instance">height_var</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hvariant"><span class="id" title="class">Hvariant</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_Omega.html#Omega"><span class="id" title="instance">Omega</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#free"><span class="id" title="instance">free</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#height"><span class="id" title="definition">height</span></a>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="height_bad" class="idref" href="#height_bad"><span class="id" title="lemma">height_bad</span></a> :  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hvariant"><span class="id" title="class">Hvariant</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_Omega.html#Omega"><span class="id" title="instance">Omega</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#free"><span class="id" title="instance">free</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#height"><span class="id" title="definition">height</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+There is no measure into omega for proving termination
+of all hydra battles 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Impossibility_Proof" class="idref" href="#Impossibility_Proof"><span class="id" title="section">Impossibility_Proof</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Let us assume there exists a variant from Hydra  into nat 
+      for proving the termination of all hydra battles 
+      <span class="inlinecode"><span class="id" title="var">Omega</span></span> is an ordinal notation for the least infinite ordinal
+      <span class="inlinecode"><span class="id" title="var">omega</span></span>, whose members are the natural numbers.
+
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="Impossibility_Proof.m" class="idref" href="#Impossibility_Proof.m"><span class="id" title="variable">m</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="Hvar:2" class="idref" href="#Hvar:2"><span class="id" title="binder">Hvar</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hvariant"><span class="id" title="class">Hvariant</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_Omega.html#Omega"><span class="id" title="instance">Omega</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#free"><span class="id" title="instance">free</span></a> <a class="idref" href="hydras.Hydra.Omega_Small.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a>).<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Impossibility_Proof.iota" class="idref" href="#Impossibility_Proof.iota"><span class="id" title="variable">iota</span></a> (<a id="i:3" class="idref" href="#i:3"><span class="id" title="binder">i</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) := <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd_mult"><span class="id" title="definition">hyd_mult</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Hydra.Omega_Small.html#i:3"><span class="id" title="variable">i</span></a>).<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Impossibility_Proof.big_h" class="idref" href="#Impossibility_Proof.big_h"><span class="id" title="variable">big_h</span></a> := <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd1"><span class="id" title="abbreviation">hyd1</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd1"><span class="id" title="abbreviation">hyd1</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a>).<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Impossibility_Proof.small_h" class="idref" href="#Impossibility_Proof.small_h"><span class="id" title="variable">small_h</span></a> := <a class="idref" href="hydras.Hydra.Omega_Small.html#Impossibility_Proof.iota"><span class="id" title="variable">iota</span></a> (<a class="idref" href="hydras.Hydra.Omega_Small.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Omega_Small.html#Impossibility_Proof.big_h"><span class="id" title="variable">big_h</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Fact</span> <a id="big_to_small" class="idref" href="#big_to_small"><span class="id" title="lemma">big_to_small</span></a>: <span class="id" title="keyword">∀</span> <a id="i:4" class="idref" href="#i:4"><span class="id" title="binder">i</span></a>,  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#battle_rel"><span class="id" title="method">battle_rel</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#free"><span class="id" title="instance">free</span></a> <a class="idref" href="hydras.Hydra.Omega_Small.html#i:4"><span class="id" title="variable">i</span></a> <a class="idref" href="hydras.Hydra.Omega_Small.html#Impossibility_Proof.big_h"><span class="id" title="variable">big_h</span></a> <a class="idref" href="hydras.Hydra.Omega_Small.html#Impossibility_Proof.small_h"><span class="id" title="variable">small_h</span></a>. 
+<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">local</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Resolve</span> <span class="id" title="var">big_to_small</span> : <span class="id" title="var">hydra</span>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="m_lt" class="idref" href="#m_lt"><span class="id" title="lemma">m_lt</span></a> : <a class="idref" href="hydras.Hydra.Omega_Small.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Omega_Small.html#Impossibility_Proof.small_h"><span class="id" title="variable">small_h</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Hydra.Omega_Small.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Omega_Small.html#Impossibility_Proof.big_h"><span class="id" title="variable">big_h</span></a>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+ In order to find a contradiction, we  prove the inequality
+       m big_h &lt;= m small_h, i.e.  m big_h &lt;= m (iota (m h)) 
+
+<div class="paragraph"> </div>
+
+       For that purpose, we prove the inequality i &lt;= m (iota i) for any i 
+   
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="round_S" class="idref" href="#round_S"><span class="id" title="lemma">round_S</span></a>: <span class="id" title="keyword">∀</span> <a id="i:5" class="idref" href="#i:5"><span class="id" title="binder">i</span></a> <a id="n:6" class="idref" href="#n:6"><span class="id" title="binder">n</span></a>, <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#battle_rel"><span class="id" title="method">battle_rel</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#free"><span class="id" title="instance">free</span></a> <a class="idref" href="hydras.Hydra.Omega_Small.html#n:6"><span class="id" title="variable">n</span></a> (<a class="idref" href="hydras.Hydra.Omega_Small.html#Impossibility_Proof.iota"><span class="id" title="variable">iota</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Hydra.Omega_Small.html#i:5"><span class="id" title="variable">i</span></a>)) (<a class="idref" href="hydras.Hydra.Omega_Small.html#Impossibility_Proof.iota"><span class="id" title="variable">iota</span></a> <a class="idref" href="hydras.Hydra.Omega_Small.html#i:5"><span class="id" title="variable">i</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="m_ge" class="idref" href="#m_ge"><span class="id" title="lemma">m_ge</span></a> : <a class="idref" href="hydras.Hydra.Omega_Small.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Omega_Small.html#Impossibility_Proof.big_h"><span class="id" title="variable">big_h</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Hydra.Omega_Small.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Omega_Small.html#Impossibility_Proof.small_h"><span class="id" title="variable">small_h</span></a>.<br/>
+ 
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Theorem</span> <a id="Contradiction" class="idref" href="#Contradiction"><span class="id" title="lemma">Contradiction</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#False"><span class="id" title="inductive">False</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Hydra.Omega_Small.html#Impossibility_Proof"><span class="id" title="section">Impossibility_Proof</span></a>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

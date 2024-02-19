@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>additions.Wf_transparent</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library additions.Wf_transparent</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+Transparent versions of wf_incl and wf_inverse_image 
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Definitions.html#"><span class="id" title="library">Relation_Definitions</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="wf_incl_transparent" class="idref" href="#wf_incl_transparent"><span class="id" title="lemma">wf_incl_transparent</span></a>  :<br/>
+<span class="id" title="keyword">∀</span> (<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a> : <span class="id" title="keyword">Type</span>) (<a id="R1:2" class="idref" href="#R1:2"><span class="id" title="binder">R1</span></a> <a id="R2:3" class="idref" href="#R2:3"><span class="id" title="binder">R2</span></a> : <a class="idref" href="additions.Wf_transparent.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Wf_transparent.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Prop</span>),<br/>
+<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Definitions.html#inclusion"><span class="id" title="definition">Relation_Definitions.inclusion</span></a> <a class="idref" href="additions.Wf_transparent.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="additions.Wf_transparent.html#R1:2"><span class="id" title="variable">R1</span></a> <a class="idref" href="additions.Wf_transparent.html#R2:3"><span class="id" title="variable">R2</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#well_founded"><span class="id" title="definition">well_founded</span></a> <a class="idref" href="additions.Wf_transparent.html#R2:3"><span class="id" title="variable">R2</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#well_founded"><span class="id" title="definition">well_founded</span></a> <a class="idref" href="additions.Wf_transparent.html#R1:2"><span class="id" title="variable">R1</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Inverse_Image_transp" class="idref" href="#Inverse_Image_transp"><span class="id" title="section">Inverse_Image_transp</span></a>. 
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="Inverse_Image_transp.A" class="idref" href="#Inverse_Image_transp.A"><span class="id" title="variable">A</span></a> <a id="Inverse_Image_transp.B" class="idref" href="#Inverse_Image_transp.B"><span class="id" title="variable">B</span></a> : <span class="id" title="keyword">Type</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="Inverse_Image_transp.R" class="idref" href="#Inverse_Image_transp.R"><span class="id" title="variable">R</span></a> : <a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.B"><span class="id" title="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.B"><span class="id" title="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Prop</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="Inverse_Image_transp.f" class="idref" href="#Inverse_Image_transp.f"><span class="id" title="variable">f</span></a> : <a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.A"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.B"><span class="id" title="variable">B</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Inverse_Image_transp.Rof" class="idref" href="#Inverse_Image_transp.Rof"><span class="id" title="variable">Rof</span></a> (<a id="x:8" class="idref" href="#x:8"><span class="id" title="binder">x</span></a> <a id="y:9" class="idref" href="#y:9"><span class="id" title="binder">y</span></a>:<a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.A"><span class="id" title="variable">A</span></a>) : <span class="id" title="keyword">Prop</span> := <a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.R"><span class="id" title="variable">R</span></a> (<a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.f"><span class="id" title="variable">f</span></a> <a class="idref" href="additions.Wf_transparent.html#x:8"><span class="id" title="variable">x</span></a>) (<a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.f"><span class="id" title="variable">f</span></a> <a class="idref" href="additions.Wf_transparent.html#y:9"><span class="id" title="variable">y</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="Acc_lemma" class="idref" href="#Acc_lemma"><span class="id" title="lemma">Acc_lemma</span></a> : <span class="id" title="keyword">∀</span> <a id="y:10" class="idref" href="#y:10"><span class="id" title="binder">y</span></a>:<a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.B"><span class="id" title="variable">B</span></a>, <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#Acc"><span class="id" title="inductive">Acc</span></a> <a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.R"><span class="id" title="variable">R</span></a> <a class="idref" href="additions.Wf_transparent.html#y:10"><span class="id" title="variable">y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">∀</span> <a id="x:11" class="idref" href="#x:11"><span class="id" title="binder">x</span></a>:<a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.A"><span class="id" title="variable">A</span></a>, <a class="idref" href="additions.Wf_transparent.html#y:10"><span class="id" title="variable">y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.f"><span class="id" title="variable">f</span></a> <a class="idref" href="additions.Wf_transparent.html#x:11"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#Acc"><span class="id" title="inductive">Acc</span></a> <a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.Rof"><span class="id" title="variable">Rof</span></a> <a class="idref" href="additions.Wf_transparent.html#x:11"><span class="id" title="variable">x</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="Acc_inverse_image" class="idref" href="#Acc_inverse_image"><span class="id" title="lemma">Acc_inverse_image</span></a> : <span class="id" title="keyword">∀</span> <a id="x:12" class="idref" href="#x:12"><span class="id" title="binder">x</span></a>:<a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.A"><span class="id" title="variable">A</span></a>, <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#Acc"><span class="id" title="inductive">Acc</span></a> <a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.R"><span class="id" title="variable">R</span></a> (<a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.f"><span class="id" title="variable">f</span></a> <a class="idref" href="additions.Wf_transparent.html#x:12"><span class="id" title="variable">x</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#Acc"><span class="id" title="inductive">Acc</span></a> <a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.Rof"><span class="id" title="variable">Rof</span></a> <a class="idref" href="additions.Wf_transparent.html#x:12"><span class="id" title="variable">x</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Theorem</span> <a id="wf_inverse_image_transparent" class="idref" href="#wf_inverse_image_transparent"><span class="id" title="lemma">wf_inverse_image_transparent</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#well_founded"><span class="id" title="definition">well_founded</span></a> <a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.R"><span class="id" title="variable">R</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#well_founded"><span class="id" title="definition">well_founded</span></a> <a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp.Rof"><span class="id" title="variable">Rof</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="additions.Wf_transparent.html#Inverse_Image_transp"><span class="id" title="section">Inverse_Image_transp</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

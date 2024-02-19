@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.MoreAck.LNN_Examples</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.MoreAck.LNN_Examples</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+Experimental 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Arith</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#"><span class="id" title="library">Lists.List</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.fol.html#"><span class="id" title="library">fol</span></a> <a class="idref" href="hydras.Ackermann.folProp.html#"><span class="id" title="library">folProp</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#"><span class="id" title="library">Languages</span></a> <a class="idref" href="hydras.Ackermann.LNN.html#"><span class="id" title="library">LNN</span></a> <a class="idref" href="hydras.Ackermann.folProof.html#"><span class="id" title="library">folProof</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.fol.html#FolNotations"><span class="id" title="module">FolNotations</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations"><span class="id" title="module">NNnotations</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="bare_syntax" class="idref" href="#bare_syntax"><span class="id" title="section">bare_syntax</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span>  <a id="f0" class="idref" href="#f0"><span class="id" title="definition">f0</span></a> : <a class="idref" href="hydras.Ackermann.fol.html#Formula"><span class="id" title="inductive">Formula</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#LNN"><span class="id" title="definition">LNN</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.fol.html#forallH"><span class="id" title="constructor">forallH</span></a> 0 <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Ackermann.fol.html#orH"><span class="id" title="definition">orH</span></a>  <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Ackermann.fol.html#equal"><span class="id" title="constructor">equal</span></a>  (<a class="idref" href="hydras.Ackermann.fol.html#var"><span class="id" title="constructor">var</span></a>  0) <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.Zero"><span class="id" title="definition">Zero</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Ackermann.fol.html#existH"><span class="id" title="definition">existH</span></a> 1 (<a class="idref" href="hydras.Ackermann.fol.html#equal"><span class="id" title="constructor">equal</span></a> (<a class="idref" href="hydras.Ackermann.fol.html#var"><span class="id" title="constructor">var</span></a> 0)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Ackermann.fol.html#apply"><span class="id" title="constructor">apply</span></a>  <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Ackermann.Languages.html#Succ_"><span class="id" title="constructor">Languages.Succ_</span></a> : <a class="idref" href="hydras.Ackermann.fol.html#Functions"><span class="id" title="projection">Functions</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#LNN"><span class="id" title="definition">LNN</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Ackermann.fol.html#Tcons"><span class="id" title="constructor">Tcons</span></a>  (<a class="idref" href="hydras.Ackermann.fol.html#var"><span class="id" title="constructor">var</span></a> 1) (@<a class="idref" href="hydras.Ackermann.fol.html#Tnil"><span class="id" title="constructor">Tnil</span></a> <span class="id" title="var">_</span>)))))).<br/>
+
+<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.LNN.html#"><span class="id" title="module">LNN</span></a>.<br/>
+<span class="id" title="keyword">Print</span> <a class="idref" href="hydras.MoreAck.LNN_Examples.html#f0"><span class="id" title="definition">f0</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.Zero"><span class="id" title="definition">Zero</span></a>.<br/>
+<span class="id" title="keyword">Set Printing All</span>.<br/>
+<span class="id" title="keyword">Unset Printing All</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <a class="idref" href="hydras.MoreAck.LNN_Examples.html#f0"><span class="id" title="definition">f0</span></a>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.MoreAck.LNN_Examples.html#bare_syntax"><span class="id" title="section">bare_syntax</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span>  <a class="idref" href="hydras.MoreAck.LNN_Examples.html#f0"><span class="id" title="definition">f0</span></a>.<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">f0</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">(</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">allH</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">0,</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">v</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">#0</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">Zero</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">∨</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">exH</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">1,</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">v</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">#0</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">Succ</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">v</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">#1)%</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">fol</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Locate</span> <span class="id" title="var">Plus</span>.<br/>
+<span class="id" title="keyword">Locate</span> "_ + _".<br/>
+&nbsp;<span class="id" title="keyword">Example</span> <a id="t1_0" class="idref" href="#t1_0"><span class="id" title="definition">t1_0</span></a> : <a class="idref" href="hydras.Ackermann.fol.html#Term"><span class="id" title="inductive">Term</span></a> <span class="id" title="var">_</span> := <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.Plus"><span class="id" title="definition">Plus</span></a> (<a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.S_"><span class="id" title="abbreviation">S_</span></a> (<a class="idref" href="hydras.Ackermann.fol.html#var"><span class="id" title="constructor">var</span></a> 1))%<span class="id" title="var">fol</span> <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.Zero"><span class="id" title="definition">Zero</span></a>.<br/>
+<span class="id" title="keyword">Print</span> <a class="idref" href="hydras.MoreAck.LNN_Examples.html#t1_0"><span class="id" title="definition">t1_0</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.S_"><span class="id" title="abbreviation">S_</span></a> <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.Zero"><span class="id" title="definition">Zero</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <a class="idref" href="hydras.MoreAck.LNN_Examples.html#t1_0"><span class="id" title="definition">t1_0</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Examples" class="idref" href="#Examples"><span class="id" title="section">Examples</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Let</span> <a id="Examples.t1" class="idref" href="#Examples.t1"><span class="id" title="variable">t1</span></a>: <a class="idref" href="hydras.Ackermann.fol.html#Term"><span class="id" title="inductive">Term</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#LNN"><span class="id" title="definition">LNN</span></a> := <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.Plus"><span class="id" title="definition">Plus</span></a> (<a class="idref" href="hydras.Ackermann.fol.html#var"><span class="id" title="constructor">var</span></a> 1) <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.Zero"><span class="id" title="definition">Zero</span></a>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+forall v0, v0 = 0 \/ exists v1,  v0 = S v1 
+</div>
+<div class="code">
+<span class="id" title="keyword">Let</span> <a id="Examples.f1" class="idref" href="#Examples.f1"><span class="id" title="variable">f1</span></a> : <a class="idref" href="hydras.Ackermann.fol.html#Formula"><span class="id" title="inductive">Formula</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#LNN"><span class="id" title="definition">LNN</span></a> :=<br/>
+&nbsp;&nbsp;(<a class="idref" href="hydras.Ackermann.fol.html#forallH"><span class="id" title="constructor">forallH</span></a> 0 <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>0 <a class="idref" href="hydras.Ackermann.fol.html#3dd041be98fa842518e2776cd5aaa2a0"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.Zero"><span class="id" title="definition">Zero</span></a> <a class="idref" href="hydras.Ackermann.fol.html#95d02b143473b1bf1f30676a3f27357c"><span class="id" title="notation">∨</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.fol.html#existH"><span class="id" title="definition">existH</span></a> 1 (<a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>0 <a class="idref" href="hydras.Ackermann.fol.html#3dd041be98fa842518e2776cd5aaa2a0"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.Succ"><span class="id" title="definition">Succ</span></a> (<a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>1))))%<span class="id" title="var">fol</span>.<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">f1</span>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <a class="idref" href="hydras.Ackermann.fol.html#Relations"><span class="id" title="projection">Relations</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Let</span> <a id="Examples.f2" class="idref" href="#Examples.f2"><span class="id" title="variable">f2</span></a> : <a class="idref" href="hydras.Ackermann.fol.html#Formula"><span class="id" title="inductive">Formula</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#LNN"><span class="id" title="definition">LNN</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Ackermann.fol.html#existH"><span class="id" title="definition">existH</span></a> 2 (<a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.LT"><span class="id" title="definition">LT</span></a> <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.Zero"><span class="id" title="definition">Zero</span></a> (<a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>2) <a class="idref" href="hydras.Ackermann.fol.html#4ba889964d74201d72d870be149fb4e5"><span class="id" title="notation">∧</span></a> <a class="idref" href="hydras.Ackermann.LNN.html#natToTerm"><span class="id" title="definition">natToTerm</span></a> 4 <a class="idref" href="hydras.Ackermann.fol.html#3dd041be98fa842518e2776cd5aaa2a0"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.Plus"><span class="id" title="definition">Plus</span></a> (<a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>2) (<a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>2)))%<span class="id" title="var">fol</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Let</span> <a id="Examples.f2'" class="idref" href="#Examples.f2'"><span class="id" title="variable">f2'</span></a> : <a class="idref" href="hydras.Ackermann.fol.html#Formula"><span class="id" title="inductive">Formula</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#LNN"><span class="id" title="definition">LNN</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Ackermann.fol.html#existH"><span class="id" title="definition">existH</span></a> 2 (<a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.Zero"><span class="id" title="definition">Zero</span></a> <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.::fol_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>2 <a class="idref" href="hydras.Ackermann.fol.html#4ba889964d74201d72d870be149fb4e5"><span class="id" title="notation">∧</span></a> <a class="idref" href="hydras.Ackermann.LNN.html#natToTerm"><span class="id" title="definition">natToTerm</span></a> 4 <a class="idref" href="hydras.Ackermann.fol.html#3dd041be98fa842518e2776cd5aaa2a0"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.Plus"><span class="id" title="definition">Plus</span></a> (<a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>2) (<a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>2)))%<span class="id" title="var">fol</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Let</span> <a id="Examples.f3" class="idref" href="#Examples.f3"><span class="id" title="variable">f3</span></a> := (<a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>0 <a class="idref" href="hydras.Ackermann.fol.html#3dd041be98fa842518e2776cd5aaa2a0"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.Zero"><span class="id" title="definition">Zero</span></a> <a class="idref" href="hydras.Ackermann.fol.html#95d02b143473b1bf1f30676a3f27357c"><span class="id" title="notation">∨</span></a> <a class="idref" href="hydras.Ackermann.fol.html#existH"><span class="id" title="definition">existH</span></a> 1 (<a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>0 <a class="idref" href="hydras.Ackermann.fol.html#3dd041be98fa842518e2776cd5aaa2a0"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.Succ"><span class="id" title="definition">Succ</span></a> (<a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>1)))%<span class="id" title="var">fol</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Let</span> <a id="Examples.f4" class="idref" href="#Examples.f4"><span class="id" title="variable">f4</span></a> := (<a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>0 <a class="idref" href="hydras.Ackermann.fol.html#3dd041be98fa842518e2776cd5aaa2a0"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>1 <a class="idref" href="hydras.Ackermann.LNN.html#138f411abfc162998ee0d11413343f95"><span class="id" title="notation">+</span></a> <a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>1 <a class="idref" href="hydras.Ackermann.fol.html#FolNotations.::fol_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>0 <a class="idref" href="hydras.Ackermann.fol.html#3dd041be98fa842518e2776cd5aaa2a0"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>1 <a class="idref" href="hydras.Ackermann.LNN.html#d5e10e8b47737e9c618b2250abdff48c"><span class="id" title="notation">×</span></a> <a class="idref" href="hydras.Ackermann.LNN.html#d5e10e8b47737e9c618b2250abdff48c"><span class="id" title="notation">(</span></a><a class="idref" href="hydras.Ackermann.LNN.html#natToTerm"><span class="id" title="definition">natToTerm</span></a> 2<a class="idref" href="hydras.Ackermann.LNN.html#d5e10e8b47737e9c618b2250abdff48c"><span class="id" title="notation">)</span></a>)%<span class="id" title="var">fol</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">f4</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> (<a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.Plus"><span class="id" title="definition">Plus</span></a> <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.Zero"><span class="id" title="definition">Zero</span></a>  <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.Zero"><span class="id" title="definition">Zero</span></a>)%<span class="id" title="var">fol</span>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Locate</span> <span class="id" title="var">LT</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.MoreAck.LNN_Examples.html#Examples"><span class="id" title="section">Examples</span></a>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Ackermann.folProof.html#GEN"><span class="id" title="constructor">GEN</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#LNN"><span class="id" title="definition">LNN</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nil"><span class="id" title="constructor">nil</span></a> (<a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>0 <a class="idref" href="hydras.Ackermann.fol.html#3dd041be98fa842518e2776cd5aaa2a0"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>0)%<span class="id" title="var">fol</span> 1.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">Prf</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">LNN</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">nil</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">(</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">forallH</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">0</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">(</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">v</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">#0</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">v</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">#0))%</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">fol</span></a>  <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">→</span></a> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">Prf</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">LNN</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">nil</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">(</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">Zero</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">Zero</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">)%</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">fol</span></a>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

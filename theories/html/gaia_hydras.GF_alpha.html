@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>gaia_hydras.GF_alpha</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library gaia_hydras.GF_alpha</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+Gaia-compatible <span class="inlinecode"><span class="id" title="var">F_</span></span> <span class="inlinecode"><span class="id" title="var">alpha</span></span> fast growing functions  
+
+<div class="paragraph"> </div>
+
+(imported from <span class="inlinecode"><span class="id" title="var">hydras.Epsilon0.F_alpha</span></span> )
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">mathcomp</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="library">all_ssreflect</span> <span class="id" title="library">zify</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">gaia</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <span class="id" title="library">ssete9</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Eqdep_dec.html#"><span class="id" title="library">Logic.Eqdep_dec</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Arith</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Prelude.DecPreOrder.html#"><span class="id" title="library">DecPreOrder</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Epsilon0.T1.html#"><span class="id" title="library">T1</span></a> <a class="idref" href="hydras.Epsilon0.E0.html#"><span class="id" title="library">E0</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <a class="idref" href="hydras.Epsilon0.Paths.html#"><span class="id" title="library">Paths</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.primRec.html#"><span class="id" title="library">primRec</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span>  <a class="idref" href="hydras.Epsilon0.F_alpha.html#"><span class="id" title="library">F_alpha</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#"><span class="id" title="library">F_omega</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">gaia_hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="gaia_hydras.T1Bridge.html#"><span class="id" title="library">T1Bridge</span></a> <a class="idref" href="gaia_hydras.GCanon.html#"><span class="id" title="library">GCanon</span></a> <a class="idref" href="gaia_hydras.GHprime.html#"><span class="id" title="library">GHprime</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab466"></a><h1 class="section">Rapidly growing functions</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="hF_" class="idref" href="#hF_"><span class="id" title="abbreviation">hF_</span></a> := <a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_alpha.F_</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="F_" class="idref" href="#F_"><span class="id" title="definition">F_</span></a> (<a id="alpha:1" class="idref" href="#alpha:1"><span class="id" title="binder">alpha</span></a> : <a class="idref" href="gaia_hydras.T1Bridge.html#E0"><span class="id" title="record">E0</span></a>)  := <a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_alpha.F_</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#E0_g2h"><span class="id" title="definition">E0_g2h</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:1"><span class="id" title="variable">alpha</span></a>).<br/>
+
+<br/>
+#[<span class="id" title="var">program</span>]<br/>
+&nbsp;<span class="id" title="keyword">Definition</span> <a id="T1F_" class="idref" href="#T1F_"><span class="id" title="definition">T1F_</span></a> (<a id="a:2" class="idref" href="#a:2"><span class="id" title="binder">a</span></a> : <span class="id" title="inductive">T1</span>)(<a id="Hnf:3" class="idref" href="#Hnf:3"><span class="id" title="binder">Hnf</span></a> : <span class="id" title="definition">T1nf</span> <a class="idref" href="gaia_hydras.GF_alpha.html#a:2"><span class="id" title="variable">a</span></a> <span class="id" title="notation">==</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#true"><span class="id" title="constructor">true</span></a>) (<a id="n:4" class="idref" href="#n:4"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>:=<br/>
+&nbsp;&nbsp;(<a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> (@<a class="idref" href="gaia_hydras.T1Bridge.html#mkE0"><span class="id" title="constructor">mkE0</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#a:2"><span class="id" title="variable">a</span></a> <span class="id" title="var">_</span>) <a class="idref" href="gaia_hydras.GF_alpha.html#n:4"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Please note that a lemma <span class="inlinecode"><span class="id" title="var">foo</span></span> may mask <span class="inlinecode"><span class="id" title="var">F_alpha.Foo</span></span> 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="F_alpha_gt" class="idref" href="#F_alpha_gt"><span class="id" title="lemma">F_alpha_gt</span></a> (<a id="alpha:5" class="idref" href="#alpha:5"><span class="id" title="binder">alpha</span></a> : <a class="idref" href="gaia_hydras.T1Bridge.html#E0"><span class="id" title="record">E0</span></a>) (<a id="n:6" class="idref" href="#n:6"><span class="id" title="binder">n</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>): (<a class="idref" href="gaia_hydras.GF_alpha.html#n:6"><span class="id" title="variable">n</span></a> <span class="id" title="notation">&lt;</span> <a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:5"><span class="id" title="variable">alpha</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#n:6"><span class="id" title="variable">n</span></a>)%<span class="id" title="var">N</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="F_alpha_mono" class="idref" href="#F_alpha_mono"><span class="id" title="lemma">F_alpha_mono</span></a> (<a id="alpha:7" class="idref" href="#alpha:7"><span class="id" title="binder">alpha</span></a>: <a class="idref" href="gaia_hydras.T1Bridge.html#E0"><span class="id" title="record">E0</span></a>): <a class="idref" href="gaia_hydras.T1Bridge.html#strict_mono"><span class="id" title="definition">strict_mono</span></a> (<a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:7"><span class="id" title="variable">alpha</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="F_alpha_dom" class="idref" href="#F_alpha_dom"><span class="id" title="lemma">F_alpha_dom</span></a> <a id="alpha:8" class="idref" href="#alpha:8"><span class="id" title="binder">alpha</span></a>:<br/>
+&nbsp;&nbsp;<a class="idref" href="gaia_hydras.T1Bridge.html#dominates_from"><span class="id" title="definition">dominates_from</span></a> 1 (<a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#E0_succ"><span class="id" title="definition">E0_succ</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:8"><span class="id" title="variable">alpha</span></a>)) (<a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:8"><span class="id" title="variable">alpha</span></a>).<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="F_alpha_Succ_le" class="idref" href="#F_alpha_Succ_le"><span class="id" title="lemma">F_alpha_Succ_le</span></a> <a id="alpha:9" class="idref" href="#alpha:9"><span class="id" title="binder">alpha</span></a>:<br/>
+&nbsp;<a class="idref" href="gaia_hydras.T1Bridge.html#fun_le"><span class="id" title="definition">fun_le</span></a> (<a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:9"><span class="id" title="variable">alpha</span></a>) (<a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#E0_succ"><span class="id" title="definition">E0_succ</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:9"><span class="id" title="variable">alpha</span></a>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="F_alpha_positive" class="idref" href="#F_alpha_positive"><span class="id" title="lemma">F_alpha_positive</span></a> (<a id="alpha:10" class="idref" href="#alpha:10"><span class="id" title="binder">alpha</span></a> : <a class="idref" href="gaia_hydras.T1Bridge.html#hE0"><span class="id" title="abbreviation">hE0</span></a>) (<a id="n:11" class="idref" href="#n:11"><span class="id" title="binder">n</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>): (0 <span class="id" title="notation">&lt;</span> <a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_alpha.F_</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:10"><span class="id" title="variable">alpha</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#n:11"><span class="id" title="variable">n</span></a>)%<span class="id" title="var">N</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="F_zeroE" class="idref" href="#F_zeroE"><span class="id" title="lemma">F_zeroE</span></a> <a id="i:12" class="idref" href="#i:12"><span class="id" title="binder">i</span></a>: <a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="gaia_hydras.T1Bridge.html#E0zero"><span class="id" title="definition">E0zero</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#i:12"><span class="id" title="variable">i</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#i:12"><span class="id" title="variable">i</span></a><span class="id" title="notation">.+1</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="F_mono_l" class="idref" href="#F_mono_l"><span class="id" title="lemma">F_mono_l</span></a> <a id="alpha:13" class="idref" href="#alpha:13"><span class="id" title="binder">alpha</span></a> <a id="beta:14" class="idref" href="#beta:14"><span class="id" title="binder">beta</span></a>:<br/>
+&nbsp;&nbsp;<a class="idref" href="gaia_hydras.T1Bridge.html#E0lt"><span class="id" title="definition">E0lt</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#beta:14"><span class="id" title="variable">beta</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:13"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="gaia_hydras.T1Bridge.html#dominates"><span class="id" title="definition">dominates</span></a> (<a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:13"><span class="id" title="variable">alpha</span></a>) (<a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#beta:14"><span class="id" title="variable">beta</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="F_alpha_0_eq" class="idref" href="#F_alpha_0_eq"><span class="id" title="lemma">F_alpha_0_eq</span></a> (<a id="alpha:15" class="idref" href="#alpha:15"><span class="id" title="binder">alpha</span></a> : <a class="idref" href="gaia_hydras.T1Bridge.html#E0"><span class="id" title="record">E0</span></a>): <a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:15"><span class="id" title="variable">alpha</span></a> 0 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="F_succE" class="idref" href="#F_succE"><span class="id" title="lemma">F_succE</span></a> <a id="alpha:16" class="idref" href="#alpha:16"><span class="id" title="binder">alpha</span></a> <a id="i:17" class="idref" href="#i:17"><span class="id" title="binder">i</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#E0_succ"><span class="id" title="definition">E0_succ</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:16"><span class="id" title="variable">alpha</span></a>) <a class="idref" href="gaia_hydras.GF_alpha.html#i:17"><span class="id" title="variable">i</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Prelude.Iterates.html#iterate"><span class="id" title="definition">Iterates.iterate</span></a> (<a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:16"><span class="id" title="variable">alpha</span></a>) <a class="idref" href="gaia_hydras.GF_alpha.html#i:17"><span class="id" title="variable">i</span></a><span class="id" title="notation">.+1</span> <a class="idref" href="gaia_hydras.GF_alpha.html#i:17"><span class="id" title="variable">i</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="F_limE" class="idref" href="#F_limE"><span class="id" title="lemma">F_limE</span></a> <a id="alpha:18" class="idref" href="#alpha:18"><span class="id" title="binder">alpha</span></a> <a id="i:19" class="idref" href="#i:19"><span class="id" title="binder">i</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" title="definition">T1limit</span> (<a class="idref" href="gaia_hydras.T1Bridge.html#cnf"><span class="id" title="projection">cnf</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:18"><span class="id" title="variable">alpha</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:18"><span class="id" title="variable">alpha</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#i:19"><span class="id" title="variable">i</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> (<a class="idref" href="gaia_hydras.GCanon.html#E0Canon"><span class="id" title="definition">E0Canon</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:18"><span class="id" title="variable">alpha</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#i:19"><span class="id" title="variable">i</span></a>) <a class="idref" href="gaia_hydras.GF_alpha.html#i:19"><span class="id" title="variable">i</span></a>.<br/>
+ 
+<br/>
+</div>
+
+<div class="doc">
+ numerical examples 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="LF1" class="idref" href="#LF1"><span class="id" title="lemma">LF1</span></a> <a id="i:20" class="idref" href="#i:20"><span class="id" title="binder">i</span></a>: <a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#E0fin"><span class="id" title="definition">E0fin</span></a> 1) <a class="idref" href="gaia_hydras.GF_alpha.html#i:20"><span class="id" title="variable">i</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> (<span class="id" title="notation">(</span>2 <span class="id" title="notation">×</span> <a class="idref" href="gaia_hydras.GF_alpha.html#i:20"><span class="id" title="variable">i</span></a><span class="id" title="notation">)</span> <span class="id" title="notation">.+1</span>)%<span class="id" title="var">N</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="LF2" class="idref" href="#LF2"><span class="id" title="lemma">LF2</span></a> <a id="i:21" class="idref" href="#i:21"><span class="id" title="binder">i</span></a>:  (<a class="idref" href="hydras.Prelude.Exp2.html#exp2"><span class="id" title="definition">Exp2.exp2</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#i:21"><span class="id" title="variable">i</span></a> <span class="id" title="notation">×</span> <a class="idref" href="gaia_hydras.GF_alpha.html#i:21"><span class="id" title="variable">i</span></a> <span class="id" title="notation">&lt;</span> <a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#E0fin"><span class="id" title="definition">E0fin</span></a> 2) <a class="idref" href="gaia_hydras.GF_alpha.html#i:21"><span class="id" title="variable">i</span></a>)%<span class="id" title="var">N</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="LF2'" class="idref" href="#LF2'"><span class="id" title="lemma">LF2'</span></a> <a id="i:22" class="idref" href="#i:22"><span class="id" title="binder">i</span></a>:  (1 <span class="id" title="notation">≤</span> <a class="idref" href="gaia_hydras.GF_alpha.html#i:22"><span class="id" title="variable">i</span></a>)%<span class="id" title="var">N</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> (<a class="idref" href="hydras.Prelude.Exp2.html#exp2"><span class="id" title="definition">Exp2.exp2</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#i:22"><span class="id" title="variable">i</span></a> <span class="id" title="notation">&lt;</span> <a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#E0fin"><span class="id" title="definition">E0fin</span></a> 2) <a class="idref" href="gaia_hydras.GF_alpha.html#i:22"><span class="id" title="variable">i</span></a>)%<span class="id" title="var">N</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="LF3_2" class="idref" href="#LF3_2"><span class="id" title="lemma">LF3_2</span></a>:<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Prelude.Iterates.html#dominates_from"><span class="id" title="definition">Iterates.dominates_from</span></a> 2 (<a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#E0fin"><span class="id" title="definition">E0fin</span></a> 3))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="n:23" class="idref" href="#n:23"><span class="id" title="binder">n</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> ⇒ <a class="idref" href="hydras.Prelude.Iterates.html#iterate"><span class="id" title="definition">Iterates.iterate</span></a> <a class="idref" href="hydras.Prelude.Exp2.html#exp2"><span class="id" title="definition">Exp2.exp2</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#n:23"><span class="id" title="variable">n</span></a><span class="id" title="notation">.+1</span> <a class="idref" href="gaia_hydras.GF_alpha.html#n:23"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Canon_plus" class="idref" href="#Canon_plus"><span class="id" title="definition">Canon_plus</span></a> <a id="n:24" class="idref" href="#n:24"><span class="id" title="binder">n</span></a> <a id="alpha:25" class="idref" href="#alpha:25"><span class="id" title="binder">alpha</span></a> <a id="beta:26" class="idref" href="#beta:26"><span class="id" title="binder">beta</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Epsilon0.Paths.html#Canon_plus"><span class="id" title="definition">Paths.Canon_plus</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#n:24"><span class="id" title="variable">n</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#E0_g2h"><span class="id" title="definition">E0_g2h</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:25"><span class="id" title="variable">alpha</span></a>) (<a class="idref" href="gaia_hydras.T1Bridge.html#E0_g2h"><span class="id" title="definition">E0_g2h</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#beta:26"><span class="id" title="variable">beta</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="F_restricted_mono_l" class="idref" href="#F_restricted_mono_l"><span class="id" title="lemma">F_restricted_mono_l</span></a> <a id="alpha:27" class="idref" href="#alpha:27"><span class="id" title="binder">alpha</span></a> <a id="beta:28" class="idref" href="#beta:28"><span class="id" title="binder">beta</span></a> <a id="n:29" class="idref" href="#n:29"><span class="id" title="binder">n</span></a>:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="gaia_hydras.GF_alpha.html#Canon_plus"><span class="id" title="definition">Canon_plus</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#n:29"><span class="id" title="variable">n</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:27"><span class="id" title="variable">alpha</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#beta:28"><span class="id" title="variable">beta</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> (<a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#beta:28"><span class="id" title="variable">beta</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#n:29"><span class="id" title="variable">n</span></a> <span class="id" title="notation">≤</span> <a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:27"><span class="id" title="variable">alpha</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#n:29"><span class="id" title="variable">n</span></a>)%<span class="id" title="var">N</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="H'_F" class="idref" href="#H'_F"><span class="id" title="lemma">H'_F</span></a> <a id="alpha:30" class="idref" href="#alpha:30"><span class="id" title="binder">alpha</span></a> <a id="n:31" class="idref" href="#n:31"><span class="id" title="binder">n</span></a> : (<a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:30"><span class="id" title="variable">alpha</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#n:31"><span class="id" title="variable">n</span></a><span class="id" title="notation">.+1</span> <span class="id" title="notation">≤</span> <a class="idref" href="gaia_hydras.GHprime.html#H'_"><span class="id" title="definition">H'_</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#E0_phi0"><span class="id" title="definition">E0_phi0</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:30"><span class="id" title="variable">alpha</span></a>) <a class="idref" href="gaia_hydras.GF_alpha.html#n:31"><span class="id" title="variable">n</span></a><span class="id" title="notation">.+1</span>)%<span class="id" title="var">N</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="F_alpha_not_PR_E0" class="idref" href="#F_alpha_not_PR_E0"><span class="id" title="lemma">F_alpha_not_PR_E0</span></a>  <a id="alpha:32" class="idref" href="#alpha:32"><span class="id" title="binder">alpha</span></a>:<br/>
+&nbsp;&nbsp;<a class="idref" href="gaia_hydras.T1Bridge.html#E0le"><span class="id" title="definition">E0le</span></a> <a class="idref" href="gaia_hydras.T1Bridge.html#E0_omega"><span class="id" title="definition">E0_omega</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:32"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 (<a class="idref" href="gaia_hydras.GF_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:32"><span class="id" title="variable">alpha</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#False"><span class="id" title="inductive">False</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="F_alpha_not_PR" class="idref" href="#F_alpha_not_PR"><span class="id" title="lemma">F_alpha_not_PR</span></a> <a id="alpha:33" class="idref" href="#alpha:33"><span class="id" title="binder">alpha</span></a> (<a id="Hnf:34" class="idref" href="#Hnf:34"><span class="id" title="binder">Hnf</span></a>: <span class="id" title="definition">T1nf</span> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:33"><span class="id" title="variable">alpha</span></a> <span class="id" title="notation">==</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#true"><span class="id" title="constructor">true</span></a>):<br/>
+&nbsp;&nbsp;<a class="idref" href="gaia_hydras.T1Bridge.html#LE"><span class="id" title="abbreviation">LE</span></a> <span class="id" title="definition">T1omega</span> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:33"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 (@<a class="idref" href="gaia_hydras.GF_alpha.html#T1F_"><span class="id" title="definition">T1F_</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#alpha:33"><span class="id" title="variable">alpha</span></a> <a class="idref" href="gaia_hydras.GF_alpha.html#Hnf:34"><span class="id" title="variable">Hnf</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#False"><span class="id" title="inductive">False</span></a>.<br/>
+ 
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

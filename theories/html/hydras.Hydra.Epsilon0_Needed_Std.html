@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Hydra.Epsilon0_Needed_Std</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Hydra.Epsilon0_Needed_Std</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+ Pierre Castéran, LaBRI and University of Bordeaux 
+
+<div class="paragraph"> </div>
+
+ We prove that the impossibility result of <a href="./hydras.Hydra.Epsilon0_Needed_Free.html"> Epsilon0_Needed_Free</a> still holds for "standard" battles 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#"><span class="id" title="library">Epsilon0_Needed_Generic</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Hydra.Hydra_Lemmas.html#"><span class="id" title="module">Hydra_Lemmas</span></a> <a class="idref" href="hydras.Epsilon0.Epsilon0.html#"><span class="id" title="module">Epsilon0</span></a> <a class="idref" href="hydras.Epsilon0.Canon.html#"><span class="id" title="module">Canon</span></a> <a class="idref" href="hydras.Epsilon0.Paths.html#"><span class="id" title="module">Paths</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Operators.html#"><span class="id" title="module">Relation_Operators</span></a> <a class="idref" href="hydras.Hydra.O2H.html#"><span class="id" title="module">O2H</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#"><span class="id" title="module">Hydra_Definitions</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">t1_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Impossibility_Proof" class="idref" href="#Impossibility_Proof"><span class="id" title="section">Impossibility_Proof</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="mu:1" class="idref" href="#mu:1"><span class="id" title="binder">mu</span></a>: <a class="idref" href="hydras.Epsilon0.T1.html#T1"><span class="id" title="inductive">T1</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="m:2" class="idref" href="#m:2"><span class="id" title="binder">m</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#T1"><span class="id" title="inductive">T1</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="Var:3" class="idref" href="#Var:3"><span class="id" title="binder">Var</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hvariant"><span class="id" title="class">Hvariant</span></a>  <a class="idref" href="hydras.Epsilon0.T1.html#T1_wf"><span class="id" title="lemma">T1_wf</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#standard"><span class="id" title="instance">standard</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#m:2"><span class="id" title="variable">m</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="Hy:4" class="idref" href="#Hy:4"><span class="id" title="binder">Hy</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#BoundedVariant"><span class="id" title="class">BoundedVariant</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Var:3"><span class="id" title="variable">Var</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#mu:1"><span class="id" title="variable">mu</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Impossibility_Proof.big_h" class="idref" href="#Impossibility_Proof.big_h"><span class="id" title="variable">big_h</span></a> := <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#big_h"><span class="id" title="definition">big_h</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.mu"><span class="id" title="variable">mu</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Impossibility_Proof.small_h" class="idref" href="#Impossibility_Proof.small_h"><span class="id" title="variable">small_h</span></a> := <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#small_h"><span class="id" title="definition">small_h</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.mu"><span class="id" title="variable">mu</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="m_ge" class="idref" href="#m_ge"><span class="id" title="lemma">m_ge</span></a> : <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.big_h"><span class="id" title="variable">big_h</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#f097afe6f86551e3dd19af72feb179da"><span class="id" title="notation">t1</span></a><a class="idref" href="hydras.Epsilon0.T1.html#f097afe6f86551e3dd19af72feb179da"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.small_h"><span class="id" title="variable">small_h</span></a>. 
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab264"></a><h2 class="section">Proof of the inequality m small_h t1&lt; m big_h</h2>
+
+<div class="paragraph"> </div>
+
+  The measure is strictly decreasing along any round 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="Lvar" class="idref" href="#Lvar"><span class="id" title="lemma">Lvar</span></a> : <span class="id" title="keyword">∀</span> <a id="h:5" class="idref" href="#h:5"><span class="id" title="binder">h</span></a> <a id="h0:6" class="idref" href="#h0:6"><span class="id" title="binder">h0</span></a> <a id="i:7" class="idref" href="#i:7"><span class="id" title="binder">i</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#h:5"><span class="id" title="variable">h</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#battle_rel"><span class="id" title="method">battle_rel</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#standard"><span class="id" title="instance">standard</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#i:7"><span class="id" title="variable">i</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#h:5"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#h0:6"><span class="id" title="variable">h0</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#h0:6"><span class="id" title="variable">h0</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#::t1_scope:x_'t1&lt;'_x"><span class="id" title="notation">t1</span></a><a class="idref" href="hydras.Epsilon0.T1.html#::t1_scope:x_'t1&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#h:5"><span class="id" title="variable">h</span></a>.<br/>
+ 
+<br/>
+</div>
+
+<div class="doc">
+Application to standard battles 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="m_decrease" class="idref" href="#m_decrease"><span class="id" title="lemma">m_decrease</span></a> : <span class="id" title="keyword">∀</span> <a id="j:8" class="idref" href="#j:8"><span class="id" title="binder">j</span></a> <a id="h0:9" class="idref" href="#h0:9"><span class="id" title="binder">h0</span></a> <a id="i:10" class="idref" href="#i:10"><span class="id" title="binder">i</span></a> <a id="h:11" class="idref" href="#h:11"><span class="id" title="binder">h</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#h:11"><span class="id" title="variable">h</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#rounds"><span class="id" title="inductive">rounds</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#standard"><span class="id" title="instance">standard</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#i:10"><span class="id" title="variable">i</span></a>  <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#h:11"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#j:8"><span class="id" title="variable">j</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#h0:9"><span class="id" title="variable">h0</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#h0:9"><span class="id" title="variable">h0</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#::t1_scope:x_'t1&lt;'_x"><span class="id" title="notation">t1</span></a><a class="idref" href="hydras.Epsilon0.T1.html#::t1_scope:x_'t1&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#h:11"><span class="id" title="variable">h</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Conversion of ordinal inequalities into  standard battles  
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="LT_to_standard_battle" class="idref" href="#LT_to_standard_battle"><span class="id" title="lemma">LT_to_standard_battle</span></a> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="alpha:23" class="idref" href="#alpha:23"><span class="id" title="binder">alpha</span></a> <a id="beta:24" class="idref" href="#beta:24"><span class="id" title="binder">beta</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#beta:24"><span class="id" title="variable">beta</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#::t1_scope:x_'t1&lt;'_x"><span class="id" title="notation">t1</span></a><a class="idref" href="hydras.Epsilon0.T1.html#::t1_scope:x_'t1&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#alpha:23"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a id="n:25" class="idref" href="#n:25"><span class="id" title="binder">n</span></a> <a id="i:26" class="idref" href="#i:26"><span class="id" title="binder">i</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">,</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#rounds"><span class="id" title="inductive">rounds</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#standard"><span class="id" title="instance">standard</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#n:25"><span class="id" title="variable">n</span></a> (<a class="idref" href="hydras.Hydra.O2H.html#iota"><span class="id" title="definition">iota</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#alpha:23"><span class="id" title="variable">alpha</span></a>) <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#i:26"><span class="id" title="variable">i</span></a> (<a class="idref" href="hydras.Hydra.O2H.html#iota"><span class="id" title="definition">iota</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#beta:24"><span class="id" title="variable">beta</span></a>). 
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="Rem3" class="idref" href="#Rem3"><span class="id" title="lemma">Rem3</span></a> : <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#beta_h"><span class="id" title="definition">beta_h</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.mu"><span class="id" title="variable">mu</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a>  <a class="idref" href="hydras.Epsilon0.T1.html#::t1_scope:x_'t1&lt;'_x"><span class="id" title="notation">t1</span></a><a class="idref" href="hydras.Epsilon0.T1.html#::t1_scope:x_'t1&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.mu"><span class="id" title="variable">mu</span></a>.<br/>
+ 
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="Rem4" class="idref" href="#Rem4"><span class="id" title="lemma">Rem4</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a id="n:27" class="idref" href="#n:27"><span class="id" title="binder">n</span></a> <a id="i:28" class="idref" href="#i:28"><span class="id" title="binder">i</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">,</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#rounds"><span class="id" title="inductive">rounds</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#standard"><span class="id" title="instance">standard</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#n:27"><span class="id" title="variable">n</span></a> (<a class="idref" href="hydras.Hydra.O2H.html#iota"><span class="id" title="definition">iota</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.mu"><span class="id" title="variable">mu</span></a>) <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#i:28"><span class="id" title="variable">i</span></a> (<a class="idref" href="hydras.Hydra.O2H.html#iota"><span class="id" title="definition">iota</span></a> (<a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#beta_h"><span class="id" title="definition">beta_h</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.mu"><span class="id" title="variable">mu</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a>)).<br/>
+ 
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="Hmu" class="idref" href="#Hmu"><span class="id" title="lemma">Hmu</span></a> : <a class="idref" href="hydras.Epsilon0.T1.html#nf"><span class="id" title="definition">nf</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.mu"><span class="id" title="variable">mu</span></a>.<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="m_lt" class="idref" href="#m_lt"><span class="id" title="lemma">m_lt</span></a> : <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.small_h"><span class="id" title="variable">small_h</span></a>  <a class="idref" href="hydras.Epsilon0.T1.html#::t1_scope:x_'t1&lt;'_x"><span class="id" title="notation">t1</span></a><a class="idref" href="hydras.Epsilon0.T1.html#::t1_scope:x_'t1&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.big_h"><span class="id" title="variable">big_h</span></a>. 
+<br/>
+</div>
+
+<div class="doc">
+End of the proof 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Fact</span> <a id="self_lt_standard" class="idref" href="#self_lt_standard"><span class="id" title="lemma">self_lt_standard</span></a> : <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.big_h"><span class="id" title="variable">big_h</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#::t1_scope:x_'t1&lt;'_x"><span class="id" title="notation">t1</span></a><a class="idref" href="hydras.Epsilon0.T1.html#::t1_scope:x_'t1&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof.big_h"><span class="id" title="variable">big_h</span></a>.<br/>
+ 
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Theorem</span> <a id="Impossibility_std" class="idref" href="#Impossibility_std"><span class="id" title="lemma">Impossibility_std</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#False"><span class="id" title="inductive">False</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_Proof"><span class="id" title="section">Impossibility_Proof</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#Impossibility_std"><span class="id" title="lemma">Impossibility_std</span></a>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

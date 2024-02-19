@@ -1,0 +1,249 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>additions.Naive</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library additions.Naive</h1>
+
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab391"></a><h2 class="section">Naïve  and Monomorphic  Functions for Computing Powers.</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab392"></a><h3 class="section">Exponentiation of integers</h3>
+
+
+<div class="paragraph"> </div>
+
+Let us define a function <span class="inlinecode"><span class="id" title="var">Z.power</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">Z</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">Z</span></span> by structural recursion
+on the exponent <span class="inlinecode"><span class="id" title="var">n</span></span>:
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ZArith.ZArith.html#"><span class="id" title="library">ZArith</span></a>.<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">Z_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <a id="Z" class="idref" href="#Z"><span class="id" title="module">Z</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="Z.power" class="idref" href="#Z.power"><span class="id" title="definition">power</span></a> (<a id="x:1" class="idref" href="#x:1"><span class="id" title="binder">x</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#Z"><span class="id" title="inductive">Z</span></a>)(<a id="n:2" class="idref" href="#n:2"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) :=<br/>
+<span class="id" title="keyword">match</span> <a class="idref" href="additions.Naive.html#n:2"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span> <br/>
+| 0%<span class="id" title="var">nat</span> ⇒ 1<br/>
+| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">p</span> ⇒ <a class="idref" href="additions.Naive.html#x:1"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ZArith.BinInt.html#d3ea1afb7d81263dc23c4eb0da2a3c4e"><span class="id" title="notation">×</span></a>  <a class="idref" href="additions.Naive.html#power:3"><span class="id" title="definition">power</span></a> <a class="idref" href="additions.Naive.html#x:1"><span class="id" title="variable">x</span></a> <span class="id" title="var">p</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> <a class="idref" href="additions.Naive.html#Z.power"><span class="id" title="definition">power</span></a> 2 10.<br/>
+</div>
+
+<div class="doc">
+
+
+<div class="paragraph"> </div>
+
+<a id="lab393"></a><h3 class="section">Some basic properties of <span class="inlinecode"><span class="id" title="var">Z.power</span></span></h3>
+
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="Z.power_S" class="idref" href="#Z.power_S"><span class="id" title="lemma">power_S</span></a>  : <span class="id" title="keyword">∀</span> (<a id="x:5" class="idref" href="#x:5"><span class="id" title="binder">x</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#Z"><span class="id" title="inductive">Z</span></a>)(<a id="n:6" class="idref" href="#n:6"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>), <a class="idref" href="additions.Naive.html#Z.power"><span class="id" title="definition">power</span></a> <a class="idref" href="additions.Naive.html#x:5"><span class="id" title="variable">x</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="additions.Naive.html#n:6"><span class="id" title="variable">n</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="additions.Naive.html#x:5"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ZArith.BinInt.html#d3ea1afb7d81263dc23c4eb0da2a3c4e"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Naive.html#Z.power"><span class="id" title="definition">power</span></a> <a class="idref" href="additions.Naive.html#x:5"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Naive.html#n:6"><span class="id" title="variable">n</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="Z.power_of_plus" class="idref" href="#Z.power_of_plus"><span class="id" title="lemma">power_of_plus</span></a> (<a id="x:7" class="idref" href="#x:7"><span class="id" title="binder">x</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#Z"><span class="id" title="inductive">Z</span></a>) :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="n:8" class="idref" href="#n:8"><span class="id" title="binder">n</span></a> <a id="p:9" class="idref" href="#p:9"><span class="id" title="binder">p</span></a>, <a class="idref" href="additions.Naive.html#Z.power"><span class="id" title="definition">power</span></a> <a class="idref" href="additions.Naive.html#x:7"><span class="id" title="variable">x</span></a> (<a class="idref" href="additions.Naive.html#n:8"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="additions.Naive.html#p:9"><span class="id" title="variable">p</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="additions.Naive.html#Z.power"><span class="id" title="definition">power</span></a> <a class="idref" href="additions.Naive.html#x:7"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Naive.html#n:8"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ZArith.BinInt.html#d3ea1afb7d81263dc23c4eb0da2a3c4e"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Naive.html#Z.power"><span class="id" title="definition">power</span></a> <a class="idref" href="additions.Naive.html#x:7"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Naive.html#p:9"><span class="id" title="variable">p</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="additions.Naive.html#Z"><span class="id" title="module">Z</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab394"></a><h3 class="section">Exponentiation modulo <span class="inlinecode"><span class="id" title="var">m</span></span></h3>
+
+
+<div class="paragraph"> </div>
+
+ Let <span class="inlinecode"><span class="id" title="var">m</span></span> be some natural number. We can compute for any number <span class="inlinecode"><span class="id" title="var">x</span></span>
+and exponent <span class="inlinecode"><span class="id" title="var">n</span></span> the number .
+
+<div class="paragraph"> </div>
+
+ Since <span class="inlinecode"><span class="id" title="var">m</span></span> and <span class="inlinecode"><span class="id" title="var">x</span></span> can be arbitrary large numbers, we give them the type 
+<span class="inlinecode"><span class="id" title="var">N</span></span> of binary natural number. Following our naïve approach, the exponent <span class="inlinecode"><span class="id" title="var">n</span></span>
+is still of type <span class="inlinecode"><span class="id" title="var">nat</span></span>.
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <a id="N_mod" class="idref" href="#N_mod"><span class="id" title="module">N_mod</span></a>.<br/>
+#[<span class="id" title="var">local</span>] <span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">N_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="N_mod.m_fixed" class="idref" href="#N_mod.m_fixed"><span class="id" title="section">m_fixed</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="N_mod.m_fixed.m" class="idref" href="#N_mod.m_fixed.m"><span class="id" title="variable">m</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#N"><span class="id" title="inductive">N</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="N_mod.mult_mod" class="idref" href="#N_mod.mult_mod"><span class="id" title="definition">mult_mod</span></a> (<a id="x:11" class="idref" href="#x:11"><span class="id" title="binder">x</span></a> <a id="y:12" class="idref" href="#y:12"><span class="id" title="binder">y</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#N"><span class="id" title="inductive">N</span></a>) := <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.NArith.BinNat.html#::N_scope:x_'mod'_x"><span class="id" title="notation">(</span></a><a class="idref" href="additions.Naive.html#x:11"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.NArith.BinNat.html#fe1417cc32a1703619b26940ce957c6a"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Naive.html#y:12"><span class="id" title="variable">y</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.NArith.BinNat.html#::N_scope:x_'mod'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.NArith.BinNat.html#::N_scope:x_'mod'_x"><span class="id" title="notation">mod</span></a> <a class="idref" href="additions.Naive.html#N_mod.m_fixed.m"><span class="id" title="variable">m</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Fixpoint</span> <a id="N_mod.power" class="idref" href="#N_mod.power"><span class="id" title="definition">power</span></a> (<a id="x:13" class="idref" href="#x:13"><span class="id" title="binder">x</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#N"><span class="id" title="inductive">N</span></a>) (<a id="n:14" class="idref" href="#n:14"><span class="id" title="binder">n</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#N"><span class="id" title="inductive">N</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.Naive.html#n:14"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0%<span class="id" title="var">nat</span> ⇒ 1 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.NArith.BinNat.html#::N_scope:x_'mod'_x"><span class="id" title="notation">mod</span></a> <a class="idref" href="additions.Naive.html#N_mod.m_fixed.m"><span class="id" title="variable">m</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">p</span> ⇒ <a class="idref" href="additions.Naive.html#N_mod.mult_mod"><span class="id" title="definition">mult_mod</span></a> <a class="idref" href="additions.Naive.html#x:13"><span class="id" title="variable">x</span></a> (<a class="idref" href="additions.Naive.html#power:15"><span class="id" title="definition">power</span></a> <a class="idref" href="additions.Naive.html#x:13"><span class="id" title="variable">x</span></a> <span class="id" title="var">p</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="additions.Naive.html#N_mod.m_fixed"><span class="id" title="section">m_fixed</span></a>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="additions.Naive.html#N_mod"><span class="id" title="module">N_mod</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> <a class="idref" href="additions.Naive.html#power"><span class="id" title="definition">N_mod.power</span></a> 14555553%<span class="id" title="var">N</span> 5689%<span class="id" title="var">N</span> 27.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<br/>
+<span class="inlinecode">&nbsp;&nbsp;&nbsp;= 9086410<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">N</span>
+<div class="paragraph"> </div>
+
+</span>
+
+<div class="paragraph"> </div>
+
+<a id="lab395"></a><h3 class="section">Exponentiation of  matrices</h3>
+
+
+<div class="paragraph"> </div>
+
+Our last example is a definition of  where  is a  matrix
+over any scalar type , assuming one can provide  with a semi-ring structure.
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Module</span> <a id="M2" class="idref" href="#M2"><span class="id" title="module">M2</span></a>.<br/>
+<span class="id" title="keyword">Section</span> <a id="M2.Definitions" class="idref" href="#M2.Definitions"><span class="id" title="section">Definitions</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> (<a id="M2.Definitions.A" class="idref" href="#M2.Definitions.A"><span class="id" title="variable">A</span></a>: <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="M2.Definitions.zero" class="idref" href="#M2.Definitions.zero"><span class="id" title="variable">zero</span></a> <a id="M2.Definitions.one" class="idref" href="#M2.Definitions.one"><span class="id" title="variable">one</span></a> : <a class="idref" href="additions.Naive.html#A:17"><span class="id" title="variable">A</span></a>) <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="M2.Definitions.plus" class="idref" href="#M2.Definitions.plus"><span class="id" title="variable">plus</span></a> <a id="M2.Definitions.mult" class="idref" href="#M2.Definitions.mult"><span class="id" title="variable">mult</span></a>  : <a class="idref" href="additions.Naive.html#A:17"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Naive.html#A:17"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Naive.html#A:17"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="M2.Definitions.rt" class="idref" href="#M2.Definitions.rt"><span class="id" title="variable">rt</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.setoid_ring.Ring_theory.html#semi_ring_theory"><span class="id" title="record">semi_ring_theory</span></a>  <a class="idref" href="additions.Naive.html#M2.Definitions.zero"><span class="id" title="variable">zero</span></a> <a class="idref" href="additions.Naive.html#M2.Definitions.one"><span class="id" title="variable">one</span></a> <a class="idref" href="additions.Naive.html#M2.Definitions.plus"><span class="id" title="variable">plus</span></a> <a class="idref" href="additions.Naive.html#M2.Definitions.mult"><span class="id" title="variable">mult</span></a>   (@<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#eq"><span class="id" title="inductive">eq</span></a> <a class="idref" href="additions.Naive.html#M2.Definitions.A"><span class="id" title="variable">A</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Add</span> <span class="id" title="var">Ring</span> <span class="id" title="var">Aring</span> : <a class="idref" href="additions.Naive.html#M2.Definitions.rt"><span class="id" title="variable">rt</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="M2.Definitions.:::'0'" class="idref" href="#M2.Definitions.:::'0'"><span class="id" title="notation">&quot;</span></a>0" := <a class="idref" href="additions.Naive.html#M2.Definitions.zero"><span class="id" title="variable">zero</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="M2.Definitions.:::'1'" class="idref" href="#M2.Definitions.:::'1'"><span class="id" title="notation">&quot;</span></a>1" := <a class="idref" href="additions.Naive.html#M2.Definitions.one"><span class="id" title="variable">one</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="617a2cc97dac8fe5e951278b3bb11609" class="idref" href="#617a2cc97dac8fe5e951278b3bb11609"><span class="id" title="notation">&quot;</span></a>x + y" := (<a class="idref" href="additions.Naive.html#M2.Definitions.plus"><span class="id" title="variable">plus</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="4d985c683f0b20e66a34edc4883055ad" class="idref" href="#4d985c683f0b20e66a34edc4883055ad"><span class="id" title="notation">&quot;</span></a>x * y " := (<a class="idref" href="additions.Naive.html#M2.Definitions.mult"><span class="id" title="variable">mult</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Structure</span> <a id="M2.t" class="idref" href="#M2.t"><span class="id" title="record">t</span></a> : <span class="id" title="keyword">Type</span> := <a id="M2.mat" class="idref" href="#M2.mat"><span class="id" title="constructor">mat</span></a>{<a id="M2.c00" class="idref" href="#M2.c00"><span class="id" title="projection">c00</span></a> : <a class="idref" href="additions.Naive.html#M2.Definitions.A"><span class="id" title="variable">A</span></a>;  <a id="M2.c01" class="idref" href="#M2.c01"><span class="id" title="projection">c01</span></a> : <a class="idref" href="additions.Naive.html#M2.Definitions.A"><span class="id" title="variable">A</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="M2.c10" class="idref" href="#M2.c10"><span class="id" title="projection">c10</span></a> : <a class="idref" href="additions.Naive.html#M2.Definitions.A"><span class="id" title="variable">A</span></a>;  <a id="M2.c11" class="idref" href="#M2.c11"><span class="id" title="projection">c11</span></a> : <a class="idref" href="additions.Naive.html#M2.Definitions.A"><span class="id" title="variable">A</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="M2.Id2" class="idref" href="#M2.Id2"><span class="id" title="definition">Id2</span></a> : <a class="idref" href="additions.Naive.html#M2.t"><span class="id" title="record">t</span></a> := <a class="idref" href="additions.Naive.html#M2.mat"><span class="id" title="constructor">mat</span></a> 1 0 0 1.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="M2.M2_mult" class="idref" href="#M2.M2_mult"><span class="id" title="definition">M2_mult</span></a> (<a id="M:28" class="idref" href="#M:28"><span class="id" title="binder">M</span></a> <a id="M':29" class="idref" href="#M':29"><span class="id" title="binder">M'</span></a>:<a class="idref" href="additions.Naive.html#M2.t"><span class="id" title="record">t</span></a>) : <a class="idref" href="additions.Naive.html#M2.t"><span class="id" title="record">t</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Naive.html#M2.mat"><span class="id" title="constructor">mat</span></a> (<a class="idref" href="additions.Naive.html#M2.c00"><span class="id" title="projection">c00</span></a> <a class="idref" href="additions.Naive.html#M:28"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.Naive.html#4d985c683f0b20e66a34edc4883055ad"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Naive.html#M2.c00"><span class="id" title="projection">c00</span></a> <a class="idref" href="additions.Naive.html#M':29"><span class="id" title="variable">M'</span></a> <a class="idref" href="additions.Naive.html#617a2cc97dac8fe5e951278b3bb11609"><span class="id" title="notation">+</span></a> <a class="idref" href="additions.Naive.html#M2.c01"><span class="id" title="projection">c01</span></a> <a class="idref" href="additions.Naive.html#M:28"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.Naive.html#4d985c683f0b20e66a34edc4883055ad"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Naive.html#M2.c10"><span class="id" title="projection">c10</span></a> <a class="idref" href="additions.Naive.html#M':29"><span class="id" title="variable">M'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="additions.Naive.html#M2.c00"><span class="id" title="projection">c00</span></a> <a class="idref" href="additions.Naive.html#M:28"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.Naive.html#4d985c683f0b20e66a34edc4883055ad"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Naive.html#M2.c01"><span class="id" title="projection">c01</span></a> <a class="idref" href="additions.Naive.html#M':29"><span class="id" title="variable">M'</span></a> <a class="idref" href="additions.Naive.html#617a2cc97dac8fe5e951278b3bb11609"><span class="id" title="notation">+</span></a> <a class="idref" href="additions.Naive.html#M2.c01"><span class="id" title="projection">c01</span></a> <a class="idref" href="additions.Naive.html#M:28"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.Naive.html#4d985c683f0b20e66a34edc4883055ad"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Naive.html#M2.c11"><span class="id" title="projection">c11</span></a> <a class="idref" href="additions.Naive.html#M':29"><span class="id" title="variable">M'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="additions.Naive.html#M2.c10"><span class="id" title="projection">c10</span></a> <a class="idref" href="additions.Naive.html#M:28"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.Naive.html#4d985c683f0b20e66a34edc4883055ad"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Naive.html#M2.c00"><span class="id" title="projection">c00</span></a> <a class="idref" href="additions.Naive.html#M':29"><span class="id" title="variable">M'</span></a> <a class="idref" href="additions.Naive.html#617a2cc97dac8fe5e951278b3bb11609"><span class="id" title="notation">+</span></a> <a class="idref" href="additions.Naive.html#M2.c11"><span class="id" title="projection">c11</span></a> <a class="idref" href="additions.Naive.html#M:28"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.Naive.html#4d985c683f0b20e66a34edc4883055ad"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Naive.html#M2.c10"><span class="id" title="projection">c10</span></a> <a class="idref" href="additions.Naive.html#M':29"><span class="id" title="variable">M'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="additions.Naive.html#M2.c10"><span class="id" title="projection">c10</span></a> <a class="idref" href="additions.Naive.html#M:28"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.Naive.html#4d985c683f0b20e66a34edc4883055ad"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Naive.html#M2.c01"><span class="id" title="projection">c01</span></a> <a class="idref" href="additions.Naive.html#M':29"><span class="id" title="variable">M'</span></a> <a class="idref" href="additions.Naive.html#617a2cc97dac8fe5e951278b3bb11609"><span class="id" title="notation">+</span></a> <a class="idref" href="additions.Naive.html#M2.c11"><span class="id" title="projection">c11</span></a> <a class="idref" href="additions.Naive.html#M:28"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.Naive.html#4d985c683f0b20e66a34edc4883055ad"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Naive.html#M2.c11"><span class="id" title="projection">c11</span></a> <a class="idref" href="additions.Naive.html#M':29"><span class="id" title="variable">M'</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Infix</span> <a id="67a4b07b9250dfdc7f4120645cd84088" class="idref" href="#67a4b07b9250dfdc7f4120645cd84088"><span class="id" title="notation">&quot;</span></a>**" := <a class="idref" href="additions.Naive.html#M2.M2_mult"><span class="id" title="definition">M2_mult</span></a> (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 40, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Fixpoint</span> <a id="M2.power" class="idref" href="#M2.power"><span class="id" title="definition">power</span></a> (<a id="M:30" class="idref" href="#M:30"><span class="id" title="binder">M</span></a> : <a class="idref" href="additions.Naive.html#M2.t"><span class="id" title="record">t</span></a>) (<a id="n:31" class="idref" href="#n:31"><span class="id" title="binder">n</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="additions.Naive.html#M2.t"><span class="id" title="record">t</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.Naive.html#n:31"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0%<span class="id" title="var">nat</span> ⇒ <a class="idref" href="additions.Naive.html#M2.Id2"><span class="id" title="definition">Id2</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">p</span> ⇒  <a class="idref" href="additions.Naive.html#M:30"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.Naive.html#67a4b07b9250dfdc7f4120645cd84088"><span class="id" title="notation">**</span></a> <a class="idref" href="additions.Naive.html#67a4b07b9250dfdc7f4120645cd84088"><span class="id" title="notation">(</span></a><a class="idref" href="additions.Naive.html#power:32"><span class="id" title="definition">power</span></a> <a class="idref" href="additions.Naive.html#M:30"><span class="id" title="variable">M</span></a> <span class="id" title="var">p</span><a class="idref" href="additions.Naive.html#67a4b07b9250dfdc7f4120645cd84088"><span class="id" title="notation">)</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab396"></a><h4 class="section"> </h4>
+
+   The <span class="inlinecode"><span class="id" title="tactic">ring</span></span> tactic, applied to inhabitants of type <span class="inlinecode"><span class="id" title="var">A</span></span>, allows us to
+   prove associativity of matrix multiplication, then a law of 
+   distributivity of <span class="inlinecode"><span class="id" title="var">power</span></span> upon <span class="inlinecode">**</span>
+   
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="M2.Id2_neutral" class="idref" href="#M2.Id2_neutral"><span class="id" title="lemma">Id2_neutral</span></a> : <span class="id" title="keyword">∀</span> <a id="M:34" class="idref" href="#M:34"><span class="id" title="binder">M</span></a>:<a class="idref" href="additions.Naive.html#M2.t"><span class="id" title="record">t</span></a>, <a class="idref" href="additions.Naive.html#M2.Id2"><span class="id" title="definition">Id2</span></a> <a class="idref" href="additions.Naive.html#67a4b07b9250dfdc7f4120645cd84088"><span class="id" title="notation">**</span></a> <a class="idref" href="additions.Naive.html#M:34"><span class="id" title="variable">M</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="additions.Naive.html#M:34"><span class="id" title="variable">M</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="M2.M2_mult_assoc" class="idref" href="#M2.M2_mult_assoc"><span class="id" title="lemma">M2_mult_assoc</span></a> : <span class="id" title="keyword">∀</span> <a id="M:35" class="idref" href="#M:35"><span class="id" title="binder">M</span></a> <a id="M':36" class="idref" href="#M':36"><span class="id" title="binder">M'</span></a> <a id="M'':37" class="idref" href="#M'':37"><span class="id" title="binder">M''</span></a>:<a class="idref" href="additions.Naive.html#M2.t"><span class="id" title="record">t</span></a>,  <a class="idref" href="additions.Naive.html#M:35"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.Naive.html#67a4b07b9250dfdc7f4120645cd84088"><span class="id" title="notation">**</span></a> <a class="idref" href="additions.Naive.html#67a4b07b9250dfdc7f4120645cd84088"><span class="id" title="notation">(</span></a><a class="idref" href="additions.Naive.html#M':36"><span class="id" title="variable">M'</span></a> <a class="idref" href="additions.Naive.html#67a4b07b9250dfdc7f4120645cd84088"><span class="id" title="notation">**</span></a> <a class="idref" href="additions.Naive.html#M'':37"><span class="id" title="variable">M''</span></a><a class="idref" href="additions.Naive.html#67a4b07b9250dfdc7f4120645cd84088"><span class="id" title="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Naive.html#67a4b07b9250dfdc7f4120645cd84088"><span class="id" title="notation">(</span></a><a class="idref" href="additions.Naive.html#M:35"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.Naive.html#67a4b07b9250dfdc7f4120645cd84088"><span class="id" title="notation">**</span></a> <a class="idref" href="additions.Naive.html#M':36"><span class="id" title="variable">M'</span></a><a class="idref" href="additions.Naive.html#67a4b07b9250dfdc7f4120645cd84088"><span class="id" title="notation">)</span></a> <a class="idref" href="additions.Naive.html#67a4b07b9250dfdc7f4120645cd84088"><span class="id" title="notation">**</span></a> <a class="idref" href="additions.Naive.html#M'':37"><span class="id" title="variable">M''</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="M2.power_of_plus" class="idref" href="#M2.power_of_plus"><span class="id" title="lemma">power_of_plus</span></a> (<a id="M:38" class="idref" href="#M:38"><span class="id" title="binder">M</span></a>:<a class="idref" href="additions.Naive.html#M2.t"><span class="id" title="record">t</span></a>) :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="n:39" class="idref" href="#n:39"><span class="id" title="binder">n</span></a> <a id="p:40" class="idref" href="#p:40"><span class="id" title="binder">p</span></a>, <a class="idref" href="additions.Naive.html#M2.power"><span class="id" title="definition">power</span></a> <a class="idref" href="additions.Naive.html#M:38"><span class="id" title="variable">M</span></a> (<a class="idref" href="additions.Naive.html#n:39"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="additions.Naive.html#p:40"><span class="id" title="variable">p</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a>  <a class="idref" href="additions.Naive.html#M2.power"><span class="id" title="definition">power</span></a> <a class="idref" href="additions.Naive.html#M:38"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.Naive.html#n:39"><span class="id" title="variable">n</span></a> <a class="idref" href="additions.Naive.html#67a4b07b9250dfdc7f4120645cd84088"><span class="id" title="notation">**</span></a>  <a class="idref" href="additions.Naive.html#M2.power"><span class="id" title="definition">power</span></a> <a class="idref" href="additions.Naive.html#M:38"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.Naive.html#p:40"><span class="id" title="variable">p</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="additions.Naive.html#M2.Definitions"><span class="id" title="section">Definitions</span></a>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="additions.Naive.html#M2"><span class="id" title="module">M2</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="fibonacci" class="idref" href="#fibonacci"><span class="id" title="definition">fibonacci</span></a> (<a id="n:41" class="idref" href="#n:41"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) :=<br/>
+&nbsp;&nbsp;<a class="idref" href="additions.Naive.html#c00"><span class="id" title="projection">M2.c00</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#N"><span class="id" title="inductive">N</span></a> (<a class="idref" href="additions.Naive.html#power"><span class="id" title="definition">M2.power</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#N"><span class="id" title="inductive">N</span></a> 0%<span class="id" title="var">N</span> 1%<span class="id" title="var">N</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.NArith.BinNat.html#Nplus"><span class="id" title="abbreviation">Nplus</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.NArith.BinNat.html#Nmult"><span class="id" title="abbreviation">Nmult</span></a> (<a class="idref" href="additions.Naive.html#mat"><span class="id" title="constructor">M2.mat</span></a> <span class="id" title="var">_</span> 1 1 1 0)%<span class="id" title="var">N</span>  <a class="idref" href="additions.Naive.html#n:41"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

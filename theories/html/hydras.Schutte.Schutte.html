@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Schutte.Schutte</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Schutte.Schutte</h1>
+
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  Axiomatic definition of countable ordinal numbers (after Kurt Schutte's
+  "Proof Theory"
+
+<div class="paragraph"> </div>
+
+ Pierre Casteran (LaBRI, University of Bordeaux)
+ with contributions by Florian Hatat (formerly student at ENS Lyon)
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="hydras.Schutte.Schutte_basics.html#"><span class="id" title="library">Schutte_basics</span></a> <a class="idref" href="hydras.Schutte.Ordering_Functions.html#"><span class="id" title="library">Ordering_Functions</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.Addition.html#"><span class="id" title="library">Addition</span></a> <a class="idref" href="hydras.Schutte.AP.html#"><span class="id" title="library">AP</span></a> <a class="idref" href="hydras.Schutte.CNF.html#"><span class="id" title="library">CNF</span></a> <a class="idref" href="hydras.Schutte.Critical.html#"><span class="id" title="library">Critical</span></a> <a class="idref" href="hydras.Schutte.Correctness_E0.html#"><span class="id" title="library">Correctness_E0</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab205"></a><h1 class="section">Warning</h1>
+
+
+<div class="paragraph"> </div>
+
+This directory contains an adaptation to Coq of the mathematical
+presentation of the set of countable ordinal numbers by K. Schutte.
+
+<div class="paragraph"> </div>
+
+In order to respect as most as possible the style of that presentation,
+we chosed to work in classical logic augmented by Hilbert's <span class="inlinecode">[<span class="id" title="var">epsilon</span>]</span>
+operator.
+
+<div class="paragraph"> </div>
+
+So, all the construction herein is powered by six axioms, three of them are
+Schutte's axioms, and the other ones allow us to work in that "classical" framework, still using the Coq proof assistant and its libraries.
+
+<div class="paragraph"> </div>
+
+<a id="lab206"></a><h2 class="section">Schutte's Axioms</h2>
+
+
+<div class="paragraph"> </div>
+
+ We consider a type <span class="inlinecode"><span class="id" title="var">ON</span></span> (Ordinal numbers), well-ordered by some relation
+ <span class="inlinecode"><span class="id" title="var">lt</span></span>, and such that every subset <span class="inlinecode"><span class="id" title="var">X</span></span> of <span class="inlinecode"><span class="id" title="var">Ord</span></span> is countable iff <span class="inlinecode"><span class="id" title="var">X</span></span> is bounded.
+
+<div class="paragraph"> </div>
+
+<br/>
+<span class="inlinecode"><br/>
+<span class="id" title="keyword">Axiom</span> <span class="id" title="var">AX1</span> : <span class="id" title="var">WO</span> <span class="id" title="var">lt</span>.<br/>
+<br/>
+<span class="id" title="keyword">Axiom</span> <span class="id" title="var">AX2</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">X</span>: <span class="id" title="var">Ensemble</span> <span class="id" title="var">Ord</span>, (<span class="id" title="tactic">∃</span> <span class="id" title="var">a</span>,  (<span class="id" title="keyword">∀</span> <span class="id" title="var">y</span>, <span class="id" title="var">X</span> <span class="id" title="var">y</span> → <span class="id" title="var">y</span> &lt; <span class="id" title="var">a</span>)) →<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">countable</span> <span class="id" title="var">X</span>.<br/>
+<br/>
+<br/>
+<span class="id" title="keyword">Axiom</span> <span class="id" title="var">AX3</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">X</span> : <span class="id" title="var">Ensemble</span> <span class="id" title="var">Ord</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">countable</span> <span class="id" title="var">X</span> →<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">∃</span> <span class="id" title="var">a</span>,  <span class="id" title="keyword">∀</span> <span class="id" title="var">y</span>, <span class="id" title="var">X</span> <span class="id" title="var">y</span> → <span class="id" title="var">y</span> &lt; <span class="id" title="var">a</span>.<br/>
+
+<div class="paragraph"> </div>
+
+</span>
+<div class="paragraph"> </div>
+
+<a id="lab207"></a><h2 class="section">Classical logic and Hilbert style</h2>
+
+
+<div class="paragraph"> </div>
+
+<a id="lab208"></a><h3 class="section">From <span class="inlinecode"><span class="id" title="var">Coq.Logic.Classical</span></span></h3>
+
+
+<div class="paragraph"> </div>
+
+<br/>
+<span class="inlinecode"><span class="id" title="keyword">Axiom</span> <span class="id" title="var">classic</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span>:<span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> ∨ ¬ <span class="id" title="var">P</span>.
+<div class="paragraph"> </div>
+
+</span>
+<div class="paragraph"> </div>
+
+<a id="lab209"></a><h3 class="section">From <span class="inlinecode"><span class="id" title="var">Coq.Logic.Epsilon</span></span></h3>
+
+
+<div class="paragraph"> </div>
+
+<br/>
+<span class="inlinecode"><br/>
+<span class="id" title="keyword">Axiom</span> <span class="id" title="var">epsilon_statement</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">A</span>→<span class="id" title="keyword">Prop</span>), <span class="id" title="var">inhabited</span> <span class="id" title="var">A</span> →<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="id" title="var">x</span> : <span class="id" title="var">A</span> | (<span class="id" title="tactic">∃</span> <span class="id" title="var">x</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) → <span class="id" title="var">P</span> <span class="id" title="var">x</span> }.<br/>
+
+<div class="paragraph"> </div>
+
+</span>
+<div class="paragraph"> </div>
+
+<a id="lab210"></a><h3 class="section">Needed for <span class="inlinecode"><span class="id" title="var">epsilon</span></span> to work properly.</h3>
+
+
+<div class="paragraph"> </div>
+
+<br/>
+<span class="inlinecode"><span class="id" title="keyword">Axiom</span> <span class="id" title="var">inh_Ord</span> : <span class="id" title="var">inhabited</span> <span class="id" title="var">Ord</span>.<br/>
+
+<div class="paragraph"> </div>
+
+</span>
+</div>
+<div class="code">
+<span class="id" title="keyword">Example</span> <a id="Ex42" class="idref" href="#Ex42"><span class="id" title="definition">Ex42</span></a>: <a class="idref" href="hydras.Schutte.Schutte_basics.html#omega"><span class="id" title="abbreviation">omega</span></a> <a class="idref" href="hydras.Schutte.Addition.html#ef17d4fde9f4f9a265266bf8f6c56f86"><span class="id" title="notation">+</span></a> 42 <a class="idref" href="hydras.Schutte.Addition.html#ef17d4fde9f4f9a265266bf8f6c56f86"><span class="id" title="notation">+</span></a> <a class="idref" href="hydras.Schutte.AP.html#6b5cc3fabae1095df9f5452df6b2c0df"><span class="id" title="notation">omega</span></a><a class="idref" href="hydras.Schutte.AP.html#6b5cc3fabae1095df9f5452df6b2c0df"><span class="id" title="notation">^2</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Schutte.AP.html#6b5cc3fabae1095df9f5452df6b2c0df"><span class="id" title="notation">omega</span></a><a class="idref" href="hydras.Schutte.AP.html#6b5cc3fabae1095df9f5452df6b2c0df"><span class="id" title="notation">^2</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Schutte.AP.html#AP_plus_closed"><span class="id" title="lemma">AP_plus_closed</span></a>. 
+<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

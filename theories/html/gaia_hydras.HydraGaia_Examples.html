@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>gaia_hydras.HydraGaia_Examples</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library gaia_hydras.HydraGaia_Examples</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">mathcomp</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="library">all_ssreflect</span> <span class="id" title="library">zify</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Eqdep_dec.html#"><span class="id" title="library">Logic.Eqdep_dec</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Prelude.DecPreOrder.html#"><span class="id" title="library">DecPreOrder</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_Generic.html#"><span class="id" title="library">ON_Generic</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Epsilon0.T1.html#"><span class="id" title="library">T1</span></a> <a class="idref" href="hydras.Epsilon0.E0.html#"><span class="id" title="library">E0</span></a> <a class="idref" href="hydras.Epsilon0.Hessenberg.html#"><span class="id" title="library">Hessenberg</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">gaia</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <span class="id" title="library">ssete9</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">gaia_hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="gaia_hydras.T1Bridge.html#"><span class="id" title="library">T1Bridge</span></a> <a class="idref" href="gaia_hydras.GCanon.html#"><span class="id" title="library">GCanon</span></a> <a class="idref" href="gaia_hydras.GHessenberg.html#"><span class="id" title="library">GHessenberg</span></a> <br/>
+&nbsp;&nbsp;<a class="idref" href="gaia_hydras.GLarge_Sets.html#"><span class="id" title="library">GLarge_Sets</span></a>.<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="notation">\</span><span class="id" title="notation">F</span> 42.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="ab410a966ac148e9b78c65c6cdf301fd" class="idref" href="#ab410a966ac148e9b78c65c6cdf301fd"><span class="id" title="definition">α</span></a> : <span class="id" title="inductive">T1</span> :=<br/>
+&nbsp;<span class="id" title="definition">T1omega</span> <span class="id" title="notation">+</span>  <span class="id" title="definition">phi0</span> <span class="id" title="definition">T1omega</span> <span class="id" title="notation">×</span> <span class="id" title="notation">\</span><span class="id" title="notation">F</span> 3 <span class="id" title="notation">+</span> <span class="id" title="definition">phi0</span> (<span class="id" title="notation">\</span><span class="id" title="notation">F</span> 5) <span class="id" title="notation">×</span> <span class="id" title="notation">\</span><span class="id" title="notation">F</span> 4 <span class="id" title="notation">+</span> <span class="id" title="definition">T1omega</span> <span class="id" title="notation">×</span> <span class="id" title="definition">T1omega</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="dc5233cb1d950ecad15b1e9b2514f665" class="idref" href="#dc5233cb1d950ecad15b1e9b2514f665"><span class="id" title="definition">β</span></a> : <span class="id" title="inductive">T1</span> :=  <span class="id" title="definition">phi0</span> (<span class="id" title="definition">phi0</span> (<span class="id" title="notation">\</span><span class="id" title="notation">F</span> 2)).<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Hessenberg's sum 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Print</span> <a class="idref" href="gaia_hydras.GHessenberg.html#oplus"><span class="id" title="definition">oplus</span></a>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="definition">T1lt</span> (<span class="id" title="notation">\</span><span class="id" title="notation">F</span> 42) <span class="id" title="definition">T1omega</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> (<span class="id" title="notation">\</span><span class="id" title="notation">F</span> 42 <span class="id" title="notation">&lt;</span> <span class="id" title="definition">T1omega</span>)%<span class="id" title="var">ca</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="notation">\</span><span class="id" title="notation">F</span> 42 <span class="id" title="notation">&lt;</span> <span class="id" title="definition">T1omega</span>. 
+<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Epsilon0.T1.html#lt"><span class="id" title="definition">T1.lt</span></a> (<a class="idref" href="hydras.Epsilon0.T1.html#T1nat"><span class="id" title="definition">T1.T1nat</span></a> 42) <a class="idref" href="hydras.Epsilon0.T1.html#T1omega"><span class="id" title="abbreviation">T1.T1omega</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Epsilon0.T1.html#lt"><span class="id" title="definition">T1.lt</span></a> (<a class="idref" href="hydras.Epsilon0.T1.html#d9b48d1d60bd5708755ece6f90c63f3a"><span class="id" title="notation">\</span></a><a class="idref" href="hydras.Epsilon0.T1.html#d9b48d1d60bd5708755ece6f90c63f3a"><span class="id" title="notation">F</span></a> 42)%<span class="id" title="var">t1</span> <a class="idref" href="hydras.Epsilon0.T1.html#T1omega"><span class="id" title="abbreviation">T1.T1omega</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

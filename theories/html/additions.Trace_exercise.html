@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>additions.Trace_exercise</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library additions.Trace_exercise</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+Solution to an exercise 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#"><span class="id" title="library">List</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#ListNotations"><span class="id" title="module">ListNotations</span></a>.<br/>
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="additions.Addition_Chains.html#"><span class="id" title="library">Addition_Chains</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.PArith.html#"><span class="id" title="library">PArith</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="fusion" class="idref" href="#fusion"><span class="id" title="definition">fusion</span></a>  {<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a>} (<a id="compare:2" class="idref" href="#compare:2"><span class="id" title="binder">compare</span></a> : <a class="idref" href="additions.Trace_exercise.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Trace_exercise.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#comparison"><span class="id" title="inductive">comparison</span></a>)(<a id="l1:3" class="idref" href="#l1:3"><span class="id" title="binder">l1</span></a> <a id="l2:4" class="idref" href="#l2:4"><span class="id" title="binder">l2</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="additions.Trace_exercise.html#A:1"><span class="id" title="variable">A</span></a>) :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="keyword">fix</span> <a id="aux:10" class="idref" href="#aux:10"><span class="id" title="binder">aux</span></a> <a id="l2:6" class="idref" href="#l2:6"><span class="id" title="binder">l2</span></a> {<span class="id" title="keyword">struct</span> <span class="id" title="var">l2</span>}:=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.Trace_exercise.html#l1:3"><span class="id" title="variable">l1</span></a>,<a class="idref" href="additions.Trace_exercise.html#l2:6"><span class="id" title="variable">l2</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nil"><span class="id" title="constructor">nil</span></a>,<span class="id" title="var">_</span> ⇒ <a class="idref" href="additions.Trace_exercise.html#l2:6"><span class="id" title="variable">l2</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>,<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="additions.Trace_exercise.html#l1:3"><span class="id" title="variable">l1</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">a1</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a><span class="id" title="var">l1'</span>,<span class="id" title="var">a2</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a><span class="id" title="var">l2'</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.Trace_exercise.html#compare:2"><span class="id" title="variable">compare</span></a> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#Lt"><span class="id" title="constructor">Lt</span></a> ⇒ <span class="id" title="var">a2</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="additions.Trace_exercise.html#aux:7"><span class="id" title="variable">aux</span></a>  <span class="id" title="var">l2'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#Eq"><span class="id" title="constructor">Eq</span></a> ⇒ <span class="id" title="var">a1</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="additions.Trace_exercise.html#fusion:5"><span class="id" title="definition">fusion</span></a> <a class="idref" href="additions.Trace_exercise.html#compare:2"><span class="id" title="variable">compare</span></a> <span class="id" title="var">l1'</span> <span class="id" title="var">l2'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#Gt"><span class="id" title="constructor">Gt</span></a> ⇒ <span class="id" title="var">a1</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="additions.Trace_exercise.html#fusion:5"><span class="id" title="definition">fusion</span></a> <a class="idref" href="additions.Trace_exercise.html#compare:2"><span class="id" title="variable">compare</span></a> <span class="id" title="var">l1'</span> <a class="idref" href="additions.Trace_exercise.html#l2:6"><span class="id" title="variable">l2</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">in</span> <a class="idref" href="additions.Trace_exercise.html#aux:10"><span class="id" title="variable">aux</span></a> <a class="idref" href="additions.Trace_exercise.html#l2:4"><span class="id" title="variable">l2</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">positive_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Traces with full information 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="info" class="idref" href="#info"><span class="id" title="inductive">info</span></a> : <span class="id" title="keyword">Set</span> :=<br/>
+&nbsp;&nbsp;<a id="Init" class="idref" href="#Init"><span class="id" title="constructor">Init</span></a><br/>
+| <a id="Add" class="idref" href="#Add"><span class="id" title="constructor">Add</span></a> (<a id="p:13" class="idref" href="#p:13"><span class="id" title="binder">p</span></a> <a id="q:14" class="idref" href="#q:14"><span class="id" title="binder">q</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trace_compare" class="idref" href="#trace_compare"><span class="id" title="definition">trace_compare</span></a> (<a id="t:15" class="idref" href="#t:15"><span class="id" title="binder">t</span></a> <a id="t':16" class="idref" href="#t':16"><span class="id" title="binder">t'</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Trace_exercise.html#info"><span class="id" title="inductive">info</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.Trace_exercise.html#t:15"><span class="id" title="variable">t</span></a>, <a class="idref" href="additions.Trace_exercise.html#t':16"><span class="id" title="variable">t'</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a><span class="id" title="var">_</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>,<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">y</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a><span class="id" title="var">_</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#Pos.compare"><span class="id" title="definition">Pos.compare</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trace_mult" class="idref" href="#trace_mult"><span class="id" title="definition">trace_mult</span></a> (<a id="l:19" class="idref" href="#l:19"><span class="id" title="binder">l</span></a> <a id="l':20" class="idref" href="#l':20"><span class="id" title="binder">l'</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Trace_exercise.html#info"><span class="id" title="inductive">info</span></a>)):=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.Trace_exercise.html#l:19"><span class="id" title="variable">l</span></a>, <a class="idref" href="additions.Trace_exercise.html#l':20"><span class="id" title="variable">l'</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nil"><span class="id" title="constructor">nil</span></a>, <span class="id" title="var">_</span> | <span class="id" title="var">_</span>,<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nil"><span class="id" title="constructor">nil</span></a> ⇒ <a class="idref" href="additions.Trace_exercise.html#l:19"><span class="id" title="variable">l</span></a><br/>
+&nbsp;&nbsp;| (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a><span class="id" title="var">_</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a><span class="id" title="var">l1</span>),(<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">y</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a><span class="id" title="var">_</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a><span class="id" title="var">l'1</span>) ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><span class="id" title="var">x</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#50efadf7a9f9d41adb2b162cbba3bda7"><span class="id" title="notation">+</span></a><span class="id" title="var">y</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a><a class="idref" href="additions.Trace_exercise.html#Add"><span class="id" title="constructor">Add</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="additions.Trace_exercise.html#fusion"><span class="id" title="definition">fusion</span></a> <a class="idref" href="additions.Trace_exercise.html#trace_compare"><span class="id" title="definition">trace_compare</span></a> <a class="idref" href="additions.Trace_exercise.html#l:19"><span class="id" title="variable">l</span></a> <a class="idref" href="additions.Trace_exercise.html#l':20"><span class="id" title="variable">l'</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="chain_trace" class="idref" href="#chain_trace"><span class="id" title="definition">chain_trace</span></a> <a id="c:23" class="idref" href="#c:23"><span class="id" title="binder">c</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#rev"><span class="id" title="definition">List.rev</span></a> (<a class="idref" href="additions.Addition_Chains.html#chain_execute"><span class="id" title="definition">chain_execute</span></a> <a class="idref" href="additions.Trace_exercise.html#c:23"><span class="id" title="variable">c</span></a>  <a class="idref" href="additions.Trace_exercise.html#trace_mult"><span class="id" title="definition">trace_mult</span></a>  (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a>1<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a><a class="idref" href="additions.Trace_exercise.html#Init"><span class="id" title="constructor">Init</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nil"><span class="id" title="constructor">nil</span></a>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="exponents" class="idref" href="#exponents"><span class="id" title="definition">exponents</span></a> <a id="c:24" class="idref" href="#c:24"><span class="id" title="binder">c</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#map"><span class="id" title="definition">List.map</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#fst"><span class="id" title="definition">fst</span></a> (<a class="idref" href="additions.Trace_exercise.html#chain_trace"><span class="id" title="definition">chain_trace</span></a> <a class="idref" href="additions.Trace_exercise.html#c:24"><span class="id" title="variable">c</span></a>).<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

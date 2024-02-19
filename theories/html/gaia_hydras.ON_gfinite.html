@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>gaia_hydras.ON_gfinite</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library gaia_hydras.ON_gfinite</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+ordinals a la mathcomp 
+</div>
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Prelude.DecPreOrder.html#"><span class="id" title="library">DecPreOrder</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_Generic.html#"><span class="id" title="library">ON_Generic</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">mathcomp</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="library">all_ssreflect</span> <span class="id" title="library">zify</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">gaia</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <span class="id" title="library">ssete9</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Eqdep_dec.html#"><span class="id" title="library">Logic.Eqdep_dec</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="finord_lt" class="idref" href="#finord_lt"><span class="id" title="definition">finord_lt</span></a> (<a id="n:1" class="idref" href="#n:1"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="alpha:2" class="idref" href="#alpha:2"><span class="id" title="binder">alpha</span></a> <a id="beta:3" class="idref" href="#beta:3"><span class="id" title="binder">beta</span></a>: <span class="id" title="notation">'</span><span class="id" title="notation">I_n</span>): <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a> :=<br/>
+&nbsp;&nbsp;(<a class="idref" href="gaia_hydras.ON_gfinite.html#alpha:2"><span class="id" title="variable">alpha</span></a> <span class="id" title="notation">&lt;</span> <a class="idref" href="gaia_hydras.ON_gfinite.html#beta:3"><span class="id" title="variable">beta</span></a>)%<span class="id" title="var">N</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Instance</span>  <a id="finord_compare" class="idref" href="#finord_compare"><span class="id" title="instance">finord_compare</span></a> (<a id="n:4" class="idref" href="#n:4"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="hydras.Prelude.Comparable.html#Compare"><span class="id" title="class">Compare</span></a> (<span class="id" title="notation">'</span><span class="id" title="notation">I_n</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <a id="alpha:5" class="idref" href="#alpha:5"><span class="id" title="binder">alpha</span></a> <a id="beta:6" class="idref" href="#beta:6"><span class="id" title="binder">beta</span></a> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Nat.html#compare"><span class="id" title="definition">Nat.compare</span></a> <a class="idref" href="gaia_hydras.ON_gfinite.html#alpha:5"><span class="id" title="variable">alpha</span></a> <a class="idref" href="gaia_hydras.ON_gfinite.html#beta:6"><span class="id" title="variable">beta</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="finord_compare_correct" class="idref" href="#finord_compare_correct"><span class="id" title="lemma">finord_compare_correct</span></a> (<a id="n:7" class="idref" href="#n:7"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="alpha:8" class="idref" href="#alpha:8"><span class="id" title="binder">alpha</span></a> <a id="beta:9" class="idref" href="#beta:9"><span class="id" title="binder">beta</span></a> : <span class="id" title="notation">'</span><span class="id" title="notation">I_n</span>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#CompSpec"><span class="id" title="definition">CompSpec</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#eq"><span class="id" title="inductive">eq</span></a> (@<a class="idref" href="gaia_hydras.ON_gfinite.html#finord_lt"><span class="id" title="definition">finord_lt</span></a> <a class="idref" href="gaia_hydras.ON_gfinite.html#n:7"><span class="id" title="variable">n</span></a>) <a class="idref" href="gaia_hydras.ON_gfinite.html#alpha:8"><span class="id" title="variable">alpha</span></a> <a class="idref" href="gaia_hydras.ON_gfinite.html#beta:9"><span class="id" title="variable">beta</span></a> (<a class="idref" href="hydras.Prelude.Comparable.html#compare"><span class="id" title="definition">compare</span></a> <a class="idref" href="gaia_hydras.ON_gfinite.html#alpha:8"><span class="id" title="variable">alpha</span></a> <a class="idref" href="gaia_hydras.ON_gfinite.html#beta:9"><span class="id" title="variable">beta</span></a>).<br/>
+
+<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Instance</span> <a id="finord_sto" class="idref" href="#finord_sto"><span class="id" title="instance">finord_sto</span></a> <a id="n:10" class="idref" href="#n:10"><span class="id" title="binder">n</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Classes.RelationClasses.html#StrictOrder"><span class="id" title="class">StrictOrder</span></a> (@<a class="idref" href="gaia_hydras.ON_gfinite.html#finord_lt"><span class="id" title="definition">finord_lt</span></a> <a class="idref" href="gaia_hydras.ON_gfinite.html#n:10"><span class="id" title="variable">n</span></a>).<br/>
+ 
+<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Instance</span> <a id="finord_comp" class="idref" href="#finord_comp"><span class="id" title="instance">finord_comp</span></a> <a id="n:11" class="idref" href="#n:11"><span class="id" title="binder">n</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Prelude.Comparable.html#Comparable"><span class="id" title="class">Comparable</span></a> (@<a class="idref" href="gaia_hydras.ON_gfinite.html#finord_lt"><span class="id" title="definition">finord_lt</span></a> <a class="idref" href="gaia_hydras.ON_gfinite.html#n:11"><span class="id" title="variable">n</span></a>) (@<a class="idref" href="gaia_hydras.ON_gfinite.html#finord_compare"><span class="id" title="instance">finord_compare</span></a> <a class="idref" href="gaia_hydras.ON_gfinite.html#n:11"><span class="id" title="variable">n</span></a>).<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="finord_lt_wf" class="idref" href="#finord_lt_wf"><span class="id" title="lemma">finord_lt_wf</span></a> <a id="n:12" class="idref" href="#n:12"><span class="id" title="binder">n</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#well_founded"><span class="id" title="definition">well_founded</span></a> (@<a class="idref" href="gaia_hydras.ON_gfinite.html#finord_lt"><span class="id" title="definition">finord_lt</span></a> <a class="idref" href="gaia_hydras.ON_gfinite.html#n:12"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Instance</span> <a id="finord_ON" class="idref" href="#finord_ON"><span class="id" title="instance">finord_ON</span></a> <a id="n:23" class="idref" href="#n:23"><span class="id" title="binder">n</span></a> : <a class="idref" href="hydras.OrdinalNotations.ON_Generic.html#ON"><span class="id" title="class">ON</span></a> (@<a class="idref" href="gaia_hydras.ON_gfinite.html#finord_lt"><span class="id" title="definition">finord_lt</span></a> <a class="idref" href="gaia_hydras.ON_gfinite.html#n:23"><span class="id" title="variable">n</span></a>) (@<a class="idref" href="gaia_hydras.ON_gfinite.html#finord_compare"><span class="id" title="instance">finord_compare</span></a> <a class="idref" href="gaia_hydras.ON_gfinite.html#n:23"><span class="id" title="variable">n</span></a>).<br/>
+ 
+<br/>
+</div>
+
+<div class="doc">
+Examples 
+</div>
+<div class="code">
+
+<br/>
+#[<span class="id" title="var">program</span>] <span class="id" title="keyword">Example</span> <a id="o_33_of_42" class="idref" href="#o_33_of_42"><span class="id" title="definition">o_33_of_42</span></a>: <span class="id" title="notation">'</span><span class="id" title="notation">I_42</span> := @<span class="id" title="constructor">Ordinal</span> 42 33 <span class="id" title="var">_</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">program</span>] <span class="id" title="keyword">Example</span> <a id="o_36_of_42" class="idref" href="#o_36_of_42"><span class="id" title="definition">o_36_of_42</span></a>: <span class="id" title="notation">'</span><span class="id" title="notation">I_42</span> :=  @<span class="id" title="constructor">Ordinal</span> 42 36 <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

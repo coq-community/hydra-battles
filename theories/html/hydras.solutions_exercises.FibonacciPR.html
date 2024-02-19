@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.solutions_exercises.FibonacciPR</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.solutions_exercises.FibonacciPR</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.primRec.html#"><span class="id" title="library">primRec</span></a> <a class="idref" href="hydras.Ackermann.cPair.html#"><span class="id" title="library">cPair</span></a> <a class="idref" href="hydras.Ackermann.extEqualNat.html#"><span class="id" title="library">extEqualNat</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The famous Fibonacci function 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="fib" class="idref" href="#fib"><span class="id" title="definition">fib</span></a> (<a id="n:1" class="idref" href="#n:1"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#n:1"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| 0 ⇒ 1<br/>
+&nbsp;&nbsp;| 1 ⇒ 1<br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> ((<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">p</span>) <span class="id" title="keyword">as</span> <span class="id" title="var">q</span>) ⇒ <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#fib:2"><span class="id" title="definition">fib</span></a> <span class="id" title="var">q</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#fib:2"><span class="id" title="definition">fib</span></a> <span class="id" title="var">p</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Proof_of_FibIsPR" class="idref" href="#Proof_of_FibIsPR"><span class="id" title="section">Proof_of_FibIsPR</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+To do :  Some parts of this proof may be made more generic 
+<div class="paragraph"> </div>
+
+ let us consider another definition of fib, as an application of
+      <span class="inlinecode"><span class="id" title="var">nat_rec</span></span>
+   
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Proof_of_FibIsPR.fib_step" class="idref" href="#Proof_of_FibIsPR.fib_step"><span class="id" title="variable">fib_step</span></a> (<a id="p:4" class="idref" href="#p:4"><span class="id" title="binder">p</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) := <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#fst"><span class="id" title="definition">fst</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#p:4"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#snd"><span class="id" title="definition">snd</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#p:4"><span class="id" title="variable">p</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#fst"><span class="id" title="definition">fst</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#p:4"><span class="id" title="variable">p</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Proof_of_FibIsPR.fib_iter" class="idref" href="#Proof_of_FibIsPR.fib_iter"><span class="id" title="variable">fib_iter</span></a> <a id="n:5" class="idref" href="#n:5"><span class="id" title="binder">n</span></a> <a id="p:6" class="idref" href="#p:6"><span class="id" title="binder">p</span></a>:= (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat_rec"><span class="id" title="definition">nat_rec</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>)%<span class="id" title="keyword">type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#p:6"><span class="id" title="variable">p</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <a id="p:7" class="idref" href="#p:7"><span class="id" title="binder">p</span></a> ⇒ <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#Proof_of_FibIsPR.fib_step"><span class="id" title="variable">fib_step</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#p:7"><span class="id" title="variable">p</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#n:5"><span class="id" title="variable">n</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="fib_alt" class="idref" href="#fib_alt"><span class="id" title="definition">fib_alt</span></a> <a id="n:8" class="idref" href="#n:8"><span class="id" title="binder">n</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#snd"><span class="id" title="definition">snd</span></a> (<a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#Proof_of_FibIsPR.fib_iter"><span class="id" title="variable">fib_iter</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#n:8"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a>1<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a>1<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>).<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The theory of primitive functions deals only with functions
+    of type <span class="inlinecode"><span class="id" title="var">naryFunc</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>.
+
+<div class="paragraph"> </div>
+
+   So, let us define a variant of <span class="inlinecode"><span class="id" title="var">fib_alt</span></span> 
+
+<div class="paragraph"> </div>
+
+   
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.cPair.html#LispAbbreviations"><span class="id" title="module">LispAbbreviations</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Ackermann.cPair.html#cPair"><span class="id" title="definition">cPair</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Print</span> <a class="idref" href="hydras.Ackermann.cPair.html#cPairPi1"><span class="id" title="definition">car</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Ackermann.cPair.html#LispAbbreviations.car"><span class="id" title="abbreviation">car</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Ackermann.cPair.html#LispAbbreviations.cdr"><span class="id" title="abbreviation">cdr</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Search</span> <a class="idref" href="hydras.Ackermann.cPair.html#cPair"><span class="id" title="definition">cPair</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Search</span> <a class="idref" href="hydras.Ackermann.cPair.html#LispAbbreviations.car"><span class="id" title="abbreviation">car</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Search</span> <a class="idref" href="hydras.Ackermann.cPair.html#LispAbbreviations.car"><span class="id" title="abbreviation">car</span></a> <a class="idref" href="hydras.Ackermann.cPair.html#LispAbbreviations.cdr"><span class="id" title="abbreviation">cdr</span></a> <a class="idref" href="hydras.Ackermann.cPair.html#cPair"><span class="id" title="definition">cPair</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Proof_of_FibIsPR.fib_step_cPair" class="idref" href="#Proof_of_FibIsPR.fib_step_cPair"><span class="id" title="variable">fib_step_cPair</span></a> <a id="p:9" class="idref" href="#p:9"><span class="id" title="binder">p</span></a> := <a class="idref" href="hydras.Ackermann.cPair.html#cPair"><span class="id" title="definition">cPair</span></a> (<a class="idref" href="hydras.Ackermann.cPair.html#LispAbbreviations.car"><span class="id" title="abbreviation">car</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#p:9"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="hydras.Ackermann.cPair.html#LispAbbreviations.cdr"><span class="id" title="abbreviation">cdr</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#p:9"><span class="id" title="variable">p</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Ackermann.cPair.html#LispAbbreviations.car"><span class="id" title="abbreviation">car</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#p:9"><span class="id" title="variable">p</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Proof_of_FibIsPR.fib_iter_cPair" class="idref" href="#Proof_of_FibIsPR.fib_iter_cPair"><span class="id" title="variable">fib_iter_cPair</span></a> <a id="n:10" class="idref" href="#n:10"><span class="id" title="binder">n</span></a> <a id="p:11" class="idref" href="#p:11"><span class="id" title="binder">p</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat_rec"><span class="id" title="definition">nat_rec</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#p:11"><span class="id" title="variable">p</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <a id="p:12" class="idref" href="#p:12"><span class="id" title="binder">p</span></a> ⇒ <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#Proof_of_FibIsPR.fib_step_cPair"><span class="id" title="variable">fib_step_cPair</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#p:12"><span class="id" title="variable">p</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#n:10"><span class="id" title="variable">n</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="fibPR" class="idref" href="#fibPR"><span class="id" title="definition">fibPR</span></a> <a id="n:13" class="idref" href="#n:13"><span class="id" title="binder">n</span></a> := <a class="idref" href="hydras.Ackermann.cPair.html#LispAbbreviations.cdr"><span class="id" title="abbreviation">cdr</span></a> (<a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#Proof_of_FibIsPR.fib_iter_cPair"><span class="id" title="variable">fib_iter_cPair</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#n:13"><span class="id" title="variable">n</span></a> (<a class="idref" href="hydras.Ackermann.cPair.html#cPair"><span class="id" title="definition">cPair</span></a> 1 1)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Let us prove that <span class="inlinecode"><span class="id" title="var">fibPR</span></span> is PR 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="fibPRIsPR" class="idref" href="#fibPRIsPR"><span class="id" title="instance">fibPRIsPR</span></a>: <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#fibPR"><span class="id" title="definition">fibPR</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Ok, but we must prove that <span class="inlinecode"><span class="id" title="var">fibPR</span></span> is extensionaly equal to <span class="inlinecode"><span class="id" title="var">fib</span></span> 
+<div class="paragraph"> </div>
+
+ let us consider the following relation 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="inv" class="idref" href="#inv"><span class="id" title="definition">inv</span></a> (<a id="p:14" class="idref" href="#p:14"><span class="id" title="binder">p</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#11c698c8685bb8ab1cf725545c085ac4"><span class="id" title="notation">×</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="c:15" class="idref" href="#c:15"><span class="id" title="binder">c</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) :=  <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#c:15"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Ackermann.cPair.html#cPair"><span class="id" title="definition">cPair</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#fst"><span class="id" title="definition">fst</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#p:14"><span class="id" title="variable">p</span></a>) (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#snd"><span class="id" title="definition">snd</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#p:14"><span class="id" title="variable">p</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="inv_Pi" class="idref" href="#inv_Pi"><span class="id" title="lemma">inv_Pi</span></a> : <span class="id" title="keyword">∀</span> <a id="p:16" class="idref" href="#p:16"><span class="id" title="binder">p</span></a> <a id="c:17" class="idref" href="#c:17"><span class="id" title="binder">c</span></a>, <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#inv"><span class="id" title="definition">inv</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#p:16"><span class="id" title="variable">p</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#c:17"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#snd"><span class="id" title="definition">snd</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#p:16"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Ackermann.cPair.html#cPairPi2"><span class="id" title="definition">cPairPi2</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#c:17"><span class="id" title="variable">c</span></a>.<br/>
+ 
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="L0" class="idref" href="#L0"><span class="id" title="lemma">L0</span></a>: <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#inv"><span class="id" title="definition">inv</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a>1<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a>1<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a> (<a class="idref" href="hydras.Ackermann.cPair.html#cPair"><span class="id" title="definition">cPair</span></a> 1 1).<br/>
+ 
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="LS" class="idref" href="#LS"><span class="id" title="lemma">LS</span></a> : <span class="id" title="keyword">∀</span> <a id="p:18" class="idref" href="#p:18"><span class="id" title="binder">p</span></a> <a id="c:19" class="idref" href="#c:19"><span class="id" title="binder">c</span></a>,  <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#inv"><span class="id" title="definition">inv</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#p:18"><span class="id" title="variable">p</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#c:19"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#inv"><span class="id" title="definition">inv</span></a> (<a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#Proof_of_FibIsPR.fib_step"><span class="id" title="variable">fib_step</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#p:18"><span class="id" title="variable">p</span></a>) (<a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#Proof_of_FibIsPR.fib_step_cPair"><span class="id" title="variable">fib_step_cPair</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#c:19"><span class="id" title="variable">c</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="L1" class="idref" href="#L1"><span class="id" title="lemma">L1</span></a> : <span class="id" title="keyword">∀</span>  <a id="p:20" class="idref" href="#p:20"><span class="id" title="binder">p</span></a> <a id="c:21" class="idref" href="#c:21"><span class="id" title="binder">c</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#inv"><span class="id" title="definition">inv</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#p:20"><span class="id" title="variable">p</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#c:21"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">∀</span> <a id="n:22" class="idref" href="#n:22"><span class="id" title="binder">n</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#inv"><span class="id" title="definition">inv</span></a> (<a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#Proof_of_FibIsPR.fib_iter"><span class="id" title="variable">fib_iter</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#n:22"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#p:20"><span class="id" title="variable">p</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#Proof_of_FibIsPR.fib_iter_cPair"><span class="id" title="variable">fib_iter_cPair</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#n:22"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#c:21"><span class="id" title="variable">c</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="L2" class="idref" href="#L2"><span class="id" title="lemma">L2</span></a> : <a class="idref" href="hydras.Ackermann.extEqualNat.html#extEqual"><span class="id" title="definition">extEqual</span></a> 1 <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#fib_alt"><span class="id" title="definition">fib_alt</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#fibPR"><span class="id" title="definition">fibPR</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="fib_altIsPR" class="idref" href="#fib_altIsPR"><span class="id" title="instance">fib_altIsPR</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#fib_alt"><span class="id" title="definition">fib_alt</span></a>.<br/>
+ 
+<br/>
+</div>
+
+<div class="doc">
+It remains to prove that fib_alt is equivalent to the "classical" fib 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="fib_OK0" class="idref" href="#fib_OK0"><span class="id" title="lemma">fib_OK0</span></a> : <span class="id" title="keyword">∀</span> <a id="n:23" class="idref" href="#n:23"><span class="id" title="binder">n</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#Proof_of_FibIsPR.fib_iter"><span class="id" title="variable">fib_iter</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#n:23"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a>1<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a>1<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">(</span></a><a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#fib"><span class="id" title="definition">fib</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#n:23"><span class="id" title="variable">n</span></a>)<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">,</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#fib"><span class="id" title="definition">fib</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#n:23"><span class="id" title="variable">n</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e6756e10c36f149b18b4a8741ed83079"><span class="id" title="notation">)</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="fib_alt_Ok" class="idref" href="#fib_alt_Ok"><span class="id" title="lemma">fib_alt_Ok</span></a> : <a class="idref" href="hydras.Ackermann.extEqualNat.html#extEqual"><span class="id" title="definition">extEqual</span></a> 1 <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#fib"><span class="id" title="definition">fib</span></a> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#fib_alt"><span class="id" title="definition">fib_alt</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="fibIsPR" class="idref" href="#fibIsPR"><span class="id" title="instance">fibIsPR</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#fib"><span class="id" title="definition">fib</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.solutions_exercises.FibonacciPR.html#Proof_of_FibIsPR"><span class="id" title="section">Proof_of_FibIsPR</span></a>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Too long !
+
+<div class="paragraph"> </div>
+
+Time Compute fibPR 3.
+ 
+</div>
+<div class="code">
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

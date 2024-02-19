@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>gaia_hydras.GHprime</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library gaia_hydras.GHprime</h1>
+
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+Gaia-compatible <span class="inlinecode"><span class="id" title="var">H'_</span></span> <span class="inlinecode"><span class="id" title="var">alpha</span></span> fast growing functions  
+
+<div class="paragraph"> </div>
+
+(imported from <span class="inlinecode"><span class="id" title="var">hydras.Epsilon0.Hprime</span></span> )
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">mathcomp</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="library">all_ssreflect</span> <span class="id" title="library">zify</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">gaia</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <span class="id" title="library">ssete9</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Eqdep_dec.html#"><span class="id" title="library">Logic.Eqdep_dec</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Prelude.DecPreOrder.html#"><span class="id" title="library">DecPreOrder</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#"><span class="id" title="library">T1</span></a> <a class="idref" href="hydras.Epsilon0.E0.html#"><span class="id" title="library">E0</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <a class="idref" href="hydras.Epsilon0.Paths.html#"><span class="id" title="library">Paths</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span>  <a class="idref" href="hydras.Prelude.Iterates.html#"><span class="id" title="library">Iterates</span></a> <a class="idref" href="hydras.Epsilon0.Hprime.html#"><span class="id" title="library">Hprime</span></a> <a class="idref" href="hydras.Epsilon0.L_alpha.html#"><span class="id" title="library">L_alpha</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">gaia_hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="gaia_hydras.T1Bridge.html#"><span class="id" title="library">T1Bridge</span></a> <a class="idref" href="gaia_hydras.GCanon.html#"><span class="id" title="library">GCanon</span></a> <a class="idref" href="gaia_hydras.GPaths.html#"><span class="id" title="library">GPaths</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="H'_" class="idref" href="#H'_"><span class="id" title="definition">H'_</span></a> <a id="alpha:1" class="idref" href="#alpha:1"><span class="id" title="binder">alpha</span></a> <a id="i:2" class="idref" href="#i:2"><span class="id" title="binder">i</span></a> := <a class="idref" href="hydras.Epsilon0.Hprime.html#H'_"><span class="id" title="definition">Hprime.H'_</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#E0_g2h"><span class="id" title="definition">E0_g2h</span></a> <a class="idref" href="gaia_hydras.GHprime.html#alpha:1"><span class="id" title="variable">alpha</span></a>) <a class="idref" href="gaia_hydras.GHprime.html#i:2"><span class="id" title="variable">i</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab467"></a><h2 class="section">Equations for <span class="inlinecode"><span class="id" title="var">H'_</span></span></h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="H'_eq1" class="idref" href="#H'_eq1"><span class="id" title="lemma">H'_eq1</span></a> (<a id="i:3" class="idref" href="#i:3"><span class="id" title="binder">i</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="gaia_hydras.GHprime.html#H'_"><span class="id" title="definition">H'_</span></a> <a class="idref" href="gaia_hydras.T1Bridge.html#E0zero"><span class="id" title="definition">E0zero</span></a> <a class="idref" href="gaia_hydras.GHprime.html#i:3"><span class="id" title="variable">i</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="gaia_hydras.GHprime.html#i:3"><span class="id" title="variable">i</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="H'_eq2" class="idref" href="#H'_eq2"><span class="id" title="lemma">H'_eq2</span></a>  <a id="alpha:4" class="idref" href="#alpha:4"><span class="id" title="binder">alpha</span></a> <a id="i:5" class="idref" href="#i:5"><span class="id" title="binder">i</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="gaia_hydras.GHprime.html#H'_"><span class="id" title="definition">H'_</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#E0_succ"><span class="id" title="definition">E0_succ</span></a> <a class="idref" href="gaia_hydras.GHprime.html#alpha:4"><span class="id" title="variable">alpha</span></a>) <a class="idref" href="gaia_hydras.GHprime.html#i:5"><span class="id" title="variable">i</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="gaia_hydras.GHprime.html#H'_"><span class="id" title="definition">H'_</span></a> <a class="idref" href="gaia_hydras.GHprime.html#alpha:4"><span class="id" title="variable">alpha</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="gaia_hydras.GHprime.html#i:5"><span class="id" title="variable">i</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="H'_eq3" class="idref" href="#H'_eq3"><span class="id" title="lemma">H'_eq3</span></a> <a id="alpha:6" class="idref" href="#alpha:6"><span class="id" title="binder">alpha</span></a> <a id="i:7" class="idref" href="#i:7"><span class="id" title="binder">i</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="gaia_hydras.T1Bridge.html#E0limit"><span class="id" title="definition">E0limit</span></a> <a class="idref" href="gaia_hydras.GHprime.html#alpha:6"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a>  <a class="idref" href="gaia_hydras.GHprime.html#H'_"><span class="id" title="definition">H'_</span></a> <a class="idref" href="gaia_hydras.GHprime.html#alpha:6"><span class="id" title="variable">alpha</span></a> <a class="idref" href="gaia_hydras.GHprime.html#i:7"><span class="id" title="variable">i</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a>  <a class="idref" href="gaia_hydras.GHprime.html#H'_"><span class="id" title="definition">H'_</span></a> (<a class="idref" href="gaia_hydras.GCanon.html#E0Canon"><span class="id" title="definition">E0Canon</span></a> <a class="idref" href="gaia_hydras.GHprime.html#alpha:6"><span class="id" title="variable">alpha</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="gaia_hydras.GHprime.html#i:7"><span class="id" title="variable">i</span></a>)) <a class="idref" href="gaia_hydras.GHprime.html#i:7"><span class="id" title="variable">i</span></a>.<br/>
+ 
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab468"></a><h2 class="section">Examples</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="H'_omega" class="idref" href="#H'_omega"><span class="id" title="lemma">H'_omega</span></a> <a id="k:8" class="idref" href="#k:8"><span class="id" title="binder">k</span></a> : <a class="idref" href="gaia_hydras.GHprime.html#H'_"><span class="id" title="definition">H'_</span></a> <a class="idref" href="gaia_hydras.T1Bridge.html#E0_omega"><span class="id" title="definition">E0_omega</span></a> <a class="idref" href="gaia_hydras.GHprime.html#k:8"><span class="id" title="variable">k</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <span class="id" title="notation">(</span>2 <span class="id" title="notation">×</span> <a class="idref" href="gaia_hydras.GHprime.html#k:8"><span class="id" title="variable">k</span></a><span class="id" title="notation">).+1</span> %<span class="id" title="var">nat</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="H'_omega_double" class="idref" href="#H'_omega_double"><span class="id" title="lemma">H'_omega_double</span></a> (<a id="k:9" class="idref" href="#k:9"><span class="id" title="binder">k</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="gaia_hydras.GHprime.html#H'_"><span class="id" title="definition">H'_</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#E0mul"><span class="id" title="definition">E0mul</span></a> <a class="idref" href="gaia_hydras.T1Bridge.html#E0_omega"><span class="id" title="definition">E0_omega</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#E0fin"><span class="id" title="definition">E0fin</span></a> 2)) <a class="idref" href="gaia_hydras.GHprime.html#k:9"><span class="id" title="variable">k</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a>  (4 <span class="id" title="notation">×</span> <a class="idref" href="gaia_hydras.GHprime.html#k:9"><span class="id" title="variable">k</span></a> <span class="id" title="notation">+</span> 3)%<span class="id" title="var">coq_nat</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+TODO
+    import more abstract properties of H' 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="H'_dom" class="idref" href="#H'_dom"><span class="id" title="lemma">H'_dom</span></a> <a id="alpha:10" class="idref" href="#alpha:10"><span class="id" title="binder">alpha</span></a> <a id="beta:11" class="idref" href="#beta:11"><span class="id" title="binder">beta</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="gaia_hydras.T1Bridge.html#E0lt"><span class="id" title="definition">E0lt</span></a> <a class="idref" href="gaia_hydras.GHprime.html#alpha:10"><span class="id" title="variable">alpha</span></a> <a class="idref" href="gaia_hydras.GHprime.html#beta:11"><span class="id" title="variable">beta</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="gaia_hydras.T1Bridge.html#dominates_strong"><span class="id" title="definition">dominates_strong</span></a> (<a class="idref" href="gaia_hydras.GHprime.html#H'_"><span class="id" title="definition">H'_</span></a> <a class="idref" href="gaia_hydras.GHprime.html#beta:11"><span class="id" title="variable">beta</span></a>) (<a class="idref" href="gaia_hydras.GHprime.html#H'_"><span class="id" title="definition">H'_</span></a> <a class="idref" href="gaia_hydras.GHprime.html#alpha:10"><span class="id" title="variable">alpha</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="H'_alpha_mono" class="idref" href="#H'_alpha_mono"><span class="id" title="lemma">H'_alpha_mono</span></a> (<a id="alpha:12" class="idref" href="#alpha:12"><span class="id" title="binder">alpha</span></a> : <a class="idref" href="gaia_hydras.T1Bridge.html#E0"><span class="id" title="record">E0</span></a>) : <a class="idref" href="gaia_hydras.T1Bridge.html#strict_mono"><span class="id" title="definition">strict_mono</span></a> (<a class="idref" href="gaia_hydras.GHprime.html#H'_"><span class="id" title="definition">H'_</span></a> <a class="idref" href="gaia_hydras.GHprime.html#alpha:12"><span class="id" title="variable">alpha</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <a id="H'_alpha_gt" class="idref" href="#H'_alpha_gt"><span class="id" title="lemma">H'_alpha_gt</span></a> <a id="alpha:13" class="idref" href="#alpha:13"><span class="id" title="binder">alpha</span></a> (<a id="Halpha:14" class="idref" href="#Halpha:14"><span class="id" title="binder">Halpha</span></a>: <a class="idref" href="gaia_hydras.GHprime.html#alpha:13"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="gaia_hydras.T1Bridge.html#E0zero"><span class="id" title="definition">E0zero</span></a>) <a id="n:15" class="idref" href="#n:15"><span class="id" title="binder">n</span></a> :<br/>
+&nbsp;&nbsp;(<a class="idref" href="gaia_hydras.GHprime.html#n:15"><span class="id" title="variable">n</span></a> <span class="id" title="notation">&lt;</span> <a class="idref" href="gaia_hydras.GHprime.html#H'_"><span class="id" title="definition">H'_</span></a> <a class="idref" href="gaia_hydras.GHprime.html#alpha:13"><span class="id" title="variable">alpha</span></a> <a class="idref" href="gaia_hydras.GHprime.html#n:15"><span class="id" title="variable">n</span></a>)%<span class="id" title="var">N</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="H'_omega_cube_min" class="idref" href="#H'_omega_cube_min"><span class="id" title="lemma">H'_omega_cube_min</span></a> :<br/>
+<span class="id" title="keyword">∀</span> <a id="k:16" class="idref" href="#k:16"><span class="id" title="binder">k</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>,<br/>
+&nbsp;&nbsp;0 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="gaia_hydras.GHprime.html#k:16"><span class="id" title="variable">k</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> (<a class="idref" href="hydras.Prelude.Iterates.html#hyper_exp2"><span class="id" title="definition">hyper_exp2</span></a> <a class="idref" href="gaia_hydras.GHprime.html#k:16"><span class="id" title="variable">k</span></a><span class="id" title="notation">.+1</span>  <span class="id" title="notation">≤</span> <a class="idref" href="gaia_hydras.GHprime.html#H'_"><span class="id" title="definition">H'_</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#E0_phi0"><span class="id" title="definition">E0_phi0</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#E0fin"><span class="id" title="definition">E0fin</span></a> 3)) <a class="idref" href="gaia_hydras.GHprime.html#k:16"><span class="id" title="variable">k</span></a>)%<span class="id" title="var">N</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

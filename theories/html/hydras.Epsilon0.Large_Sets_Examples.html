@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Epsilon0.Large_Sets_Examples</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Epsilon0.Large_Sets_Examples</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Epsilon0.E0.html#"><span class="id" title="library">E0</span></a> <a class="idref" href="hydras.Epsilon0.Canon.html#"><span class="id" title="library">Canon</span></a> <a class="idref" href="hydras.Epsilon0.Paths.html#"><span class="id" title="library">Paths</span></a>  <a class="idref" href="hydras.Prelude.MoreLists.html#"><span class="id" title="library">MoreLists</span></a> <a class="idref" href="hydras.Epsilon0.Large_Sets.html#"><span class="id" title="library">Large_Sets</span></a>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="ex_pathS1" class="idref" href="#ex_pathS1"><span class="id" title="definition">ex_pathS1</span></a> : <a class="idref" href="hydras.Epsilon0.Paths.html#pathS"><span class="id" title="definition">pathS</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#T1omega"><span class="id" title="abbreviation">T1omega</span></a> (2<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a>3<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a>4<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nil"><span class="id" title="constructor">nil</span></a>) 1.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="ex_pathS2" class="idref" href="#ex_pathS2"><span class="id" title="definition">ex_pathS2</span></a> : <a class="idref" href="hydras.Epsilon0.Paths.html#pathS"><span class="id" title="definition">pathS</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#T1omega"><span class="id" title="abbreviation">T1omega</span></a> (<a class="idref" href="hydras.Prelude.MoreLists.html#interval"><span class="id" title="definition">interval</span></a> 3 6) 1.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="omega_omega_1_4" class="idref" href="#omega_omega_1_4"><span class="id" title="definition">omega_omega_1_4</span></a> : <a class="idref" href="hydras.Epsilon0.Paths.html#gnaw"><span class="id" title="definition">gnaw</span></a> (<a class="idref" href="hydras.Epsilon0.T1.html#T1omega"><span class="id" title="abbreviation">T1omega</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#6d507108061d062f40e7ec3dfffa8239"><span class="id" title="notation">^</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#T1omega"><span class="id" title="abbreviation">T1omega</span></a>) (<a class="idref" href="hydras.Prelude.MoreLists.html#interval"><span class="id" title="definition">interval</span></a> 1 4) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 0.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Example</span> <a id="omega_omega_1_3" class="idref" href="#omega_omega_1_3"><span class="id" title="definition">omega_omega_1_3</span></a> : <a class="idref" href="hydras.Epsilon0.Paths.html#gnaw"><span class="id" title="definition">gnaw</span></a> (<a class="idref" href="hydras.Epsilon0.T1.html#T1omega"><span class="id" title="abbreviation">T1omega</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#6d507108061d062f40e7ec3dfffa8239"><span class="id" title="notation">^</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#T1omega"><span class="id" title="abbreviation">T1omega</span></a>) (<a class="idref" href="hydras.Prelude.MoreLists.html#interval"><span class="id" title="definition">interval</span></a> 1 3) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="answer" class="idref" href="#answer"><span class="id" title="inductive">answer</span></a> : <span class="id" title="keyword">Set</span> := <a id="Ok" class="idref" href="#Ok"><span class="id" title="constructor">Ok</span></a> | <a id="Too_far" class="idref" href="#Too_far"><span class="id" title="constructor">Too_far</span></a> | <a id="Remaining" class="idref" href="#Remaining"><span class="id" title="constructor">Remaining</span></a> (<a id="rest:3" class="idref" href="#rest:3"><span class="id" title="binder">rest</span></a> : <a class="idref" href="hydras.Epsilon0.T1.html#ppT1"><span class="id" title="inductive">ppT1</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="large_set_check" class="idref" href="#large_set_check"><span class="id" title="definition">large_set_check</span></a> <a id="alpha:4" class="idref" href="#alpha:4"><span class="id" title="binder">alpha</span></a> <a id="i:5" class="idref" href="#i:5"><span class="id" title="binder">i</span></a> <a id="j:6" class="idref" href="#j:6"><span class="id" title="binder">j</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <a id="beta:7" class="idref" href="#beta:7"><span class="id" title="binder">beta</span></a> := <a class="idref" href="hydras.Epsilon0.Paths.html#gnaw"><span class="id" title="definition">gnaw</span></a> <a class="idref" href="hydras.Epsilon0.Large_Sets_Examples.html#alpha:4"><span class="id" title="variable">alpha</span></a> (<a class="idref" href="hydras.Prelude.MoreLists.html#interval"><span class="id" title="definition">interval</span></a> <a class="idref" href="hydras.Epsilon0.Large_Sets_Examples.html#i:5"><span class="id" title="variable">i</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.PeanoNat.html#Nat.pred"><span class="id" title="definition">Nat.pred</span></a> <a class="idref" href="hydras.Epsilon0.Large_Sets_Examples.html#j:6"><span class="id" title="variable">j</span></a>))<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">in</span> <span class="id" title="keyword">match</span> <a class="idref" href="hydras.Epsilon0.Large_Sets_Examples.html#beta:7"><span class="id" title="variable">beta</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="hydras.Epsilon0.T1.html#one"><span class="id" title="abbreviation">one</span></a> ⇒ <a class="idref" href="hydras.Epsilon0.Large_Sets_Examples.html#Ok"><span class="id" title="constructor">Ok</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="hydras.Epsilon0.T1.html#zero"><span class="id" title="constructor">zero</span></a> ⇒ <a class="idref" href="hydras.Epsilon0.Large_Sets_Examples.html#Too_far"><span class="id" title="constructor">Too_far</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  <span class="id" title="var">_</span> ⇒ <a class="idref" href="hydras.Epsilon0.Large_Sets_Examples.html#Remaining"><span class="id" title="constructor">Remaining</span></a> (<a class="idref" href="hydras.Epsilon0.T1.html#pp"><span class="id" title="definition">pp</span></a> (<a class="idref" href="hydras.Epsilon0.Canon.html#canon"><span class="id" title="definition">canon</span></a> <a class="idref" href="hydras.Epsilon0.Large_Sets_Examples.html#beta:7"><span class="id" title="variable">beta</span></a> <a class="idref" href="hydras.Epsilon0.Large_Sets_Examples.html#j:6"><span class="id" title="variable">j</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Resolve</span> <span class="id" title="var">iota_from_lt_not_In</span>: <span class="id" title="var">core</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="Ex1" class="idref" href="#Ex1"><span class="id" title="definition">Ex1</span></a> : <a class="idref" href="hydras.Epsilon0.Large_Sets.html#mlarge"><span class="id" title="definition">mlarge</span></a> (<a class="idref" href="hydras.Epsilon0.T1.html#T1omega"><span class="id" title="abbreviation">T1omega</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#ec5016939656baf2f20020d4a10c3866"><span class="id" title="notation">×</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#T1omega"><span class="id" title="abbreviation">T1omega</span></a>) (<a class="idref" href="hydras.Prelude.MoreLists.html#interval"><span class="id" title="definition">interval</span></a> 6 510).<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="Ex2" class="idref" href="#Ex2"><span class="id" title="definition">Ex2</span></a> : <a class="idref" href="hydras.Epsilon0.Large_Sets.html#large"><span class="id" title="definition">large</span></a> (<a class="idref" href="hydras.Epsilon0.T1.html#T1omega"><span class="id" title="abbreviation">T1omega</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#ec5016939656baf2f20020d4a10c3866"><span class="id" title="notation">×</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#T1omega"><span class="id" title="abbreviation">T1omega</span></a>) (<a class="idref" href="hydras.Prelude.MoreLists.html#interval"><span class="id" title="definition">interval</span></a> 6 700).<br/>
+ 
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

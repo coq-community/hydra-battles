@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.MoreAck.BadSubst</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.MoreAck.BadSubst</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.fol.html#"><span class="id" title="library">fol</span></a> <a class="idref" href="hydras.Ackermann.folProp.html#"><span class="id" title="library">folProp</span></a> <a class="idref" href="hydras.Ackermann.folProof.html#"><span class="id" title="library">folProof</span></a>  <a class="idref" href="hydras.Ackermann.Languages.html#"><span class="id" title="library">Languages</span></a> <a class="idref" href="hydras.Ackermann.folLogic.html#"><span class="id" title="library">folLogic</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#"><span class="id" title="library">primRec</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Arith</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.fol.html#FolNotations"><span class="id" title="module">FolNotations</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab333"></a><h2 class="section">Preliminary lemmas</h2>
+
+</div>
+<div class="code">
+
+<br/>
+#[<span class="id" title="var">local</span>] <span class="id" title="var">Arguments</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#In"><span class="id" title="definition">Ensembles.In</span></a> {<span class="id" title="var">_</span>} .<br/>
+#[<span class="id" title="var">local</span>] <span class="id" title="var">Arguments</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#Add"><span class="id" title="definition">Ensembles.Add</span></a> {<span class="id" title="var">_</span>} .<br/>
+#[<span class="id" title="var">local</span>] <span class="id" title="var">Arguments</span> <a class="idref" href="hydras.Ackermann.fol.html#atomic"><span class="id" title="constructor">atomic</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> : <span class="id" title="tactic">clear</span> <span class="id" title="var">implicits</span>.<br/>
+#[<span class="id" title="var">local</span>] <span class="id" title="var">Arguments</span> <a class="idref" href="hydras.Ackermann.fol.html#apply"><span class="id" title="constructor">apply</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> : <span class="id" title="tactic">clear</span> <span class="id" title="var">implicits</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <a id="BadSubst" class="idref" href="#BadSubst"><span class="id" title="module">BadSubst</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Fixpoint</span> <a id="BadSubst.substF" class="idref" href="#BadSubst.substF"><span class="id" title="definition">substF</span></a> <a id="L:1" class="idref" href="#L:1"><span class="id" title="binder">L</span></a> (<a id="F:2" class="idref" href="#F:2"><span class="id" title="binder">F</span></a> : <a class="idref" href="hydras.Ackermann.fol.html#Formula"><span class="id" title="inductive">Formula</span></a> <a class="idref" href="hydras.MoreAck.BadSubst.html#L:1"><span class="id" title="variable">L</span></a>) <a id="v:3" class="idref" href="#v:3"><span class="id" title="binder">v</span></a> (<a id="t:4" class="idref" href="#t:4"><span class="id" title="binder">t</span></a>: <a class="idref" href="hydras.Ackermann.fol.html#Term"><span class="id" title="inductive">Term</span></a> <a class="idref" href="hydras.MoreAck.BadSubst.html#L:1"><span class="id" title="variable">L</span></a>) :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.MoreAck.BadSubst.html#F:2"><span class="id" title="variable">F</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="hydras.Ackermann.fol.html#equal"><span class="id" title="constructor">equal</span></a>  <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> ⇒ <a class="idref" href="hydras.Ackermann.fol.html#equal"><span class="id" title="constructor">equal</span></a> (<a class="idref" href="hydras.Ackermann.folProp.html#substT"><span class="id" title="definition">substT</span></a> <span class="id" title="var">t1</span> <a class="idref" href="hydras.MoreAck.BadSubst.html#v:3"><span class="id" title="variable">v</span></a> <a class="idref" href="hydras.MoreAck.BadSubst.html#t:4"><span class="id" title="variable">t</span></a>) (<a class="idref" href="hydras.Ackermann.folProp.html#substT"><span class="id" title="definition">substT</span></a> <span class="id" title="var">t2</span> <a class="idref" href="hydras.MoreAck.BadSubst.html#v:3"><span class="id" title="variable">v</span></a> <a class="idref" href="hydras.MoreAck.BadSubst.html#t:4"><span class="id" title="variable">t</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="hydras.Ackermann.fol.html#atomic"><span class="id" title="constructor">atomic</span></a>  <span class="id" title="var">r</span> <span class="id" title="var">s</span> ⇒  <a class="idref" href="hydras.Ackermann.fol.html#atomic"><span class="id" title="constructor">atomic</span></a> <a class="idref" href="hydras.MoreAck.BadSubst.html#L:1"><span class="id" title="variable">L</span></a> <span class="id" title="var">r</span> (<a class="idref" href="hydras.Ackermann.folProp.html#substTs"><span class="id" title="definition">substTs</span></a> <span class="id" title="var">s</span> <a class="idref" href="hydras.MoreAck.BadSubst.html#v:3"><span class="id" title="variable">v</span></a> <a class="idref" href="hydras.MoreAck.BadSubst.html#t:4"><span class="id" title="variable">t</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="hydras.Ackermann.fol.html#impH"><span class="id" title="constructor">impH</span></a>  <span class="id" title="var">G</span> <span class="id" title="var">H</span> ⇒ <a class="idref" href="hydras.Ackermann.fol.html#impH"><span class="id" title="constructor">impH</span></a> (<a class="idref" href="hydras.MoreAck.BadSubst.html#substF:5"><span class="id" title="definition">substF</span></a> <a class="idref" href="hydras.MoreAck.BadSubst.html#L:1"><span class="id" title="variable">L</span></a> <span class="id" title="var">G</span> <a class="idref" href="hydras.MoreAck.BadSubst.html#v:3"><span class="id" title="variable">v</span></a> <a class="idref" href="hydras.MoreAck.BadSubst.html#t:4"><span class="id" title="variable">t</span></a>) (<a class="idref" href="hydras.MoreAck.BadSubst.html#substF:5"><span class="id" title="definition">substF</span></a> <a class="idref" href="hydras.MoreAck.BadSubst.html#L:1"><span class="id" title="variable">L</span></a> <span class="id" title="var">H</span> <a class="idref" href="hydras.MoreAck.BadSubst.html#v:3"><span class="id" title="variable">v</span></a> <a class="idref" href="hydras.MoreAck.BadSubst.html#t:4"><span class="id" title="variable">t</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="hydras.Ackermann.fol.html#notH"><span class="id" title="constructor">notH</span></a>  <span class="id" title="var">G</span> ⇒ <a class="idref" href="hydras.Ackermann.fol.html#notH"><span class="id" title="constructor">notH</span></a> (<a class="idref" href="hydras.MoreAck.BadSubst.html#substF:5"><span class="id" title="definition">substF</span></a> <a class="idref" href="hydras.MoreAck.BadSubst.html#L:1"><span class="id" title="variable">L</span></a> <span class="id" title="var">G</span> <a class="idref" href="hydras.MoreAck.BadSubst.html#v:3"><span class="id" title="variable">v</span></a> <a class="idref" href="hydras.MoreAck.BadSubst.html#t:4"><span class="id" title="variable">t</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="hydras.Ackermann.fol.html#forallH"><span class="id" title="constructor">forallH</span></a>  <span class="id" title="var">w</span> <span class="id" title="var">G</span> ⇒ <span class="id" title="keyword">if</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.PeanoNat.html#Nat.eq_dec"><span class="id" title="lemma">Nat.eq_dec</span></a> <span class="id" title="var">w</span> <a class="idref" href="hydras.MoreAck.BadSubst.html#v:3"><span class="id" title="variable">v</span></a> <span class="id" title="keyword">then</span> <a class="idref" href="hydras.MoreAck.BadSubst.html#F:2"><span class="id" title="variable">F</span></a> <span class="id" title="keyword">else</span> <a class="idref" href="hydras.Ackermann.fol.html#forallH"><span class="id" title="constructor">forallH</span></a> <span class="id" title="var">w</span> (<a class="idref" href="hydras.MoreAck.BadSubst.html#substF:5"><span class="id" title="definition">substF</span></a> <a class="idref" href="hydras.MoreAck.BadSubst.html#L:1"><span class="id" title="variable">L</span></a> <span class="id" title="var">G</span> <a class="idref" href="hydras.MoreAck.BadSubst.html#v:3"><span class="id" title="variable">v</span></a> <a class="idref" href="hydras.MoreAck.BadSubst.html#t:4"><span class="id" title="variable">t</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.MoreAck.BadSubst.html#BadSubst"><span class="id" title="module">BadSubst</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#"><span class="id" title="library">List</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#ListNotations"><span class="id" title="module">ListNotations</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <a id="BadSubstF2" class="idref" href="#BadSubstF2"><span class="id" title="module">BadSubstF2</span></a>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.MoreAck.BadSubst.html#BadSubstF2"><span class="id" title="module">BadSubstF2</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.MoreAck.FolExamples.html#"><span class="id" title="library">FolExamples</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="hydras.MoreAck.FolExamples.html#Toy"><span class="id" title="module">Toy</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="BadExample" class="idref" href="#BadExample"><span class="id" title="section">BadExample</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="BadExample.F" class="idref" href="#BadExample.F"><span class="id" title="variable">F</span></a> := (<a class="idref" href="hydras.Ackermann.fol.html#ab366141b54751aa5ea1077b9b863e32"><span class="id" title="notation">allH</span></a> 1<a class="idref" href="hydras.Ackermann.fol.html#ab366141b54751aa5ea1077b9b863e32"><span class="id" title="notation">,</span></a> <a class="idref" href="hydras.Ackermann.fol.html#0b83cac238622d86e6ca74792daf53c5"><span class="id" title="notation">exH</span></a> 2<a class="idref" href="hydras.Ackermann.fol.html#0b83cac238622d86e6ca74792daf53c5"><span class="id" title="notation">,</span></a> <a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>1 <a class="idref" href="hydras.Ackermann.fol.html#FolNotations.::fol_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="hydras.MoreAck.FolExamples.html#Toy.f"><span class="id" title="abbreviation">f</span></a> <a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>2)%<span class="id" title="var">fol</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="BadExample.F1" class="idref" href="#BadExample.F1"><span class="id" title="variable">F1</span></a>: <a class="idref" href="hydras.Ackermann.fol.html#Formula"><span class="id" title="inductive">Formula</span></a> <a class="idref" href="hydras.MoreAck.FolExamples.html#Toy.L"><span class="id" title="definition">L</span></a> :=  (<a class="idref" href="hydras.Ackermann.fol.html#0b83cac238622d86e6ca74792daf53c5"><span class="id" title="notation">exH</span></a> 2<a class="idref" href="hydras.Ackermann.fol.html#0b83cac238622d86e6ca74792daf53c5"><span class="id" title="notation">,</span></a> <a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>1 <a class="idref" href="hydras.Ackermann.fol.html#FolNotations.::fol_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="hydras.MoreAck.FolExamples.html#Toy.f"><span class="id" title="abbreviation">f</span></a> <a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a>2)%<span class="id" title="var">fol</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.MoreAck.BadSubst.html#BadExample"><span class="id" title="section">BadExample</span></a>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

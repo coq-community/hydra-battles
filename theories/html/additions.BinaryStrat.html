@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>additions.BinaryStrat</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library additions.BinaryStrat</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  Binary strategy, according to Bergeron, Brlek et al. 
+
+<div class="paragraph"> </div>
+
+  Let  be a positive number. We associate to  the half of .
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Arith</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.NArith.NArith.html#"><span class="id" title="library">NArith</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.micromega.Lia.html#"><span class="id" title="library">Lia</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">additions</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span>  <a class="idref" href="additions.Pow.html#"><span class="id" title="library">Pow</span></a> <a class="idref" href="additions.Compatibility.html#"><span class="id" title="library">Compatibility</span></a> <a class="idref" href="additions.More_on_positive.html#"><span class="id" title="library">More_on_positive</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">additions</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="additions.Strategies.html#"><span class="id" title="library">Strategies</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">positive_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="half" class="idref" href="#half"><span class="id" title="definition">half</span></a> (<a id="p:1" class="idref" href="#p:1"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.BinaryStrat.html#p:1"><span class="id" title="variable">p</span></a> <span class="id" title="keyword">with</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xH"><span class="id" title="constructor">xH</span></a> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xH"><span class="id" title="constructor">xH</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|    <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xI"><span class="id" title="constructor">xI</span></a> <span class="id" title="var">q</span> | <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> <span class="id" title="var">q</span> ⇒  <span class="id" title="var">q</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="two" class="idref" href="#two"><span class="id" title="definition">two</span></a> (<a id="p:3" class="idref" href="#p:3"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>) := 2%<span class="id" title="var">positive</span>.<br/>
+
+<br/>
+#[ <span class="id" title="var">global</span> ] <span class="id" title="keyword">Instance</span> <a id="Binary_strat" class="idref" href="#Binary_strat"><span class="id" title="instance">Binary_strat</span></a> : <a class="idref" href="additions.Strategies.html#Strategy"><span class="id" title="class">Strategy</span></a> <a class="idref" href="additions.BinaryStrat.html#half"><span class="id" title="definition">half</span></a>.<br/>
+
+<br/>
+#[ <span class="id" title="var">global</span> ] <span class="id" title="keyword">Instance</span> <a id="Two_strat" class="idref" href="#Two_strat"><span class="id" title="instance">Two_strat</span></a> : <a class="idref" href="additions.Strategies.html#Strategy"><span class="id" title="class">Strategy</span></a> <a class="idref" href="additions.BinaryStrat.html#two"><span class="id" title="definition">two</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

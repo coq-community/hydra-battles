@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>gaia_hydras.GLarge_Sets</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library gaia_hydras.GLarge_Sets</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+Gaia-compatible large sequences 
+
+<div class="paragraph"> </div>
+
+(imported from <span class="inlinecode"><span class="id" title="var">hydras.Epsilon0.Large_Sets</span></span> )
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">mathcomp</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="library">all_ssreflect</span> <span class="id" title="library">zify</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Epsilon0.T1.html#"><span class="id" title="library">T1</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Epsilon0.Canon.html#"><span class="id" title="library">Canon</span></a> <a class="idref" href="hydras.Epsilon0.Paths.html#"><span class="id" title="library">Paths</span></a> <a class="idref" href="hydras.Epsilon0.Large_Sets.html#"><span class="id" title="library">Large_Sets</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">gaia_hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="gaia_hydras.T1Bridge.html#"><span class="id" title="library">T1Bridge</span></a> <a class="idref" href="gaia_hydras.GCanon.html#"><span class="id" title="library">GCanon</span></a> <a class="idref" href="gaia_hydras.GPaths.html#"><span class="id" title="library">GPaths</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">gaia</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="library">ssete9</span>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="module">CantorOrdinal</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="hmlarge" class="idref" href="#hmlarge"><span class="id" title="abbreviation">hmlarge</span></a>  := <a class="idref" href="hydras.Epsilon0.Large_Sets.html#mlarge"><span class="id" title="definition">mlarge</span></a>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="hmlargeS" class="idref" href="#hmlargeS"><span class="id" title="abbreviation">hmlargeS</span></a>  := <a class="idref" href="hydras.Epsilon0.Large_Sets.html#mlargeS"><span class="id" title="definition">mlargeS</span></a>.<br/>
+<span class="id" title="keyword">Definition</span> <a id="mlarge" class="idref" href="#mlarge"><span class="id" title="definition">mlarge</span></a> <a id="a:1" class="idref" href="#a:1"><span class="id" title="binder">a</span></a> <a id="s:2" class="idref" href="#s:2"><span class="id" title="binder">s</span></a> := <a class="idref" href="gaia_hydras.GLarge_Sets.html#hmlarge"><span class="id" title="abbreviation">hmlarge</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#g2h"><span class="id" title="definition">g2h</span></a> <a class="idref" href="gaia_hydras.GLarge_Sets.html#a:1"><span class="id" title="variable">a</span></a>) <a class="idref" href="gaia_hydras.GLarge_Sets.html#s:2"><span class="id" title="variable">s</span></a>.<br/>
+<span class="id" title="keyword">Definition</span> <a id="mlargeS" class="idref" href="#mlargeS"><span class="id" title="definition">mlargeS</span></a> <a id="a:3" class="idref" href="#a:3"><span class="id" title="binder">a</span></a> <a id="s:4" class="idref" href="#s:4"><span class="id" title="binder">s</span></a> := <a class="idref" href="gaia_hydras.GLarge_Sets.html#hmlargeS"><span class="id" title="abbreviation">hmlargeS</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#g2h"><span class="id" title="definition">g2h</span></a> <a class="idref" href="gaia_hydras.GLarge_Sets.html#a:3"><span class="id" title="variable">a</span></a>) <a class="idref" href="gaia_hydras.GLarge_Sets.html#s:4"><span class="id" title="variable">s</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="hlarge" class="idref" href="#hlarge"><span class="id" title="abbreviation">hlarge</span></a> := <a class="idref" href="hydras.Epsilon0.Large_Sets.html#large"><span class="id" title="definition">large</span></a>.<br/>
+<span class="id" title="keyword">Notation</span> <a id="hlargeS" class="idref" href="#hlargeS"><span class="id" title="abbreviation">hlargeS</span></a> := <a class="idref" href="hydras.Epsilon0.Large_Sets.html#largeS"><span class="id" title="definition">largeS</span></a>.<br/>
+<span class="id" title="keyword">Definition</span> <a id="large" class="idref" href="#large"><span class="id" title="definition">large</span></a> <a id="a:5" class="idref" href="#a:5"><span class="id" title="binder">a</span></a> <a id="A:6" class="idref" href="#A:6"><span class="id" title="binder">A</span></a> := <a class="idref" href="gaia_hydras.GLarge_Sets.html#hlarge"><span class="id" title="abbreviation">hlarge</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#g2h"><span class="id" title="definition">g2h</span></a> <a class="idref" href="gaia_hydras.GLarge_Sets.html#a:5"><span class="id" title="variable">a</span></a>) <a class="idref" href="gaia_hydras.GLarge_Sets.html#A:6"><span class="id" title="variable">A</span></a>.<br/>
+<span class="id" title="keyword">Definition</span> <a id="largeS" class="idref" href="#largeS"><span class="id" title="definition">largeS</span></a> <a id="a:7" class="idref" href="#a:7"><span class="id" title="binder">a</span></a> <a id="A:8" class="idref" href="#A:8"><span class="id" title="binder">A</span></a> := <a class="idref" href="gaia_hydras.GLarge_Sets.html#hlargeS"><span class="id" title="abbreviation">hlargeS</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#g2h"><span class="id" title="definition">g2h</span></a> <a class="idref" href="gaia_hydras.GLarge_Sets.html#a:7"><span class="id" title="variable">a</span></a>) <a class="idref" href="gaia_hydras.GLarge_Sets.html#A:8"><span class="id" title="variable">A</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="hL_spec" class="idref" href="#hL_spec"><span class="id" title="abbreviation">hL_spec</span></a> := <a class="idref" href="hydras.Epsilon0.Large_Sets.html#L_spec"><span class="id" title="inductive">L_spec</span></a>.<br/>
+<span class="id" title="keyword">Definition</span> <a id="L_spec" class="idref" href="#L_spec"><span class="id" title="definition">L_spec</span></a> <a id="a:9" class="idref" href="#a:9"><span class="id" title="binder">a</span></a> <a id="f:10" class="idref" href="#f:10"><span class="id" title="binder">f</span></a> := <a class="idref" href="hydras.Epsilon0.Large_Sets.html#L_spec"><span class="id" title="inductive">L_spec</span></a> (<a class="idref" href="gaia_hydras.T1Bridge.html#g2h"><span class="id" title="definition">g2h</span></a> <a class="idref" href="gaia_hydras.GLarge_Sets.html#a:9"><span class="id" title="variable">a</span></a>) <a class="idref" href="gaia_hydras.GLarge_Sets.html#f:10"><span class="id" title="variable">f</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="mlarge_unicity" class="idref" href="#mlarge_unicity"><span class="id" title="lemma">mlarge_unicity</span></a> <a id="a:11" class="idref" href="#a:11"><span class="id" title="binder">a</span></a> <a id="k:12" class="idref" href="#k:12"><span class="id" title="binder">k</span></a> <a id="l:13" class="idref" href="#l:13"><span class="id" title="binder">l</span></a> <a id="l':14" class="idref" href="#l':14"><span class="id" title="binder">l'</span></a> : <br/>
+&nbsp;&nbsp;<a class="idref" href="gaia_hydras.GLarge_Sets.html#mlarge"><span class="id" title="definition">mlarge</span></a> <a class="idref" href="gaia_hydras.GLarge_Sets.html#a:11"><span class="id" title="variable">a</span></a> (<span class="id" title="definition">index_iota</span> <a class="idref" href="gaia_hydras.GLarge_Sets.html#k:12"><span class="id" title="variable">k</span></a><span class="id" title="notation">.+1</span> <a class="idref" href="gaia_hydras.GLarge_Sets.html#l:13"><span class="id" title="variable">l</span></a><span class="id" title="notation">.+1</span>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="gaia_hydras.GLarge_Sets.html#mlarge"><span class="id" title="definition">mlarge</span></a> <a class="idref" href="gaia_hydras.GLarge_Sets.html#a:11"><span class="id" title="variable">a</span></a> (<span class="id" title="definition">index_iota</span> <a class="idref" href="gaia_hydras.GLarge_Sets.html#k:12"><span class="id" title="variable">k</span></a><span class="id" title="notation">.+1</span> <a class="idref" href="gaia_hydras.GLarge_Sets.html#l':14"><span class="id" title="variable">l'</span></a><span class="id" title="notation">.+1</span>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="gaia_hydras.GLarge_Sets.html#l:13"><span class="id" title="variable">l</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="gaia_hydras.GLarge_Sets.html#l':14"><span class="id" title="variable">l'</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="L_fin_ok" class="idref" href="#L_fin_ok"><span class="id" title="lemma">L_fin_ok</span></a> <a id="i:15" class="idref" href="#i:15"><span class="id" title="binder">i</span></a> : <a class="idref" href="gaia_hydras.GLarge_Sets.html#L_spec"><span class="id" title="definition">L_spec</span></a> (<span class="id" title="notation">\</span><span class="id" title="notation">F</span> <a class="idref" href="gaia_hydras.GLarge_Sets.html#i:15"><span class="id" title="variable">i</span></a>) (<a class="idref" href="hydras.Epsilon0.Large_Sets.html#L_fin"><span class="id" title="definition">L_fin</span></a> <a class="idref" href="gaia_hydras.GLarge_Sets.html#i:15"><span class="id" title="variable">i</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <a id="Theorem_4_5" class="idref" href="#Theorem_4_5"><span class="id" title="lemma">Theorem_4_5</span></a> (<a id="a:16" class="idref" href="#a:16"><span class="id" title="binder">a</span></a>: <span class="id" title="inductive">T1</span>)(<a id="Ha:17" class="idref" href="#Ha:17"><span class="id" title="binder">Ha</span></a> : <span class="id" title="definition">T1nf</span> <a class="idref" href="gaia_hydras.GLarge_Sets.html#a:16"><span class="id" title="variable">a</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="A:18" class="idref" href="#A:18"><span class="id" title="binder">A</span></a> <a id="B:19" class="idref" href="#B:19"><span class="id" title="binder">B</span></a> : <span class="id" title="abbreviation">seq</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="HA:20" class="idref" href="#HA:20"><span class="id" title="binder">HA</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sorting.Sorted.html#Sorted"><span class="id" title="inductive">Sorted.Sorted</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#lt"><span class="id" title="definition">Peano.lt</span></a> <a class="idref" href="gaia_hydras.GLarge_Sets.html#A:18"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="HB:21" class="idref" href="#HB:21"><span class="id" title="binder">HB</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sorting.Sorted.html#Sorted"><span class="id" title="inductive">Sorted.Sorted</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#lt"><span class="id" title="definition">Peano.lt</span></a> <a class="idref" href="gaia_hydras.GLarge_Sets.html#B:19"><span class="id" title="variable">B</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="HAB:22" class="idref" href="#HAB:22"><span class="id" title="binder">HAB</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#incl"><span class="id" title="definition">List.incl</span></a> <a class="idref" href="gaia_hydras.GLarge_Sets.html#A:18"><span class="id" title="variable">A</span></a> <a class="idref" href="gaia_hydras.GLarge_Sets.html#B:19"><span class="id" title="variable">B</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="gaia_hydras.GLarge_Sets.html#largeS"><span class="id" title="definition">largeS</span></a> <a class="idref" href="gaia_hydras.GLarge_Sets.html#a:16"><span class="id" title="variable">a</span></a> <a class="idref" href="gaia_hydras.GLarge_Sets.html#A:18"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="gaia_hydras.GLarge_Sets.html#largeS"><span class="id" title="definition">largeS</span></a> <a class="idref" href="gaia_hydras.GLarge_Sets.html#a:16"><span class="id" title="variable">a</span></a> <a class="idref" href="gaia_hydras.GLarge_Sets.html#B:19"><span class="id" title="variable">B</span></a>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

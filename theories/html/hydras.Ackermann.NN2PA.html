@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Ackermann.NN2PA</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Ackermann.NN2PA</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+ NN2PA.v : 
+
+<div class="paragraph"> </div>
+
+Original version by Russel O'Connor
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#"><span class="id" title="library">Ensembles</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#"><span class="id" title="library">List</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Arith</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras.Ackermann</span> <br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.folProp.html#"><span class="id" title="library">folProp</span></a>  <a class="idref" href="hydras.Ackermann.folProof.html#"><span class="id" title="library">folProof</span></a>  <a class="idref" href="hydras.Ackermann.subProp.html#"><span class="id" title="library">subProp</span></a>  <a class="idref" href="hydras.Ackermann.folLogic3.html#"><span class="id" title="library">folLogic3</span></a>  <a class="idref" href="hydras.Ackermann.folReplace.html#"><span class="id" title="library">folReplace</span></a>  <a class="idref" href="hydras.Ackermann.NN.html#"><span class="id" title="library">NN</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.PAtheory.html#"><span class="id" title="library">PAtheory</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras.Ackermann</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="hydras.Ackermann.LNN2LNT.html#"><span class="id" title="library">LNN2LNT</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras.Ackermann</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.subAll.html#"><span class="id" title="library">subAll</span></a> <a class="idref" href="hydras.Ackermann.ListExt.html#"><span class="id" title="library">ListExt</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations"><span class="id" title="module">NNnotations</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="NN2PA" class="idref" href="#NN2PA"><span class="id" title="lemma">NN2PA</span></a> (<a id="f:1" class="idref" href="#f:1"><span class="id" title="binder">f</span></a> : <a class="idref" href="hydras.Ackermann.fol.html#Formula"><span class="id" title="inductive">fol.Formula</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#LNN"><span class="id" title="definition">LNN</span></a>):<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.folProof.html#SysPrf"><span class="id" title="definition">folProof.SysPrf</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#LNN"><span class="id" title="definition">LNN</span></a> <a class="idref" href="hydras.Ackermann.NN.html#NN"><span class="id" title="definition">NN</span></a> <a class="idref" href="hydras.Ackermann.NN2PA.html#f:1"><span class="id" title="variable">f</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Ackermann.LNT.html#SysPrf"><span class="id" title="definition">SysPrf</span></a> <a class="idref" href="hydras.Ackermann.PA.html#PA"><span class="id" title="definition">PA</span></a> (<a class="idref" href="hydras.Ackermann.LNN2LNT.html#LNN2LNT_formula"><span class="id" title="definition">LNN2LNT_formula</span></a> <a class="idref" href="hydras.Ackermann.NN2PA.html#f:1"><span class="id" title="variable">f</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+If  <span class="inlinecode"><span class="id" title="var">F</span>[<span class="id" title="var">x</span>\0]</span>, <span class="inlinecode"><span class="id" title="var">F</span>[<span class="id" title="var">x</span>\1]</span> ... <span class="inlinecode"><span class="id" title="var">F</span>[<span class="id" title="var">x</span>\<span class="id" title="var">m</span>-1]</span> are provable in PA,
+       then <span class="inlinecode"></span> <span class="inlinecode"><span class="id" title="var">v_x</span></span> <span class="inlinecode">&lt;'</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">F</span></span> is also provable (where <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">&lt;'</span> <span class="inlinecode"><span class="id" title="var">b</span></span> is the translation of <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">&lt;</span> <span class="inlinecode"><span class="id" title="var">b</span></span> into PA).
+
+<div class="paragraph"> </div>
+
+   More precisely: 
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <a id="PAboundedLT" class="idref" href="#PAboundedLT"><span class="id" title="lemma">PAboundedLT</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<a id="m:2" class="idref" href="#m:2"><span class="id" title="binder">m</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="F:3" class="idref" href="#F:3"><span class="id" title="binder">F</span></a> : <a class="idref" href="hydras.Ackermann.LNT.html#Formula"><span class="id" title="definition">LNT.Formula</span></a>) (<a id="x:4" class="idref" href="#x:4"><span class="id" title="binder">x</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><span class="id" title="keyword">∀</span> <a id="n:5" class="idref" href="#n:5"><span class="id" title="binder">n</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.NN2PA.html#n:5"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Ackermann.NN2PA.html#m:2"><span class="id" title="variable">m</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Ackermann.LNT.html#SysPrf"><span class="id" title="definition">SysPrf</span></a> <a class="idref" href="hydras.Ackermann.PA.html#PA"><span class="id" title="definition">PA</span></a> (<a class="idref" href="hydras.Ackermann.folProp.html#substF"><span class="id" title="definition">substF</span></a> <a class="idref" href="hydras.Ackermann.NN2PA.html#F:3"><span class="id" title="variable">F</span></a> <a class="idref" href="hydras.Ackermann.NN2PA.html#x:4"><span class="id" title="variable">x</span></a> (<a class="idref" href="hydras.Ackermann.LNT.html#natToTerm"><span class="id" title="definition">natToTerm</span></a> <a class="idref" href="hydras.Ackermann.NN2PA.html#n:5"><span class="id" title="variable">n</span></a>))<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.LNT.html#SysPrf"><span class="id" title="definition">SysPrf</span></a> <a class="idref" href="hydras.Ackermann.PA.html#PA"><span class="id" title="definition">PA</span></a> (<a class="idref" href="hydras.Ackermann.LNN2LNT.html#LNN2LNT_formula"><span class="id" title="definition">LNN2LNT_formula</span></a> (<a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">v</span></a><a class="idref" href="hydras.Ackermann.fol.html#a12ef5915927c1f20da57c369b8b6c71"><span class="id" title="notation">#</span></a><a class="idref" href="hydras.Ackermann.NN2PA.html#x:4"><span class="id" title="variable">x</span></a> <a class="idref" href="hydras.Ackermann.LNN.html#NNnotations.::fol_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Ackermann.LNN.html#natToTerm"><span class="id" title="definition">LNN.natToTerm</span></a> <a class="idref" href="hydras.Ackermann.NN2PA.html#m:2"><span class="id" title="variable">m</span></a>)%<span class="id" title="var">fol</span> <a class="idref" href="hydras.Ackermann.LNT.html#::nt_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Ackermann.NN2PA.html#F:3"><span class="id" title="variable">F</span></a>)%<span class="id" title="var">nt</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

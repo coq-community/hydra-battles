@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Ackermann.codeNatToTerm</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Ackermann.codeNatToTerm</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras.Ackermann</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.primRec.html#"><span class="id" title="library">primRec</span></a> <a class="idref" href="hydras.Ackermann.cPair.html#"><span class="id" title="library">cPair</span></a> <a class="idref" href="hydras.Ackermann.code.html#"><span class="id" title="library">code</span></a> <a class="idref" href="hydras.Ackermann.folProp.html#"><span class="id" title="library">folProp</span></a> <a class="idref" href="hydras.Ackermann.folProof.html#"><span class="id" title="library">folProof</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.Languages.html#"><span class="id" title="library">Languages</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Arith</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras.Ackermann</span> <span class="id" title="keyword">Require</span> <a class="idref" href="hydras.Ackermann.LNN.html#"><span class="id" title="library">LNN</span></a> <a class="idref" href="hydras.Ackermann.LNT.html#"><span class="id" title="library">LNT</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="natToTermLNN" class="idref" href="#natToTermLNN"><span class="id" title="definition">natToTermLNN</span></a> := <a class="idref" href="hydras.Ackermann.LNN.html#natToTerm"><span class="id" title="definition">LNN.natToTerm</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="natToTermLNT" class="idref" href="#natToTermLNT"><span class="id" title="definition">natToTermLNT</span></a> := <a class="idref" href="hydras.Ackermann.LNT.html#natToTerm"><span class="id" title="definition">LNT.natToTerm</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="codeNatToTerm" class="idref" href="#codeNatToTerm"><span class="id" title="definition">codeNatToTerm</span></a> (<a id="n:1" class="idref" href="#n:1"><span class="id" title="binder">n</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Ackermann.codeNatToTerm.html#n:1"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;0 ⇒ <a class="idref" href="hydras.Ackermann.cPair.html#cPair"><span class="id" title="definition">cPair</span></a> 4 0<br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">p</span> ⇒ <a class="idref" href="hydras.Ackermann.cPair.html#cPair"><span class="id" title="definition">cPair</span></a> 3 (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="hydras.Ackermann.cPair.html#cPair"><span class="id" title="definition">cPair</span></a> (<a class="idref" href="hydras.Ackermann.codeNatToTerm.html#codeNatToTerm:2"><span class="id" title="definition">codeNatToTerm</span></a> <span class="id" title="var">p</span>) 0))<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Instance</span> <a id="LcodeLNN" class="idref" href="#LcodeLNN"><span class="id" title="instance">LcodeLNN</span></a> : <a class="idref" href="hydras.Ackermann.code.html#Lcode"><span class="id" title="class">Lcode</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#LNN"><span class="id" title="definition">LNN</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#codeLNTFunction"><span class="id" title="definition">codeLNTFunction</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#codeLNNRelation"><span class="id" title="definition">codeLNNRelation</span></a>.<br/>
+
+<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Instance</span> <a id="LcodeLNT" class="idref" href="#LcodeLNT"><span class="id" title="instance">LcodeLNT</span></a> : <a class="idref" href="hydras.Ackermann.code.html#Lcode"><span class="id" title="class">Lcode</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#LNT"><span class="id" title="definition">LNT</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#codeLNTFunction"><span class="id" title="definition">codeLNTFunction</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#codeLNTRelation"><span class="id" title="definition">codeLNTRelation</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="codeNatToTermCorrectLNN" class="idref" href="#codeNatToTermCorrectLNN"><span class="id" title="lemma">codeNatToTermCorrectLNN</span></a> <a id="n:4" class="idref" href="#n:4"><span class="id" title="binder">n</span></a> :<br/>
+&nbsp;<a class="idref" href="hydras.Ackermann.codeNatToTerm.html#codeNatToTerm"><span class="id" title="definition">codeNatToTerm</span></a> <a class="idref" href="hydras.Ackermann.codeNatToTerm.html#n:4"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Ackermann.code.html#codeTerm"><span class="id" title="definition">codeTerm</span></a> (<a class="idref" href="hydras.Ackermann.codeNatToTerm.html#natToTermLNN"><span class="id" title="definition">natToTermLNN</span></a> <a class="idref" href="hydras.Ackermann.codeNatToTerm.html#n:4"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="codeNatToTermCorrectLNT" class="idref" href="#codeNatToTermCorrectLNT"><span class="id" title="lemma">codeNatToTermCorrectLNT</span></a> <a id="n:5" class="idref" href="#n:5"><span class="id" title="binder">n</span></a> :<br/>
+&nbsp;<a class="idref" href="hydras.Ackermann.codeNatToTerm.html#codeNatToTerm"><span class="id" title="definition">codeNatToTerm</span></a> <a class="idref" href="hydras.Ackermann.codeNatToTerm.html#n:5"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Ackermann.code.html#codeTerm"><span class="id" title="definition">codeTerm</span></a>  (<a class="idref" href="hydras.Ackermann.codeNatToTerm.html#natToTermLNT"><span class="id" title="definition">natToTermLNT</span></a> <a class="idref" href="hydras.Ackermann.codeNatToTerm.html#n:5"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="codeNatToTermIsPR" class="idref" href="#codeNatToTermIsPR"><span class="id" title="instance">codeNatToTermIsPR</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 <a class="idref" href="hydras.Ackermann.codeNatToTerm.html#codeNatToTerm"><span class="id" title="definition">codeNatToTerm</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

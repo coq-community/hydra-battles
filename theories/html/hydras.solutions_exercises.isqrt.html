@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.solutions_exercises.isqrt</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.solutions_exercises.isqrt</h1>
+
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span>  <a class="idref" href="hydras.Ackermann.primRec.html#"><span class="id" title="library">primRec</span></a> <a class="idref" href="hydras.Ackermann.extEqualNat.html#"><span class="id" title="library">extEqualNat</span></a> <a class="idref" href="hydras.Prelude.ssrnat_extracts.html#"><span class="id" title="library">ssrnat_extracts</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Min.html#"><span class="id" title="library">Min</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.setoid_ring.ArithRing.html#"><span class="id" title="library">ArithRing</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.micromega.Lia.html#"><span class="id" title="library">Lia</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Compare_dec.html#"><span class="id" title="library">Compare_dec</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Arith</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.micromega.Lia.html#"><span class="id" title="library">Lia</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Returns smallest value of x less or equal than b such that (P b x). 
+    Otherwise returns b  
+</div>
+<div class="code">
+<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Ackermann.primRec.html#boundedSearch"><span class="id" title="definition">boundedSearch</span></a>.<br/>
+<span class="id" title="keyword">Search</span> <a class="idref" href="hydras.Ackermann.primRec.html#boundedSearch"><span class="id" title="definition">boundedSearch</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="boundedSearch3" class="idref" href="#boundedSearch3"><span class="id" title="lemma">boundedSearch3</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<a id="P:1" class="idref" href="#P:1"><span class="id" title="binder">P</span></a> : <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryRel"><span class="id" title="definition">naryRel</span></a> 2) (<a id="b:2" class="idref" href="#b:2"><span class="id" title="binder">b</span></a>  : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>), <a class="idref" href="hydras.Ackermann.primRec.html#boundedSearch"><span class="id" title="definition">boundedSearch</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#P:1"><span class="id" title="variable">P</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#b:2"><span class="id" title="variable">b</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#b:2"><span class="id" title="variable">b</span></a>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="boundedSearch4" class="idref" href="#boundedSearch4"><span class="id" title="lemma">boundedSearch4</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<a id="P:3" class="idref" href="#P:3"><span class="id" title="binder">P</span></a> : <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryRel"><span class="id" title="definition">naryRel</span></a> 2) (<a id="b:4" class="idref" href="#b:4"><span class="id" title="binder">b</span></a>  : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.solutions_exercises.isqrt.html#P:3"><span class="id" title="variable">P</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#b:4"><span class="id" title="variable">b</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#b:4"><span class="id" title="variable">b</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#true"><span class="id" title="constructor">true</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.solutions_exercises.isqrt.html#P:3"><span class="id" title="variable">P</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#b:4"><span class="id" title="variable">b</span></a> (<a class="idref" href="hydras.Ackermann.primRec.html#boundedSearch"><span class="id" title="definition">boundedSearch</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#P:3"><span class="id" title="variable">P</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#b:4"><span class="id" title="variable">b</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#true"><span class="id" title="constructor">true</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="isqrt_spec" class="idref" href="#isqrt_spec"><span class="id" title="definition">isqrt_spec</span></a> <a id="n:5" class="idref" href="#n:5"><span class="id" title="binder">n</span></a> <a id="r:6" class="idref" href="#r:6"><span class="id" title="binder">r</span></a> := <a class="idref" href="hydras.solutions_exercises.isqrt.html#r:6"><span class="id" title="variable">r</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#r:6"><span class="id" title="variable">r</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#ea090076ab3dcdee0cfd3882c88b993f"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#n:5"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#ea090076ab3dcdee0cfd3882c88b993f"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#r:6"><span class="id" title="variable">r</span></a><a class="idref" href="hydras.Prelude.ssrnat_extracts.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#r:6"><span class="id" title="variable">r</span></a><a class="idref" href="hydras.Prelude.ssrnat_extracts.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="sqrtIsPR" class="idref" href="#sqrtIsPR"><span class="id" title="section">sqrtIsPR</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="sqrtIsPR.P" class="idref" href="#sqrtIsPR.P"><span class="id" title="variable">P</span></a> (<a id="n:7" class="idref" href="#n:7"><span class="id" title="binder">n</span></a> <a id="r:8" class="idref" href="#r:8"><span class="id" title="binder">r</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) :=  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.PeanoNat.html#Nat.ltb"><span class="id" title="definition">Nat.ltb</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#n:7"><span class="id" title="variable">n</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#r:8"><span class="id" title="variable">r</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#r:8"><span class="id" title="variable">r</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="isqrt" class="idref" href="#isqrt"><span class="id" title="definition">isqrt</span></a> := <a class="idref" href="hydras.Ackermann.primRec.html#boundedSearch"><span class="id" title="definition">boundedSearch</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#sqrtIsPR.P"><span class="id" title="variable">P</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="sqrtIsPR.Proof_isqrt" class="idref" href="#sqrtIsPR.Proof_isqrt"><span class="id" title="section">Proof_isqrt</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="sqrtIsPR.Proof_isqrt.n" class="idref" href="#sqrtIsPR.Proof_isqrt.n"><span class="id" title="variable">n</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="R00" class="idref" href="#R00"><span class="id" title="lemma">R00</span></a> : <a class="idref" href="hydras.solutions_exercises.isqrt.html#sqrtIsPR.P"><span class="id" title="variable">P</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#sqrtIsPR.Proof_isqrt.n"><span class="id" title="variable">n</span></a> (<a class="idref" href="hydras.solutions_exercises.isqrt.html#isqrt"><span class="id" title="definition">isqrt</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#sqrtIsPR.Proof_isqrt.n"><span class="id" title="variable">n</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#true"><span class="id" title="constructor">true</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="R01" class="idref" href="#R01"><span class="id" title="lemma">R01</span></a> :  <a class="idref" href="hydras.solutions_exercises.isqrt.html#sqrtIsPR.Proof_isqrt.n"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Prelude.ssrnat_extracts.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">(</span></a><a class="idref" href="hydras.solutions_exercises.isqrt.html#isqrt"><span class="id" title="definition">isqrt</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#sqrtIsPR.Proof_isqrt.n"><span class="id" title="variable">n</span></a><a class="idref" href="hydras.Prelude.ssrnat_extracts.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">).+1</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="hydras.Prelude.ssrnat_extracts.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">(</span></a><a class="idref" href="hydras.solutions_exercises.isqrt.html#isqrt"><span class="id" title="definition">isqrt</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#sqrtIsPR.Proof_isqrt.n"><span class="id" title="variable">n</span></a><a class="idref" href="hydras.Prelude.ssrnat_extracts.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">).+1</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="R02" class="idref" href="#R02"><span class="id" title="lemma">R02</span></a> : <a class="idref" href="hydras.solutions_exercises.isqrt.html#isqrt"><span class="id" title="definition">isqrt</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#sqrtIsPR.Proof_isqrt.n"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#isqrt"><span class="id" title="definition">isqrt</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#sqrtIsPR.Proof_isqrt.n"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#sqrtIsPR.Proof_isqrt.n"><span class="id" title="variable">n</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="hydras.solutions_exercises.isqrt.html#sqrtIsPR.Proof_isqrt"><span class="id" title="section">Proof_isqrt</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="sqrt_correct" class="idref" href="#sqrt_correct"><span class="id" title="lemma">sqrt_correct</span></a> (<a id="n:10" class="idref" href="#n:10"><span class="id" title="binder">n</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="hydras.solutions_exercises.isqrt.html#isqrt_spec"><span class="id" title="definition">isqrt_spec</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#n:10"><span class="id" title="variable">n</span></a> (<a class="idref" href="hydras.solutions_exercises.isqrt.html#isqrt"><span class="id" title="definition">isqrt</span></a> <a class="idref" href="hydras.solutions_exercises.isqrt.html#n:10"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="issqrtIsPR" class="idref" href="#issqrtIsPR"><span class="id" title="instance">issqrtIsPR</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 <a class="idref" href="hydras.solutions_exercises.isqrt.html#isqrt"><span class="id" title="definition">isqrt</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.solutions_exercises.isqrt.html#sqrtIsPR"><span class="id" title="section">sqrtIsPR</span></a>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Extra work :
+   Define a faster implementation of <span class="inlinecode"><span class="id" title="var">sqrt_spec</span></span>, and prove your function is 
+   extensionnaly equal to <span class="inlinecode"><span class="id" title="var">isqrt</span></span> (hence PR!)
+ 
+</div>
+<div class="code">
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

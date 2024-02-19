@@ -1,0 +1,858 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Hydra.Hydra_Definitions</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Hydra.Hydra_Definitions</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+Pierre Casteran, LaBRI, University of Bordeaux 
+<div class="paragraph"> </div>
+
+<a id="lab228"></a><h1 class="section">Data types</h1>
+
+
+<div class="paragraph"> </div>
+
+ An hydra is a finitely branched tree. We use the auxiliary type <span class="inlinecode"><span class="id" title="var">Hydrae</span></span>  for
+ representing finite sequences  of hydras.
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relations.html#"><span class="id" title="library">Relations</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Epsilon0.T1.html#"><span class="id" title="library">T1</span></a> <a class="idref" href="hydras.Epsilon0.Epsilon0.html#"><span class="id" title="library">Epsilon0</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#"><span class="id" title="library">List</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#ListNotations"><span class="id" title="module">ListNotations</span></a>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="Hydra" class="idref" href="#Hydra"><span class="id" title="inductive">Hydra</span></a> : <span class="id" title="keyword">Set</span> :=<br/>
+| <a id="node" class="idref" href="#node"><span class="id" title="constructor">node</span></a> :  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae:2"><span class="id" title="inductive">Hydrae</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra:1"><span class="id" title="inductive">Hydra</span></a><br/>
+<span class="id" title="keyword">with</span> <a id="Hydrae" class="idref" href="#Hydrae"><span class="id" title="inductive">Hydrae</span></a> : <span class="id" title="keyword">Set</span> :=<br/>
+| <a id="hnil" class="idref" href="#hnil"><span class="id" title="constructor">hnil</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae:2"><span class="id" title="inductive">Hydrae</span></a><br/>
+| <a id="hcons" class="idref" href="#hcons"><span class="id" title="constructor">hcons</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra:1"><span class="id" title="inductive">Hydra</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae:2"><span class="id" title="inductive">Hydrae</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae:2"><span class="id" title="inductive">Hydrae</span></a>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Alternative representation (discarded) 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <a id="Alt" class="idref" href="#Alt"><span class="id" title="module">Alt</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Inductive</span> <a id="Alt.Hydra" class="idref" href="#Alt.Hydra"><span class="id" title="inductive">Hydra</span></a> : <span class="id" title="keyword">Set</span> :=<br/>
+&nbsp;&nbsp;| <a id="Alt.hnode" class="idref" href="#Alt.hnode"><span class="id" title="constructor">hnode</span></a> (<a id="daughters:7" class="idref" href="#daughters:7"><span class="id" title="binder">daughters</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra:5"><span class="id" title="inductive">Hydra</span></a>).<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Alt"><span class="id" title="module">Alt</span></a>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  Mutual induction scheme for types Hydra and Hydrae 
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Scheme</span> <a id="Hydra_rect2" class="idref" href="#Hydra_rect2"><span class="id" title="definition">Hydra_rect2</span></a> := <span class="id" title="keyword">Induction</span> <span class="id" title="keyword">for</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a> <span class="id" title="keyword">Sort</span> <span class="id" title="keyword">Type</span><br/>
+<span class="id" title="keyword">with</span>   <a id="Hydrae_rect2" class="idref" href="#Hydrae_rect2"><span class="id" title="definition">Hydrae_rect2</span></a> := <span class="id" title="keyword">Induction</span> <span class="id" title="keyword">for</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae"><span class="id" title="inductive">Hydrae</span></a> <span class="id" title="keyword">Sort</span> <span class="id" title="keyword">Type</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra_rect2"><span class="id" title="definition">Hydra_rect2</span></a> <span class="id" title="var">P</span> <span class="id" title="var">P0</span> : <span class="id" title="tactic">rename</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae_rect2"><span class="id" title="definition">Hydrae_rect2</span></a> <span class="id" title="var">P</span> <span class="id" title="var">P0</span> : <span class="id" title="tactic">rename</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+All elements of s satisfy P 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="h_forall" class="idref" href="#h_forall"><span class="id" title="definition">h_forall</span></a> (<a id="P:8" class="idref" href="#P:8"><span class="id" title="binder">P</span></a>: <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Prop</span>) (<a id="s:9" class="idref" href="#s:9"><span class="id" title="binder">s</span></a>: <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae"><span class="id" title="inductive">Hydrae</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:9"><span class="id" title="variable">s</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hnil"><span class="id" title="constructor">hnil</span></a> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#True"><span class="id" title="inductive">True</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h</span> <span class="id" title="var">s'</span> ⇒ <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#P:8"><span class="id" title="variable">P</span></a> <span class="id" title="var">h</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h_forall:10"><span class="id" title="definition">h_forall</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#P:8"><span class="id" title="variable">P</span></a> <span class="id" title="var">s'</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="h_eq_dec" class="idref" href="#h_eq_dec"><span class="id" title="lemma">h_eq_dec</span></a> : <span class="id" title="keyword">∀</span> <a id="h:12" class="idref" href="#h:12"><span class="id" title="binder">h</span></a> <a id="h':13" class="idref" href="#h':13"><span class="id" title="binder">h'</span></a>:<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a>, <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#87727981cdc1579fef00b9d9c1d3b9da"><span class="id" title="notation">{</span></a><a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:12"><span class="id" title="variable">h</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':13"><span class="id" title="variable">h'</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#87727981cdc1579fef00b9d9c1d3b9da"><span class="id" title="notation">}+{</span></a><a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:12"><span class="id" title="variable">h</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':13"><span class="id" title="variable">h'</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#87727981cdc1579fef00b9d9c1d3b9da"><span class="id" title="notation">}</span></a><br/>
+<span class="id" title="keyword">with</span> <a id="hs_eq_dec" class="idref" href="#hs_eq_dec"><span class="id" title="lemma">hs_eq_dec</span></a> : <span class="id" title="keyword">∀</span> <a id="l:14" class="idref" href="#l:14"><span class="id" title="binder">l</span></a> <a id="l':15" class="idref" href="#l':15"><span class="id" title="binder">l'</span></a>:<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae"><span class="id" title="inductive">Hydrae</span></a>, <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#87727981cdc1579fef00b9d9c1d3b9da"><span class="id" title="notation">{</span></a><a class="idref" href="hydras.Hydra.Hydra_Definitions.html#l:14"><span class="id" title="variable">l</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#l':15"><span class="id" title="variable">l'</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#87727981cdc1579fef00b9d9c1d3b9da"><span class="id" title="notation">}+{</span></a><a class="idref" href="hydras.Hydra.Hydra_Definitions.html#l:14"><span class="id" title="variable">l</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#l':15"><span class="id" title="variable">l'</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#87727981cdc1579fef00b9d9c1d3b9da"><span class="id" title="notation">}</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+For list usage 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="hs2l" class="idref" href="#hs2l"><span class="id" title="definition">hs2l</span></a> (<a id="s:16" class="idref" href="#s:16"><span class="id" title="binder">s</span></a>: <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae"><span class="id" title="inductive">Hydrae</span></a>): <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a> :=<br/>
+<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:16"><span class="id" title="variable">s</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hnil"><span class="id" title="constructor">hnil</span></a> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#ae9a5e1034e143b218b09d8e454472bd"><span class="id" title="notation">[]</span></a><br/>
+| <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h</span> <span class="id" title="var">s'</span> ⇒ <span class="id" title="var">h</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hs2l:17"><span class="id" title="definition">hs2l</span></a> <span class="id" title="var">s'</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="l2hs" class="idref" href="#l2hs"><span class="id" title="definition">l2hs</span></a> (<a id="l:19" class="idref" href="#l:19"><span class="id" title="binder">l</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a>): <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae"><span class="id" title="inductive">Hydrae</span></a> :=<br/>
+<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#l:19"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#ae9a5e1034e143b218b09d8e454472bd"><span class="id" title="notation">[]</span></a> ⇒ <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hnil"><span class="id" title="constructor">hnil</span></a><br/>
+| <span class="id" title="var">h</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <span class="id" title="var">l'</span> ⇒ <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h</span> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#l2hs:20"><span class="id" title="definition">l2hs</span></a> <span class="id" title="var">l'</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="hs2lK" class="idref" href="#hs2lK"><span class="id" title="lemma">hs2lK</span></a> (<a id="s:22" class="idref" href="#s:22"><span class="id" title="binder">s</span></a>: <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae"><span class="id" title="inductive">Hydrae</span></a>) : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#l2hs"><span class="id" title="definition">l2hs</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hs2l"><span class="id" title="definition">hs2l</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:22"><span class="id" title="variable">s</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:22"><span class="id" title="variable">s</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="l2hsK" class="idref" href="#l2hsK"><span class="id" title="lemma">l2hsK</span></a> (<a id="l:23" class="idref" href="#l:23"><span class="id" title="binder">l</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a>) : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hs2l"><span class="id" title="definition">hs2l</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#l2hs"><span class="id" title="definition">l2hs</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#l:23"><span class="id" title="variable">l</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#l:23"><span class="id" title="variable">l</span></a>.<br/>
+ 
+<br/>
+</div>
+
+<div class="doc">
+  Number of nodes (a.k.a. size)
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="hsize" class="idref" href="#hsize"><span class="id" title="definition">hsize</span></a> (<a id="h:24" class="idref" href="#h:24"><span class="id" title="binder">h</span></a>:<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a>) : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:24"><span class="id" title="variable">h</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#node"><span class="id" title="constructor">node</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#lhsize:27"><span class="id" title="definition">lhsize</span></a> <span class="id" title="var">l</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+<span class="id" title="keyword">with</span> <a id="lhsize" class="idref" href="#lhsize"><span class="id" title="definition">lhsize</span></a> <a id="l:25" class="idref" href="#l:25"><span class="id" title="binder">l</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#l:25"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hnil"><span class="id" title="constructor">hnil</span></a> ⇒ 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h</span> <span class="id" title="var">hs</span> ⇒ <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hsize:26"><span class="id" title="definition">hsize</span></a> <span class="id" title="var">h</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#lhsize:27"><span class="id" title="definition">lhsize</span></a> <span class="id" title="var">hs</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab229"></a><h3 class="section">height (length of longest branch)</h3>
+
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="height" class="idref" href="#height"><span class="id" title="definition">height</span></a>  (<a id="h:30" class="idref" href="#h:30"><span class="id" title="binder">h</span></a>:<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a>) : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:30"><span class="id" title="variable">h</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#node"><span class="id" title="constructor">node</span></a> <span class="id" title="var">l</span> ⇒ <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#lheight:33"><span class="id" title="definition">lheight</span></a> <span class="id" title="var">l</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+<span class="id" title="keyword">with</span> <a id="lheight" class="idref" href="#lheight"><span class="id" title="definition">lheight</span></a> <a id="l:31" class="idref" href="#l:31"><span class="id" title="binder">l</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#l:31"><span class="id" title="variable">l</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hnil"><span class="id" title="constructor">hnil</span></a> ⇒ 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h</span> <span class="id" title="var">hs</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.PeanoNat.html#Nat.max"><span class="id" title="definition">Nat.max</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#height:32"><span class="id" title="definition">height</span></a> <span class="id" title="var">h</span>)) (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#lheight:33"><span class="id" title="definition">lheight</span></a> <span class="id" title="var">hs</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab230"></a><h2 class="section">Abbreviations</h2>
+
+ 
+<div class="paragraph"> </div>
+
+<a id="lab231"></a><h3 class="section">Heads : A head is just a node without daughters</h3>
+
+
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab232"></a><h3 class="section">Hydra with 0, 1, 2 or 3 daughters</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="head" class="idref" href="#head"><span class="id" title="abbreviation">head</span></a> := (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#node"><span class="id" title="constructor">node</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hnil"><span class="id" title="constructor">hnil</span></a>).<br/>
+<span class="id" title="keyword">Notation</span> <a id="hyd1" class="idref" href="#hyd1"><span class="id" title="abbreviation">hyd1</span></a> <span class="id" title="var">h</span> := (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#node"><span class="id" title="constructor">node</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hnil"><span class="id" title="constructor">hnil</span></a>)).<br/>
+<span class="id" title="keyword">Notation</span> <a id="hyd2" class="idref" href="#hyd2"><span class="id" title="abbreviation">hyd2</span></a> <span class="id" title="var">h</span> <span class="id" title="var">h'</span> := (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#node"><span class="id" title="constructor">node</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h</span> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h'</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hnil"><span class="id" title="constructor">hnil</span></a>))).<br/>
+<span class="id" title="keyword">Notation</span> <a id="hyd3" class="idref" href="#hyd3"><span class="id" title="abbreviation">hyd3</span></a> <span class="id" title="var">h</span> <span class="id" title="var">h'</span> <span class="id" title="var">h''</span> := (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#node"><span class="id" title="constructor">node</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h</span> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h'</span> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h''</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hnil"><span class="id" title="constructor">hnil</span></a>)))).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab233"></a><h3 class="section">Adds n copies of the same hydra h at the right of  s</h3>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="hcons_mult" class="idref" href="#hcons_mult"><span class="id" title="definition">hcons_mult</span></a> (<a id="h:36" class="idref" href="#h:36"><span class="id" title="binder">h</span></a>:<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a>)(<a id="n:37" class="idref" href="#n:37"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>)(<a id="s:38" class="idref" href="#s:38"><span class="id" title="binder">s</span></a>:<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae"><span class="id" title="inductive">Hydrae</span></a>):<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae"><span class="id" title="inductive">Hydrae</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:37"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span> <br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#O"><span class="id" title="constructor">O</span></a> ⇒ <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:38"><span class="id" title="variable">s</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">p</span> ⇒ <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:36"><span class="id" title="variable">h</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons_mult:39"><span class="id" title="definition">hcons_mult</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:36"><span class="id" title="variable">h</span></a> <span class="id" title="var">p</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:38"><span class="id" title="variable">s</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab234"></a><h3 class="section">Hydra with n equal daughters</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="hyd_mult" class="idref" href="#hyd_mult"><span class="id" title="definition">hyd_mult</span></a> <a id="h:41" class="idref" href="#h:41"><span class="id" title="binder">h</span></a> <a id="n:42" class="idref" href="#n:42"><span class="id" title="binder">n</span></a> := <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#node"><span class="id" title="constructor">node</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons_mult"><span class="id" title="definition">hcons_mult</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:41"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:42"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hnil"><span class="id" title="constructor">hnil</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab235"></a><h2 class="section">Managing sequences of hydras</h2>
+
+ 
+<div class="paragraph"> </div>
+
+<a id="lab236"></a><h3 class="section">Appending</h3>
+
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="hy_app" class="idref" href="#hy_app"><span class="id" title="definition">hy_app</span></a> (<a id="s1:43" class="idref" href="#s1:43"><span class="id" title="binder">s1</span></a> <a id="s2:44" class="idref" href="#s2:44"><span class="id" title="binder">s2</span></a>: <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae"><span class="id" title="inductive">Hydrae</span></a>) : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae"><span class="id" title="inductive">Hydrae</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s1:43"><span class="id" title="variable">s1</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hnil"><span class="id" title="constructor">hnil</span></a> ⇒ <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s2:44"><span class="id" title="variable">s2</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h1</span> <span class="id" title="var">s1'</span> ⇒ <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h1</span> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hy_app:45"><span class="id" title="definition">hy_app</span></a> <span class="id" title="var">s1'</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s2:44"><span class="id" title="variable">s2</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab237"></a><h3 class="section">Adds a  head to  the right of <span class="inlinecode"><span class="id" title="var">s</span></span></h3>
+
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="add_head_r" class="idref" href="#add_head_r"><span class="id" title="definition">add_head_r</span></a> (<a id="s:47" class="idref" href="#s:47"><span class="id" title="binder">s</span></a>: <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae"><span class="id" title="inductive">Hydrae</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:47"><span class="id" title="variable">s</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hnil"><span class="id" title="constructor">hnil</span></a> ⇒ <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hnil"><span class="id" title="constructor">hnil</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h</span> <span class="id" title="var">s'</span> ⇒ <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h</span> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#add_head_r:48"><span class="id" title="definition">add_head_r</span></a> <span class="id" title="var">s'</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab238"></a><h3 class="section">Adds i   heads to the right of <span class="inlinecode"><span class="id" title="var">s</span></span></h3>
+
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="add_head_r_plus" class="idref" href="#add_head_r_plus"><span class="id" title="definition">add_head_r_plus</span></a> (<a id="s:50" class="idref" href="#s:50"><span class="id" title="binder">s</span></a>:<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae"><span class="id" title="inductive">Hydrae</span></a>) (<a id="i:51" class="idref" href="#i:51"><span class="id" title="binder">i</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>)  :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#i:51"><span class="id" title="variable">i</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;0 ⇒ <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:50"><span class="id" title="variable">s</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">j</span> ⇒ <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#add_head_r"><span class="id" title="definition">add_head_r</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#add_head_r_plus:52"><span class="id" title="definition">add_head_r_plus</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:50"><span class="id" title="variable">s</span></a> <span class="id" title="var">j</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab239"></a><h3 class="section">adds <span class="inlinecode"><span class="id" title="var">i</span></span> heads to  the root of <span class="inlinecode"><span class="id" title="var">h</span></span> (to the right of its daughters)</h3>
+
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="add_r" class="idref" href="#add_r"><span class="id" title="definition">add_r</span></a> <a id="h:54" class="idref" href="#h:54"><span class="id" title="binder">h</span></a> <a id="i:55" class="idref" href="#i:55"><span class="id" title="binder">i</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:54"><span class="id" title="variable">h</span></a> <span class="id" title="keyword">with</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#node"><span class="id" title="constructor">node</span></a> <span class="id" title="var">s</span> ⇒ <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#node"><span class="id" title="constructor">node</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#add_head_r_plus"><span class="id" title="definition">add_head_r_plus</span></a> <span class="id" title="var">s</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#i:55"><span class="id" title="variable">i</span></a>) <span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab240"></a><h1 class="section">Hydra Battles</h1>
+
+
+<div class="paragraph"> </div>
+
+<a id="lab241"></a><h2 class="section">Relation associated with a single round.</h2>
+
+
+<div class="paragraph"> </div>
+
+  We represent the rules of Hydra Battles through a binary relation:
+  <span class="inlinecode"><span class="id" title="var">round_n</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> on the <span class="inlinecode"><span class="id" title="var">Hydra</span></span> type. 
+The proposition  <span class="inlinecode"><span class="id" title="var">round_n</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>  <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">h'</span></span> holds if <span class="inlinecode"><span class="id" title="var">h'</span></span> is obtained from <span class="inlinecode"><span class="id" title="var">h</span></span> by a single round of a battle, and <span class="inlinecode"><span class="id" title="var">n</span></span> is the <i>expected</i> replication  factor (irrelevant if the chopped head is at distance 1 from the foot).
+
+<div class="paragraph"> </div>
+
+The proposition <span class="inlinecode"><span class="id" title="var">round_n</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">h'</span></span> holds 
+
+<div class="paragraph"> </div>
+
+<ul class="doclist">
+<li> if <span class="inlinecode"><span class="id" title="var">h'</span></span> is obtained from <span class="inlinecode"><span class="id" title="var">h</span></span> by chopping off one head of height 1. This situation is described by the proposition <span class="inlinecode"><span class="id" title="var">R1</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">h'</span></span>.
+
+<div class="paragraph"> </div>
+
+
+</li>
+<li> Or <span class="inlinecode"><span class="id" title="var">h'</span></span> is obtained from <span class="inlinecode"><span class="id" title="var">h</span></span> through a beheading at distance  from the foot, with creation of <span class="inlinecode"><span class="id" title="var">n</span></span> copies of some dub-hydra.
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+Before giving the definition in Coq of <span class="inlinecode"><span class="id" title="var">round_n</span></span>, we need to define several  auxiliary relations.
+
+<div class="paragraph"> </div>
+
+<a id="lab242"></a><h3 class="section">S0</h3>
+
+
+<div class="paragraph"> </div>
+
+ The proposition <span class="inlinecode"><span class="id" title="var">S0</span></span> <span class="inlinecode"><span class="id" title="var">s</span></span> <span class="inlinecode"><span class="id" title="var">s'</span></span> holds if the sequence <span class="inlinecode"><span class="id" title="var">s'</span></span> is obtained by removing one head from <span class="inlinecode"><span class="id" title="var">s</span></span>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="S0" class="idref" href="#S0"><span class="id" title="inductive">S0</span></a> :  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Definitions.html#relation"><span class="id" title="definition">relation</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae"><span class="id" title="inductive">Hydrae</span></a> :=<br/>
+| <a id="S0_first" class="idref" href="#S0_first"><span class="id" title="constructor">S0_first</span></a> : <span class="id" title="keyword">∀</span> <a id="s:59" class="idref" href="#s:59"><span class="id" title="binder">s</span></a>, <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#S0:57"><span class="id" title="inductive">S0</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:59"><span class="id" title="variable">s</span></a>) <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:59"><span class="id" title="variable">s</span></a><br/>
+| <a id="S0_rest" class="idref" href="#S0_rest"><span class="id" title="constructor">S0_rest</span></a> : <span class="id" title="keyword">∀</span>  <a id="h:60" class="idref" href="#h:60"><span class="id" title="binder">h</span></a> <a id="s:61" class="idref" href="#s:61"><span class="id" title="binder">s</span></a> <a id="s':62" class="idref" href="#s':62"><span class="id" title="binder">s'</span></a>, <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#S0:57"><span class="id" title="inductive">S0</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:61"><span class="id" title="variable">s</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s':62"><span class="id" title="variable">s'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#S0:57"><span class="id" title="inductive">S0</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:60"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:61"><span class="id" title="variable">s</span></a>) (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:60"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s':62"><span class="id" title="variable">s'</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab243"></a><h3 class="section">R1</h3>
+
+
+<div class="paragraph"> </div>
+
+    The proposition <span class="inlinecode"><span class="id" title="var">R1</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">h'</span></span> holds if <span class="inlinecode"><span class="id" title="var">h'</span></span> is obtained by removing one head from <span class="inlinecode"><span class="id" title="var">h</span></span> at distance 1 from  the foot 
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="R1" class="idref" href="#R1"><span class="id" title="inductive">R1</span></a>  :  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Definitions.html#relation"><span class="id" title="definition">relation</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a> :=<br/>
+| <a id="R1_intro" class="idref" href="#R1_intro"><span class="id" title="constructor">R1_intro</span></a> : <span class="id" title="keyword">∀</span> <a id="s:65" class="idref" href="#s:65"><span class="id" title="binder">s</span></a> <a id="s':66" class="idref" href="#s':66"><span class="id" title="binder">s'</span></a>, <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#S0"><span class="id" title="inductive">S0</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:65"><span class="id" title="variable">s</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s':66"><span class="id" title="variable">s'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#R1:63"><span class="id" title="inductive">R1</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#node"><span class="id" title="constructor">node</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:65"><span class="id" title="variable">s</span></a>) (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#node"><span class="id" title="constructor">node</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s':66"><span class="id" title="variable">s'</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab244"></a><h3 class="section">S1</h3>
+
+
+<div class="paragraph"> </div>
+
+  <span class="inlinecode"><span class="id" title="var">S1</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">s</span></span> <span class="inlinecode"><span class="id" title="var">s'</span></span> holds if <span class="inlinecode"><span class="id" title="var">s'</span></span> is obtained from <span class="inlinecode"><span class="id" title="var">s</span></span> by replacing some  member <span class="inlinecode"><span class="id" title="var">h</span></span> of <span class="inlinecode"><span class="id" title="var">s</span></span> by  copies of <span class="inlinecode"><span class="id" title="var">h</span></span>,  where <span class="inlinecode"><span class="id" title="var">R1</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">h'</span></span> holds.
+  Thus, <span class="inlinecode"><span class="id" title="var">n</span></span> is the number of new replicas of <span class="inlinecode"><span class="id" title="var">h'</span></span>. 
+
+<div class="paragraph"> </div>
+
+ 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="S1" class="idref" href="#S1"><span class="id" title="inductive">S1</span></a> (<a id="n:67" class="idref" href="#n:67"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>)  : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Definitions.html#relation"><span class="id" title="definition">relation</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae"><span class="id" title="inductive">Hydrae</span></a>  :=<br/>
+| <a id="S1_first" class="idref" href="#S1_first"><span class="id" title="constructor">S1_first</span></a> : <span class="id" title="keyword">∀</span> <a id="s:70" class="idref" href="#s:70"><span class="id" title="binder">s</span></a> <a id="h:71" class="idref" href="#h:71"><span class="id" title="binder">h</span></a> <a id="h':72" class="idref" href="#h':72"><span class="id" title="binder">h'</span></a> ,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#R1"><span class="id" title="inductive">R1</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:71"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':72"><span class="id" title="variable">h'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#S1:68"><span class="id" title="inductive">S1</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:67"><span class="id" title="variable">n</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:71"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:70"><span class="id" title="variable">s</span></a>) (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons_mult"><span class="id" title="definition">hcons_mult</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':72"><span class="id" title="variable">h'</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:67"><span class="id" title="variable">n</span></a>) <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:70"><span class="id" title="variable">s</span></a>)<br/>
+| <a id="S1_next" class="idref" href="#S1_next"><span class="id" title="constructor">S1_next</span></a> : <span class="id" title="keyword">∀</span> <a id="h:73" class="idref" href="#h:73"><span class="id" title="binder">h</span></a> <a id="s:74" class="idref" href="#s:74"><span class="id" title="binder">s</span></a> <a id="s':75" class="idref" href="#s':75"><span class="id" title="binder">s'</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#S1:68"><span class="id" title="inductive">S1</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:67"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:74"><span class="id" title="variable">s</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s':75"><span class="id" title="variable">s'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#S1:68"><span class="id" title="inductive">S1</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:67"><span class="id" title="variable">n</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:73"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:74"><span class="id" title="variable">s</span></a>) (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:73"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s':75"><span class="id" title="variable">s'</span></a>).<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab245"></a><h3 class="section">R2</h3>
+
+
+<div class="paragraph"> </div>
+
+The proposition <span class="inlinecode"><span class="id" title="var">R2</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">h'</span></span> holds if some sub-hydra <span class="inlinecode"><span class="id" title="var">h0</span></span> of <span class="inlinecode"><span class="id" title="var">h</span></span> has been replaced by <span class="inlinecode"><span class="id" title="var">h'0</span></span>,
+  where <span class="inlinecode"><span class="id" title="var">R1</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">h0</span></span> <span class="inlinecode"><span class="id" title="var">h'0</span></span>. The <span class="inlinecode"><span class="id" title="var">S2</span></span> relation is just a helper for <span class="inlinecode"><span class="id" title="var">R2</span></span>.
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="R2" class="idref" href="#R2"><span class="id" title="inductive">R2</span></a> (<a id="n:76" class="idref" href="#n:76"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>)  :  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Definitions.html#relation"><span class="id" title="definition">relation</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a>  :=<br/>
+| <a id="R2_intro" class="idref" href="#R2_intro"><span class="id" title="constructor">R2_intro</span></a> : <span class="id" title="keyword">∀</span> <a id="s:81" class="idref" href="#s:81"><span class="id" title="binder">s</span></a> <a id="s':82" class="idref" href="#s':82"><span class="id" title="binder">s'</span></a>, <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#S1"><span class="id" title="inductive">S1</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:76"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:81"><span class="id" title="variable">s</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s':82"><span class="id" title="variable">s'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#R2:77"><span class="id" title="inductive">R2</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:76"><span class="id" title="variable">n</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#node"><span class="id" title="constructor">node</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:81"><span class="id" title="variable">s</span></a>) (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#node"><span class="id" title="constructor">node</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s':82"><span class="id" title="variable">s'</span></a>)<br/>
+| <a id="R2_intro_2" class="idref" href="#R2_intro_2"><span class="id" title="constructor">R2_intro_2</span></a> : <span class="id" title="keyword">∀</span> <a id="s:83" class="idref" href="#s:83"><span class="id" title="binder">s</span></a> <a id="s':84" class="idref" href="#s':84"><span class="id" title="binder">s'</span></a>, <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#S2:78"><span class="id" title="inductive">S2</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:76"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:83"><span class="id" title="variable">s</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s':84"><span class="id" title="variable">s'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#R2:77"><span class="id" title="inductive">R2</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:76"><span class="id" title="variable">n</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#node"><span class="id" title="constructor">node</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:83"><span class="id" title="variable">s</span></a>) (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#node"><span class="id" title="constructor">node</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s':84"><span class="id" title="variable">s'</span></a>)<br/>
+<br/>
+<span class="id" title="keyword">with</span> <a id="S2" class="idref" href="#S2"><span class="id" title="inductive">S2</span></a> (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) :  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Definitions.html#relation"><span class="id" title="definition">relation</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydrae"><span class="id" title="inductive">Hydrae</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  <a id="S2_first" class="idref" href="#S2_first"><span class="id" title="constructor">S2_first</span></a> : <span class="id" title="keyword">∀</span> <a id="h:85" class="idref" href="#h:85"><span class="id" title="binder">h</span></a> <a id="h':86" class="idref" href="#h':86"><span class="id" title="binder">h'</span></a> <a id="s:87" class="idref" href="#s:87"><span class="id" title="binder">s</span></a> ,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#R2:77"><span class="id" title="inductive">R2</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:76"><span class="id" title="variable">n</span></a>   <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:85"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':86"><span class="id" title="variable">h'</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#S2:78"><span class="id" title="inductive">S2</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:76"><span class="id" title="variable">n</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:85"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:87"><span class="id" title="variable">s</span></a>) (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':86"><span class="id" title="variable">h'</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#s:87"><span class="id" title="variable">s</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  <a id="S2_next" class="idref" href="#S2_next"><span class="id" title="constructor">S2_next</span></a>  : <span class="id" title="keyword">∀</span> <a id="h:88" class="idref" href="#h:88"><span class="id" title="binder">h</span></a>   <a id="r:89" class="idref" href="#r:89"><span class="id" title="binder">r</span></a> <a id="r':90" class="idref" href="#r':90"><span class="id" title="binder">r'</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#S2:78"><span class="id" title="inductive">S2</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:76"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#r:89"><span class="id" title="variable">r</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#r':90"><span class="id" title="variable">r'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#S2:78"><span class="id" title="inductive">S2</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:76"><span class="id" title="variable">n</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:88"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#r:89"><span class="id" title="variable">r</span></a>) (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:88"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#r':90"><span class="id" title="variable">r'</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab246"></a><h3 class="section"><span class="inlinecode"><span class="id" title="var">round_n</span></span></h3>
+
+
+<div class="paragraph"> </div>
+
+   Let <span class="inlinecode"><span class="id" title="var">n</span></span> be an <i>expected</i> replication number. The relation <span class="inlinecode"><span class="id" title="var">round_n</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">h'</span></span>
+   holds:
+<ul class="doclist">
+<li> if  <span class="inlinecode"><span class="id" title="var">h'</span></span> is obtained from <span class="inlinecode"><span class="id" title="var">h</span></span> by removing one head of height 1 (and the factor <span class="inlinecode"><span class="id" title="var">n</span></span> is irrelevant)
+
+</li>
+<li> or  <span class="inlinecode"><span class="id" title="var">h'</span></span> is obtained from <span class="inlinecode"><span class="id" title="var">h</span></span> by removing one head of height greater or equal than 2, and this beheading was made with a relocation factor <span class="inlinecode"><span class="id" title="var">n</span></span>.
+
+</li>
+</ul>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="round_n" class="idref" href="#round_n"><span class="id" title="definition">round_n</span></a> <a id="n:91" class="idref" href="#n:91"><span class="id" title="binder">n</span></a> <a id="h:92" class="idref" href="#h:92"><span class="id" title="binder">h</span></a> <a id="h':93" class="idref" href="#h':93"><span class="id" title="binder">h'</span></a> := <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#R1"><span class="id" title="inductive">R1</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:92"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':93"><span class="id" title="variable">h'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#f031fe1957c4a4a8e217aa46af2b4e25"><span class="id" title="notation">∨</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#R2"><span class="id" title="inductive">R2</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:91"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:92"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':93"><span class="id" title="variable">h'</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Transition system associated with battles 
+<div class="paragraph"> </div>
+
+<a id="lab247"></a><h3 class="section">Binary relation associated with a battle round</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="round" class="idref" href="#round"><span class="id" title="definition">round</span></a> <a id="h:94" class="idref" href="#h:94"><span class="id" title="binder">h</span></a> <a id="h':95" class="idref" href="#h':95"><span class="id" title="binder">h'</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a id="n:96" class="idref" href="#n:96"><span class="id" title="binder">n</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">,</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round_n"><span class="id" title="definition">round_n</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:96"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:94"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':95"><span class="id" title="variable">h'</span></a>.<br/>
+<span class="id" title="keyword">Infix</span> <a id=":::x_'-1-&gt;'_x" class="idref" href="#:::x_'-1-&gt;'_x"><span class="id" title="notation">&quot;</span></a>-1-&gt;" := <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round"><span class="id" title="definition">round</span></a> (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 60).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab248"></a><h3 class="section">transitive closures of round</h3>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="round_plus" class="idref" href="#round_plus"><span class="id" title="definition">round_plus</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Operators.html#clos_trans_1n"><span class="id" title="inductive">clos_trans_1n</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round"><span class="id" title="definition">round</span></a>.<br/>
+<span class="id" title="keyword">Definition</span> <a id="round_star" class="idref" href="#round_star"><span class="id" title="definition">round_star</span></a> <a id="h:97" class="idref" href="#h:97"><span class="id" title="binder">h</span></a> <a id="h':98" class="idref" href="#h':98"><span class="id" title="binder">h'</span></a> := <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:97"><span class="id" title="variable">h</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':98"><span class="id" title="variable">h'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#f031fe1957c4a4a8e217aa46af2b4e25"><span class="id" title="notation">∨</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round_plus"><span class="id" title="definition">round_plus</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:97"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':98"><span class="id" title="variable">h'</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Infix</span> <a id="4b2603e3c2ae6b73edb417c5b09dc498" class="idref" href="#4b2603e3c2ae6b73edb417c5b09dc498"><span class="id" title="notation">&quot;</span></a>-+-&gt;" := <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round_plus"><span class="id" title="definition">round_plus</span></a> (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 60).<br/>
+<span class="id" title="keyword">Infix</span> <a id="01d24958106a67451f21f2873a331e59" class="idref" href="#01d24958106a67451f21f2873a331e59"><span class="id" title="notation">&quot;</span></a>-*-&gt;" := <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round_star"><span class="id" title="definition">round_star</span></a> (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 60).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab249"></a><h2 class="section">Experimental tactics for interactive battles</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab250"></a><h3 class="section">removes the i-th daughter (should be a head)</h3>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">chop_off</span> <span class="id" title="var">i</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span> |- <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#S0"><span class="id" title="inductive">S0</span></a> ?<span class="id" title="var">h</span> ?<span class="id" title="var">h'</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">i</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#O"><span class="id" title="constructor">O</span></a> ⇒ <span class="id" title="tactic">eapply</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#S0_first"><span class="id" title="constructor">S0_first</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> ?<span class="id" title="var">j</span> ⇒ <span class="id" title="tactic">eapply</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#S0_rest"><span class="id" title="constructor">S0_rest</span></a>; <span class="id" title="var">chop_off</span> <span class="id" title="var">j</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  |- <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round"><span class="id" title="definition">round</span></a> ?<span class="id" title="var">h</span> ?<span class="id" title="var">h'</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">∃</span> 0; <span class="id" title="tactic">left</span>; <span class="id" title="tactic">split</span>; <span class="id" title="var">chop_off</span> <span class="id" title="var">i</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  |- <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round_n"><span class="id" title="definition">round_n</span></a> ?<span class="id" title="var">n</span> ?<span class="id" title="var">h</span> ?<span class="id" title="var">h'</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">left</span> ; <span class="id" title="tactic">split</span>; <span class="id" title="var">chop_off</span> <span class="id" title="var">i</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+ Calls the <span class="inlinecode"><span class="id" title="var">R2</span></span> relation 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">h_search_n</span> <span class="id" title="var">n</span>  :=  <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round"><span class="id" title="definition">round</span></a> ?<span class="id" title="var">h</span> ?<span class="id" title="var">h'</span> ⇒  <span class="id" title="tactic">∃</span> <span class="id" title="var">n</span>; <span class="id" title="var">eright</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">h_search</span>   :=  <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| |- <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round_n"><span class="id" title="definition">round_n</span></a> ?<span class="id" title="var">p</span> ?<span class="id" title="var">h</span> ?<span class="id" title="var">h'</span> ⇒ <span class="id" title="var">eright</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">s2_nth</span> <span class="id" title="var">n</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 0 ⇒ <span class="id" title="var">eleft</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> ?<span class="id" title="var">p</span> ⇒ <span class="id" title="var">eright</span> ; <span class="id" title="var">s2_nth</span> <span class="id" title="var">p</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Moves to the <span class="inlinecode"><span class="id" title="var">i</span></span>-th daugther 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">r2_up</span> <span class="id" title="var">i</span> := <span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#R2"><span class="id" title="inductive">R2</span></a> ?<span class="id" title="var">n</span> ?<span class="id" title="var">h</span> ?<span class="id" title="var">h'</span> ⇒ <span class="id" title="var">eright</span>; <span class="id" title="var">s2_nth</span> <span class="id" title="var">i</span> <br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">S1_nth</span> <span class="id" title="var">i</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#S1"><span class="id" title="inductive">S1</span></a> ?<span class="id" title="var">n</span> ?<span class="id" title="var">h</span> ?<span class="id" title="var">h'</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">i</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 0 ⇒ <span class="id" title="var">eleft</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> ?<span class="id" title="var">j</span> ⇒ <span class="id" title="var">eright</span> ; <span class="id" title="var">S1_nth</span> <span class="id" title="var">j</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+chops off a head which is the <span class="inlinecode"><span class="id" title="var">j</span></span>-th daughter of the 
+    <span class="inlinecode"><span class="id" title="var">i</span></span>-th dauchter
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">r2_d2</span> <span class="id" title="var">i</span> <span class="id" title="var">j</span> :=<br/>
+&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#R2"><span class="id" title="inductive">R2</span></a> ?<span class="id" title="var">n</span> ?<span class="id" title="var">h</span> ?<span class="id" title="var">h'</span> ⇒ <span class="id" title="var">eleft</span>; <span class="id" title="var">S1_nth</span> <span class="id" title="var">i</span>; <span class="id" title="tactic">split</span>; <span class="id" title="var">chop_off</span> <span class="id" title="var">j</span><br/>
+&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+End of the battle 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">stop</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round_star"><span class="id" title="definition">round_star</span></a> ?<span class="id" title="var">h</span> ?<span class="id" title="var">h'</span> ⇒ <span class="id" title="tactic">left</span>; <span class="id" title="tactic">reflexivity</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Still fighting 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="round_star_intro" class="idref" href="#round_star_intro"><span class="id" title="lemma">round_star_intro</span></a> <a id="h:99" class="idref" href="#h:99"><span class="id" title="binder">h</span></a> <a id="h'':100" class="idref" href="#h'':100"><span class="id" title="binder">h''</span></a> : <span class="id" title="keyword">∀</span> <a id="h':101" class="idref" href="#h':101"><span class="id" title="binder">h'</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:99"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#:::x_'-1-&gt;'_x"><span class="id" title="notation">-1-&gt;</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':101"><span class="id" title="variable">h'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':101"><span class="id" title="variable">h'</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#01d24958106a67451f21f2873a331e59"><span class="id" title="notation">-*-&gt;</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h'':100"><span class="id" title="variable">h''</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:99"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#01d24958106a67451f21f2873a331e59"><span class="id" title="notation">-*-&gt;</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h'':100"><span class="id" title="variable">h''</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">forward</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|- <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round_star"><span class="id" title="definition">round_star</span></a> ?<span class="id" title="var">h</span> ?<span class="id" title="var">h'</span> ⇒ <span class="id" title="tactic">eapply</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round_star_intro"><span class="id" title="lemma">round_star_intro</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab251"></a><h2 class="section">Traces</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="trace_to" class="idref" href="#trace_to"><span class="id" title="inductive">trace_to</span></a>  <a id="dest:102" class="idref" href="#dest:102"><span class="id" title="binder">dest</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<a id="trace_to1" class="idref" href="#trace_to1"><span class="id" title="constructor">trace_to1</span></a> : <span class="id" title="keyword">∀</span> <a id="n:105" class="idref" href="#n:105"><span class="id" title="binder">n</span></a> <a id="h:106" class="idref" href="#h:106"><span class="id" title="binder">h</span></a>, <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round_n"><span class="id" title="definition">round_n</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:105"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:106"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#dest:102"><span class="id" title="variable">dest</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#trace_to:103"><span class="id" title="inductive">trace_to</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#dest:102"><span class="id" title="variable">dest</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:105"><span class="id" title="variable">n</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nil"><span class="id" title="constructor">nil</span></a>) <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:106"><span class="id" title="variable">h</span></a><br/>
+| <a id="trace_toS" class="idref" href="#trace_toS"><span class="id" title="constructor">trace_toS</span></a> : <span class="id" title="keyword">∀</span> <a id="n:107" class="idref" href="#n:107"><span class="id" title="binder">n</span></a> <a id="t:108" class="idref" href="#t:108"><span class="id" title="binder">t</span></a> <a id="h:109" class="idref" href="#h:109"><span class="id" title="binder">h</span></a> <a id="h':110" class="idref" href="#h':110"><span class="id" title="binder">h'</span></a>,  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round_n"><span class="id" title="definition">round_n</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:107"><span class="id" title="variable">n</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:109"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':110"><span class="id" title="variable">h'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#trace_to:103"><span class="id" title="inductive">trace_to</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#dest:102"><span class="id" title="variable">dest</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#t:108"><span class="id" title="variable">t</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':110"><span class="id" title="variable">h'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#trace_to:103"><span class="id" title="inductive">trace_to</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#dest:102"><span class="id" title="variable">dest</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:107"><span class="id" title="variable">n</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#t:108"><span class="id" title="variable">t</span></a>) <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:109"><span class="id" title="variable">h</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="trace" class="idref" href="#trace"><span class="id" title="definition">trace</span></a> <a id="t:111" class="idref" href="#t:111"><span class="id" title="binder">t</span></a> <a id="h:112" class="idref" href="#h:112"><span class="id" title="binder">h</span></a> <a id="h':113" class="idref" href="#h':113"><span class="id" title="binder">h'</span></a> := <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#trace_to"><span class="id" title="inductive">trace_to</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':113"><span class="id" title="variable">h'</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#t:111"><span class="id" title="variable">t</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:112"><span class="id" title="variable">h</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  Let  be an hydra and  and expected replication factor. The next step of 
+  the current battle may be specified by the following type 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="round_spec" class="idref" href="#round_spec"><span class="id" title="definition">round_spec</span></a> <a id="h:114" class="idref" href="#h:114"><span class="id" title="binder">h</span></a> <a id="n:115" class="idref" href="#n:115"><span class="id" title="binder">n</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">{</span></a><a id="h':116" class="idref" href="#h':116"><span class="id" title="binder">h'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">:</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">|</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round_n"><span class="id" title="definition">round_n</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#n:115"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:114"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':116"><span class="id" title="variable">h'</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">}</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#53e8e3b7ca0342c8b99a777b3c5faf3a"><span class="id" title="notation">+</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#53e8e3b7ca0342c8b99a777b3c5faf3a"><span class="id" title="notation">{</span></a><a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:114"><span class="id" title="variable">h</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#53e8e3b7ca0342c8b99a777b3c5faf3a"><span class="id" title="notation">}</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab252"></a><h2 class="section">Classes of battles</h2>
+
+
+<div class="paragraph"> </div>
+
+In an hydra battle, the interaction between the two players  may depend on the time (number of rounds) elapsed since the beginning of the fight.
+
+<div class="paragraph"> </div>
+
+Let us formalize this dependence through a relation linking the number of the current round, and the hydra before and after the considered round.
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="round_t" class="idref" href="#round_t"><span class="id" title="definition">round_t</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Prop</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Class</span> <a id="Battle" class="idref" href="#Battle"><span class="id" title="record">Battle</span></a> :=<br/>
+&nbsp;&nbsp;{ <a id="battle_rel" class="idref" href="#battle_rel"><span class="id" title="projection">battle_rel</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round_t"><span class="id" title="definition">round_t</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="battle_ok" class="idref" href="#battle_ok"><span class="id" title="projection">battle_ok</span></a> : <span class="id" title="keyword">∀</span> <a id="i:119" class="idref" href="#i:119"><span class="id" title="binder">i</span></a> <a id="h:120" class="idref" href="#h:120"><span class="id" title="binder">h</span></a> <a id="h':121" class="idref" href="#h':121"><span class="id" title="binder">h'</span></a>, <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#battle_rel:118"><span class="id" title="method">battle_rel</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#i:119"><span class="id" title="variable">i</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:120"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':121"><span class="id" title="variable">h'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round"><span class="id" title="definition">round</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:120"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':121"><span class="id" title="variable">h'</span></a>}.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#battle_rel"><span class="id" title="method">battle_rel</span></a> : <span class="id" title="tactic">clear</span> <span class="id" title="var">implicits</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+In the current state of this development, we will consider two instances of class <span class="inlinecode"><span class="id" title="var">Battle</span></span>:
+
+<div class="paragraph"> </div>
+
+<ul class="doclist">
+<li> In <span class="inlinecode"><span class="id" title="var">free</span></span>, we hydra may chose any replication factor at any time.
+
+<div class="paragraph"> </div>
+
+
+</li>
+<li> In <span class="inlinecode"><span class="id" title="var">standard</span></span> the replication factor at round number <span class="inlinecode"><span class="id" title="var">i</span></span> is just <span class="inlinecode"><span class="id" title="var">i</span></span>
+
+</li>
+</ul>
+ 
+</div>
+<div class="code">
+
+<br/>
+#[ <span class="id" title="var">global</span>, <span class="id" title="tactic">refine</span> ] <span class="id" title="keyword">Instance</span> <a id="free" class="idref" href="#free"><span class="id" title="instance">free</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Battle"><span class="id" title="class">Battle</span></a> <br/>
+&nbsp;&nbsp;:= <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Build_Battle"><span class="id" title="constructor">Build_Battle</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span>  <a id="h:123" class="idref" href="#h:123"><span class="id" title="binder">h</span></a> <a id="h':124" class="idref" href="#h':124"><span class="id" title="binder">h'</span></a> ⇒ <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round"><span class="id" title="definition">round</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:123"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':124"><span class="id" title="variable">h'</span></a>) <span class="id" title="var">_</span>.<br/>
+ 
+<br/>
+
+<br/>
+#[ <span class="id" title="var">global</span>, <span class="id" title="tactic">refine</span>] <span class="id" title="keyword">Instance</span> <a id="standard" class="idref" href="#standard"><span class="id" title="instance">standard</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Battle"><span class="id" title="class">Battle</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Build_Battle"><span class="id" title="constructor">Build_Battle</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round_n"><span class="id" title="definition">round_n</span></a>  <span class="id" title="var">_</span>.<br/>
+ 
+<br/>
+</div>
+
+<div class="doc">
+ The following relation allows us to consider sequences of rounds in a given  class  of battles 
+
+<div class="paragraph"> </div>
+
+ The proposition <span class="inlinecode"><span class="id" title="var">rounds</span></span> <span class="inlinecode"><span class="id" title="var">b</span></span> <span class="inlinecode"><span class="id" title="var">i</span></span> <span class="inlinecode"><span class="id" title="var">h</span></span> <span class="inlinecode"><span class="id" title="var">j</span></span> <span class="inlinecode"><span class="id" title="var">h'</span></span> holds if there is a battle of class <span class="inlinecode"><span class="id" title="var">B</span></span> that
+  starts with hydra <span class="inlinecode"><span class="id" title="var">h</span></span> at round <span class="inlinecode"><span class="id" title="var">i</span></span> and ends with hydra <span class="inlinecode"><span class="id" title="var">h'</span></span> at round <span class="inlinecode"><span class="id" title="var">j</span></span>
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="rounds" class="idref" href="#rounds"><span class="id" title="inductive">rounds</span></a> (<a id="B:125" class="idref" href="#B:125"><span class="id" title="binder">B</span></a>:<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Battle"><span class="id" title="class">Battle</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;<a id="rounds_1" class="idref" href="#rounds_1"><span class="id" title="constructor">rounds_1</span></a> : <span class="id" title="keyword">∀</span> <a id="i:128" class="idref" href="#i:128"><span class="id" title="binder">i</span></a> <a id="h:129" class="idref" href="#h:129"><span class="id" title="binder">h</span></a>  <a id="h':130" class="idref" href="#h':130"><span class="id" title="binder">h'</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#battle_rel"><span class="id" title="method">battle_rel</span></a>   <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#B:125"><span class="id" title="variable">B</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#i:128"><span class="id" title="variable">i</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:129"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':130"><span class="id" title="variable">h'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#rounds:126"><span class="id" title="inductive">rounds</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#B:125"><span class="id" title="variable">B</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#i:128"><span class="id" title="variable">i</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:129"><span class="id" title="variable">h</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#i:128"><span class="id" title="variable">i</span></a>) <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':130"><span class="id" title="variable">h'</span></a><br/>
+| <a id="rounds_n" class="idref" href="#rounds_n"><span class="id" title="constructor">rounds_n</span></a> : <span class="id" title="keyword">∀</span> <a id="i:131" class="idref" href="#i:131"><span class="id" title="binder">i</span></a> <a id="h:132" class="idref" href="#h:132"><span class="id" title="binder">h</span></a>  <a id="j:133" class="idref" href="#j:133"><span class="id" title="binder">j</span></a> <a id="h':134" class="idref" href="#h':134"><span class="id" title="binder">h'</span></a> <a id="h'':135" class="idref" href="#h'':135"><span class="id" title="binder">h''</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#battle_rel"><span class="id" title="method">battle_rel</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#B:125"><span class="id" title="variable">B</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#i:131"><span class="id" title="variable">i</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:132"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h'':135"><span class="id" title="variable">h''</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#rounds:126"><span class="id" title="inductive">rounds</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#B:125"><span class="id" title="variable">B</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#i:131"><span class="id" title="variable">i</span></a>) <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h'':135"><span class="id" title="variable">h''</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#j:133"><span class="id" title="variable">j</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':134"><span class="id" title="variable">h'</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#rounds:126"><span class="id" title="inductive">rounds</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#B:125"><span class="id" title="variable">B</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#i:131"><span class="id" title="variable">i</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:132"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#j:133"><span class="id" title="variable">j</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':134"><span class="id" title="variable">h'</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+number of steps leading to the hydra's death 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="battle_length" class="idref" href="#battle_length"><span class="id" title="definition">battle_length</span></a> <a id="B:136" class="idref" href="#B:136"><span class="id" title="binder">B</span></a> <a id="k:137" class="idref" href="#k:137"><span class="id" title="binder">k</span></a> <a id="h:138" class="idref" href="#h:138"><span class="id" title="binder">h</span></a> <a id="l:139" class="idref" href="#l:139"><span class="id" title="binder">l</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#rounds"><span class="id" title="inductive">rounds</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#B:136"><span class="id" title="variable">B</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#k:137"><span class="id" title="variable">k</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:138"><span class="id" title="variable">h</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.PeanoNat.html#Nat.pred"><span class="id" title="definition">Nat.pred</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#k:137"><span class="id" title="variable">k</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#l:139"><span class="id" title="variable">l</span></a>)%<span class="id" title="var">nat</span>) <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a>.<br/>
+
+<br/>
+#[<span class="id" title="var">deprecated</span>(<span class="id" title="var">note</span>="use rounds")]<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="battle" class="idref" href="#battle"><span class="id" title="abbreviation">battle</span></a> := <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#rounds"><span class="id" title="inductive">rounds</span></a> (<span class="id" title="var">only</span> <span class="id" title="var">parsing</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab253"></a><h3 class="section">Uniform termination</h3>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Termination" class="idref" href="#Termination"><span class="id" title="definition">Termination</span></a> :=  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#well_founded"><span class="id" title="definition">well_founded</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Operators.html#transp"><span class="id" title="definition">transp</span></a> <span class="id" title="var">_</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round"><span class="id" title="definition">round</span></a>).<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="B_termination" class="idref" href="#B_termination"><span class="id" title="definition">B_termination</span></a> (<a id="B:140" class="idref" href="#B:140"><span class="id" title="binder">B</span></a>: <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Battle"><span class="id" title="class">Battle</span></a>) :=<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#well_founded"><span class="id" title="definition">well_founded</span></a> (<span class="id" title="keyword">fun</span> <a id="h':141" class="idref" href="#h':141"><span class="id" title="binder">h'</span></a> <a id="h:142" class="idref" href="#h:142"><span class="id" title="binder">h</span></a> ⇒  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a id="i:143" class="idref" href="#i:143"><span class="id" title="binder">i</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">,</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#battle_rel"><span class="id" title="method">battle_rel</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#B:140"><span class="id" title="variable">B</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#i:143"><span class="id" title="variable">i</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:142"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':141"><span class="id" title="variable">h'</span></a> ).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab254"></a><h3 class="section">Variants for proving termination</h3>
+
+ 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Class</span> <a id="Hvariant" class="idref" href="#Hvariant"><span class="id" title="record">Hvariant</span></a> {<a id="A:144" class="idref" href="#A:144"><span class="id" title="binder">A</span></a>:<span class="id" title="keyword">Type</span>}{<a id="Lt:145" class="idref" href="#Lt:145"><span class="id" title="binder">Lt</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Definitions.html#relation"><span class="id" title="definition">relation</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#A:144"><span class="id" title="variable">A</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="Wf:146" class="idref" href="#Wf:146"><span class="id" title="binder">Wf</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#well_founded"><span class="id" title="definition">well_founded</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Lt:145"><span class="id" title="variable">Lt</span></a>)(<a id="B:147" class="idref" href="#B:147"><span class="id" title="binder">B</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Battle"><span class="id" title="class">Battle</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="m:148" class="idref" href="#m:148"><span class="id" title="binder">m</span></a>: <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#A:144"><span class="id" title="variable">A</span></a>): <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;{<a id="variant_decr" class="idref" href="#variant_decr"><span class="id" title="projection">variant_decr</span></a>: <span class="id" title="keyword">∀</span> <a id="i:150" class="idref" href="#i:150"><span class="id" title="binder">i</span></a> <a id="h:151" class="idref" href="#h:151"><span class="id" title="binder">h</span></a> <a id="h':152" class="idref" href="#h':152"><span class="id" title="binder">h'</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:151"><span class="id" title="variable">h</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#battle_rel"><span class="id" title="method">battle_rel</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#B:147"><span class="id" title="variable">B</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#i:150"><span class="id" title="variable">i</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:151"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':152"><span class="id" title="variable">h'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Lt:145"><span class="id" title="variable">Lt</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#m:148"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':152"><span class="id" title="variable">h'</span></a>) (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#m:148"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:151"><span class="id" title="variable">h</span></a>)}.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Variant bounded by some ordinal alpha &lt; epsilon0 <a id="lab255"></a><h2 class="section">Strictly Bounded variants</h2>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Class</span> <a id="BoundedVariant" class="idref" href="#BoundedVariant"><span class="id" title="record">BoundedVariant</span></a> {<a id="A:154" class="idref" href="#A:154"><span class="id" title="binder">A</span></a>:<span class="id" title="keyword">Type</span>}{<a id="Lt:155" class="idref" href="#Lt:155"><span class="id" title="binder">Lt</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Definitions.html#relation"><span class="id" title="definition">relation</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#A:154"><span class="id" title="variable">A</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<a id="Wf:156" class="idref" href="#Wf:156"><span class="id" title="binder">Wf</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#well_founded"><span class="id" title="definition">well_founded</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Lt:155"><span class="id" title="variable">Lt</span></a>}{<a id="B:157" class="idref" href="#B:157"><span class="id" title="binder">B</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Battle"><span class="id" title="class">Battle</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<a id="m:158" class="idref" href="#m:158"><span class="id" title="binder">m</span></a>: <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#A:154"><span class="id" title="variable">A</span></a>} (<a id="Var:159" class="idref" href="#Var:159"><span class="id" title="binder">Var</span></a>: <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hvariant"><span class="id" title="class">Hvariant</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Wf:156"><span class="id" title="variable">Wf</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#B:157"><span class="id" title="variable">B</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#m:158"><span class="id" title="variable">m</span></a>)(<a id="mu:160" class="idref" href="#mu:160"><span class="id" title="binder">mu</span></a>:<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#A:154"><span class="id" title="variable">A</span></a>):=<br/>
+&nbsp;&nbsp;{ <a id="m_bounded" class="idref" href="#m_bounded"><span class="id" title="projection">m_bounded</span></a>: <span class="id" title="keyword">∀</span> <a id="h:162" class="idref" href="#h:162"><span class="id" title="binder">h</span></a>, <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Lt:155"><span class="id" title="variable">Lt</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#m:158"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:162"><span class="id" title="variable">h</span></a> ) <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#mu:160"><span class="id" title="variable">mu</span></a> }.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab256"></a><h3 class="section">Liveness</h3>
+
+
+<div class="paragraph"> </div>
+
+ For every reachable configuration <span class="inlinecode">(<span class="id" title="var">i</span>,<span class="id" title="var">h</span>)</span>, either <span class="inlinecode"><span class="id" title="var">h</span></span> is a head, or 
+ there exists a beheading leading to some configuration <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">i</span>,</span> <span class="inlinecode"><span class="id" title="var">h'</span>)</span>.
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Alive" class="idref" href="#Alive"><span class="id" title="definition">Alive</span></a> (<a id="B:164" class="idref" href="#B:164"><span class="id" title="binder">B</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Battle"><span class="id" title="class">Battle</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="i:165" class="idref" href="#i:165"><span class="id" title="binder">i</span></a> <a id="h:166" class="idref" href="#h:166"><span class="id" title="binder">h</span></a>, <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:166"><span class="id" title="variable">h</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">{</span></a><a id="h':167" class="idref" href="#h':167"><span class="id" title="binder">h'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">:</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">|</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#battle_rel"><span class="id" title="method">battle_rel</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#B:164"><span class="id" title="variable">B</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#i:165"><span class="id" title="variable">i</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h:166"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#h':167"><span class="id" title="variable">h'</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#6556914db359db999889decec6a4a562"><span class="id" title="notation">}</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

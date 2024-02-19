@@ -1,0 +1,1074 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>additions.Addition_Chains</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library additions.Addition_Chains</h1>
+
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab339"></a><h1 class="section">Addition Chains</h1>
+
+Pierre Casteran, LaBRI, University of Bordeaux
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">additions</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="additions.Monoid_instances.html#"><span class="id" title="library">Monoid_instances</span></a> <a class="idref" href="additions.Pow.html#"><span class="id" title="library">Pow</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relations.html#"><span class="id" title="library">Relations</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Classes.RelationClasses.html#"><span class="id" title="library">RelationClasses</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.micromega.Lia.html#"><span class="id" title="library">Lia</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#"><span class="id" title="library">List</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Param</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="library">Param</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">additions</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="additions.More_on_positive.html#"><span class="id" title="library">More_on_positive</span></a>.<br/>
+<span class="id" title="keyword">Generalizable Variables</span> <span class="id" title="var">A</span> <span class="id" title="var">op</span> <span class="id" title="var">one</span> <span class="id" title="var">Aeq</span>.<br/>
+<span class="id" title="keyword">Infix</span> <a id="2596316c6f2ff161cb03e25fd8914390" class="idref" href="#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">&quot;</span></a>==" := <a class="idref" href="additions.Monoid_def.html#equiv"><span class="id" title="definition">Monoid_def.equiv</span></a> (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 70) : <span class="id" title="var">type_scope</span>.<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">M_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab340"></a><h2 class="section">Computations composed of multiplications over type  A</h2>
+
+  (in Continuation Passing Style) 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="computation" class="idref" href="#computation"><span class="id" title="inductive">computation</span></a> {<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a>:<span class="id" title="keyword">Type</span>}  : <span class="id" title="keyword">Type</span> :=<br/>
+| <a id="Return" class="idref" href="#Return"><span class="id" title="constructor">Return</span></a> (<a id="a:4" class="idref" href="#a:4"><span class="id" title="binder">a</span></a> : <a class="idref" href="additions.Addition_Chains.html#A:1"><span class="id" title="variable">A</span></a>)<br/>
+| <a id="Mult" class="idref" href="#Mult"><span class="id" title="constructor">Mult</span></a> (<a id="x:5" class="idref" href="#x:5"><span class="id" title="binder">x</span></a> <a id="y:6" class="idref" href="#y:6"><span class="id" title="binder">y</span></a> : <a class="idref" href="additions.Addition_Chains.html#A:1"><span class="id" title="variable">A</span></a>) (<a id="k:7" class="idref" href="#k:7"><span class="id" title="binder">k</span></a> : <a class="idref" href="additions.Addition_Chains.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Addition_Chains.html#computation:2"><span class="id" title="inductive">computation</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab341"></a><h3 class="section">Monadic Notation for computations</h3>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="5870a17092f4a8078b9692b4c6687556" class="idref" href="#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&quot;</span></a>z '&lt;---'  x 'times' y ';' e2 " :=<br/>
+&nbsp;&nbsp;(<a class="idref" href="additions.Addition_Chains.html#Mult"><span class="id" title="constructor">Mult</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span>  (<span class="id" title="keyword">fun</span> <a id="z:8" class="idref" href="#z:8"><span class="id" title="binder">z</span></a> ⇒ <span class="id" title="var">e2</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">right</span> <span class="id" title="keyword">associativity</span>, <span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 60).<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="comp128" class="idref" href="#comp128"><span class="id" title="definition">comp128</span></a> : <a class="idref" href="additions.Addition_Chains.html#computation"><span class="id" title="inductive">computation</span></a>  :=<br/>
+&nbsp;&nbsp;<a id="x:9" class="idref" href="#x:9"><span class="id" title="binder">x</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> 2 <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> 2<a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;&nbsp;<a id="y:10" class="idref" href="#y:10"><span class="id" title="binder">y</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x:9"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> 2<a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;&nbsp;<a id="z:11" class="idref" href="#z:11"><span class="id" title="binder">z</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#y:10"><span class="id" title="variable">y</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#y:10"><span class="id" title="variable">y</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;&nbsp;<a id="t:12" class="idref" href="#t:12"><span class="id" title="binder">t</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> 2 <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#z:11"><span class="id" title="variable">z</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#Return"><span class="id" title="constructor">Return</span></a> <a class="idref" href="additions.Addition_Chains.html#t:12"><span class="id" title="variable">t</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab342"></a><h3 class="section">Definition</h3>
+
+
+<div class="paragraph"> </div>
+
+An <i>addition chain</i> (in short a <i>chain</i>) is a function that maps
+ any type  and any value  of type  into a computation on .
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="chain" class="idref" href="#chain"><span class="id" title="definition">chain</span></a> := <span class="id" title="keyword">∀</span> <a id="A:13" class="idref" href="#A:13"><span class="id" title="binder">A</span></a>:<span class="id" title="keyword">Type</span>, <a class="idref" href="additions.Addition_Chains.html#A:13"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> @<a class="idref" href="additions.Addition_Chains.html#computation"><span class="id" title="inductive">computation</span></a> <a class="idref" href="additions.Addition_Chains.html#A:13"><span class="id" title="variable">A</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The chain associated with the empty computation 
+   (raising to the first power) 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="C1" class="idref" href="#C1"><span class="id" title="definition">C1</span></a> : <a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a> :=  (@<a class="idref" href="additions.Addition_Chains.html#Return"><span class="id" title="constructor">Return</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="C3" class="idref" href="#C3"><span class="id" title="definition">C3</span></a> : <a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fun</span> (<a id="A:14" class="idref" href="#A:14"><span class="id" title="binder">A</span></a>:<span class="id" title="keyword">Type</span>) (<a id="x:15" class="idref" href="#x:15"><span class="id" title="binder">x</span></a>:<a class="idref" href="additions.Addition_Chains.html#A:14"><span class="id" title="variable">A</span></a>) ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="x2:16" class="idref" href="#x2:16"><span class="id" title="binder">x2</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x:15"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x:15"><span class="id" title="variable">x</span></a><a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="x3:17" class="idref" href="#x3:17"><span class="id" title="binder">x3</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x2:16"><span class="id" title="variable">x2</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x:15"><span class="id" title="variable">x</span></a><a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#Return"><span class="id" title="constructor">Return</span></a> <a class="idref" href="additions.Addition_Chains.html#x3:17"><span class="id" title="variable">x3</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Chain associated with the 7-th power 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="C7" class="idref" href="#C7"><span class="id" title="definition">C7</span></a> : <a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a> :=<br/>
+&nbsp;<span class="id" title="keyword">fun</span> (<a id="A:18" class="idref" href="#A:18"><span class="id" title="binder">A</span></a>:<span class="id" title="keyword">Type</span>) (<a id="x:19" class="idref" href="#x:19"><span class="id" title="binder">x</span></a>:<a class="idref" href="additions.Addition_Chains.html#A:18"><span class="id" title="variable">A</span></a>) ⇒<br/>
+&nbsp;<a id="x2:20" class="idref" href="#x2:20"><span class="id" title="binder">x2</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x:19"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x:19"><span class="id" title="variable">x</span></a><a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;<a id="x3:21" class="idref" href="#x3:21"><span class="id" title="binder">x3</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x2:20"><span class="id" title="variable">x2</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x:19"><span class="id" title="variable">x</span></a><a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;<a id="x6:22" class="idref" href="#x6:22"><span class="id" title="binder">x6</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x3:21"><span class="id" title="variable">x3</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x3:21"><span class="id" title="variable">x3</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;<a id="x7:23" class="idref" href="#x7:23"><span class="id" title="binder">x7</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x6:22"><span class="id" title="variable">x6</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x:19"><span class="id" title="variable">x</span></a><a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;<a class="idref" href="additions.Addition_Chains.html#Return"><span class="id" title="constructor">Return</span></a> <a class="idref" href="additions.Addition_Chains.html#x7:23"><span class="id" title="variable">x7</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab343"></a><h3 class="section">Our Favorite example</h3>
+
+
+<div class="paragraph"> </div>
+
+  The chain below is intented to compute 87-th power in any EMonoid.
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Example</span>  <a id="C87" class="idref" href="#C87"><span class="id" title="definition">C87</span></a> : <a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a> :=<br/>
+&nbsp;<span class="id" title="keyword">fun</span> <a id="A:24" class="idref" href="#A:24"><span class="id" title="binder">A</span></a> (<a id="x:25" class="idref" href="#x:25"><span class="id" title="binder">x</span></a> : <a class="idref" href="additions.Addition_Chains.html#A:24"><span class="id" title="variable">A</span></a>)=&gt;<br/>
+&nbsp;&nbsp;<a id="x2:26" class="idref" href="#x2:26"><span class="id" title="binder">x2</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x:25"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x:25"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;&nbsp;<a id="x3:27" class="idref" href="#x3:27"><span class="id" title="binder">x3</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x2:26"><span class="id" title="variable">x2</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x:25"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;&nbsp;<a id="x6:28" class="idref" href="#x6:28"><span class="id" title="binder">x6</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x3:27"><span class="id" title="variable">x3</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x3:27"><span class="id" title="variable">x3</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;&nbsp;<a id="x7:29" class="idref" href="#x7:29"><span class="id" title="binder">x7</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x6:28"><span class="id" title="variable">x6</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x:25"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;&nbsp;<a id="x10:30" class="idref" href="#x10:30"><span class="id" title="binder">x10</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x7:29"><span class="id" title="variable">x7</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x3:27"><span class="id" title="variable">x3</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;&nbsp;<a id="x20:31" class="idref" href="#x20:31"><span class="id" title="binder">x20</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x10:30"><span class="id" title="variable">x10</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x10:30"><span class="id" title="variable">x10</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;&nbsp;<a id="x40:32" class="idref" href="#x40:32"><span class="id" title="binder">x40</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x20:31"><span class="id" title="variable">x20</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x20:31"><span class="id" title="variable">x20</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;&nbsp;<a id="x80:33" class="idref" href="#x80:33"><span class="id" title="binder">x80</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x40:32"><span class="id" title="variable">x40</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x40:32"><span class="id" title="variable">x40</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a>  <br/>
+&nbsp;&nbsp;<a id="x87:34" class="idref" href="#x87:34"><span class="id" title="binder">x87</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x80:33"><span class="id" title="variable">x80</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x7:29"><span class="id" title="variable">x7</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#Return"><span class="id" title="constructor">Return</span></a> <a class="idref" href="additions.Addition_Chains.html#x87:34"><span class="id" title="variable">x87</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab344"></a><h3 class="section">Chain length (number of mutiplications)</h3>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="computation_length" class="idref" href="#computation_length"><span class="id" title="definition">computation_length</span></a> {<a id="A:35" class="idref" href="#A:35"><span class="id" title="binder">A</span></a>} (<a id="a:36" class="idref" href="#a:36"><span class="id" title="binder">a</span></a>:<a class="idref" href="additions.Addition_Chains.html#A:35"><span class="id" title="variable">A</span></a>) (<a id="m:37" class="idref" href="#m:37"><span class="id" title="binder">m</span></a> : @<a class="idref" href="additions.Addition_Chains.html#computation"><span class="id" title="inductive">computation</span></a> <a class="idref" href="additions.Addition_Chains.html#A:35"><span class="id" title="variable">A</span></a>) : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> :=<br/>
+<span class="id" title="keyword">match</span> <a class="idref" href="additions.Addition_Chains.html#m:37"><span class="id" title="variable">m</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="additions.Addition_Chains.html#Mult"><span class="id" title="constructor">Mult</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">k</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="additions.Addition_Chains.html#computation_length:38"><span class="id" title="definition">computation_length</span></a> <a class="idref" href="additions.Addition_Chains.html#a:36"><span class="id" title="variable">a</span></a> (<span class="id" title="var">k</span> <a class="idref" href="additions.Addition_Chains.html#a:36"><span class="id" title="variable">a</span></a>))<br/>
+&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ 0%<span class="id" title="var">nat</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="chain_length" class="idref" href="#chain_length"><span class="id" title="definition">chain_length</span></a> (<a id="c:40" class="idref" href="#c:40"><span class="id" title="binder">c</span></a>:<a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>) := <a class="idref" href="additions.Addition_Chains.html#computation_length"><span class="id" title="definition">computation_length</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#tt"><span class="id" title="constructor">tt</span></a> (<a class="idref" href="additions.Addition_Chains.html#c:40"><span class="id" title="variable">c</span></a> <span class="id" title="var">_</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#tt"><span class="id" title="constructor">tt</span></a>).<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab345"></a><h3 class="section">Execution of chains</h3>
+
+
+<div class="paragraph"> </div>
+
+Chains are designed for effectively computing powers. 
+
+<div class="paragraph"> </div>
+
+First, we define recursively the <i>evaluation</i>  of a computation, then 
+the <i>execution</i> of a chain.
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="computation_execute" class="idref" href="#computation_execute"><span class="id" title="definition">computation_execute</span></a>  {<a id="A:41" class="idref" href="#A:41"><span class="id" title="binder">A</span></a>:<span class="id" title="keyword">Type</span>} (<a id="op:42" class="idref" href="#op:42"><span class="id" title="binder">op</span></a>: <a class="idref" href="additions.Monoid_def.html#Mult_op"><span class="id" title="class">Mult_op</span></a> <a class="idref" href="additions.Addition_Chains.html#A:41"><span class="id" title="variable">A</span></a>) <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="c:43" class="idref" href="#c:43"><span class="id" title="binder">c</span></a> : <a class="idref" href="additions.Addition_Chains.html#computation"><span class="id" title="inductive">computation</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.Addition_Chains.html#c:43"><span class="id" title="variable">c</span></a> <span class="id" title="keyword">with</span> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="additions.Addition_Chains.html#Return"><span class="id" title="constructor">Return</span></a> <span class="id" title="var">x</span> ⇒ <span class="id" title="var">x</span> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="additions.Addition_Chains.html#Mult"><span class="id" title="constructor">Mult</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">k</span> ⇒ <a class="idref" href="additions.Addition_Chains.html#computation_execute:44"><span class="id" title="definition">computation_execute</span></a> <a class="idref" href="additions.Addition_Chains.html#op:42"><span class="id" title="variable">op</span></a> (<span class="id" title="var">k</span> (<span class="id" title="var">x</span> <a class="idref" href="additions.Monoid_def.html#e1cb395850f224a43e9550833db388b3"><span class="id" title="notation">×</span></a> <span class="id" title="var">y</span>))<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="computation_eval" class="idref" href="#computation_eval"><span class="id" title="definition">computation_eval</span></a> `{<a id="M:50" class="idref" href="#M:50"><span class="id" title="binder">M</span></a>:@<a class="idref" href="additions.Monoid_def.html#EMonoid"><span class="id" title="class">EMonoid</span></a> <a id="A:46" class="idref" href="#A:46"><span class="id" title="binder">A</span></a> <a id="E_op:47" class="idref" href="#E_op:47"><span class="id" title="binder">E_op</span></a> <a id="E_one:48" class="idref" href="#E_one:48"><span class="id" title="binder">E_one</span></a> <a id="E_eq:49" class="idref" href="#E_eq:49"><span class="id" title="binder">E_eq</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="c:51" class="idref" href="#c:51"><span class="id" title="binder">c</span></a> : <a class="idref" href="additions.Addition_Chains.html#computation"><span class="id" title="inductive">computation</span></a>) : <a class="idref" href="additions.Addition_Chains.html#A:46"><span class="id" title="variable">A</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#computation_execute"><span class="id" title="definition">computation_execute</span></a> <a class="idref" href="additions.Addition_Chains.html#E_op:47"><span class="id" title="variable">E_op</span></a> <a class="idref" href="additions.Addition_Chains.html#c:51"><span class="id" title="variable">c</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="chain_execute" class="idref" href="#chain_execute"><span class="id" title="definition">chain_execute</span></a> (<a id="c:52" class="idref" href="#c:52"><span class="id" title="binder">c</span></a>:<a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>) {<a id="A:53" class="idref" href="#A:53"><span class="id" title="binder">A</span></a>} <a id="op:54" class="idref" href="#op:54"><span class="id" title="binder">op</span></a>  (<a id="a:55" class="idref" href="#a:55"><span class="id" title="binder">a</span></a>:<a class="idref" href="additions.Addition_Chains.html#A:53"><span class="id" title="variable">A</span></a>) :=<br/>
+&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#computation_execute"><span class="id" title="definition">computation_execute</span></a> <a class="idref" href="additions.Addition_Chains.html#op:54"><span class="id" title="variable">op</span></a> (<a class="idref" href="additions.Addition_Chains.html#c:52"><span class="id" title="variable">c</span></a> <a class="idref" href="additions.Addition_Chains.html#A:53"><span class="id" title="variable">A</span></a> <a class="idref" href="additions.Addition_Chains.html#a:55"><span class="id" title="variable">a</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="chain_apply" class="idref" href="#chain_apply"><span class="id" title="definition">chain_apply</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="c:56" class="idref" href="#c:56"><span class="id" title="binder">c</span></a>:<a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>) `{<a id="M:61" class="idref" href="#M:61"><span class="id" title="binder">M</span></a>:@<a class="idref" href="additions.Monoid_def.html#EMonoid"><span class="id" title="class">EMonoid</span></a> <a id="A:57" class="idref" href="#A:57"><span class="id" title="binder">A</span></a> <a id="E_op:58" class="idref" href="#E_op:58"><span class="id" title="binder">E_op</span></a> <a id="E_one:59" class="idref" href="#E_one:59"><span class="id" title="binder">E_one</span></a> <a id="E_eq:60" class="idref" href="#E_eq:60"><span class="id" title="binder">E_eq</span></a>} <a id="a:62" class="idref" href="#a:62"><span class="id" title="binder">a</span></a> : <a class="idref" href="additions.Addition_Chains.html#A:57"><span class="id" title="variable">A</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#computation_eval"><span class="id" title="definition">computation_eval</span></a> (<a class="idref" href="additions.Addition_Chains.html#c:56"><span class="id" title="variable">c</span></a> <a class="idref" href="additions.Addition_Chains.html#A:57"><span class="id" title="variable">A</span></a> <a class="idref" href="additions.Addition_Chains.html#a:62"><span class="id" title="variable">a</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="computation_eval_rw" class="idref" href="#computation_eval_rw"><span class="id" title="lemma">computation_eval_rw</span></a> `{<a id="M:67" class="idref" href="#M:67"><span class="id" title="binder">M</span></a>:@<a class="idref" href="additions.Monoid_def.html#EMonoid"><span class="id" title="class">EMonoid</span></a> <a id="A:63" class="idref" href="#A:63"><span class="id" title="binder">A</span></a> <a id="E_op:64" class="idref" href="#E_op:64"><span class="id" title="binder">E_op</span></a> <a id="E_one:65" class="idref" href="#E_one:65"><span class="id" title="binder">E_one</span></a> <a id="E_eq:66" class="idref" href="#E_eq:66"><span class="id" title="binder">E_eq</span></a>} <a id="c:68" class="idref" href="#c:68"><span class="id" title="binder">c</span></a> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#computation_eval"><span class="id" title="definition">computation_eval</span></a> <a class="idref" href="additions.Addition_Chains.html#c:68"><span class="id" title="variable">c</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a>  <a class="idref" href="additions.Addition_Chains.html#computation_execute"><span class="id" title="definition">computation_execute</span></a> <a class="idref" href="additions.Addition_Chains.html#E_op:64"><span class="id" title="variable">E_op</span></a> <a class="idref" href="additions.Addition_Chains.html#c:68"><span class="id" title="variable">c</span></a>.<br/>
+ 
+<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab346"></a><h2 class="section">Chain correctness</h2>
+
+
+<div class="paragraph"> </div>
+
+In this section, we define formally the correctness of a given chain 
+ with respect to  some given exponent,
+and more generally the correctness of a chain generator, i.e.  a function that,
+given any positive integer , returns a chain that is correct with respect to  .
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="chain_correct_nat" class="idref" href="#chain_correct_nat"><span class="id" title="definition">chain_correct_nat</span></a> (<a id="n:69" class="idref" href="#n:69"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="c:70" class="idref" href="#c:70"><span class="id" title="binder">c</span></a>: <a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>) := <a class="idref" href="additions.Addition_Chains.html#n:69"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> 0 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a> <br/>
+<span class="id" title="keyword">∀</span> `(<a id="M:75" class="idref" href="#M:75"><span class="id" title="binder">M</span></a>:@<a class="idref" href="additions.Monoid_def.html#EMonoid"><span class="id" title="class">EMonoid</span></a>  <a id="A:71" class="idref" href="#A:71"><span class="id" title="binder">A</span></a> <a id="E_op:72" class="idref" href="#E_op:72"><span class="id" title="binder">E_op</span></a> <a id="E_one:73" class="idref" href="#E_one:73"><span class="id" title="binder">E_one</span></a> <a id="E_eq:74" class="idref" href="#E_eq:74"><span class="id" title="binder">E_eq</span></a>) (<a id="x:76" class="idref" href="#x:76"><span class="id" title="binder">x</span></a>:<a class="idref" href="additions.Addition_Chains.html#A:71"><span class="id" title="variable">A</span></a>), <br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#chain_apply"><span class="id" title="definition">chain_apply</span></a> <a class="idref" href="additions.Addition_Chains.html#c:70"><span class="id" title="variable">c</span></a> <a class="idref" href="additions.Addition_Chains.html#x:76"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a>   <a class="idref" href="additions.Addition_Chains.html#x:76"><span class="id" title="variable">x</span></a>  <a class="idref" href="additions.Pow.html#765592cb239fbb605ff794a9833fef51"><span class="id" title="notation">^</span></a>  <a class="idref" href="additions.Addition_Chains.html#n:69"><span class="id" title="variable">n</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="chain_correct" class="idref" href="#chain_correct"><span class="id" title="definition">chain_correct</span></a> (<a id="p:77" class="idref" href="#p:77"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>) (<a id="c:78" class="idref" href="#c:78"><span class="id" title="binder">c</span></a>: <a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>) :=<br/>
+&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#chain_correct_nat"><span class="id" title="definition">chain_correct_nat</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#Pos.to_nat"><span class="id" title="definition">Pos.to_nat</span></a> <a class="idref" href="additions.Addition_Chains.html#p:77"><span class="id" title="variable">p</span></a>) <a class="idref" href="additions.Addition_Chains.html#c:78"><span class="id" title="variable">c</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="optimal" class="idref" href="#optimal"><span class="id" title="definition">optimal</span></a> (<a id="p:79" class="idref" href="#p:79"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>) (<a id="c:80" class="idref" href="#c:80"><span class="id" title="binder">c</span></a> : <a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="c':81" class="idref" href="#c':81"><span class="id" title="binder">c'</span></a>, <a class="idref" href="additions.Addition_Chains.html#chain_correct"><span class="id" title="definition">chain_correct</span></a> <a class="idref" href="additions.Addition_Chains.html#p:79"><span class="id" title="variable">p</span></a> <a class="idref" href="additions.Addition_Chains.html#c':81"><span class="id" title="variable">c'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="additions.Addition_Chains.html#chain_length"><span class="id" title="definition">chain_length</span></a> <a class="idref" href="additions.Addition_Chains.html#c:80"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="additions.Addition_Chains.html#chain_length"><span class="id" title="definition">chain_length</span></a> <a class="idref" href="additions.Addition_Chains.html#c':81"><span class="id" title="variable">c'</span></a>)%<span class="id" title="var">nat</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A slow tactic for proving a chain's correctness 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">slow_chain_correct_tac</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ |- <a class="idref" href="additions.Addition_Chains.html#chain_correct"><span class="id" title="definition">chain_correct</span></a> ?<span class="id" title="var">p</span> ?<span class="id" title="var">c</span> ] ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">A</span> := <span class="id" title="tactic">fresh</span> "A" <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">op</span> := <span class="id" title="tactic">fresh</span> "op" <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">one</span> := <span class="id" title="tactic">fresh</span> "one" <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">eqv</span> := <span class="id" title="tactic">fresh</span> "eqv" <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">M</span> := <span class="id" title="tactic">fresh</span> "M" <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">x</span> := <span class="id" title="tactic">fresh</span> "x"<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">in</span>  <span class="id" title="tactic">split</span>;[<span class="id" title="tactic">discriminate</span> | <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">c</span>, <a class="idref" href="additions.Addition_Chains.html#chain_apply"><span class="id" title="definition">chain_apply</span></a>, <a class="idref" href="additions.Addition_Chains.html#computation_eval"><span class="id" title="definition">computation_eval</span></a>; <span class="id" title="tactic">simpl</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">op</span> <span class="id" title="var">one</span> <span class="id" title="var">eq</span> <span class="id" title="var">M</span> <span class="id" title="var">x</span>; <span class="id" title="var">monoid_simpl</span> <span class="id" title="var">M</span>; <span class="id" title="tactic">reflexivity</span>]<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="C7_ok" class="idref" href="#C7_ok"><span class="id" title="definition">C7_ok</span></a> : <a class="idref" href="additions.Addition_Chains.html#chain_correct"><span class="id" title="definition">chain_correct</span></a> 7 <a class="idref" href="additions.Addition_Chains.html#C7"><span class="id" title="definition">C7</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The following proof takes a very long time. Happily, C87's correctness 
+will be proved  more  efficiently, using  reflection or parametricity. 
+
+<div class="paragraph"> </div>
+
+ Remove the comment if you can wait ... 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab347"></a><h1 class="section">Correctness Proof by Reflection</h1>
+
+  See chap 16 of Coq'Art 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+Binary trees of multiplications over A 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <a id="Monoid_Exp" class="idref" href="#Monoid_Exp"><span class="id" title="inductive">Monoid_Exp</span></a> (<a id="A:82" class="idref" href="#A:82"><span class="id" title="binder">A</span></a>:<span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;<a id="Mul_node" class="idref" href="#Mul_node"><span class="id" title="constructor">Mul_node</span></a> (<a id="t:85" class="idref" href="#t:85"><span class="id" title="binder">t</span></a> <a id="t':86" class="idref" href="#t':86"><span class="id" title="binder">t'</span></a> : <a class="idref" href="additions.Addition_Chains.html#Monoid_Exp:83"><span class="id" title="inductive">Monoid_Exp</span></a> <a class="idref" href="additions.Addition_Chains.html#A:82"><span class="id" title="variable">A</span></a>) | <a id="One_node" class="idref" href="#One_node"><span class="id" title="constructor">One_node</span></a> | <a id="A_node" class="idref" href="#A_node"><span class="id" title="constructor">A_node</span></a> (<a id="a:87" class="idref" href="#a:87"><span class="id" title="binder">a</span></a>:<a class="idref" href="additions.Addition_Chains.html#A:82"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="additions.Addition_Chains.html#Mul_node"><span class="id" title="constructor">Mul_node</span></a> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="additions.Addition_Chains.html#One_node"><span class="id" title="constructor">One_node</span></a> {<span class="id" title="var">A</span>} .<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="additions.Addition_Chains.html#A_node"><span class="id" title="constructor">A_node</span></a> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> .<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Linearization functions 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="flatten_aux" class="idref" href="#flatten_aux"><span class="id" title="definition">flatten_aux</span></a> {<a id="A:88" class="idref" href="#A:88"><span class="id" title="binder">A</span></a>:<span class="id" title="keyword">Type</span>}(<a id="t:89" class="idref" href="#t:89"><span class="id" title="binder">t</span></a> <a id="fin:90" class="idref" href="#fin:90"><span class="id" title="binder">fin</span></a> : <a class="idref" href="additions.Addition_Chains.html#Monoid_Exp"><span class="id" title="inductive">Monoid_Exp</span></a> <a class="idref" href="additions.Addition_Chains.html#A:88"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="additions.Addition_Chains.html#Monoid_Exp"><span class="id" title="inductive">Monoid_Exp</span></a> <a class="idref" href="additions.Addition_Chains.html#A:88"><span class="id" title="variable">A</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.Addition_Chains.html#t:89"><span class="id" title="variable">t</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#Mul_node"><span class="id" title="constructor">Mul_node</span></a>  <span class="id" title="var">t</span> <span class="id" title="var">t'</span> ⇒ <a class="idref" href="additions.Addition_Chains.html#flatten_aux:91"><span class="id" title="definition">flatten_aux</span></a> <a class="idref" href="additions.Addition_Chains.html#t:89"><span class="id" title="variable">t</span></a> (<a class="idref" href="additions.Addition_Chains.html#flatten_aux:91"><span class="id" title="definition">flatten_aux</span></a> <span class="id" title="var">t'</span> <a class="idref" href="additions.Addition_Chains.html#fin:90"><span class="id" title="variable">fin</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="additions.Addition_Chains.html#One_node"><span class="id" title="constructor">One_node</span></a>  ⇒ <a class="idref" href="additions.Addition_Chains.html#fin:90"><span class="id" title="variable">fin</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">x</span> ⇒ <a class="idref" href="additions.Addition_Chains.html#Mul_node"><span class="id" title="constructor">Mul_node</span></a>  <span class="id" title="var">x</span> <a class="idref" href="additions.Addition_Chains.html#fin:90"><span class="id" title="variable">fin</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="flatten" class="idref" href="#flatten"><span class="id" title="definition">flatten</span></a> {<a id="A:93" class="idref" href="#A:93"><span class="id" title="binder">A</span></a>:<span class="id" title="keyword">Type</span>} (<a id="t:94" class="idref" href="#t:94"><span class="id" title="binder">t</span></a>: <a class="idref" href="additions.Addition_Chains.html#Monoid_Exp"><span class="id" title="inductive">Monoid_Exp</span></a> <a class="idref" href="additions.Addition_Chains.html#A:93"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;: <a class="idref" href="additions.Addition_Chains.html#Monoid_Exp"><span class="id" title="inductive">Monoid_Exp</span></a> <a class="idref" href="additions.Addition_Chains.html#A:93"><span class="id" title="variable">A</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.Addition_Chains.html#t:94"><span class="id" title="variable">t</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="additions.Addition_Chains.html#Mul_node"><span class="id" title="constructor">Mul_node</span></a> <span class="id" title="var">t</span> <span class="id" title="var">t'</span> ⇒ <a class="idref" href="additions.Addition_Chains.html#flatten_aux"><span class="id" title="definition">flatten_aux</span></a> <a class="idref" href="additions.Addition_Chains.html#t:94"><span class="id" title="variable">t</span></a> (<a class="idref" href="additions.Addition_Chains.html#flatten:95"><span class="id" title="definition">flatten</span></a> <span class="id" title="var">t'</span>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="additions.Addition_Chains.html#One_node"><span class="id" title="constructor">One_node</span></a> ⇒ <a class="idref" href="additions.Addition_Chains.html#One_node"><span class="id" title="constructor">One_node</span></a><br/>
+&nbsp;&nbsp;| <span class="id" title="var">X</span> ⇒ <a class="idref" href="additions.Addition_Chains.html#Mul_node"><span class="id" title="constructor">Mul_node</span></a> <span class="id" title="var">X</span> <a class="idref" href="additions.Addition_Chains.html#One_node"><span class="id" title="constructor">One_node</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Interpretation function 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Function</span> <span class="id" title="tactic">eval</span> {<a id="A:129" class="idref" href="#A:129"><span class="id" title="binder">A</span></a>:<span class="id" title="keyword">Type</span>} {<a id="op:130" class="idref" href="#op:130"><span class="id" title="binder">op</span></a> <a id="one:131" class="idref" href="#one:131"><span class="id" title="binder">one</span></a> <a id="eqv:132" class="idref" href="#eqv:132"><span class="id" title="binder">eqv</span></a>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="M:133" class="idref" href="#M:133"><span class="id" title="binder">M</span></a>: @<a class="idref" href="additions.Monoid_def.html#EMonoid"><span class="id" title="class">EMonoid</span></a> <a class="idref" href="additions.Addition_Chains.html#A:101"><span class="id" title="variable">A</span></a> <a class="idref" href="additions.Addition_Chains.html#op:102"><span class="id" title="variable">op</span></a> <a class="idref" href="additions.Addition_Chains.html#one:103"><span class="id" title="variable">one</span></a> <a class="idref" href="additions.Addition_Chains.html#eqv:104"><span class="id" title="variable">eqv</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="t:134" class="idref" href="#t:134"><span class="id" title="binder">t</span></a>: <a class="idref" href="additions.Addition_Chains.html#Monoid_Exp"><span class="id" title="inductive">Monoid_Exp</span></a> <a class="idref" href="additions.Addition_Chains.html#A:101"><span class="id" title="variable">A</span></a>) : <a class="idref" href="additions.Addition_Chains.html#A:101"><span class="id" title="variable">A</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.Addition_Chains.html#t:106"><span class="id" title="variable">t</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#Mul_node"><span class="id" title="constructor">Mul_node</span></a> <span class="id" title="var">t1</span> <span class="id" title="var">t2</span> ⇒ (<a class="idref" href="additions.Addition_Chains.html#eval:107"><span class="id" title="definition">eval</span></a> <a class="idref" href="additions.Addition_Chains.html#M:105"><span class="id" title="variable">M</span></a> <span class="id" title="var">t1</span> <a class="idref" href="additions.Monoid_def.html#e1cb395850f224a43e9550833db388b3"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Addition_Chains.html#eval:107"><span class="id" title="definition">eval</span></a> <a class="idref" href="additions.Addition_Chains.html#M:105"><span class="id" title="variable">M</span></a> <span class="id" title="var">t2</span>)%<span class="id" title="var">M</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="additions.Addition_Chains.html#One_node"><span class="id" title="constructor">One_node</span></a> ⇒ <a class="idref" href="additions.Addition_Chains.html#one:103"><span class="id" title="variable">one</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="additions.Addition_Chains.html#A_node"><span class="id" title="constructor">A_node</span></a> <span class="id" title="var">a</span> ⇒ <span class="id" title="var">a</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="flatten_aux_valid" class="idref" href="#flatten_aux_valid"><span class="id" title="lemma">flatten_aux_valid</span></a> `(<a id="M:163" class="idref" href="#M:163"><span class="id" title="binder">M</span></a>: @<a class="idref" href="additions.Monoid_def.html#EMonoid"><span class="id" title="class">EMonoid</span></a> <a id="A:159" class="idref" href="#A:159"><span class="id" title="binder">A</span></a> <a id="op:160" class="idref" href="#op:160"><span class="id" title="binder">op</span></a> <a id="one:161" class="idref" href="#one:161"><span class="id" title="binder">one</span></a> <a id="eqv:162" class="idref" href="#eqv:162"><span class="id" title="binder">eqv</span></a>):<br/>
+<span class="id" title="keyword">∀</span> <a id="t:164" class="idref" href="#t:164"><span class="id" title="binder">t</span></a> <a id="t':165" class="idref" href="#t':165"><span class="id" title="binder">t'</span></a>, (<a class="idref" href="additions.Addition_Chains.html#eval"><span class="id" title="definition">eval</span></a> <a class="idref" href="additions.Addition_Chains.html#M:163"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.Addition_Chains.html#t:164"><span class="id" title="variable">t</span></a> <a class="idref" href="additions.Monoid_def.html#e1cb395850f224a43e9550833db388b3"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Addition_Chains.html#eval"><span class="id" title="definition">eval</span></a> <a class="idref" href="additions.Addition_Chains.html#M:163"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.Addition_Chains.html#t':165"><span class="id" title="variable">t'</span></a>)%<span class="id" title="var">M</span> <a class="idref" href="additions.Addition_Chains.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">(</span></a><a class="idref" href="additions.Addition_Chains.html#eval"><span class="id" title="definition">eval</span></a> <a class="idref" href="additions.Addition_Chains.html#M:163"><span class="id" title="variable">M</span></a> (<a class="idref" href="additions.Addition_Chains.html#flatten_aux"><span class="id" title="definition">flatten_aux</span></a> <a class="idref" href="additions.Addition_Chains.html#t:164"><span class="id" title="variable">t</span></a> <a class="idref" href="additions.Addition_Chains.html#t':165"><span class="id" title="variable">t'</span></a>)<a class="idref" href="additions.Addition_Chains.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">)</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="flatten_valid" class="idref" href="#flatten_valid"><span class="id" title="lemma">flatten_valid</span></a> `(<a id="M:170" class="idref" href="#M:170"><span class="id" title="binder">M</span></a>: @<a class="idref" href="additions.Monoid_def.html#EMonoid"><span class="id" title="class">EMonoid</span></a> <a id="A:166" class="idref" href="#A:166"><span class="id" title="binder">A</span></a> <a id="op:167" class="idref" href="#op:167"><span class="id" title="binder">op</span></a> <a id="one:168" class="idref" href="#one:168"><span class="id" title="binder">one</span></a> <a id="eqv:169" class="idref" href="#eqv:169"><span class="id" title="binder">eqv</span></a>):<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="t:171" class="idref" href="#t:171"><span class="id" title="binder">t</span></a> , <a class="idref" href="additions.Addition_Chains.html#eval"><span class="id" title="definition">eval</span></a> <a class="idref" href="additions.Addition_Chains.html#M:170"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.Addition_Chains.html#t:171"><span class="id" title="variable">t</span></a> <a class="idref" href="additions.Addition_Chains.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a> <a class="idref" href="additions.Addition_Chains.html#eval"><span class="id" title="definition">eval</span></a> <a class="idref" href="additions.Addition_Chains.html#M:170"><span class="id" title="variable">M</span></a> (<a class="idref" href="additions.Addition_Chains.html#flatten"><span class="id" title="definition">flatten</span></a> <a class="idref" href="additions.Addition_Chains.html#t:171"><span class="id" title="variable">t</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="flatten_valid_2" class="idref" href="#flatten_valid_2"><span class="id" title="lemma">flatten_valid_2</span></a> `(<a id="M:176" class="idref" href="#M:176"><span class="id" title="binder">M</span></a>: @<a class="idref" href="additions.Monoid_def.html#EMonoid"><span class="id" title="class">EMonoid</span></a> <a id="A:172" class="idref" href="#A:172"><span class="id" title="binder">A</span></a> <a id="op:173" class="idref" href="#op:173"><span class="id" title="binder">op</span></a> <a id="one:174" class="idref" href="#one:174"><span class="id" title="binder">one</span></a> <a id="eqv:175" class="idref" href="#eqv:175"><span class="id" title="binder">eqv</span></a>):<br/>
+<span class="id" title="keyword">∀</span> <a id="t:177" class="idref" href="#t:177"><span class="id" title="binder">t</span></a> <a id="t':178" class="idref" href="#t':178"><span class="id" title="binder">t'</span></a> , <a class="idref" href="additions.Addition_Chains.html#eval"><span class="id" title="definition">eval</span></a>  <a class="idref" href="additions.Addition_Chains.html#M:176"><span class="id" title="variable">M</span></a> (<a class="idref" href="additions.Addition_Chains.html#flatten"><span class="id" title="definition">flatten</span></a> <a class="idref" href="additions.Addition_Chains.html#t:177"><span class="id" title="variable">t</span></a>) <a class="idref" href="additions.Addition_Chains.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a> <a class="idref" href="additions.Addition_Chains.html#eval"><span class="id" title="definition">eval</span></a> <a class="idref" href="additions.Addition_Chains.html#M:176"><span class="id" title="variable">M</span></a> (<a class="idref" href="additions.Addition_Chains.html#flatten"><span class="id" title="definition">flatten</span></a> <a class="idref" href="additions.Addition_Chains.html#t':178"><span class="id" title="variable">t'</span></a>)  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#eval"><span class="id" title="definition">eval</span></a> <a class="idref" href="additions.Addition_Chains.html#M:176"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.Addition_Chains.html#t:177"><span class="id" title="variable">t</span></a> <a class="idref" href="additions.Addition_Chains.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a> <a class="idref" href="additions.Addition_Chains.html#eval"><span class="id" title="definition">eval</span></a> <a class="idref" href="additions.Addition_Chains.html#M:176"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.Addition_Chains.html#t':178"><span class="id" title="variable">t'</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+"Quote" tactic 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">model</span> <span class="id" title="var">A</span>  <span class="id" title="var">op</span> <span class="id" title="var">one</span> <span class="id" title="var">v</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="var">v</span> <span class="id" title="keyword">with</span> <br/>
+| (?<span class="id" title="var">x</span>  <a class="idref" href="additions.Monoid_def.html#e1cb395850f224a43e9550833db388b3"><span class="id" title="notation">×</span></a> ?<span class="id" title="var">y</span>)%<span class="id" title="var">M</span> ⇒ <span class="id" title="keyword">let</span> <span class="id" title="var">r1</span> := <span class="id" title="var">model</span> <span class="id" title="var">A</span> <span class="id" title="var">op</span> <span class="id" title="var">one</span> <span class="id" title="var">x</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">with</span> <span class="id" title="var">r2</span> :=(<span class="id" title="var">model</span> <span class="id" title="var">A</span> <span class="id" title="var">op</span> <span class="id" title="var">one</span> <span class="id" title="var">y</span>) <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">in</span>  <span class="id" title="keyword">constr</span>:(@<a class="idref" href="additions.Addition_Chains.html#Mul_node"><span class="id" title="constructor">Mul_node</span></a> <span class="id" title="var">A</span> <span class="id" title="var">r1</span> <span class="id" title="var">r2</span>)<br/>
+| <span class="id" title="var">one</span> ⇒ <span class="id" title="keyword">constr</span>:(@<a class="idref" href="additions.Addition_Chains.html#One_node"><span class="id" title="constructor">One_node</span></a> <span class="id" title="var">A</span>)<br/>
+| ?<span class="id" title="var">x</span> ⇒ <span class="id" title="keyword">constr</span>:(@<a class="idref" href="additions.Addition_Chains.html#A_node"><span class="id" title="constructor">A_node</span></a> <span class="id" title="var">A</span> <span class="id" title="var">x</span>)<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">monoid_eq_A</span> <span class="id" title="var">A</span> <span class="id" title="var">op</span> <span class="id" title="var">one</span> <span class="id" title="var">E_eq</span> <span class="id" title="var">M</span>  :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span> <br/>
+| [ |- <span class="id" title="var">E_eq</span>  ?<span class="id" title="var">X</span> ?<span class="id" title="var">Y</span> ] ⇒<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">tX</span> := <span class="id" title="var">model</span> <span class="id" title="var">A</span> <span class="id" title="var">op</span> <span class="id" title="var">one</span> <span class="id" title="var">X</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tY</span> := <span class="id" title="var">model</span> <span class="id" title="var">A</span> <span class="id" title="var">op</span> <span class="id" title="var">one</span> <span class="id" title="var">Y</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">change</span> (<span class="id" title="var">E_eq</span> (<a class="idref" href="additions.Addition_Chains.html#eval"><span class="id" title="definition">eval</span></a> <span class="id" title="var">M</span> <span class="id" title="var">tX</span>) (<a class="idref" href="additions.Addition_Chains.html#eval"><span class="id" title="definition">eval</span></a> <span class="id" title="var">M</span> <span class="id" title="var">tY</span>)))<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">reflection_correct_tac</span> :=<br/>
+<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+[ |- <a class="idref" href="additions.Addition_Chains.html#chain_correct"><span class="id" title="definition">chain_correct</span></a> ?<span class="id" title="var">n</span> ?<span class="id" title="var">c</span> ] ⇒<br/>
+&nbsp;<span class="id" title="tactic">split</span>; [<span class="id" title="tactic">try</span> <span class="id" title="tactic">discriminate</span> |<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">A</span> := <span class="id" title="tactic">fresh</span> "A"<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">in</span> <span class="id" title="keyword">let</span> <span class="id" title="var">op</span> := <span class="id" title="tactic">fresh</span> "op"<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">in</span> <span class="id" title="keyword">let</span> <span class="id" title="var">one</span> := <span class="id" title="tactic">fresh</span> "one" <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">in</span> <span class="id" title="keyword">let</span> <span class="id" title="var">E_eq</span> := <span class="id" title="tactic">fresh</span> "eq" <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">in</span> <span class="id" title="keyword">let</span> <span class="id" title="var">M</span> := <span class="id" title="tactic">fresh</span> "M"<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">in</span> <span class="id" title="keyword">let</span> <span class="id" title="var">x</span> := <span class="id" title="tactic">fresh</span> "x" <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">in</span>  (<span class="id" title="tactic">try</span> <span class="id" title="tactic">unfold</span> <span class="id" title="var">c</span>); <span class="id" title="tactic">unfold</span> <a class="idref" href="additions.Addition_Chains.html#chain_apply"><span class="id" title="definition">chain_apply</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>; <span class="id" title="tactic">red</span>; <span class="id" title="tactic">intros</span>  <span class="id" title="var">A</span> <span class="id" title="var">op</span> <span class="id" title="var">one</span> <span class="id" title="var">E_eq</span> <span class="id" title="var">M</span> <span class="id" title="var">x</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="additions.Addition_Chains.html#computation_eval"><span class="id" title="definition">computation_eval</span></a>;<span class="id" title="tactic">simpl</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">monoid_eq_A</span> <span class="id" title="var">A</span> <span class="id" title="var">op</span> <span class="id" title="var">one</span> <span class="id" title="var">E_eq</span> <span class="id" title="var">M</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="additions.Addition_Chains.html#flatten_valid_2"><span class="id" title="lemma">flatten_valid_2</span></a>;<span class="id" title="tactic">try</span> <span class="id" title="tactic">reflexivity</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="C87_ok" class="idref" href="#C87_ok"><span class="id" title="definition">C87_ok</span></a> : <a class="idref" href="additions.Addition_Chains.html#chain_correct"><span class="id" title="definition">chain_correct</span></a> 87 <a class="idref" href="additions.Addition_Chains.html#C87"><span class="id" title="definition">C87</span></a>.  
+<br/>
+<span class="id" title="keyword">Example</span> <a id="C7_ok'" class="idref" href="#C7_ok'"><span class="id" title="definition">C7_ok'</span></a> : <a class="idref" href="additions.Addition_Chains.html#chain_correct"><span class="id" title="definition">chain_correct</span></a> 7 <a class="idref" href="additions.Addition_Chains.html#C7"><span class="id" title="definition">C7</span></a>.<br/>
+ 
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab348"></a><h1 class="section">Correctness and parametricity</h1>
+
+
+<div class="paragraph"> </div>
+
+In this section, we show some tools for proving automatically the
+correctness of a given chain, and try to avoid spending time
+while proceeding to a lot of setoid rewritings 
+
+<div class="paragraph"> </div>
+
+First, we notice that any chain is able to compute its associated exponent:
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="the_exponent_nat" class="idref" href="#the_exponent_nat"><span class="id" title="definition">the_exponent_nat</span></a> (<a id="c:179" class="idref" href="#c:179"><span class="id" title="binder">c</span></a>:<a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>) : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> :=<br/>
+&nbsp;<a class="idref" href="additions.Addition_Chains.html#chain_apply"><span class="id" title="definition">chain_apply</span></a> <a class="idref" href="additions.Addition_Chains.html#c:179"><span class="id" title="variable">c</span></a> (<span class="id" title="var">M</span>:=<a class="idref" href="additions.Monoid_instances.html#Natplus"><span class="id" title="instance">Natplus</span></a>) 1%<span class="id" title="var">nat</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="the_exponent" class="idref" href="#the_exponent"><span class="id" title="definition">the_exponent</span></a> (<a id="c:180" class="idref" href="#c:180"><span class="id" title="binder">c</span></a>:<a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>) : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#chain_execute"><span class="id" title="definition">chain_execute</span></a> <a class="idref" href="additions.Addition_Chains.html#c:180"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#Pos.add"><span class="id" title="definition">Pos.add</span></a>  1%<span class="id" title="var">positive</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+Roughly, if cA is a computation on A and cB a computation on B,
+cA and cB are related through (computation_R A B R) if, during  their execution,
+the corresponding variables of type A  and B are always bound to related
+(w.r.t. <span class="inlinecode"><span class="id" title="var">R</span></span> ) values. 
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <a class="idref" href="additions.Addition_Chains.html#computation_R"><span class="id" title="inductive">computation_R</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We say that a chain <span class="inlinecode"><span class="id" title="var">c</span></span> is <i>parametric</i> if
+   <span class="inlinecode"><span class="id" title="var">c</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span> and <span class="inlinecode"><span class="id" title="var">c</span></span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode"><span class="id" title="var">b</span></span> are equivalent with respect to any  relation that
+   contains  the pair <span class="inlinecode">(<span class="id" title="var">a</span>,<span class="id" title="var">b</span>)</span>.
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="parametric" class="idref" href="#parametric"><span class="id" title="definition">parametric</span></a> (<a id="c:181" class="idref" href="#c:181"><span class="id" title="binder">c</span></a>:<a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="A:182" class="idref" href="#A:182"><span class="id" title="binder">A</span></a> <a id="B:183" class="idref" href="#B:183"><span class="id" title="binder">B</span></a> (<a id="R:184" class="idref" href="#R:184"><span class="id" title="binder">R</span></a>: <a class="idref" href="additions.Addition_Chains.html#A:182"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Addition_Chains.html#B:183"><span class="id" title="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Type</span>) (<a id="a:185" class="idref" href="#a:185"><span class="id" title="binder">a</span></a>:<a class="idref" href="additions.Addition_Chains.html#A:182"><span class="id" title="variable">A</span></a>) (<a id="b:186" class="idref" href="#b:186"><span class="id" title="binder">b</span></a>:<a class="idref" href="additions.Addition_Chains.html#B:183"><span class="id" title="variable">B</span></a>),<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#R:184"><span class="id" title="variable">R</span></a> <a class="idref" href="additions.Addition_Chains.html#a:185"><span class="id" title="variable">a</span></a> <a class="idref" href="additions.Addition_Chains.html#b:186"><span class="id" title="variable">b</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Addition_Chains.html#computation_R"><span class="id" title="inductive">computation_R</span></a>  <a class="idref" href="additions.Addition_Chains.html#A:182"><span class="id" title="variable">A</span></a> <a class="idref" href="additions.Addition_Chains.html#B:183"><span class="id" title="variable">B</span></a> <a class="idref" href="additions.Addition_Chains.html#R:184"><span class="id" title="variable">R</span></a> (<a class="idref" href="additions.Addition_Chains.html#c:181"><span class="id" title="variable">c</span></a> <a class="idref" href="additions.Addition_Chains.html#A:182"><span class="id" title="variable">A</span></a> <a class="idref" href="additions.Addition_Chains.html#a:185"><span class="id" title="variable">a</span></a>) (<a class="idref" href="additions.Addition_Chains.html#c:181"><span class="id" title="variable">c</span></a> <a class="idref" href="additions.Addition_Chains.html#B:183"><span class="id" title="variable">B</span></a> <a class="idref" href="additions.Addition_Chains.html#b:186"><span class="id" title="variable">b</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+ The following statement cannot be proven in Coq (AFAIK) 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="any_chain_parametric" class="idref" href="#any_chain_parametric"><span class="id" title="definition">any_chain_parametric</span></a> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;<span class="id" title="keyword">∀</span> <a id="c:187" class="idref" href="#c:187"><span class="id" title="binder">c</span></a>:<a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>, <a class="idref" href="additions.Addition_Chains.html#parametric"><span class="id" title="definition">parametric</span></a> <a class="idref" href="additions.Addition_Chains.html#c:187"><span class="id" title="variable">c</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">any_chain_parametric</span></a>.<br/>
+ 
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+ Nevertheless, if we don't want to assume <span class="inlinecode"><span class="id" title="var">any_chain_parametric</span></span>, 
+ we can use the  following tactic for proving a given that a given chain <span class="inlinecode"><span class="id" title="var">c</span></span> 
+ is parametric. 
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">parametric_tac</span>  := <br/>
+&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span> [ |- <a class="idref" href="additions.Addition_Chains.html#parametric"><span class="id" title="definition">parametric</span></a> ?<span class="id" title="var">c</span>] ⇒<br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">red</span> ; <span class="id" title="tactic">intros</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> (<span class="id" title="tactic">right</span>;[<span class="id" title="tactic">assumption</span> | <span class="id" title="tactic">assumption</span> | ]);  <span class="id" title="tactic">left</span>; <span class="id" title="tactic">assumption</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="P87" class="idref" href="#P87"><span class="id" title="definition">P87</span></a> : <a class="idref" href="additions.Addition_Chains.html#parametric"><span class="id" title="definition">parametric</span></a> <a class="idref" href="additions.Addition_Chains.html#C87"><span class="id" title="definition">C87</span></a>.  
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab349"></a><h2 class="section">computation of  compared to computation of </h2>
+
+
+<div class="paragraph"> </div>
+
+The following section is dedicated to prove that, if a chain  is parametric,
+it computes powers of the form , where  is obtained by applying the
+function <span class="inlinecode"><span class="id" title="var">the_exponent_nat</span></span> to .
+
+<div class="paragraph"> </div>
+
+Basically, we proceed by an induction on the hypothesis 
+<span class="inlinecode"><span class="id" title="var">equiv</span></span> <span class="inlinecode"><span class="id" title="var">gamma_A</span></span> <span class="inlinecode"><span class="id" title="var">gamma_nat</span></span> <span class="inlinecode"><span class="id" title="var">l</span></span> where <span class="inlinecode"><span class="id" title="var">gamma</span></span> is a computation on <span class="inlinecode"><span class="id" title="var">A</span></span>,
+gamma_nat a computation on <span class="inlinecode"><span class="id" title="var">nat</span></span> (with respect to the additive monoid on <span class="inlinecode"><span class="id" title="var">nat</span></span>),
+and <span class="inlinecode"><span class="id" title="var">l</span></span> is a list of pairs of the form .
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Refinement_proof" class="idref" href="#Refinement_proof"><span class="id" title="section">Refinement_proof</span></a>.<br/>
+&nbsp;<span class="id" title="keyword">Variable</span> <a id="Refinement_proof.A" class="idref" href="#Refinement_proof.A"><span class="id" title="variable">A</span></a>: <span class="id" title="keyword">Type</span>.<br/>
+&nbsp;<span class="id" title="keyword">Variable</span> <a id="Refinement_proof.E_op" class="idref" href="#Refinement_proof.E_op"><span class="id" title="variable">E_op</span></a> : <a class="idref" href="additions.Monoid_def.html#Mult_op"><span class="id" title="class">Mult_op</span></a> <a class="idref" href="additions.Addition_Chains.html#Refinement_proof.A"><span class="id" title="variable">A</span></a>.<br/>
+&nbsp;<span class="id" title="keyword">Variable</span> <a id="Refinement_proof.E_one" class="idref" href="#Refinement_proof.E_one"><span class="id" title="variable">E_one</span></a> : <a class="idref" href="additions.Addition_Chains.html#Refinement_proof.A"><span class="id" title="variable">A</span></a>.<br/>
+&nbsp;<span class="id" title="keyword">Variable</span> <a id="Refinement_proof.E_eq" class="idref" href="#Refinement_proof.E_eq"><span class="id" title="variable">E_eq</span></a> : <a class="idref" href="additions.Monoid_def.html#Equiv"><span class="id" title="class">Equiv</span></a> <a class="idref" href="additions.Addition_Chains.html#Refinement_proof.A"><span class="id" title="variable">A</span></a>.<br/>
+&nbsp;<span class="id" title="keyword">Context</span> (<a id="M:192" class="idref" href="#M:192"><span class="id" title="binder">M</span></a> : <a class="idref" href="additions.Monoid_def.html#EMonoid"><span class="id" title="class">EMonoid</span></a> <a class="idref" href="additions.Addition_Chains.html#Refinement_proof.E_op"><span class="id" title="variable">E_op</span></a> <a class="idref" href="additions.Addition_Chains.html#Refinement_proof.E_one"><span class="id" title="variable">E_one</span></a> <a class="idref" href="additions.Addition_Chains.html#Refinement_proof.E_eq"><span class="id" title="variable">E_eq</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+ Let us characterise the lists of pairs of the form , for a given 
+ and .
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="power_R" class="idref" href="#power_R"><span class="id" title="definition">power_R</span></a>  (<a id="a:193" class="idref" href="#a:193"><span class="id" title="binder">a</span></a>:<a class="idref" href="additions.Addition_Chains.html#Refinement_proof.A"><span class="id" title="variable">A</span></a>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fun</span> (<a id="x:194" class="idref" href="#x:194"><span class="id" title="binder">x</span></a>:<a class="idref" href="additions.Addition_Chains.html#Refinement_proof.A"><span class="id" title="variable">A</span></a>)(<a id="n:195" class="idref" href="#n:195"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) ⇒ <a class="idref" href="additions.Addition_Chains.html#n:195"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> 0 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a> <a class="idref" href="additions.Addition_Chains.html#x:194"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a> <a class="idref" href="additions.Addition_Chains.html#a:193"><span class="id" title="variable">a</span></a> <a class="idref" href="additions.Pow.html#765592cb239fbb605ff794a9833fef51"><span class="id" title="notation">^</span></a> <a class="idref" href="additions.Addition_Chains.html#n:195"><span class="id" title="variable">n</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Remark</span> <a id="power_R_Mult" class="idref" href="#power_R_Mult"><span class="id" title="lemma">power_R_Mult</span></a> : <span class="id" title="keyword">∀</span> <a id="a:196" class="idref" href="#a:196"><span class="id" title="binder">a</span></a> <a id="x:197" class="idref" href="#x:197"><span class="id" title="binder">x</span></a> <a id="y:198" class="idref" href="#y:198"><span class="id" title="binder">y</span></a> <a id="i:199" class="idref" href="#i:199"><span class="id" title="binder">i</span></a> <a id="j:200" class="idref" href="#j:200"><span class="id" title="binder">j</span></a>, <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#power_R"><span class="id" title="definition">power_R</span></a> <a class="idref" href="additions.Addition_Chains.html#a:196"><span class="id" title="variable">a</span></a> <a class="idref" href="additions.Addition_Chains.html#x:197"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#i:199"><span class="id" title="variable">i</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Addition_Chains.html#power_R"><span class="id" title="definition">power_R</span></a> <a class="idref" href="additions.Addition_Chains.html#a:196"><span class="id" title="variable">a</span></a> <a class="idref" href="additions.Addition_Chains.html#y:198"><span class="id" title="variable">y</span></a> <a class="idref" href="additions.Addition_Chains.html#j:200"><span class="id" title="variable">j</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#power_R"><span class="id" title="definition">power_R</span></a> <a class="idref" href="additions.Addition_Chains.html#a:196"><span class="id" title="variable">a</span></a> (<a class="idref" href="additions.Addition_Chains.html#x:197"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Monoid_def.html#e1cb395850f224a43e9550833db388b3"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Addition_Chains.html#y:198"><span class="id" title="variable">y</span></a>) (<a class="idref" href="additions.Addition_Chains.html#i:199"><span class="id" title="variable">i</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a><a class="idref" href="additions.Addition_Chains.html#j:200"><span class="id" title="variable">j</span></a>)%<span class="id" title="var">nat</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Remark</span> <a id="power_R_1" class="idref" href="#power_R_1"><span class="id" title="lemma">power_R_1</span></a> : <span class="id" title="keyword">∀</span> <a id="a:201" class="idref" href="#a:201"><span class="id" title="binder">a</span></a>, <a class="idref" href="additions.Addition_Chains.html#power_R"><span class="id" title="definition">power_R</span></a> <a class="idref" href="additions.Addition_Chains.html#a:201"><span class="id" title="variable">a</span></a> <a class="idref" href="additions.Addition_Chains.html#a:201"><span class="id" title="variable">a</span></a> 1%<span class="id" title="var">nat</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span>  <a id="power_R_is_a_refinement" class="idref" href="#power_R_is_a_refinement"><span class="id" title="lemma">power_R_is_a_refinement</span></a> (<a id="a:202" class="idref" href="#a:202"><span class="id" title="binder">a</span></a>:<a class="idref" href="additions.Addition_Chains.html#Refinement_proof.A"><span class="id" title="variable">A</span></a>) :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span>(<a id="gamma:203" class="idref" href="#gamma:203"><span class="id" title="binder">gamma</span></a> : @<a class="idref" href="additions.Addition_Chains.html#computation"><span class="id" title="inductive">computation</span></a> <a class="idref" href="additions.Addition_Chains.html#Refinement_proof.A"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="gamma_nat:204" class="idref" href="#gamma_nat:204"><span class="id" title="binder">gamma_nat</span></a> : @<a class="idref" href="additions.Addition_Chains.html#computation"><span class="id" title="inductive">computation</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#computation_R"><span class="id" title="inductive">computation_R</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span>  (<a class="idref" href="additions.Addition_Chains.html#power_R"><span class="id" title="definition">power_R</span></a> <a class="idref" href="additions.Addition_Chains.html#a:202"><span class="id" title="variable">a</span></a>) <a class="idref" href="additions.Addition_Chains.html#gamma:203"><span class="id" title="variable">gamma</span></a> <a class="idref" href="additions.Addition_Chains.html#gamma_nat:204"><span class="id" title="variable">gamma_nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#power_R"><span class="id" title="definition">power_R</span></a> <a class="idref" href="additions.Addition_Chains.html#a:202"><span class="id" title="variable">a</span></a> (<a class="idref" href="additions.Addition_Chains.html#computation_eval"><span class="id" title="definition">computation_eval</span></a> <a class="idref" href="additions.Addition_Chains.html#gamma:203"><span class="id" title="variable">gamma</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="additions.Addition_Chains.html#computation_eval"><span class="id" title="definition">computation_eval</span></a> (<span class="id" title="var">M</span>:= <a class="idref" href="additions.Monoid_instances.html#Natplus"><span class="id" title="instance">Natplus</span></a>) <a class="idref" href="additions.Addition_Chains.html#gamma_nat:204"><span class="id" title="variable">gamma_nat</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="param_correctness_aux" class="idref" href="#param_correctness_aux"><span class="id" title="lemma">param_correctness_aux</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<a id="c:205" class="idref" href="#c:205"><span class="id" title="binder">c</span></a>:<a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>)(<a id="a:206" class="idref" href="#a:206"><span class="id" title="binder">a</span></a>:<a class="idref" href="additions.Addition_Chains.html#Refinement_proof.A"><span class="id" title="variable">A</span></a>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#computation_R"><span class="id" title="inductive">computation_R</span></a> <a class="idref" href="additions.Addition_Chains.html#Refinement_proof.A"><span class="id" title="variable">A</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> (<a class="idref" href="additions.Addition_Chains.html#power_R"><span class="id" title="definition">power_R</span></a> <a class="idref" href="additions.Addition_Chains.html#a:206"><span class="id" title="variable">a</span></a> ) (<a class="idref" href="additions.Addition_Chains.html#c:205"><span class="id" title="variable">c</span></a> <a class="idref" href="additions.Addition_Chains.html#Refinement_proof.A"><span class="id" title="variable">A</span></a> <a class="idref" href="additions.Addition_Chains.html#a:206"><span class="id" title="variable">a</span></a>) (<a class="idref" href="additions.Addition_Chains.html#c:205"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> 1%<span class="id" title="var">nat</span>)  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#power_R"><span class="id" title="definition">power_R</span></a>  <a class="idref" href="additions.Addition_Chains.html#a:206"><span class="id" title="variable">a</span></a> (<a class="idref" href="additions.Addition_Chains.html#computation_eval"><span class="id" title="definition">computation_eval</span></a> (<a class="idref" href="additions.Addition_Chains.html#c:205"><span class="id" title="variable">c</span></a> <a class="idref" href="additions.Addition_Chains.html#Refinement_proof.A"><span class="id" title="variable">A</span></a> <a class="idref" href="additions.Addition_Chains.html#a:206"><span class="id" title="variable">a</span></a>)) (<a class="idref" href="additions.Addition_Chains.html#the_exponent_nat"><span class="id" title="definition">the_exponent_nat</span></a> <a class="idref" href="additions.Addition_Chains.html#c:205"><span class="id" title="variable">c</span></a>) .<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="additions.Addition_Chains.html#Refinement_proof"><span class="id" title="section">Refinement_proof</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab350"></a><h2 class="section">Correctness Theorem</h2>
+
+
+<div class="paragraph"> </div>
+
+From our study of the <span class="inlinecode"><span class="id" title="var">computation</span>\<span class="id" title="var">_R</span></span> predicate, we infer that any parametric chain 
+is correct with respect to the number <span class="inlinecode"><span class="id" title="var">the_exponent_nat</span></span> <span class="inlinecode"><span class="id" title="var">c</span></span>
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="exponent_nat_neq_0" class="idref" href="#exponent_nat_neq_0"><span class="id" title="lemma">exponent_nat_neq_0</span></a> : <span class="id" title="keyword">∀</span> <a id="c:207" class="idref" href="#c:207"><span class="id" title="binder">c</span></a>: <a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>,  <a class="idref" href="additions.Addition_Chains.html#parametric"><span class="id" title="definition">parametric</span></a> <a class="idref" href="additions.Addition_Chains.html#c:207"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#the_exponent_nat"><span class="id" title="definition">the_exponent_nat</span></a> <a class="idref" href="additions.Addition_Chains.html#c:207"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> 0.<br/>
+<span class="id" title="keyword">Lemma</span> <a id="exponent_pos2nat" class="idref" href="#exponent_pos2nat"><span class="id" title="lemma">exponent_pos2nat</span></a> : <span class="id" title="keyword">∀</span> <a id="c:208" class="idref" href="#c:208"><span class="id" title="binder">c</span></a>: <a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#parametric"><span class="id" title="definition">parametric</span></a> <a class="idref" href="additions.Addition_Chains.html#c:208"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#the_exponent_nat"><span class="id" title="definition">the_exponent_nat</span></a> <a class="idref" href="additions.Addition_Chains.html#c:208"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#Pos.to_nat"><span class="id" title="definition">Pos.to_nat</span></a> (<a class="idref" href="additions.Addition_Chains.html#the_exponent"><span class="id" title="definition">the_exponent</span></a> <a class="idref" href="additions.Addition_Chains.html#c:208"><span class="id" title="variable">c</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="exponent_pos_of_nat" class="idref" href="#exponent_pos_of_nat"><span class="id" title="lemma">exponent_pos_of_nat</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="c:213" class="idref" href="#c:213"><span class="id" title="binder">c</span></a>: <a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>,  <a class="idref" href="additions.Addition_Chains.html#parametric"><span class="id" title="definition">parametric</span></a> <a class="idref" href="additions.Addition_Chains.html#c:213"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#the_exponent"><span class="id" title="definition">the_exponent</span></a> <a class="idref" href="additions.Addition_Chains.html#c:213"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#Pos.of_nat"><span class="id" title="definition">Pos.of_nat</span></a> (<a class="idref" href="additions.Addition_Chains.html#the_exponent_nat"><span class="id" title="definition">the_exponent_nat</span></a> <a class="idref" href="additions.Addition_Chains.html#c:213"><span class="id" title="variable">c</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="param_correctness_nat" class="idref" href="#param_correctness_nat"><span class="id" title="lemma">param_correctness_nat</span></a> (<a id="c:214" class="idref" href="#c:214"><span class="id" title="binder">c</span></a>: <a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#parametric"><span class="id" title="definition">parametric</span></a> <a class="idref" href="additions.Addition_Chains.html#c:214"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#chain_correct_nat"><span class="id" title="definition">chain_correct_nat</span></a> (<a class="idref" href="additions.Addition_Chains.html#the_exponent_nat"><span class="id" title="definition">the_exponent_nat</span></a> <a class="idref" href="additions.Addition_Chains.html#c:214"><span class="id" title="variable">c</span></a>) <a class="idref" href="additions.Addition_Chains.html#c:214"><span class="id" title="variable">c</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="param_correctness" class="idref" href="#param_correctness"><span class="id" title="lemma">param_correctness</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<a id="p:215" class="idref" href="#p:215"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>) (<a id="c:216" class="idref" href="#c:216"><span class="id" title="binder">c</span></a>:<a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#p:215"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="additions.Addition_Chains.html#the_exponent"><span class="id" title="definition">the_exponent</span></a> <a class="idref" href="additions.Addition_Chains.html#c:216"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Addition_Chains.html#parametric"><span class="id" title="definition">parametric</span></a> <a class="idref" href="additions.Addition_Chains.html#c:216"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#chain_correct"><span class="id" title="definition">chain_correct</span></a> <a class="idref" href="additions.Addition_Chains.html#p:215"><span class="id" title="variable">p</span></a>  <a class="idref" href="additions.Addition_Chains.html#c:216"><span class="id" title="variable">c</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab351"></a><h3 class="section">Remark</h3>
+
+
+<div class="paragraph"> </div>
+
+If we admit that any chain is parametric, we infer the correctness of every chain.
+
+<div class="paragraph"> </div>
+
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="param_correctness_for_free" class="idref" href="#param_correctness_for_free"><span class="id" title="lemma">param_correctness_for_free</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#any_chain_parametric"><span class="id" title="definition">any_chain_parametric</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="p:217" class="idref" href="#p:217"><span class="id" title="binder">p</span></a> (<a id="c:218" class="idref" href="#c:218"><span class="id" title="binder">c</span></a> : <a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>) ,<br/>
+<a class="idref" href="additions.Addition_Chains.html#p:217"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="additions.Addition_Chains.html#the_exponent"><span class="id" title="definition">the_exponent</span></a> <a class="idref" href="additions.Addition_Chains.html#c:218"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Addition_Chains.html#chain_correct"><span class="id" title="definition">chain_correct</span></a> <a class="idref" href="additions.Addition_Chains.html#p:217"><span class="id" title="variable">p</span></a> <a class="idref" href="additions.Addition_Chains.html#c:218"><span class="id" title="variable">c</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab352"></a><h3 class="section">Back to 87</h3>
+
+
+<div class="paragraph"> </div>
+
+We present two new-proofs of consistency of <span class="inlinecode"><span class="id" title="var">C87</span></span>.
+The first one uses the <span class="inlinecode"><span class="id" title="var">parametric_tac</span></span> tactic, the other one 
+using the "free refinement" method 
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">param_chain_correct</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;[|- <a class="idref" href="additions.Addition_Chains.html#chain_correct"><span class="id" title="definition">chain_correct</span></a> ?<span class="id" title="var">p</span> ?<span class="id" title="var">c</span> ] ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span> <span class="id" title="var">H</span> := <span class="id" title="tactic">fresh</span> "H" <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">p</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="additions.Addition_Chains.html#the_exponent"><span class="id" title="definition">the_exponent</span></a> <span class="id" title="var">c</span>) <span class="id" title="tactic">by</span> <span class="id" title="tactic">reflexivity</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="additions.Addition_Chains.html#param_correctness"><span class="id" title="lemma">param_correctness</span></a>;[<span class="id" title="tactic">trivial</span> | <span class="id" title="var">parametric_tac</span>]<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="C87_ok'" class="idref" href="#C87_ok'"><span class="id" title="lemma">C87_ok'</span></a> : <a class="idref" href="additions.Addition_Chains.html#chain_correct"><span class="id" title="definition">chain_correct</span></a> 87  <a class="idref" href="additions.Addition_Chains.html#C87"><span class="id" title="definition">C87</span></a>. 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="L87''" class="idref" href="#L87''"><span class="id" title="lemma">L87''</span></a> : <a class="idref" href="additions.Addition_Chains.html#any_chain_parametric"><span class="id" title="definition">any_chain_parametric</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Addition_Chains.html#chain_correct"><span class="id" title="definition">chain_correct</span></a> 87 <a class="idref" href="additions.Addition_Chains.html#C87"><span class="id" title="definition">C87</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab353"></a><h2 class="section">Correct by construction chains</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="chain_generator" class="idref" href="#chain_generator"><span class="id" title="definition">chain_generator</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="correct_generator" class="idref" href="#correct_generator"><span class="id" title="definition">correct_generator</span></a> (<a id="gen:219" class="idref" href="#gen:219"><span class="id" title="binder">gen</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>) :=<br/>
+&nbsp;<span class="id" title="keyword">∀</span> <a id="p:220" class="idref" href="#p:220"><span class="id" title="binder">p</span></a>, <a class="idref" href="additions.Addition_Chains.html#chain_correct"><span class="id" title="definition">chain_correct</span></a> <a class="idref" href="additions.Addition_Chains.html#p:220"><span class="id" title="variable">p</span></a> (<a class="idref" href="additions.Addition_Chains.html#gen:219"><span class="id" title="variable">gen</span></a> <a class="idref" href="additions.Addition_Chains.html#p:220"><span class="id" title="variable">p</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Computing  using a chain generator 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="cpower_pos" class="idref" href="#cpower_pos"><span class="id" title="definition">cpower_pos</span></a> (<a id="g:221" class="idref" href="#g:221"><span class="id" title="binder">g</span></a> : <a class="idref" href="additions.Addition_Chains.html#chain_generator"><span class="id" title="definition">chain_generator</span></a>)  <a id="p:222" class="idref" href="#p:222"><span class="id" title="binder">p</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`{<a id="M:227" class="idref" href="#M:227"><span class="id" title="binder">M</span></a>:@<a class="idref" href="additions.Monoid_def.html#EMonoid"><span class="id" title="class">EMonoid</span></a> <a id="A:223" class="idref" href="#A:223"><span class="id" title="binder">A</span></a> <a id="E_op:224" class="idref" href="#E_op:224"><span class="id" title="binder">E_op</span></a> <a id="E_one:225" class="idref" href="#E_one:225"><span class="id" title="binder">E_one</span></a> <a id="E_eq:226" class="idref" href="#E_eq:226"><span class="id" title="binder">E_eq</span></a>} <a id="a:228" class="idref" href="#a:228"><span class="id" title="binder">a</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#chain_apply"><span class="id" title="definition">chain_apply</span></a> (<a class="idref" href="additions.Addition_Chains.html#g:221"><span class="id" title="variable">g</span></a> <a class="idref" href="additions.Addition_Chains.html#p:222"><span class="id" title="variable">p</span></a>) (<span class="id" title="var">M</span>:=<a class="idref" href="additions.Addition_Chains.html#M:227"><span class="id" title="variable">M</span></a>) <a class="idref" href="additions.Addition_Chains.html#a:228"><span class="id" title="variable">a</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="cpower" class="idref" href="#cpower"><span class="id" title="definition">cpower</span></a> (<a id="g:229" class="idref" href="#g:229"><span class="id" title="binder">g</span></a> : <a class="idref" href="additions.Addition_Chains.html#chain_generator"><span class="id" title="definition">chain_generator</span></a>)  <a id="n:230" class="idref" href="#n:230"><span class="id" title="binder">n</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`{<a id="M:235" class="idref" href="#M:235"><span class="id" title="binder">M</span></a>:@<a class="idref" href="additions.Monoid_def.html#EMonoid"><span class="id" title="class">EMonoid</span></a> <a id="A:231" class="idref" href="#A:231"><span class="id" title="binder">A</span></a> <a id="E_op:232" class="idref" href="#E_op:232"><span class="id" title="binder">E_op</span></a> <a id="E_one:233" class="idref" href="#E_one:233"><span class="id" title="binder">E_one</span></a> <a id="E_eq:234" class="idref" href="#E_eq:234"><span class="id" title="binder">E_eq</span></a>} <a id="a:236" class="idref" href="#a:236"><span class="id" title="binder">a</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.Addition_Chains.html#n:230"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span> 0%<span class="id" title="var">N</span> ⇒ <a class="idref" href="additions.Addition_Chains.html#E_one:233"><span class="id" title="variable">E_one</span></a> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#Npos"><span class="id" title="constructor">Npos</span></a> <span class="id" title="var">p</span> ⇒ <a class="idref" href="additions.Addition_Chains.html#cpower_pos"><span class="id" title="definition">cpower_pos</span></a>  <a class="idref" href="additions.Addition_Chains.html#g:229"><span class="id" title="variable">g</span></a> <span class="id" title="var">p</span> <a class="idref" href="additions.Addition_Chains.html#a:236"><span class="id" title="variable">a</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab354"></a><h3 class="section">Definition</h3>
+
+A chain generator is <i>optimal</i> if it returns chains whose length are less or 
+equal than the chains returned by any correct generator.
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="optimal_generator" class="idref" href="#optimal_generator"><span class="id" title="definition">optimal_generator</span></a> (<a id="g:238" class="idref" href="#g:238"><span class="id" title="binder">g</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a> ) :=<br/>
+&nbsp;<span class="id" title="keyword">∀</span> <a id="p:239" class="idref" href="#p:239"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>, <a class="idref" href="additions.Addition_Chains.html#optimal"><span class="id" title="definition">optimal</span></a> <a class="idref" href="additions.Addition_Chains.html#p:239"><span class="id" title="variable">p</span></a> (<a class="idref" href="additions.Addition_Chains.html#g:238"><span class="id" title="variable">g</span></a> <a class="idref" href="additions.Addition_Chains.html#p:239"><span class="id" title="variable">p</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab355"></a><h2 class="section">Some chain generators</h2>
+
+
+<div class="paragraph"> </div>
+
+We reinterpret the naïve and binary exponentiation algorithms in the framework 
+of addition chains.
+
+<div class="paragraph"> </div>
+
+Instead of directly computing  for some base  and exponent ,
+we build chains that describe the computations associated with both methods.
+Not surprisingly, this chain generation will be described in terms of recursive
+functions, once the underlying monoid is fixed.
+
+<div class="paragraph"> </div>
+
+<a id="lab356"></a><h2 class="section">Chains associated to the well-known binary exponentiation algorithm</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab357"></a><h3 class="section">computation of </h3>
+
+
+<div class="paragraph"> </div>
+
+As for the "classical" binary exponentiation algorithm,
+we define an auxiliary computation generator for computing the
+product of an accumulator  with an arbitrary power of some value 
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="axp_scheme" class="idref" href="#axp_scheme"><span class="id" title="definition">axp_scheme</span></a>  {<a id="A:240" class="idref" href="#A:240"><span class="id" title="binder">A</span></a>} <a id="p:241" class="idref" href="#p:241"><span class="id" title="binder">p</span></a> : <a class="idref" href="additions.Addition_Chains.html#A:240"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Addition_Chains.html#A:240"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> @<a class="idref" href="additions.Addition_Chains.html#computation"><span class="id" title="inductive">computation</span></a> <a class="idref" href="additions.Addition_Chains.html#A:240"><span class="id" title="variable">A</span></a>   :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.Addition_Chains.html#p:241"><span class="id" title="variable">p</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xH"><span class="id" title="constructor">xH</span></a> ⇒  (<span class="id" title="keyword">fun</span> <a id="a:244" class="idref" href="#a:244"><span class="id" title="binder">a</span></a> <a id="x:245" class="idref" href="#x:245"><span class="id" title="binder">x</span></a> ⇒ <a id="y:246" class="idref" href="#y:246"><span class="id" title="binder">y</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#a:244"><span class="id" title="variable">a</span></a>  <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x:245"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a> <a class="idref" href="additions.Addition_Chains.html#Return"><span class="id" title="constructor">Return</span></a> <a class="idref" href="additions.Addition_Chains.html#y:246"><span class="id" title="variable">y</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> <span class="id" title="var">q</span> ⇒ (<span class="id" title="keyword">fun</span> <a id="a:247" class="idref" href="#a:247"><span class="id" title="binder">a</span></a> <a id="x:248" class="idref" href="#x:248"><span class="id" title="binder">x</span></a> ⇒ <a id="x2:249" class="idref" href="#x2:249"><span class="id" title="binder">x2</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x:248"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a>  <a class="idref" href="additions.Addition_Chains.html#x:248"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a> <a class="idref" href="additions.Addition_Chains.html#axp_scheme:242"><span class="id" title="definition">axp_scheme</span></a> <span class="id" title="var">q</span> <a class="idref" href="additions.Addition_Chains.html#a:247"><span class="id" title="variable">a</span></a> <a class="idref" href="additions.Addition_Chains.html#x2:249"><span class="id" title="variable">x2</span></a>)<br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xI"><span class="id" title="constructor">xI</span></a> <span class="id" title="var">q</span> ⇒ (<span class="id" title="keyword">fun</span> <a id="a:250" class="idref" href="#a:250"><span class="id" title="binder">a</span></a> <a id="x:251" class="idref" href="#x:251"><span class="id" title="binder">x</span></a> ⇒ <a id="ax:252" class="idref" href="#ax:252"><span class="id" title="binder">ax</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#a:250"><span class="id" title="variable">a</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x:251"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="x2:253" class="idref" href="#x2:253"><span class="id" title="binder">x2</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x:251"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x:251"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#axp_scheme:242"><span class="id" title="definition">axp_scheme</span></a> <span class="id" title="var">q</span> <a class="idref" href="additions.Addition_Chains.html#ax:252"><span class="id" title="variable">ax</span></a> <a class="idref" href="additions.Addition_Chains.html#x2:253"><span class="id" title="variable">x2</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span>  <a id="bin_pow_scheme" class="idref" href="#bin_pow_scheme"><span class="id" title="definition">bin_pow_scheme</span></a> {<a id="A:254" class="idref" href="#A:254"><span class="id" title="binder">A</span></a>} (<a id="p:255" class="idref" href="#p:255"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>)  : <a class="idref" href="additions.Addition_Chains.html#A:254"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> @<a class="idref" href="additions.Addition_Chains.html#computation"><span class="id" title="inductive">computation</span></a> <a class="idref" href="additions.Addition_Chains.html#A:254"><span class="id" title="variable">A</span></a>:=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.Addition_Chains.html#p:255"><span class="id" title="variable">p</span></a> <span class="id" title="keyword">with</span>  |  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xH"><span class="id" title="constructor">xH</span></a> ⇒ <span class="id" title="keyword">fun</span> <a id="x:258" class="idref" href="#x:258"><span class="id" title="binder">x</span></a> ⇒ <a class="idref" href="additions.Addition_Chains.html#Return"><span class="id" title="constructor">Return</span></a> <a class="idref" href="additions.Addition_Chains.html#x:258"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xI"><span class="id" title="constructor">xI</span></a> <span class="id" title="var">q</span>  ⇒ <span class="id" title="keyword">fun</span> <a id="x:259" class="idref" href="#x:259"><span class="id" title="binder">x</span></a> ⇒ <a id="x2:260" class="idref" href="#x2:260"><span class="id" title="binder">x2</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x:259"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x:259"><span class="id" title="variable">x</span></a><a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a> <a class="idref" href="additions.Addition_Chains.html#axp_scheme"><span class="id" title="definition">axp_scheme</span></a> <span class="id" title="var">q</span> <a class="idref" href="additions.Addition_Chains.html#x:259"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#x2:260"><span class="id" title="variable">x2</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> <span class="id" title="var">q</span> ⇒ <span class="id" title="keyword">fun</span> <a id="x:261" class="idref" href="#x:261"><span class="id" title="binder">x</span></a> ⇒ <a id="x2:262" class="idref" href="#x2:262"><span class="id" title="binder">x2</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">&lt;---</span></a> <a class="idref" href="additions.Addition_Chains.html#x:261"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">times</span></a> <a class="idref" href="additions.Addition_Chains.html#x:261"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Addition_Chains.html#5870a17092f4a8078b9692b4c6687556"><span class="id" title="notation">;</span></a> <a class="idref" href="additions.Addition_Chains.html#bin_pow_scheme:256"><span class="id" title="definition">bin_pow_scheme</span></a> <span class="id" title="var">q</span> <a class="idref" href="additions.Addition_Chains.html#x2:262"><span class="id" title="variable">x2</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="binary_chain" class="idref" href="#binary_chain"><span class="id" title="definition">binary_chain</span></a> (<a id="p:263" class="idref" href="#p:263"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>) : <a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <a id="A:264" class="idref" href="#A:264"><span class="id" title="binder">A</span></a> ⇒ <a class="idref" href="additions.Addition_Chains.html#bin_pow_scheme"><span class="id" title="definition">bin_pow_scheme</span></a> <a class="idref" href="additions.Addition_Chains.html#p:263"><span class="id" title="variable">p</span></a>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab358"></a><h2 class="section">Correctness of the binary method</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="binary_power_proof" class="idref" href="#binary_power_proof"><span class="id" title="section">binary_power_proof</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Variables</span> (<a id="binary_power_proof.A" class="idref" href="#binary_power_proof.A"><span class="id" title="variable">A</span></a>: <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="binary_power_proof.E_op" class="idref" href="#binary_power_proof.E_op"><span class="id" title="variable">E_op</span></a> : <a class="idref" href="additions.Monoid_def.html#Mult_op"><span class="id" title="class">Mult_op</span></a> <a class="idref" href="additions.Addition_Chains.html#A:265"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="binary_power_proof.E_one" class="idref" href="#binary_power_proof.E_one"><span class="id" title="variable">E_one</span></a> : <a class="idref" href="additions.Addition_Chains.html#A:265"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="binary_power_proof.E_eq" class="idref" href="#binary_power_proof.E_eq"><span class="id" title="variable">E_eq</span></a>: <a class="idref" href="additions.Monoid_def.html#Equiv"><span class="id" title="class">Equiv</span></a> <a class="idref" href="additions.Addition_Chains.html#A:265"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Context</span> (<a id="M:269" class="idref" href="#M:269"><span class="id" title="binder">M</span></a> : <a class="idref" href="additions.Monoid_def.html#EMonoid"><span class="id" title="class">EMonoid</span></a>  <a class="idref" href="additions.Addition_Chains.html#binary_power_proof.E_op"><span class="id" title="variable">E_op</span></a> <a class="idref" href="additions.Addition_Chains.html#binary_power_proof.E_one"><span class="id" title="variable">E_one</span></a> <a class="idref" href="additions.Addition_Chains.html#binary_power_proof.E_eq"><span class="id" title="variable">E_eq</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Existing Instance</span> <span class="id" title="var">Eop_proper</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+ As for linear chains, we first establish the correctness of the auxiliary
+  function <span class="inlinecode"><span class="id" title="var">axp_scheme</span></span>.
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="axp_correct" class="idref" href="#axp_correct"><span class="id" title="lemma">axp_correct</span></a> : <span class="id" title="keyword">∀</span> <a id="p:270" class="idref" href="#p:270"><span class="id" title="binder">p</span></a> <a id="a:271" class="idref" href="#a:271"><span class="id" title="binder">a</span></a> <a id="x:272" class="idref" href="#x:272"><span class="id" title="binder">x</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#computation_eval"><span class="id" title="definition">computation_eval</span></a> (<a class="idref" href="additions.Addition_Chains.html#axp_scheme"><span class="id" title="definition">axp_scheme</span></a> <a class="idref" href="additions.Addition_Chains.html#p:270"><span class="id" title="variable">p</span></a> <a class="idref" href="additions.Addition_Chains.html#a:271"><span class="id" title="variable">a</span></a> <a class="idref" href="additions.Addition_Chains.html#x:272"><span class="id" title="variable">x</span></a>) <a class="idref" href="additions.Addition_Chains.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#a:271"><span class="id" title="variable">a</span></a> <a class="idref" href="additions.Monoid_def.html#e1cb395850f224a43e9550833db388b3"><span class="id" title="notation">×</span></a>  <a class="idref" href="additions.Addition_Chains.html#x:272"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Pow.html#765592cb239fbb605ff794a9833fef51"><span class="id" title="notation">^</span></a> <a class="idref" href="additions.Pow.html#765592cb239fbb605ff794a9833fef51"><span class="id" title="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#Pos.to_nat"><span class="id" title="definition">Pos.to_nat</span></a> <a class="idref" href="additions.Addition_Chains.html#p:270"><span class="id" title="variable">p</span></a><a class="idref" href="additions.Pow.html#765592cb239fbb605ff794a9833fef51"><span class="id" title="notation">)</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binary_correct" class="idref" href="#binary_correct"><span class="id" title="lemma">binary_correct</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="p:273" class="idref" href="#p:273"><span class="id" title="binder">p</span></a> <a id="x:274" class="idref" href="#x:274"><span class="id" title="binder">x</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#computation_eval"><span class="id" title="definition">computation_eval</span></a> (<a class="idref" href="additions.Addition_Chains.html#bin_pow_scheme"><span class="id" title="definition">bin_pow_scheme</span></a> <a class="idref" href="additions.Addition_Chains.html#p:273"><span class="id" title="variable">p</span></a> (<span class="id" title="var">A</span>:=<a class="idref" href="additions.Addition_Chains.html#binary_power_proof.A"><span class="id" title="variable">A</span></a>) <a class="idref" href="additions.Addition_Chains.html#x:274"><span class="id" title="variable">x</span></a>) <a class="idref" href="additions.Addition_Chains.html#2596316c6f2ff161cb03e25fd8914390"><span class="id" title="notation">==</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#x:274"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.Pow.html#765592cb239fbb605ff794a9833fef51"><span class="id" title="notation">^</span></a> <a class="idref" href="additions.Pow.html#765592cb239fbb605ff794a9833fef51"><span class="id" title="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#Pos.to_nat"><span class="id" title="definition">Pos.to_nat</span></a> <a class="idref" href="additions.Addition_Chains.html#p:273"><span class="id" title="variable">p</span></a><a class="idref" href="additions.Pow.html#765592cb239fbb605ff794a9833fef51"><span class="id" title="notation">)</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span>  <a class="idref" href="additions.Addition_Chains.html#binary_power_proof"><span class="id" title="section">binary_power_proof</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binary_generator_correct" class="idref" href="#binary_generator_correct"><span class="id" title="lemma">binary_generator_correct</span></a> : <a class="idref" href="additions.Addition_Chains.html#correct_generator"><span class="id" title="definition">correct_generator</span></a> <a class="idref" href="additions.Addition_Chains.html#binary_chain"><span class="id" title="definition">binary_chain</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab359"></a><h2 class="section">The binary method is not optimal</h2>
+
+
+<div class="paragraph"> </div>
+
+    We use the function <span class="inlinecode"><span class="id" title="var">chain_length</span></span> and proofs of correctness 
+  for showing that <span class="inlinecode"><span class="id" title="var">binary_chain</span></span>, although correct, is not an optimal 
+  chain generator.
+
+<div class="paragraph"> </div>
+
+   Our proof  is structured as a proof by contradiction, under the 
+   hypothesis that <span class="inlinecode"><span class="id" title="var">binary_chain</span></span> is optimal.
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="non_optimality_proof" class="idref" href="#non_optimality_proof"><span class="id" title="section">non_optimality_proof</span></a>.<br/>
+
+<br/>
+&nbsp;<span class="id" title="keyword">Hypothesis</span> <a id="non_optimality_proof.binary_opt" class="idref" href="#non_optimality_proof.binary_opt"><span class="id" title="variable">binary_opt</span></a> : <a class="idref" href="additions.Addition_Chains.html#optimal_generator"><span class="id" title="definition">optimal_generator</span></a> <a class="idref" href="additions.Addition_Chains.html#binary_chain"><span class="id" title="definition">binary_chain</span></a>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+&nbsp;<span class="id" title="keyword">Lemma</span> <a id="binary_generator_not_optimal" class="idref" href="#binary_generator_not_optimal"><span class="id" title="lemma">binary_generator_not_optimal</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#False"><span class="id" title="inductive">False</span></a>.  
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="additions.Addition_Chains.html#non_optimality_proof"><span class="id" title="section">non_optimality_proof</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">M_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="S1" class="idref" href="#S1"><span class="id" title="section">S1</span></a>.<br/>
+&nbsp;<span class="id" title="keyword">Fixpoint</span> <a id="clog2" class="idref" href="#clog2"><span class="id" title="definition">clog2</span></a> (<a id="p:276" class="idref" href="#p:276"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>) : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> :=<br/>
+&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.Addition_Chains.html#p:276"><span class="id" title="variable">p</span></a> <span class="id" title="keyword">with</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xH"><span class="id" title="constructor">xH</span></a> ⇒ 1%<span class="id" title="var">nat</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xH"><span class="id" title="constructor">xH</span></a> ⇒ 2%<span class="id" title="var">nat</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> <span class="id" title="var">p</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="additions.Addition_Chains.html#clog2:277"><span class="id" title="definition">clog2</span></a> <a class="idref" href="additions.Addition_Chains.html#p:276"><span class="id" title="variable">p</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xI"><span class="id" title="constructor">xI</span></a> <span class="id" title="var">p</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="additions.Addition_Chains.html#clog2:277"><span class="id" title="definition">clog2</span></a> <a class="idref" href="additions.Addition_Chains.html#p:276"><span class="id" title="variable">p</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="exp2" class="idref" href="#exp2"><span class="id" title="definition">exp2</span></a> (<a id="n:279" class="idref" href="#n:279"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.Addition_Chains.html#n:279"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#O"><span class="id" title="constructor">O</span></a> ⇒ 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">p</span> ⇒ 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#83db3fa9f059c10cb623a122cf097cd0"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Addition_Chains.html#exp2:280"><span class="id" title="definition">exp2</span></a> <span class="id" title="var">p</span><br/>
+&nbsp;<span class="id" title="keyword">end</span>.<br/>
+&nbsp;<span class="id" title="keyword">Lemma</span> <a id="exp2_Plus" class="idref" href="#exp2_Plus"><span class="id" title="lemma">exp2_Plus</span></a> : <span class="id" title="keyword">∀</span> <a id="n:282" class="idref" href="#n:282"><span class="id" title="binder">n</span></a> <a id="p:283" class="idref" href="#p:283"><span class="id" title="binder">p</span></a>, <a class="idref" href="additions.Addition_Chains.html#exp2"><span class="id" title="definition">exp2</span></a> (<a class="idref" href="additions.Addition_Chains.html#n:282"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="additions.Addition_Chains.html#p:283"><span class="id" title="variable">p</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> (<a class="idref" href="additions.Addition_Chains.html#exp2"><span class="id" title="definition">exp2</span></a> <a class="idref" href="additions.Addition_Chains.html#n:282"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#83db3fa9f059c10cb623a122cf097cd0"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Addition_Chains.html#exp2"><span class="id" title="definition">exp2</span></a> <a class="idref" href="additions.Addition_Chains.html#p:283"><span class="id" title="variable">p</span></a>)%<span class="id" title="var">positive</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="axp_scheme_length1" class="idref" href="#axp_scheme_length1"><span class="id" title="lemma">axp_scheme_length1</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="p:284" class="idref" href="#p:284"><span class="id" title="binder">p</span></a>, (<a class="idref" href="additions.Addition_Chains.html#computation_length"><span class="id" title="definition">computation_length</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#tt"><span class="id" title="constructor">tt</span></a> (<a class="idref" href="additions.Addition_Chains.html#axp_scheme"><span class="id" title="definition">axp_scheme</span></a>  <a class="idref" href="additions.Addition_Chains.html#p:284"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#tt"><span class="id" title="constructor">tt</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#tt"><span class="id" title="constructor">tt</span></a>  ) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Addition_Chains.html#clog2"><span class="id" title="definition">clog2</span></a> <a class="idref" href="additions.Addition_Chains.html#p:284"><span class="id" title="variable">p</span></a>)%<span class="id" title="var">nat</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="bin_pow_scheme_length1" class="idref" href="#bin_pow_scheme_length1"><span class="id" title="lemma">bin_pow_scheme_length1</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="p:285" class="idref" href="#p:285"><span class="id" title="binder">p</span></a>, (<a class="idref" href="additions.Addition_Chains.html#computation_length"><span class="id" title="definition">computation_length</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#tt"><span class="id" title="constructor">tt</span></a> (<a class="idref" href="additions.Addition_Chains.html#bin_pow_scheme"><span class="id" title="definition">bin_pow_scheme</span></a>  <a class="idref" href="additions.Addition_Chains.html#p:285"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#tt"><span class="id" title="constructor">tt</span></a>  ) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Addition_Chains.html#clog2"><span class="id" title="definition">clog2</span></a> <a class="idref" href="additions.Addition_Chains.html#p:285"><span class="id" title="variable">p</span></a>)%<span class="id" title="var">nat</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="binary_chain_length" class="idref" href="#binary_chain_length"><span class="id" title="lemma">binary_chain_length</span></a> : <span class="id" title="keyword">∀</span> <a id="p:286" class="idref" href="#p:286"><span class="id" title="binder">p</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="additions.Addition_Chains.html#chain_length"><span class="id" title="definition">chain_length</span></a> (<a class="idref" href="additions.Addition_Chains.html#binary_chain"><span class="id" title="definition">binary_chain</span></a> <a class="idref" href="additions.Addition_Chains.html#p:286"><span class="id" title="variable">p</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Addition_Chains.html#clog2"><span class="id" title="definition">clog2</span></a> <a class="idref" href="additions.Addition_Chains.html#p:286"><span class="id" title="variable">p</span></a>)%<span class="id" title="var">nat</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="optimal_upper_bound" class="idref" href="#optimal_upper_bound"><span class="id" title="lemma">optimal_upper_bound</span></a>: <span class="id" title="keyword">∀</span> <a id="p:287" class="idref" href="#p:287"><span class="id" title="binder">p</span></a> <a id="c:288" class="idref" href="#c:288"><span class="id" title="binder">c</span></a>, <a class="idref" href="additions.Addition_Chains.html#optimal"><span class="id" title="definition">optimal</span></a> <a class="idref" href="additions.Addition_Chains.html#p:287"><span class="id" title="variable">p</span></a> <a class="idref" href="additions.Addition_Chains.html#c:288"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <br/>
+&nbsp;&nbsp;&nbsp;(<a class="idref" href="additions.Addition_Chains.html#chain_length"><span class="id" title="definition">chain_length</span></a> <a class="idref" href="additions.Addition_Chains.html#c:288"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.Addition_Chains.html#clog2"><span class="id" title="definition">clog2</span></a> <a class="idref" href="additions.Addition_Chains.html#p:287"><span class="id" title="variable">p</span></a>)%<span class="id" title="var">nat</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="additions.Addition_Chains.html#S1"><span class="id" title="section">S1</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab360"></a><h1 class="section">How to prove chain correctness in general ?</h1>
+
+
+<div class="paragraph"> </div>
+
+ In previous sections, we showed proofs of correctness of two chain generators.
+ By definition, every chain returned by these generators is correct w.r.t. 
+ the given exponent.
+
+<div class="paragraph"> </div>
+
+ The problem with <span class="inlinecode"><span class="id" title="var">C87</span></span> is quite different. This chain 
+ has been given by hand, and we had to prove its correctness. 
+
+<div class="paragraph"> </div>
+
+ Although the proof script for lemma <span class="inlinecode"><span class="id" title="var">L87</span></span> is quite short, the resulting 
+ proof  is quite clumsy, consisting in a long chain of equivalences using
+ associativity of the multiplication.
+
+<div class="paragraph"> </div>
+
+ The reader can easily be convinced of this fact, just by the command 
+<span class="inlinecode"><span class="id" title="keyword">Print</span></span> <span class="inlinecode"><span class="id" title="var">L87</span>.</span>
+
+<div class="paragraph"> </div>
+
+In a similar way, it may happen that a correct chain generator is hard
+to certify in . In this case, one may chose to prove the 
+correctness of various chains returned by the generator.
+
+<div class="paragraph"> </div>
+
+In the rest of this section, we investigate some ways of proving 
+the correctness of given chains.
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="S2" class="idref" href="#S2"><span class="id" title="section">S2</span></a>.<br/>
+</div>
+
+<div class="doc">
+Difficult and unfinished (conjecture)
+
+<div class="paragraph"> </div>
+
+ We would like to prove that for  any parametric chain c for p,
+c's length is greater or equal than  log2(p).
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Variables</span> <a id="S2.A" class="idref" href="#S2.A"><span class="id" title="variable">A</span></a> <a id="S2.B" class="idref" href="#S2.B"><span class="id" title="variable">B</span></a> : <span class="id" title="keyword">Type</span>.<br/>
+<span class="id" title="keyword">Variables</span> (<a id="S2.a" class="idref" href="#S2.a"><span class="id" title="variable">a</span></a>:<a class="idref" href="additions.Addition_Chains.html#S2.A"><span class="id" title="variable">A</span></a>)(<a id="S2.b" class="idref" href="#S2.b"><span class="id" title="variable">b</span></a>:<a class="idref" href="additions.Addition_Chains.html#S2.B"><span class="id" title="variable">B</span></a>).<br/>
+<span class="id" title="keyword">Let</span> <a id="S2.R_true" class="idref" href="#S2.R_true"><span class="id" title="variable">R_true</span></a> := <span class="id" title="keyword">fun</span> (<a id="x:293" class="idref" href="#x:293"><span class="id" title="binder">x</span></a>:<a class="idref" href="additions.Addition_Chains.html#S2.A"><span class="id" title="variable">A</span></a>)(<a id="y:294" class="idref" href="#y:294"><span class="id" title="binder">y</span></a>:<a class="idref" href="additions.Addition_Chains.html#S2.B"><span class="id" title="variable">B</span></a>) ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#True"><span class="id" title="inductive">True</span></a>.<br/>
+<span class="id" title="keyword">Lemma</span>  <a id="L" class="idref" href="#L"><span class="id" title="lemma">L</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span>(<a id="gammaA:295" class="idref" href="#gammaA:295"><span class="id" title="binder">gammaA</span></a> : @<a class="idref" href="additions.Addition_Chains.html#computation"><span class="id" title="inductive">computation</span></a> <a class="idref" href="additions.Addition_Chains.html#S2.A"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="gammaB:296" class="idref" href="#gammaB:296"><span class="id" title="binder">gammaB</span></a> : @<a class="idref" href="additions.Addition_Chains.html#computation"><span class="id" title="inductive">computation</span></a> <a class="idref" href="additions.Addition_Chains.html#S2.B"><span class="id" title="variable">B</span></a>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#computation_R"><span class="id" title="inductive">computation_R</span></a>  <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="additions.Addition_Chains.html#S2.R_true"><span class="id" title="variable">R_true</span></a> <a class="idref" href="additions.Addition_Chains.html#gammaA:295"><span class="id" title="variable">gammaA</span></a> <a class="idref" href="additions.Addition_Chains.html#gammaB:296"><span class="id" title="variable">gammaB</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@<a class="idref" href="additions.Addition_Chains.html#computation_length"><span class="id" title="definition">computation_length</span></a> <a class="idref" href="additions.Addition_Chains.html#S2.A"><span class="id" title="variable">A</span></a> <a class="idref" href="additions.Addition_Chains.html#S2.a"><span class="id" title="variable">a</span></a> <a class="idref" href="additions.Addition_Chains.html#gammaA:295"><span class="id" title="variable">gammaA</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> @<a class="idref" href="additions.Addition_Chains.html#computation_length"><span class="id" title="definition">computation_length</span></a> <a class="idref" href="additions.Addition_Chains.html#S2.B"><span class="id" title="variable">B</span></a> <a class="idref" href="additions.Addition_Chains.html#S2.b"><span class="id" title="variable">b</span></a> <a class="idref" href="additions.Addition_Chains.html#gammaB:296"><span class="id" title="variable">gammaB</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="L2" class="idref" href="#L2"><span class="id" title="lemma">L2</span></a> : <span class="id" title="keyword">∀</span> <a id="c:297" class="idref" href="#c:297"><span class="id" title="binder">c</span></a> : <a class="idref" href="additions.Addition_Chains.html#chain"><span class="id" title="definition">chain</span></a>, <a class="idref" href="additions.Addition_Chains.html#parametric"><span class="id" title="definition">parametric</span></a> <a class="idref" href="additions.Addition_Chains.html#c:297"><span class="id" title="variable">c</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Addition_Chains.html#computation_length"><span class="id" title="definition">computation_length</span></a> <a class="idref" href="additions.Addition_Chains.html#S2.a"><span class="id" title="variable">a</span></a> (<a class="idref" href="additions.Addition_Chains.html#c:297"><span class="id" title="variable">c</span></a> <a class="idref" href="additions.Addition_Chains.html#S2.A"><span class="id" title="variable">A</span></a> <a class="idref" href="additions.Addition_Chains.html#S2.a"><span class="id" title="variable">a</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="additions.Addition_Chains.html#computation_length"><span class="id" title="definition">computation_length</span></a> <a class="idref" href="additions.Addition_Chains.html#S2.b"><span class="id" title="variable">b</span></a> (<a class="idref" href="additions.Addition_Chains.html#c:297"><span class="id" title="variable">c</span></a> <a class="idref" href="additions.Addition_Chains.html#S2.B"><span class="id" title="variable">B</span></a> <a class="idref" href="additions.Addition_Chains.html#S2.b"><span class="id" title="variable">b</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="additions.Addition_Chains.html#S2"><span class="id" title="section">S2</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Extraction</span> <span class="id" title="var">Language</span> <span class="id" title="keyword">Scheme</span>.<br/>
+<span class="id" title="keyword">Recursive Extraction</span> <span class="id" title="var">chain_apply</span>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

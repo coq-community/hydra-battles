@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Schutte.Countable</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Schutte.Countable</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+A formalization of denumerable sets.  by Florian Hatat and Stéphane Desarzens  
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#"><span class="id" title="library">Ensembles</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Arith</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.setoid_ring.ArithRing.html#"><span class="id" title="library">ArithRing</span></a> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Wellfounded.Wellfounded.html#"><span class="id" title="library">Wellfounded</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relations.html#"><span class="id" title="library">Relations</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Wf_nat.html#"><span class="id" title="library">Wf_nat</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Finite_sets.html#"><span class="id" title="library">Finite_sets</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#"><span class="id" title="library">Logic.Epsilon</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Image.html#"><span class="id" title="library">Sets.Image</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.micromega.Lia.html#"><span class="id" title="library">Lia</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">ZornsLemma</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="library">Classical_Wf</span> <span class="id" title="library">CountableTypes</span> <span class="id" title="library">Families</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#"><span class="id" title="library">MoreEpsilonIota</span></a> <a class="idref" href="hydras.Schutte.PartialFun.html#"><span class="id" title="library">PartialFun</span></a>  <a class="idref" href="hydras.Schutte.GRelations.html#"><span class="id" title="library">GRelations</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Prelude.More_Arith.html#"><span class="id" title="library">Prelude.More_Arith</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.PeanoNat.html#Nat"><span class="id" title="module">Nat</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A is countable if there exists an injection from <span class="inlinecode"><span class="id" title="var">A</span></span> to
+  <span class="inlinecode"><span class="id" title="var">Full_set</span></span> <span class="inlinecode"><span class="id" title="var">nat</span></span>. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Countable" class="idref" href="#Countable"><span class="id" title="section">Countable</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="Countable.Definitions" class="idref" href="#Countable.Definitions"><span class="id" title="section">Definitions</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="Countable.Definitions.U" class="idref" href="#Countable.Definitions.U"><span class="id" title="variable">U</span></a> : <span class="id" title="keyword">Type</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="Countable.Definitions.A" class="idref" href="#Countable.Definitions.A"><span class="id" title="variable">A</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#Ensemble"><span class="id" title="definition">Ensemble</span></a> <a class="idref" href="hydras.Schutte.Countable.html#Countable.Definitions.U"><span class="id" title="variable">U</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Predicate for relations which number the elements of A.
+
+<div class="paragraph"> </div>
+
+  These relations map each element of A to at least one integer, but they
+  are not required to be functional (injectivity is only needed to ensure that
+  A is countable). 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="rel_numbers" class="idref" href="#rel_numbers"><span class="id" title="definition">rel_numbers</span></a> (<a id="R:3" class="idref" href="#R:3"><span class="id" title="binder">R</span></a>: <a class="idref" href="hydras.Schutte.GRelations.html#GRelation"><span class="id" title="definition">GRelation</span></a> <a class="idref" href="hydras.Schutte.Countable.html#Countable.Definitions.U"><span class="id" title="variable">U</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) := <a class="idref" href="hydras.Schutte.GRelations.html#rel_injection"><span class="id" title="inductive">rel_injection</span></a> <a class="idref" href="hydras.Schutte.Countable.html#Countable.Definitions.A"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#Full_set"><span class="id" title="inductive">Full_set</span></a> <a class="idref" href="hydras.Schutte.Countable.html#R:3"><span class="id" title="variable">R</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Predicate for relations which enumerate A. 
+</div>
+<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="rel_enumerates" class="idref" href="#rel_enumerates"><span class="id" title="definition">rel_enumerates</span></a> (<a id="R:4" class="idref" href="#R:4"><span class="id" title="binder">R</span></a> : <a class="idref" href="hydras.Schutte.GRelations.html#GRelation"><span class="id" title="definition">GRelation</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="hydras.Schutte.Countable.html#Countable.Definitions.U"><span class="id" title="variable">U</span></a>) := <a class="idref" href="hydras.Schutte.GRelations.html#rel_surjection"><span class="id" title="inductive">rel_surjection</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#Full_set"><span class="id" title="inductive">Full_set</span></a> <a class="idref" href="hydras.Schutte.Countable.html#Countable.Definitions.A"><span class="id" title="variable">A</span></a> <a class="idref" href="hydras.Schutte.Countable.html#R:4"><span class="id" title="variable">R</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Theorem</span> <a id="countable_surj" class="idref" href="#countable_surj"><span class="id" title="lemma">countable_surj</span></a> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="definition">Countable</span> <a class="idref" href="hydras.Schutte.Countable.html#Countable.Definitions.A"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a id="R:5" class="idref" href="#R:5"><span class="id" title="binder">R</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">,</span></a> <a class="idref" href="hydras.Schutte.Countable.html#rel_enumerates"><span class="id" title="definition">rel_enumerates</span></a> <a class="idref" href="hydras.Schutte.Countable.html#R:5"><span class="id" title="variable">R</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Schutte.Countable.html#Countable.Definitions"><span class="id" title="section">Definitions</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="Countable.U" class="idref" href="#Countable.U"><span class="id" title="variable">U</span></a> : <span class="id" title="keyword">Type</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="Countable.Countable_seq_range" class="idref" href="#Countable.Countable_seq_range"><span class="id" title="section">Countable_seq_range</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="seq_range" class="idref" href="#seq_range"><span class="id" title="definition">seq_range</span></a> (<a id="f:27" class="idref" href="#f:27"><span class="id" title="binder">f</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.Countable.html#Countable.U"><span class="id" title="variable">U</span></a>) : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#Ensemble"><span class="id" title="definition">Ensemble</span></a> <a class="idref" href="hydras.Schutte.Countable.html#Countable.U"><span class="id" title="variable">U</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.PartialFun.html#image"><span class="id" title="definition">image</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#Full_set"><span class="id" title="inductive">Full_set</span></a> <a class="idref" href="hydras.Schutte.Countable.html#f:27"><span class="id" title="variable">f</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="seq_range_countable" class="idref" href="#seq_range_countable"><span class="id" title="lemma">seq_range_countable</span></a> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="f:28" class="idref" href="#f:28"><span class="id" title="binder">f</span></a>, <span class="id" title="definition">Countable</span> (<a class="idref" href="hydras.Schutte.Countable.html#seq_range"><span class="id" title="definition">seq_range</span></a> <a class="idref" href="hydras.Schutte.Countable.html#f:28"><span class="id" title="variable">f</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Schutte.Countable.html#Countable.Countable_seq_range"><span class="id" title="section">Countable_seq_range</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="Countable.Countable_bijection" class="idref" href="#Countable.Countable_bijection"><span class="id" title="section">Countable_bijection</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="Countable.Countable_bijection.V" class="idref" href="#Countable.Countable_bijection.V"><span class="id" title="variable">V</span></a> : <span class="id" title="keyword">Type</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="Countable.Countable_bijection.A" class="idref" href="#Countable.Countable_bijection.A"><span class="id" title="variable">A</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#Ensemble"><span class="id" title="definition">Ensemble</span></a> <a class="idref" href="hydras.Schutte.Countable.html#Countable.U"><span class="id" title="variable">U</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="Countable.Countable_bijection.B" class="idref" href="#Countable.Countable_bijection.B"><span class="id" title="variable">B</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#Ensemble"><span class="id" title="definition">Ensemble</span></a> <a class="idref" href="hydras.Schutte.Countable.html#Countable.Countable_bijection.V"><span class="id" title="variable">V</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="Countable.Countable_bijection.g" class="idref" href="#Countable.Countable_bijection.g"><span class="id" title="variable">g</span></a> : <a class="idref" href="hydras.Schutte.Countable.html#Countable.U"><span class="id" title="variable">U</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.Countable.html#Countable.Countable_bijection.V"><span class="id" title="variable">V</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Hypothesis</span> <a id="Countable.Countable_bijection.g_bij" class="idref" href="#Countable.Countable_bijection.g_bij"><span class="id" title="variable">g_bij</span></a> : <a class="idref" href="hydras.Schutte.PartialFun.html#fun_bijection"><span class="id" title="inductive">fun_bijection</span></a> <a class="idref" href="hydras.Schutte.Countable.html#Countable.Countable_bijection.A"><span class="id" title="variable">A</span></a> <a class="idref" href="hydras.Schutte.Countable.html#Countable.Countable_bijection.B"><span class="id" title="variable">B</span></a> <a class="idref" href="hydras.Schutte.Countable.html#Countable.Countable_bijection.g"><span class="id" title="variable">g</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="countable_bij_fun" class="idref" href="#countable_bij_fun"><span class="id" title="lemma">countable_bij_fun</span></a> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="definition">Countable</span> <a class="idref" href="hydras.Schutte.Countable.html#Countable.Countable_bijection.A"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="definition">Countable</span> <a class="idref" href="hydras.Schutte.Countable.html#Countable.Countable_bijection.B"><span class="id" title="variable">B</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="countable_bij_funR" class="idref" href="#countable_bij_funR"><span class="id" title="lemma">countable_bij_funR</span></a> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="definition">Countable</span> <a class="idref" href="hydras.Schutte.Countable.html#Countable.Countable_bijection.B"><span class="id" title="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="definition">Countable</span> <a class="idref" href="hydras.Schutte.Countable.html#Countable.Countable_bijection.A"><span class="id" title="variable">A</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Schutte.Countable.html#Countable.Countable_bijection"><span class="id" title="section">Countable_bijection</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Schutte.Countable.html#Countable"><span class="id" title="section">Countable</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="countable_image" class="idref" href="#countable_image"><span class="id" title="lemma">countable_image</span></a> : <span class="id" title="keyword">∀</span> (<a id="U:34" class="idref" href="#U:34"><span class="id" title="binder">U</span></a> <a id="V:35" class="idref" href="#V:35"><span class="id" title="binder">V</span></a>:<span class="id" title="keyword">Type</span>)(<a id="DA:36" class="idref" href="#DA:36"><span class="id" title="binder">DA</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#Ensemble"><span class="id" title="definition">Ensemble</span></a> <a class="idref" href="hydras.Schutte.Countable.html#U:34"><span class="id" title="variable">U</span></a>)(<a id="f:37" class="idref" href="#f:37"><span class="id" title="binder">f</span></a>:<a class="idref" href="hydras.Schutte.Countable.html#U:34"><span class="id" title="variable">U</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><a class="idref" href="hydras.Schutte.Countable.html#V:35"><span class="id" title="variable">V</span></a>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="definition">Countable</span> <a class="idref" href="hydras.Schutte.Countable.html#DA:36"><span class="id" title="variable">DA</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="definition">Countable</span> (<a class="idref" href="hydras.Schutte.PartialFun.html#image"><span class="id" title="definition">image</span></a> <a class="idref" href="hydras.Schutte.Countable.html#DA:36"><span class="id" title="variable">DA</span></a> <a class="idref" href="hydras.Schutte.Countable.html#f:37"><span class="id" title="variable">f</span></a>).<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

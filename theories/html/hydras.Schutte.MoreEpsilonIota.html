@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Schutte.MoreEpsilonIota</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Schutte.MoreEpsilonIota</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  Complements to Coq.Logic.Epsilon
+
+<div class="paragraph"> </div>
+
+  Pierre Casteran,
+  LaBRI, University of Bordeaux
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#"><span class="id" title="library">Ensembles</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#"><span class="id" title="library">Logic.Epsilon</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#epsilon_statement"><span class="id" title="axiom">epsilon_statement</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#epsilon"><span class="id" title="definition">epsilon</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#constructive_indefinite_description"><span class="id" title="lemma">constructive_indefinite_description</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#iota_statement"><span class="id" title="lemma">iota_statement</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#iota"><span class="id" title="definition">iota</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#iota_spec"><span class="id" title="definition">iota_spec</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#In"><span class="id" title="definition">In</span></a> {<span class="id" title="var">U</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+&nbsp;<span class="id" title="keyword">Lemma</span> <a id="epsilon_ind" class="idref" href="#epsilon_ind"><span class="id" title="lemma">epsilon_ind</span></a> {<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a>:<span class="id" title="keyword">Type</span>} (<a id="inh:2" class="idref" href="#inh:2"><span class="id" title="binder">inh</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#inhabited"><span class="id" title="inductive">inhabited</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#A:1"><span class="id" title="variable">A</span></a>) (<a id="P:3" class="idref" href="#P:3"><span class="id" title="binder">P</span></a> <a id="Q:4" class="idref" href="#Q:4"><span class="id" title="binder">Q</span></a> : <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Prop</span>):<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ex"><span class="id" title="inductive">ex</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#P:3"><span class="id" title="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><span class="id" title="keyword">∀</span> <a id="a:5" class="idref" href="#a:5"><span class="id" title="binder">a</span></a>, <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#P:3"><span class="id" title="variable">P</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#a:5"><span class="id" title="variable">a</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#Q:4"><span class="id" title="variable">Q</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#a:5"><span class="id" title="variable">a</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#Q:4"><span class="id" title="variable">Q</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#epsilon"><span class="id" title="definition">epsilon</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#inh:2"><span class="id" title="variable">inh</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#P:3"><span class="id" title="variable">P</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <a id="epsilon_equiv" class="idref" href="#epsilon_equiv"><span class="id" title="lemma">epsilon_equiv</span></a>  {<a id="A:6" class="idref" href="#A:6"><span class="id" title="binder">A</span></a>:<span class="id" title="keyword">Type</span>}(<a id="a:7" class="idref" href="#a:7"><span class="id" title="binder">a</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#inhabited"><span class="id" title="inductive">inhabited</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#A:6"><span class="id" title="variable">A</span></a>)(<a id="P:8" class="idref" href="#P:8"><span class="id" title="binder">P</span></a>:<a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#A:6"><span class="id" title="variable">A</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><span class="id" title="keyword">Prop</span>):<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ex"><span class="id" title="inductive">ex</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#P:8"><span class="id" title="variable">P</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">)&lt;-&gt;</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#P:8"><span class="id" title="variable">P</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#epsilon"><span class="id" title="definition">epsilon</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#a:7"><span class="id" title="variable">a</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#P:8"><span class="id" title="variable">P</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">epsilon_elim_aux</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span> [ |- (?<span class="id" title="var">P</span> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#epsilon"><span class="id" title="definition">epsilon</span></a> (<span class="id" title="var">A</span>:=?<span class="id" title="var">X</span>) ?<span class="id" title="var">a</span> ?<span class="id" title="var">Q</span>))] ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#epsilon_ind"><span class="id" title="lemma">epsilon_ind</span></a>; <span class="id" title="tactic">auto</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">epsilon_elim</span> := <span class="id" title="var">epsilon_elim_aux</span> ||<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;[ |- (?<span class="id" title="var">P</span> (?<span class="id" title="var">k</span> ?<span class="id" title="var">d</span>))] ⇒<br/>
+&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">let</span> <span class="id" title="var">v</span> := <span class="id" title="tactic">eval</span> <span class="id" title="tactic">cbv</span> <span class="id" title="keyword">zeta</span> <span class="id" title="keyword">beta</span> <span class="id" title="keyword">delta</span> [<span class="id" title="var">k</span>]  <span class="id" title="tactic">in</span> (<span class="id" title="var">k</span> <span class="id" title="var">d</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">match</span> <span class="id" title="var">v</span> <span class="id" title="keyword">with</span> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#epsilon"><span class="id" title="definition">epsilon</span></a> ?<span class="id" title="var">w</span> ?<span class="id" title="var">d</span>) ⇒ <span class="id" title="tactic">change</span> (<span class="id" title="var">P</span> <span class="id" title="var">v</span>); <span class="id" title="var">epsilon_elim_aux</span> <span class="id" title="keyword">end</span>))<br/>
+&nbsp;&nbsp;| [ |- (?<span class="id" title="var">P</span> (?<span class="id" title="var">k</span> ?<span class="id" title="var">arg</span> ?<span class="id" title="var">arg1</span>))] ⇒<br/>
+&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">let</span> <span class="id" title="var">v</span> := <span class="id" title="tactic">eval</span> <span class="id" title="tactic">cbv</span> <span class="id" title="keyword">zeta</span> <span class="id" title="keyword">beta</span> <span class="id" title="keyword">delta</span> [<span class="id" title="var">k</span>]  <span class="id" title="tactic">in</span> (<span class="id" title="var">k</span> <span class="id" title="var">arg</span> <span class="id" title="var">arg1</span>) <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">match</span> <span class="id" title="var">v</span> <span class="id" title="keyword">with</span> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#epsilon"><span class="id" title="definition">epsilon</span></a> ?<span class="id" title="var">w</span> ?<span class="id" title="var">d</span>) ⇒ <span class="id" title="tactic">change</span> (<span class="id" title="var">P</span> <span class="id" title="var">v</span>); <span class="id" title="var">epsilon_elim_aux</span> <span class="id" title="keyword">end</span>))<br/>
+&nbsp;&nbsp;| [ |- (?<span class="id" title="var">P</span> ?<span class="id" title="var">k</span>)] ⇒<br/>
+&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">let</span> <span class="id" title="var">v</span> := <span class="id" title="tactic">eval</span> <span class="id" title="tactic">cbv</span> <span class="id" title="keyword">zeta</span> <span class="id" title="keyword">beta</span> <span class="id" title="keyword">delta</span> [<span class="id" title="var">k</span>]  <span class="id" title="tactic">in</span> <span class="id" title="var">k</span> <span class="id" title="tactic">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">match</span> <span class="id" title="var">v</span> <span class="id" title="keyword">with</span> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#epsilon"><span class="id" title="definition">epsilon</span></a> ?<span class="id" title="var">w</span> ?<span class="id" title="var">d</span>) ⇒ <span class="id" title="tactic">change</span> (<span class="id" title="var">P</span> <span class="id" title="var">v</span>); <span class="id" title="var">epsilon_elim_aux</span> <span class="id" title="keyword">end</span>))<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="On_Iota" class="idref" href="#On_Iota"><span class="id" title="section">On_Iota</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> (<a id="On_Iota.A" class="idref" href="#On_Iota.A"><span class="id" title="variable">A</span></a>:<span class="id" title="keyword">Type</span>)(<a id="On_Iota.P" class="idref" href="#On_Iota.P"><span class="id" title="variable">P</span></a>: <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#A:9"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Prop</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Hypothesis</span>  <a id="On_Iota.inhA" class="idref" href="#On_Iota.inhA"><span class="id" title="variable">inhA</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#inhabited"><span class="id" title="inductive">inhabited</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#On_Iota.A"><span class="id" title="variable">A</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Hypothesis</span> <a id="On_Iota.unique_P" class="idref" href="#On_Iota.unique_P"><span class="id" title="variable">unique_P</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a3726bd940c3c0e96cb8e13291e9ded4"><span class="id" title="notation">∃</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a3726bd940c3c0e96cb8e13291e9ded4"><span class="id" title="notation">!</span></a> <a id="x:12" class="idref" href="#x:12"><span class="id" title="binder">x</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a3726bd940c3c0e96cb8e13291e9ded4"><span class="id" title="notation">,</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#On_Iota.P"><span class="id" title="variable">P</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#x:12"><span class="id" title="variable">x</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="iota_spec_1" class="idref" href="#iota_spec_1"><span class="id" title="lemma">iota_spec_1</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#unique"><span class="id" title="definition">unique</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#On_Iota.P"><span class="id" title="variable">P</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#iota"><span class="id" title="definition">iota</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#On_Iota.inhA"><span class="id" title="variable">inhA</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#On_Iota.P"><span class="id" title="variable">P</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="iota_eq" class="idref" href="#iota_eq"><span class="id" title="lemma">iota_eq</span></a> : <span class="id" title="keyword">∀</span> <a id="a:14" class="idref" href="#a:14"><span class="id" title="binder">a</span></a>, <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#On_Iota.P"><span class="id" title="variable">P</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#a:14"><span class="id" title="variable">a</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#a:14"><span class="id" title="variable">a</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#iota"><span class="id" title="definition">iota</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#On_Iota.inhA"><span class="id" title="variable">inhA</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#On_Iota.P"><span class="id" title="variable">P</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="iota_ind" class="idref" href="#iota_ind"><span class="id" title="lemma">iota_ind</span></a> (<a id="Q:15" class="idref" href="#Q:15"><span class="id" title="binder">Q</span></a>:<a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#On_Iota.A"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Prop</span>) :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><span class="id" title="keyword">∀</span> <a id="a:16" class="idref" href="#a:16"><span class="id" title="binder">a</span></a>, <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#unique"><span class="id" title="definition">unique</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#On_Iota.P"><span class="id" title="variable">P</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#a:16"><span class="id" title="variable">a</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#Q:15"><span class="id" title="variable">Q</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#a:16"><span class="id" title="variable">a</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a>  <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#Q:15"><span class="id" title="variable">Q</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#iota"><span class="id" title="definition">iota</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#On_Iota.inhA"><span class="id" title="variable">inhA</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#On_Iota.P"><span class="id" title="variable">P</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#On_Iota"><span class="id" title="section">On_Iota</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Ltac</span> <span class="id" title="var">iota_elim</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="keyword">goal</span> <span class="id" title="keyword">with</span> |- <span class="id" title="keyword">context</span> <span class="id" title="var">c</span> [(<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#iota"><span class="id" title="definition">iota</span></a> ?<span class="id" title="var">b</span> ?<span class="id" title="var">P</span>)] ⇒<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#iota_ind"><span class="id" title="lemma">iota_ind</span></a> <span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Class</span> <a id="InH" class="idref" href="#InH"><span class="id" title="record">InH</span></a> (<a id="A:17" class="idref" href="#A:17"><span class="id" title="binder">A</span></a>: <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;<a id="InHWit" class="idref" href="#InHWit"><span class="id" title="projection">InHWit</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#inhabited"><span class="id" title="inductive">inhabited</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#A:17"><span class="id" title="variable">A</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="some" class="idref" href="#some"><span class="id" title="definition">some</span></a> {<a id="A:20" class="idref" href="#A:20"><span class="id" title="binder">A</span></a>:<span class="id" title="keyword">Type</span>} {<a id="H:21" class="idref" href="#H:21"><span class="id" title="binder">H</span></a> : <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#InH"><span class="id" title="class">InH</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#A:20"><span class="id" title="variable">A</span></a>} (<a id="P:22" class="idref" href="#P:22"><span class="id" title="binder">P</span></a>: <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#A:20"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Prop</span>)<br/>
+&nbsp;&nbsp;:= <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#epsilon"><span class="id" title="definition">epsilon</span></a> (@<a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#InHWit"><span class="id" title="definition">InHWit</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#A:20"><span class="id" title="variable">A</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#H:21"><span class="id" title="variable">H</span></a>) <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#P:22"><span class="id" title="variable">P</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="the" class="idref" href="#the"><span class="id" title="definition">the</span></a> {<a id="A:23" class="idref" href="#A:23"><span class="id" title="binder">A</span></a>:<span class="id" title="keyword">Type</span>} {<a id="H:24" class="idref" href="#H:24"><span class="id" title="binder">H</span></a> : <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#InH"><span class="id" title="class">InH</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#A:23"><span class="id" title="variable">A</span></a>} (<a id="P:25" class="idref" href="#P:25"><span class="id" title="binder">P</span></a>: <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#A:23"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Prop</span>)<br/>
+&nbsp;&nbsp;:= <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Epsilon.html#iota"><span class="id" title="definition">iota</span></a> (@<a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#InHWit"><span class="id" title="definition">InHWit</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#A:23"><span class="id" title="variable">A</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#H:24"><span class="id" title="variable">H</span></a>) <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#P:25"><span class="id" title="variable">P</span></a>.<br/>
+
+<br/>
+#[ <span class="id" title="var">global</span> ] <span class="id" title="keyword">Instance</span> <a id="inhNat" class="idref" href="#inhNat"><span class="id" title="instance">inhNat</span></a> : <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#InH"><span class="id" title="class">InH</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A small example 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="some_pos" class="idref" href="#some_pos"><span class="id" title="definition">some_pos</span></a> := <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#some"><span class="id" title="definition">some</span></a> (<span class="id" title="keyword">fun</span> <a id="i:26" class="idref" href="#i:26"><span class="id" title="binder">i</span></a> ⇒ 0 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#i:26"><span class="id" title="variable">i</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="Ex1" class="idref" href="#Ex1"><span class="id" title="definition">Ex1</span></a> : 1 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#some_pos"><span class="id" title="definition">some_pos</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#some_pos"><span class="id" title="definition">some_pos</span></a>, <a class="idref" href="hydras.Schutte.MoreEpsilonIota.html#some"><span class="id" title="definition">some</span></a>; <span class="id" title="var">epsilon_elim</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">∃</span> 42;   <span class="id" title="tactic">auto</span> <span class="id" title="keyword">with</span> <span class="id" title="var">arith</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

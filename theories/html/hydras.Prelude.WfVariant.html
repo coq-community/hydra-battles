@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Prelude.WfVariant</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Prelude.WfVariant</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+Pierre Casteran, LaBRI, University of Bordeaux  Definition of termination variants 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relations.html#"><span class="id" title="library">Relations</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Program.Basics.html#"><span class="id" title="library">Basics</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Wellfounded.Inverse_Image.html#"><span class="id" title="library">Wellfounded.Inverse_Image</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Wellfounded.Inclusion.html#"><span class="id" title="library">Wellfounded.Inclusion</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Variants" class="idref" href="#Variants"><span class="id" title="section">Variants</span></a>.<br/>
+&nbsp;<span class="id" title="keyword">Variable</span> <a id="Variants.E" class="idref" href="#Variants.E"><span class="id" title="variable">E</span></a>: <span class="id" title="keyword">Type</span>.<br/>
+&nbsp;<span class="id" title="keyword">Variable</span> <a id="Variants.tr" class="idref" href="#Variants.tr"><span class="id" title="variable">tr</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Definitions.html#relation"><span class="id" title="definition">relation</span></a> <a class="idref" href="hydras.Prelude.WfVariant.html#Variants.E"><span class="id" title="variable">E</span></a>. 
+<br/>
+&nbsp;<span class="id" title="keyword">Definition</span> <a id="terminates" class="idref" href="#terminates"><span class="id" title="definition">terminates</span></a>  :=  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#well_founded"><span class="id" title="definition">well_founded</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Program.Basics.html#flip"><span class="id" title="definition">flip</span></a> <a class="idref" href="hydras.Prelude.WfVariant.html#Variants.tr"><span class="id" title="variable">tr</span></a>).<br/>
+
+<br/>
+&nbsp;<span class="id" title="keyword">Variables</span> (<a id="Variants.T" class="idref" href="#Variants.T"><span class="id" title="variable">T</span></a>: <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="Variants.lt" class="idref" href="#Variants.lt"><span class="id" title="variable">lt</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Definitions.html#relation"><span class="id" title="definition">relation</span></a> <a class="idref" href="hydras.Prelude.WfVariant.html#T:3"><span class="id" title="variable">T</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="Variants.m" class="idref" href="#Variants.m"><span class="id" title="variable">m</span></a> : <a class="idref" href="hydras.Prelude.WfVariant.html#Variants.E"><span class="id" title="variable">E</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Prelude.WfVariant.html#T:3"><span class="id" title="variable">T</span></a>).<br/>
+
+<br/>
+&nbsp;<span class="id" title="keyword">Infix</span> <a id="Variants.:::x_'&lt;'_x" class="idref" href="#Variants.:::x_'&lt;'_x"><span class="id" title="notation">&quot;</span></a>&lt;" := <a class="idref" href="hydras.Prelude.WfVariant.html#Variants.lt"><span class="id" title="variable">lt</span></a>.<br/>
+
+<br/>
+&nbsp;<span class="id" title="keyword">Class</span> <a id="WfVariant" class="idref" href="#WfVariant"><span class="id" title="record">WfVariant</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="wf" class="idref" href="#wf"><span class="id" title="projection">wf</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#well_founded"><span class="id" title="definition">well_founded</span></a> <a class="idref" href="hydras.Prelude.WfVariant.html#Variants.lt"><span class="id" title="variable">lt</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="decr" class="idref" href="#decr"><span class="id" title="projection">decr</span></a> : <span class="id" title="keyword">∀</span> <a id="x:8" class="idref" href="#x:8"><span class="id" title="binder">x</span></a> <a id="y:9" class="idref" href="#y:9"><span class="id" title="binder">y</span></a>, <a class="idref" href="hydras.Prelude.WfVariant.html#Variants.tr"><span class="id" title="variable">tr</span></a> <a class="idref" href="hydras.Prelude.WfVariant.html#x:8"><span class="id" title="variable">x</span></a> <a class="idref" href="hydras.Prelude.WfVariant.html#y:9"><span class="id" title="variable">y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Prelude.WfVariant.html#Variants.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Prelude.WfVariant.html#y:9"><span class="id" title="variable">y</span></a> <a class="idref" href="hydras.Prelude.WfVariant.html#Variants.:::x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Prelude.WfVariant.html#Variants.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Prelude.WfVariant.html#x:8"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;&nbsp;}.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="Variant_termination" class="idref" href="#Variant_termination"><span class="id" title="lemma">Variant_termination</span></a> (<a id="Var:11" class="idref" href="#Var:11"><span class="id" title="binder">Var</span></a> : <a class="idref" href="hydras.Prelude.WfVariant.html#WfVariant"><span class="id" title="class">WfVariant</span></a> ) :  <a class="idref" href="hydras.Prelude.WfVariant.html#terminates"><span class="id" title="definition">terminates</span></a> .<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Prelude.WfVariant.html#Variants"><span class="id" title="section">Variants</span></a>.<br/>
+
+<br/>
+&nbsp;<span class="id" title="keyword">Arguments</span> <a class="idref" href="hydras.Prelude.WfVariant.html#decr"><span class="id" title="method">decr</span></a> {<span class="id" title="var">E</span> <span class="id" title="var">tr</span> <span class="id" title="var">T</span> <span class="id" title="var">lt</span> <span class="id" title="var">m</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+&nbsp;<span class="id" title="keyword">Arguments</span> <a class="idref" href="hydras.Prelude.WfVariant.html#wf"><span class="id" title="method">wf</span></a> {<span class="id" title="var">E</span> <span class="id" title="var">tr</span> <span class="id" title="var">T</span> <span class="id" title="var">lt</span> <span class="id" title="var">m</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>  .<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

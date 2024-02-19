@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Epsilon0.F_omega</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Epsilon0.F_omega</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+ About <span class="inlinecode"><span class="id" title="var">F_</span></span> <span class="inlinecode"><span class="id" title="var">omega</span></span> 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Prelude.Iterates.html#"><span class="id" title="library">Iterates</span></a> <a class="idref" href="hydras.Epsilon0.F_alpha.html#"><span class="id" title="library">F_alpha</span></a> <a class="idref" href="hydras.Epsilon0.E0.html#"><span class="id" title="library">E0</span></a> <a class="idref" href="hydras.MoreAck.Ack.html#"><span class="id" title="library">Ack</span></a> <a class="idref" href="hydras.MoreAck.AckNotPR.html#"><span class="id" title="library">AckNotPR</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.setoid_ring.ArithRing.html#"><span class="id" title="library">ArithRing</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.micromega.Lia.html#"><span class="id" title="library">Lia</span></a>   <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Arith</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Prelude.Exp2.html#"><span class="id" title="module">Exp2</span></a>.<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab104"></a><h2 class="section">Rewriting lemmas</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="Ack_iterate_rw" class="idref" href="#Ack_iterate_rw"><span class="id" title="lemma">Ack_iterate_rw</span></a> <a id="n:1" class="idref" href="#n:1"><span class="id" title="binder">n</span></a> <a id="p:2" class="idref" href="#p:2"><span class="id" title="binder">p</span></a> : <a class="idref" href="hydras.MoreAck.Ack.html#Ack"><span class="id" title="definition">Ack</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#n:1"><span class="id" title="variable">n</span></a>) (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#p:2"><span class="id" title="variable">p</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Prelude.Iterates.html#iterate"><span class="id" title="definition">iterate</span></a> (<a class="idref" href="hydras.MoreAck.Ack.html#Ack"><span class="id" title="definition">Ack</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#n:1"><span class="id" title="variable">n</span></a>) (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#p:2"><span class="id" title="variable">p</span></a>)) 1.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="F_iterate_rw" class="idref" href="#F_iterate_rw"><span class="id" title="lemma">F_iterate_rw</span></a> <a id="n:3" class="idref" href="#n:3"><span class="id" title="binder">n</span></a> <a id="p:4" class="idref" href="#p:4"><span class="id" title="binder">p</span></a> : <a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#n:3"><span class="id" title="variable">n</span></a>) (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#p:4"><span class="id" title="variable">p</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Prelude.Iterates.html#iterate"><span class="id" title="definition">iterate</span></a> (<a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#n:3"><span class="id" title="variable">n</span></a>) (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#p:4"><span class="id" title="variable">p</span></a>)) (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#p:4"><span class="id" title="variable">p</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab105"></a><h2 class="section">Comparison between <span class="inlinecode"><span class="id" title="var">Ack</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> and <span class="inlinecode"><span class="id" title="var">F_</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span></h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="L02" class="idref" href="#L02"><span class="id" title="lemma">L02</span></a> <a id="p:5" class="idref" href="#p:5"><span class="id" title="binder">p</span></a>: 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#p:5"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#p:5"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> 3 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Prelude.Exp2.html#exp2"><span class="id" title="definition">exp2</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#p:5"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#p:5"><span class="id" title="variable">p</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="inductive_step" class="idref" href="#inductive_step"><span class="id" title="section">inductive_step</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="inductive_step.n" class="idref" href="#inductive_step.n"><span class="id" title="variable">n</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Hypothesis</span> <a id="inductive_step.Hn" class="idref" href="#inductive_step.Hn"><span class="id" title="variable">Hn</span></a> : <span class="id" title="keyword">∀</span> <a id="p:7" class="idref" href="#p:7"><span class="id" title="binder">p</span></a>, 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#p:7"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.MoreAck.Ack.html#Ack"><span class="id" title="definition">Ack</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#inductive_step.n"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#p:7"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#inductive_step.n"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#p:7"><span class="id" title="variable">p</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="L" class="idref" href="#L"><span class="id" title="lemma">L</span></a>: <span class="id" title="keyword">∀</span> <a id="p:9" class="idref" href="#p:9"><span class="id" title="binder">p</span></a>, 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#p:9"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.MoreAck.Ack.html#Ack"><span class="id" title="definition">Ack</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#inductive_step.n"><span class="id" title="variable">n</span></a>) <a class="idref" href="hydras.Epsilon0.F_omega.html#p:9"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#inductive_step.n"><span class="id" title="variable">n</span></a>) <a class="idref" href="hydras.Epsilon0.F_omega.html#p:9"><span class="id" title="variable">p</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Epsilon0.F_omega.html#inductive_step"><span class="id" title="section">inductive_step</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="L2" class="idref" href="#L2"><span class="id" title="lemma">L2</span></a> : <span class="id" title="keyword">∀</span> <a id="n:10" class="idref" href="#n:10"><span class="id" title="binder">n</span></a>, 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#n:10"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">∀</span> <a id="p:11" class="idref" href="#p:11"><span class="id" title="binder">p</span></a>, 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#p:11"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.MoreAck.Ack.html#Ack"><span class="id" title="definition">Ack</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#n:10"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#p:11"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#n:10"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#p:11"><span class="id" title="variable">p</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="F_vs_Ack" class="idref" href="#F_vs_Ack"><span class="id" title="lemma">F_vs_Ack</span></a> <a id="n:12" class="idref" href="#n:12"><span class="id" title="binder">n</span></a> : 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#n:12"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.MoreAck.Ack.html#Ack"><span class="id" title="definition">Ack</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#n:12"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#n:12"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="hydras.Epsilon0.E0.html#E0_omega"><span class="id" title="instance">E0_omega</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#n:12"><span class="id" title="variable">n</span></a>. 
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab106"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">F_</span></span> <span class="inlinecode"><span class="id" title="var">omega</span></span> is not primitive recursive</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.primRec.html#"><span class="id" title="module">primRec</span></a> <a class="idref" href="hydras.Ackermann.extEqualNat.html#"><span class="id" title="module">extEqualNat</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="F_omega_notPR" class="idref" href="#F_omega_notPR"><span class="id" title="section">F_omega_notPR</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="F_omega_PR:13" class="idref" href="#F_omega_PR:13"><span class="id" title="binder">F_omega_PR</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 (<a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="hydras.Epsilon0.E0.html#E0_omega"><span class="id" title="instance">E0_omega</span></a>)).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="F_omega_not_PR" class="idref" href="#F_omega_not_PR"><span class="id" title="lemma">F_omega_not_PR</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#False"><span class="id" title="inductive">False</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Epsilon0.F_omega.html#F_omega_notPR"><span class="id" title="section">F_omega_notPR</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab107"></a><h2 class="section"><span class="inlinecode"><span class="id" title="var">F_</span></span> <span class="inlinecode"><span class="id" title="var">alpha</span></span> is not primitive recursive, for <span class="inlinecode"><span class="id" title="var">omega</span></span> <span class="inlinecode">≤</span> <span class="inlinecode"><span class="id" title="var">alpha</span></span></h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="F_alpha_notPR" class="idref" href="#F_alpha_notPR"><span class="id" title="section">F_alpha_notPR</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="F_alpha_notPR.alpha" class="idref" href="#F_alpha_notPR.alpha"><span class="id" title="variable">alpha</span></a>: <a class="idref" href="hydras.Epsilon0.E0.html#E0"><span class="id" title="class">E0</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="F_alpha_notPR.case_lt" class="idref" href="#F_alpha_notPR.case_lt"><span class="id" title="section">case_lt</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Hypothesis</span> <a id="F_alpha_notPR.case_lt.Halpha" class="idref" href="#F_alpha_notPR.case_lt.Halpha"><span class="id" title="variable">Halpha</span></a> : <a class="idref" href="hydras.Epsilon0.E0.html#E0_omega"><span class="id" title="instance">E0_omega</span></a> <a class="idref" href="hydras.Epsilon0.E0.html#::E0_scope:x_'o&lt;'_x"><span class="id" title="notation">o</span></a><a class="idref" href="hydras.Epsilon0.E0.html#::E0_scope:x_'o&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#F_alpha_notPR.alpha"><span class="id" title="variable">alpha</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="R5" class="idref" href="#R5"><span class="id" title="lemma">R5</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a id="N:16" class="idref" href="#N:16"><span class="id" title="binder">N</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">,</span></a> <span class="id" title="keyword">∀</span> <a id="k:17" class="idref" href="#k:17"><span class="id" title="binder">k</span></a>, <a class="idref" href="hydras.Epsilon0.F_omega.html#N:16"><span class="id" title="variable">N</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#k:17"><span class="id" title="variable">k</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="hydras.Epsilon0.E0.html#E0_omega"><span class="id" title="instance">E0_omega</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#k:17"><span class="id" title="variable">k</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#F_alpha_notPR.alpha"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#k:17"><span class="id" title="variable">k</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="H:18" class="idref" href="#H:18"><span class="id" title="binder">H</span></a>: <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 (<a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#F_alpha_notPR.alpha"><span class="id" title="variable">alpha</span></a>)).<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="R00" class="idref" href="#R00"><span class="id" title="lemma">R00</span></a> : <a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#F_alpha_notPR.alpha"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Prelude.Iterates.html#:::x_'&gt;&gt;'_x"><span class="id" title="notation">&gt;&gt;</span></a> <span class="id" title="keyword">fun</span> <a id="n:19" class="idref" href="#n:19"><span class="id" title="binder">n</span></a> ⇒ <a class="idref" href="hydras.MoreAck.Ack.html#Ack"><span class="id" title="definition">Ack</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#n:19"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#n:19"><span class="id" title="variable">n</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="FF" class="idref" href="#FF"><span class="id" title="lemma">FF</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#False"><span class="id" title="inductive">False</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Epsilon0.F_omega.html#F_alpha_notPR.case_lt"><span class="id" title="section">case_lt</span></a>.<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Hypothesis</span> <a id="F_alpha_notPR.H" class="idref" href="#F_alpha_notPR.H"><span class="id" title="variable">H</span></a> : <a class="idref" href="hydras.Epsilon0.E0.html#E0_omega"><span class="id" title="instance">E0_omega</span></a> <a class="idref" href="hydras.Epsilon0.E0.html#b8cab4266e2151a748b18e18aa1598f9"><span class="id" title="notation">o</span></a><a class="idref" href="hydras.Epsilon0.E0.html#b8cab4266e2151a748b18e18aa1598f9"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#F_alpha_notPR.alpha"><span class="id" title="variable">alpha</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="H0:21" class="idref" href="#H0:21"><span class="id" title="binder">H0</span></a>: <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 (<a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#F_alpha_notPR.alpha"><span class="id" title="variable">alpha</span></a>)).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="F_alpha_not_PR" class="idref" href="#F_alpha_not_PR"><span class="id" title="lemma">F_alpha_not_PR</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#False"><span class="id" title="inductive">False</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Epsilon0.F_omega.html#F_alpha_notPR"><span class="id" title="section">F_alpha_notPR</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab108"></a><h2 class="section">On the other hand, <span class="inlinecode"><span class="id" title="var">F_</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> is PR for any <span class="inlinecode"><span class="id" title="var">n</span>:<span class="id" title="var">nat</span></span></h2>
+
+ 
+</div>
+<div class="code">
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="F_0_isPR" class="idref" href="#F_0_isPR"><span class="id" title="instance">F_0_isPR</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 (<a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> 0).<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="step" class="idref" href="#step"><span class="id" title="section">step</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="step.n" class="idref" href="#step.n"><span class="id" title="variable">n</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Hypothesis</span> <a id="step.Hn" class="idref" href="#step.Hn"><span class="id" title="variable">Hn</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 (<a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#step.n"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="step.F" class="idref" href="#step.F"><span class="id" title="variable">F</span></a> := <span class="id" title="keyword">fun</span> <a id="a:24" class="idref" href="#a:24"><span class="id" title="binder">a</span></a> <a id="b:25" class="idref" href="#b:25"><span class="id" title="binder">b</span></a> ⇒  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat_rec"><span class="id" title="definition">nat_rec</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) <a class="idref" href="hydras.Epsilon0.F_omega.html#a:24"><span class="id" title="variable">a</span></a> (<span class="id" title="keyword">fun</span> <a id="x:26" class="idref" href="#x:26"><span class="id" title="binder">x</span></a> <a id="y:27" class="idref" href="#y:27"><span class="id" title="binder">y</span></a>  ⇒ <a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#step.n"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#y:27"><span class="id" title="variable">y</span></a>) <a class="idref" href="hydras.Epsilon0.F_omega.html#b:25"><span class="id" title="variable">b</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="L00" class="idref" href="#L00"><span class="id" title="lemma">L00</span></a>: <span class="id" title="keyword">∀</span> <a id="i:28" class="idref" href="#i:28"><span class="id" title="binder">i</span></a>,  <a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> (<a class="idref" href="hydras.Epsilon0.E0.html#E0_succ"><span class="id" title="instance">E0_succ</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#step.n"><span class="id" title="variable">n</span></a>) <a class="idref" href="hydras.Epsilon0.F_omega.html#i:28"><span class="id" title="variable">i</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#step.F"><span class="id" title="variable">F</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#i:28"><span class="id" title="variable">i</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#i:28"><span class="id" title="variable">i</span></a>) .<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">local</span>] <span class="id" title="keyword">Instance</span> <a id="R01" class="idref" href="#R01"><span class="id" title="instance">R01</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 2 <a class="idref" href="hydras.Epsilon0.F_omega.html#step.F"><span class="id" title="variable">F</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">local</span>] <span class="id" title="keyword">Instance</span> <a id="R02" class="idref" href="#R02"><span class="id" title="instance">R02</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 (<span class="id" title="keyword">fun</span> <a id="i:37" class="idref" href="#i:37"><span class="id" title="binder">i</span></a>  ⇒  <a class="idref" href="hydras.Epsilon0.F_omega.html#step.F"><span class="id" title="variable">F</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#i:37"><span class="id" title="variable">i</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#i:37"><span class="id" title="variable">i</span></a>)).<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">local</span>] <span class="id" title="keyword">Instance</span> <a id="R03" class="idref" href="#R03"><span class="id" title="instance">R03</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 (<a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#step.n"><span class="id" title="variable">n</span></a>)).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Epsilon0.F_omega.html#step"><span class="id" title="section">step</span></a>.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="F_n_PR" class="idref" href="#F_n_PR"><span class="id" title="instance">F_n_PR</span></a> (<a id="n:38" class="idref" href="#n:38"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>)  : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 (<a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a>  <a class="idref" href="hydras.Epsilon0.F_omega.html#n:38"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+ Keep in mind that <span class="inlinecode"><span class="id" title="var">isPR</span></span> is of sort <span class="inlinecode"><span class="id" title="keyword">Set</span></span>, so <span class="inlinecode"><span class="id" title="var">not</span></span> and <span class="inlinecode"><span class="id" title="var">iff</span></span>
+     cannot be used 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="F_alpha_PR_inv" class="idref" href="#F_alpha_PR_inv"><span class="id" title="lemma">F_alpha_PR_inv</span></a>: <span class="id" title="keyword">∀</span> <a id="alpha:39" class="idref" href="#alpha:39"><span class="id" title="binder">alpha</span></a>,  <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 (<a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#alpha:39"><span class="id" title="variable">alpha</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#alpha:39"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Epsilon0.E0.html#::E0_scope:x_'o&lt;'_x"><span class="id" title="notation">o</span></a><a class="idref" href="hydras.Epsilon0.E0.html#::E0_scope:x_'o&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Epsilon0.E0.html#E0_omega"><span class="id" title="instance">E0_omega</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="F_alpha_notPR_inv" class="idref" href="#F_alpha_notPR_inv"><span class="id" title="lemma">F_alpha_notPR_inv</span></a>: <span class="id" title="keyword">∀</span> <a id="alpha:40" class="idref" href="#alpha:40"><span class="id" title="binder">alpha</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 (<a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#alpha:40"><span class="id" title="variable">alpha</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#False"><span class="id" title="inductive">False</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Epsilon0.E0.html#E0_omega"><span class="id" title="instance">E0_omega</span></a> <a class="idref" href="hydras.Epsilon0.E0.html#b8cab4266e2151a748b18e18aa1598f9"><span class="id" title="notation">o</span></a><a class="idref" href="hydras.Epsilon0.E0.html#b8cab4266e2151a748b18e18aa1598f9"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#alpha:40"><span class="id" title="variable">alpha</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Epsilon0.F_omega.html#F_alpha_not_PR"><span class="id" title="lemma">F_alpha_not_PR</span></a>.<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Epsilon0.F_omega.html#F_alpha_PR_inv"><span class="id" title="lemma">F_alpha_PR_inv</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

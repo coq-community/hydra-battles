@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Ackermann.ListExt</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Ackermann.ListExt</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+ ListExt.v: 
+
+<div class="paragraph"> </div>
+
+   The most part of the original contents by Russel have been 
+   replaced by lemmas from <span class="inlinecode"><span class="id" title="var">Coq.List</span></span>. 
+   We decided to keep <span class="inlinecode"><span class="id" title="var">in_remove_neq</span></span> (originally <span class="inlinecode"><span class="id" title="var">In_list_remove2</span></span> 
+   since it appears in many composed tactics. 
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#"><span class="id" title="library">Lists.List</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="List_Remove" class="idref" href="#List_Remove"><span class="id" title="section">List_Remove</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Variable</span> <a id="List_Remove.A" class="idref" href="#List_Remove.A"><span class="id" title="variable">A</span></a> : <span class="id" title="keyword">Set</span>.<br/>
+<span class="id" title="keyword">Hypothesis</span> <a id="List_Remove.Aeq_dec" class="idref" href="#List_Remove.Aeq_dec"><span class="id" title="variable">Aeq_dec</span></a> : <span class="id" title="keyword">∀</span> <a id="a:2" class="idref" href="#a:2"><span class="id" title="binder">a</span></a> <a id="b:3" class="idref" href="#b:3"><span class="id" title="binder">b</span></a> : <a class="idref" href="hydras.Ackermann.ListExt.html#List_Remove.A"><span class="id" title="variable">A</span></a>, <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#87727981cdc1579fef00b9d9c1d3b9da"><span class="id" title="notation">{</span></a><a class="idref" href="hydras.Ackermann.ListExt.html#a:2"><span class="id" title="variable">a</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Ackermann.ListExt.html#b:3"><span class="id" title="variable">b</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#87727981cdc1579fef00b9d9c1d3b9da"><span class="id" title="notation">}</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#87727981cdc1579fef00b9d9c1d3b9da"><span class="id" title="notation">+</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#87727981cdc1579fef00b9d9c1d3b9da"><span class="id" title="notation">{</span></a><a class="idref" href="hydras.Ackermann.ListExt.html#a:2"><span class="id" title="variable">a</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="hydras.Ackermann.ListExt.html#b:3"><span class="id" title="variable">b</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#87727981cdc1579fef00b9d9c1d3b9da"><span class="id" title="notation">}</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="in_remove_neq" class="idref" href="#in_remove_neq"><span class="id" title="lemma">in_remove_neq</span></a>:<br/>
+&nbsp;<span class="id" title="keyword">∀</span> (<a id="a:5" class="idref" href="#a:5"><span class="id" title="binder">a</span></a> <a id="b:6" class="idref" href="#b:6"><span class="id" title="binder">b</span></a> : <a class="idref" href="hydras.Ackermann.ListExt.html#List_Remove.A"><span class="id" title="variable">A</span></a>) (<a id="l:7" class="idref" href="#l:7"><span class="id" title="binder">l</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="hydras.Ackermann.ListExt.html#List_Remove.A"><span class="id" title="variable">A</span></a>), <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#In"><span class="id" title="definition">In</span></a> <a class="idref" href="hydras.Ackermann.ListExt.html#a:5"><span class="id" title="variable">a</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#remove"><span class="id" title="definition">List.remove</span></a> <a class="idref" href="hydras.Ackermann.ListExt.html#List_Remove.Aeq_dec"><span class="id" title="variable">Aeq_dec</span></a> <a class="idref" href="hydras.Ackermann.ListExt.html#b:6"><span class="id" title="variable">b</span></a> <a class="idref" href="hydras.Ackermann.ListExt.html#l:7"><span class="id" title="variable">l</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.ListExt.html#a:5"><span class="id" title="variable">a</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="hydras.Ackermann.ListExt.html#b:6"><span class="id" title="variable">b</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Ackermann.ListExt.html#List_Remove"><span class="id" title="section">List_Remove</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Old name in Russel's development 
+</div>
+<div class="code">
+
+<br/>
+#[<span class="id" title="var">deprecated</span>(<span class="id" title="var">note</span>="use ListExt.in_remove_neq instead")]<br/>
+&nbsp;<span class="id" title="keyword">Notation</span> <a id="In_list_remove2" class="idref" href="#In_list_remove2"><span class="id" title="abbreviation">In_list_remove2</span></a> := <a class="idref" href="hydras.Ackermann.ListExt.html#in_remove_neq"><span class="id" title="lemma">in_remove_neq</span></a> (<span class="id" title="var">only</span> <span class="id" title="var">parsing</span>).<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

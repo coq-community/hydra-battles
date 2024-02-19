@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>additions.Dichotomy</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library additions.Dichotomy</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  Dichotomic strategy, according to Bergeron, Brlek et al. 
+
+<div class="paragraph"> </div>
+
+  Let  be a positive number. We associate to  the integer 
+   .
+  For instance, if , the result is 10.
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Arith</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.NArith.NArith.html#"><span class="id" title="library">NArith</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">additions</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <a class="idref" href="additions.Strategies.html#"><span class="id" title="library">Strategies</span></a> <a class="idref" href="additions.Pow.html#"><span class="id" title="library">Pow</span></a> <a class="idref" href="additions.Compatibility.html#"><span class="id" title="library">Compatibility</span></a> <br/>
+&nbsp;&nbsp;<a class="idref" href="additions.More_on_positive.html#"><span class="id" title="library">More_on_positive</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">positive_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Computes 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Function</span> <span class="id" title="var">dicho_aux</span> (<a id="p:9" class="idref" href="#p:9"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>) {<span class="id" title="keyword">struct</span> <span class="id" title="var">p</span>} : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a> :=<br/>
+&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.Dichotomy.html#p:1"><span class="id" title="variable">p</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;| 1%<span class="id" title="var">positive</span>   ⇒  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xH"><span class="id" title="constructor">xH</span></a><br/>
+&nbsp;&nbsp;&nbsp;| 2%<span class="id" title="var">positive</span> | 3%<span class="id" title="var">positive</span>  ⇒ 2 <br/>
+&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> <span class="id" title="var">q</span>) | <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xI"><span class="id" title="constructor">xI</span></a> <span class="id" title="var">q</span>) | <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xI"><span class="id" title="constructor">xI</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> <span class="id" title="var">q</span>) | <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xI"><span class="id" title="constructor">xI</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xI"><span class="id" title="constructor">xI</span></a> <span class="id" title="var">q</span>) ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> (<a class="idref" href="additions.Dichotomy.html#dicho_aux:2"><span class="id" title="definition">dicho_aux</span></a> <span class="id" title="var">q</span>)<br/>
+&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="dicho" class="idref" href="#dicho"><span class="id" title="definition">dicho</span></a>  (<a id="p:31" class="idref" href="#p:31"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>) : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="additions.More_on_positive.html#N2pos"><span class="id" title="definition">N2pos</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.NArith.BinNat.html#N.div"><span class="id" title="definition">N.div</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#Npos"><span class="id" title="constructor">Npos</span></a> <a class="idref" href="additions.Dichotomy.html#p:31"><span class="id" title="variable">p</span></a>) (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#Npos"><span class="id" title="constructor">Npos</span></a> (<a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> <a class="idref" href="additions.Dichotomy.html#p:31"><span class="id" title="variable">p</span></a>))).<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+rewriting lemmas 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="dicho_aux_xOxO" class="idref" href="#dicho_aux_xOxO"><span class="id" title="lemma">dicho_aux_xOxO</span></a> :  <span class="id" title="keyword">∀</span> <a id="p:32" class="idref" href="#p:32"><span class="id" title="binder">p</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> <a class="idref" href="additions.Dichotomy.html#p:32"><span class="id" title="variable">p</span></a>)) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> (<a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> <a class="idref" href="additions.Dichotomy.html#p:32"><span class="id" title="variable">p</span></a>).<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="dicho_aux_xOxI" class="idref" href="#dicho_aux_xOxI"><span class="id" title="lemma">dicho_aux_xOxI</span></a> :  <span class="id" title="keyword">∀</span> <a id="p:33" class="idref" href="#p:33"><span class="id" title="binder">p</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xI"><span class="id" title="constructor">xI</span></a> <a class="idref" href="additions.Dichotomy.html#p:33"><span class="id" title="variable">p</span></a>)) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> (<a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> <a class="idref" href="additions.Dichotomy.html#p:33"><span class="id" title="variable">p</span></a>).<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="dicho_aux_xIxO" class="idref" href="#dicho_aux_xIxO"><span class="id" title="lemma">dicho_aux_xIxO</span></a> :  <span class="id" title="keyword">∀</span> <a id="p:34" class="idref" href="#p:34"><span class="id" title="binder">p</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xI"><span class="id" title="constructor">xI</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> <a class="idref" href="additions.Dichotomy.html#p:34"><span class="id" title="variable">p</span></a>)) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> (<a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> <a class="idref" href="additions.Dichotomy.html#p:34"><span class="id" title="variable">p</span></a>).<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="dicho_aux_xIxI" class="idref" href="#dicho_aux_xIxI"><span class="id" title="lemma">dicho_aux_xIxI</span></a> :  <span class="id" title="keyword">∀</span> <a id="p:35" class="idref" href="#p:35"><span class="id" title="binder">p</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xI"><span class="id" title="constructor">xI</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xI"><span class="id" title="constructor">xI</span></a> <a class="idref" href="additions.Dichotomy.html#p:35"><span class="id" title="variable">p</span></a>)) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> (<a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> <a class="idref" href="additions.Dichotomy.html#p:35"><span class="id" title="variable">p</span></a>).<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="dicho_aux_le_xOXO" class="idref" href="#dicho_aux_le_xOXO"><span class="id" title="lemma">dicho_aux_le_xOXO</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="p:36" class="idref" href="#p:36"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a> ,  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> (<a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> <a class="idref" href="additions.Dichotomy.html#p:36"><span class="id" title="variable">p</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#c9d5bad8b60a20d83e777300ee498110"><span class="id" title="notation">≤</span></a> <a class="idref" href="additions.Dichotomy.html#p:36"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> (<a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> (<a class="idref" href="additions.Dichotomy.html#p:36"><span class="id" title="variable">p</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPosDef.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0~0</span></a>)) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#c9d5bad8b60a20d83e777300ee498110"><span class="id" title="notation">≤</span></a> <a class="idref" href="additions.Dichotomy.html#p:36"><span class="id" title="variable">p</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPosDef.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0~0</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="dicho_aux_le_xOXI" class="idref" href="#dicho_aux_le_xOXI"><span class="id" title="lemma">dicho_aux_le_xOXI</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="p:37" class="idref" href="#p:37"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a> , <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> (<a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> <a class="idref" href="additions.Dichotomy.html#p:37"><span class="id" title="variable">p</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#c9d5bad8b60a20d83e777300ee498110"><span class="id" title="notation">≤</span></a> <a class="idref" href="additions.Dichotomy.html#p:37"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> (<a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> (<a class="idref" href="additions.Dichotomy.html#p:37"><span class="id" title="variable">p</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPosDef.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPosDef.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a>)) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#c9d5bad8b60a20d83e777300ee498110"><span class="id" title="notation">≤</span></a> <a class="idref" href="additions.Dichotomy.html#p:37"><span class="id" title="variable">p</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPosDef.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPosDef.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="dicho_aux_le_xIXO" class="idref" href="#dicho_aux_le_xIXO"><span class="id" title="lemma">dicho_aux_le_xIXO</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="p:38" class="idref" href="#p:38"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a> , <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> (<a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> <a class="idref" href="additions.Dichotomy.html#p:38"><span class="id" title="variable">p</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#c9d5bad8b60a20d83e777300ee498110"><span class="id" title="notation">≤</span></a> <a class="idref" href="additions.Dichotomy.html#p:38"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> (<a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> (<a class="idref" href="additions.Dichotomy.html#p:38"><span class="id" title="variable">p</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPosDef.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPosDef.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>)) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#c9d5bad8b60a20d83e777300ee498110"><span class="id" title="notation">≤</span></a> <a class="idref" href="additions.Dichotomy.html#p:38"><span class="id" title="variable">p</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPosDef.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPosDef.html#35713fcadfdd66af247cbf95acf859fa"><span class="id" title="notation">~0</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="dicho_aux_le_xIXI" class="idref" href="#dicho_aux_le_xIXI"><span class="id" title="lemma">dicho_aux_le_xIXI</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="p:39" class="idref" href="#p:39"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a> , <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> (<a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> <a class="idref" href="additions.Dichotomy.html#p:39"><span class="id" title="variable">p</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#c9d5bad8b60a20d83e777300ee498110"><span class="id" title="notation">≤</span></a> <a class="idref" href="additions.Dichotomy.html#p:39"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> (<a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> (<a class="idref" href="additions.Dichotomy.html#p:39"><span class="id" title="variable">p</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPosDef.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1~1</span></a>)) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#c9d5bad8b60a20d83e777300ee498110"><span class="id" title="notation">≤</span></a> <a class="idref" href="additions.Dichotomy.html#p:39"><span class="id" title="variable">p</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPosDef.html#119ad21c8e0c4947cd973f1f72e5feea"><span class="id" title="notation">~1~1</span></a>.<br/>
+
+<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Resolve</span> <span class="id" title="var">dicho_aux_le_xOXO</span> <span class="id" title="var">dicho_aux_le_xOXI</span> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">dicho_aux_le_xIXO</span> <span class="id" title="var">dicho_aux_le_xIXI</span> : <span class="id" title="var">chains</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="dicho_aux_lt" class="idref" href="#dicho_aux_lt"><span class="id" title="lemma">dicho_aux_lt</span></a> : <span class="id" title="keyword">∀</span> <a id="p:40" class="idref" href="#p:40"><span class="id" title="binder">p</span></a>, 3 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#::positive_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="additions.Dichotomy.html#p:40"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> (<a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> <a class="idref" href="additions.Dichotomy.html#p:40"><span class="id" title="variable">p</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#c9d5bad8b60a20d83e777300ee498110"><span class="id" title="notation">≤</span></a>  <a class="idref" href="additions.Dichotomy.html#p:40"><span class="id" title="variable">p</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="dicho_aux_gt" class="idref" href="#dicho_aux_gt"><span class="id" title="lemma">dicho_aux_gt</span></a> : <span class="id" title="keyword">∀</span> <a id="p:41" class="idref" href="#p:41"><span class="id" title="binder">p</span></a>, 3 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#::positive_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="additions.Dichotomy.html#p:41"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> 1 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#::positive_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="additions.Dichotomy.html#dicho_aux"><span class="id" title="definition">dicho_aux</span></a> <a class="idref" href="additions.Dichotomy.html#p:41"><span class="id" title="variable">p</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="dicho_lt" class="idref" href="#dicho_lt"><span class="id" title="lemma">dicho_lt</span></a> : <span class="id" title="keyword">∀</span> <a id="p:42" class="idref" href="#p:42"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>, 3 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#::positive_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="additions.Dichotomy.html#p:42"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.Dichotomy.html#dicho"><span class="id" title="definition">dicho</span></a>  <a class="idref" href="additions.Dichotomy.html#p:42"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#::positive_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="additions.Dichotomy.html#p:42"><span class="id" title="variable">p</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="dicho_gt" class="idref" href="#dicho_gt"><span class="id" title="lemma">dicho_gt</span></a> : <span class="id" title="keyword">∀</span> <a id="p:43" class="idref" href="#p:43"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>, 3 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#::positive_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="additions.Dichotomy.html#p:43"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> 1 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.PArith.BinPos.html#::positive_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="additions.Dichotomy.html#dicho"><span class="id" title="definition">dicho</span></a>  <a class="idref" href="additions.Dichotomy.html#p:43"><span class="id" title="variable">p</span></a>.<br/>
+ 
+<br/>
+#[ <span class="id" title="var">global</span> ] <span class="id" title="keyword">Instance</span> <a id="Dicho_strat" class="idref" href="#Dicho_strat"><span class="id" title="instance">Dicho_strat</span></a> : <a class="idref" href="additions.Strategies.html#Strategy"><span class="id" title="class">Strategy</span></a> <a class="idref" href="additions.Dichotomy.html#dicho"><span class="id" title="definition">dicho</span></a>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

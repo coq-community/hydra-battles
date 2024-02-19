@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Ackermann.PAconsistent</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Ackermann.PAconsistent</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+PAconsistent.v
+
+<div class="paragraph"> </div>
+
+    Original file by Russel O' Connor 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Arith</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras.Ackermann</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.folProof.html#"><span class="id" title="library">folProof</span></a>  <a class="idref" href="hydras.Ackermann.folProp.html#"><span class="id" title="library">folProp</span></a>  <a class="idref" href="hydras.Ackermann.PA.html#"><span class="id" title="library">PA</span></a> <a class="idref" href="hydras.Ackermann.model.html#"><span class="id" title="library">model</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="natModel" class="idref" href="#natModel"><span class="id" title="definition">natModel</span></a> : <a class="idref" href="hydras.Ackermann.model.html#Model"><span class="id" title="record">Model</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#LNT"><span class="id" title="definition">LNT</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.model.html#model"><span class="id" title="constructor">model</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#LNT"><span class="id" title="definition">LNT</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="f:1" class="idref" href="#f:1"><span class="id" title="binder">f</span></a> : <a class="idref" href="hydras.Ackermann.fol.html#Functions"><span class="id" title="projection">Functions</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#LNT"><span class="id" title="definition">LNT</span></a> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Ackermann.PAconsistent.html#f:1"><span class="id" title="variable">f</span></a> <span class="id" title="keyword">return</span> (<a class="idref" href="hydras.Ackermann.model.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> (<a class="idref" href="hydras.Ackermann.fol.html#arityF"><span class="id" title="projection">arityF</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#LNT"><span class="id" title="definition">LNT</span></a> <a class="idref" href="hydras.Ackermann.PAconsistent.html#f:2"><span class="id" title="variable">f</span></a>)) <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="hydras.Ackermann.Languages.html#Plus_"><span class="id" title="constructor">Languages.Plus_</span></a> ⇒ <span class="id" title="keyword">fun</span> <a id="x:3" class="idref" href="#x:3"><span class="id" title="binder">x</span></a> <a id="y:4" class="idref" href="#y:4"><span class="id" title="binder">y</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> ⇒ <a class="idref" href="hydras.Ackermann.PAconsistent.html#y:4"><span class="id" title="variable">y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="hydras.Ackermann.PAconsistent.html#x:3"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="hydras.Ackermann.Languages.html#Times_"><span class="id" title="constructor">Languages.Times_</span></a> ⇒ <span class="id" title="keyword">fun</span> <a id="x:5" class="idref" href="#x:5"><span class="id" title="binder">x</span></a> <a id="y:6" class="idref" href="#y:6"><span class="id" title="binder">y</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> ⇒ <a class="idref" href="hydras.Ackermann.PAconsistent.html#y:6"><span class="id" title="variable">y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="hydras.Ackermann.PAconsistent.html#x:5"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="hydras.Ackermann.Languages.html#Succ_"><span class="id" title="constructor">Languages.Succ_</span></a> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="hydras.Ackermann.Languages.html#Zero_"><span class="id" title="constructor">Languages.Zero_</span></a> ⇒ 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>) <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="r:7" class="idref" href="#r:7"><span class="id" title="binder">r</span></a> : <a class="idref" href="hydras.Ackermann.fol.html#Relations"><span class="id" title="projection">Relations</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#LNT"><span class="id" title="definition">LNT</span></a> ⇒ <span class="id" title="keyword">match</span> <a class="idref" href="hydras.Ackermann.PAconsistent.html#r:7"><span class="id" title="variable">r</span></a> <span class="id" title="keyword">with</span> <span class="id" title="keyword">end</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <a id="PAconsistent" class="idref" href="#PAconsistent"><span class="id" title="lemma">PAconsistent</span></a> : <a class="idref" href="hydras.Ackermann.folProof.html#Consistent"><span class="id" title="definition">Consistent</span></a> <a class="idref" href="hydras.Ackermann.Languages.html#LNT"><span class="id" title="definition">LNT</span></a> <a class="idref" href="hydras.Ackermann.PA.html#PA"><span class="id" title="definition">PA</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

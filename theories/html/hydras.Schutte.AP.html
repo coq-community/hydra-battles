@@ -1,0 +1,330 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Schutte.AP</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Schutte.AP</h1>
+
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab178"></a><h1 class="section">Additive principal ordinals</h1>
+
+<div class="paragraph"> </div>
+
+ Pierre Casteran, LaBRI, Universite de Bordeaux 
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+In this library, we define the exponential of basis omega, also called <span class="inlinecode"><span class="id" title="var">phi0</span></span>.
+
+<div class="paragraph"> </div>
+
+In fact,  <math> &omega; <sup> &alpha; </sup> </math> , written  <span class="inlinecode"><span class="id" title="var">phi0</span></span> <span class="inlinecode"><span class="id" title="var">alpha</span></span> in Coq,
+ is defined as the <span class="inlinecode"><span class="id" title="var">alpha</span></span>-th <i>additive principal</i> ordinal.
+
+<div class="paragraph"> </div>
+
+ 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab179"></a><h2 class="section">Main Definitions</h2>
+
+
+<div class="paragraph"> </div>
+
+<a id="lab180"></a><h3 class="section">Additive principal ordinals</h3>
+
+ 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="AP" class="idref" href="#AP"><span class="id" title="definition">AP</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#Ensemble"><span class="id" title="definition">Ensemble</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <a id="alpha:1" class="idref" href="#alpha:1"><span class="id" title="binder">alpha</span></a> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.Schutte_basics.html#zero"><span class="id" title="definition">zero</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:1"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">(</span></a><span class="id" title="keyword">∀</span> <a id="beta:2" class="idref" href="#beta:2"><span class="id" title="binder">beta</span></a>, <a class="idref" href="hydras.Schutte.AP.html#beta:2"><span class="id" title="variable">beta</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:1"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:2"><span class="id" title="variable">beta</span></a> <a class="idref" href="hydras.Schutte.Addition.html#ef17d4fde9f4f9a265266bf8f6c56f86"><span class="id" title="notation">+</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:1"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:1"><span class="id" title="variable">alpha</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">)</span></a>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab181"></a><h3 class="section">Exponential of basis omega</h3>
+
+ 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="_phi0" class="idref" href="#_phi0"><span class="id" title="definition">_phi0</span></a> := <a class="idref" href="hydras.Schutte.Ordering_Functions.html#ord"><span class="id" title="definition">ord</span></a> <a class="idref" href="hydras.Schutte.AP.html#AP"><span class="id" title="definition">AP</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="phi0" class="idref" href="#phi0"><span class="id" title="abbreviation">phi0</span></a> := <a class="idref" href="hydras.Schutte.AP.html#_phi0"><span class="id" title="definition">_phi0</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="6b5cc3fabae1095df9f5452df6b2c0df" class="idref" href="#6b5cc3fabae1095df9f5452df6b2c0df"><span class="id" title="notation">&quot;</span></a>'omega^'" := <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> (<span class="id" title="var">only</span> <span class="id" title="var">parsing</span>) : <span class="id" title="var">schutte_scope</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab182"></a><h3 class="section">Omega-towers</h3>
+
+ 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="omega_tower" class="idref" href="#omega_tower"><span class="id" title="definition">omega_tower</span></a> (<a id="i:3" class="idref" href="#i:3"><span class="id" title="binder">i</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.Schutte.AP.html#i:3"><span class="id" title="variable">i</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;0 ⇒  1<br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">j</span> ⇒ <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> (<a class="idref" href="hydras.Schutte.AP.html#omega_tower:4"><span class="id" title="definition">omega_tower</span></a> <span class="id" title="var">j</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab183"></a><h3 class="section">The limit ordinal <span class="inlinecode"><span class="id" title="var">epsilon0</span></span></h3>
+
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="epsilon0" class="idref" href="#epsilon0"><span class="id" title="definition">epsilon0</span></a> := <a class="idref" href="hydras.Schutte.Schutte_basics.html#omega_limit"><span class="id" title="definition">omega_limit</span></a> <a class="idref" href="hydras.Schutte.AP.html#omega_tower"><span class="id" title="definition">omega_tower</span></a>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab184"></a><h2 class="section">Proofs, proofs, proofs ...</h2>
+
+<div class="paragraph"> </div>
+
+<a id="lab185"></a><h2 class="section">About additive principals</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="AP_one" class="idref" href="#AP_one"><span class="id" title="lemma">AP_one</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#In"><span class="id" title="definition">In</span></a> <a class="idref" href="hydras.Schutte.AP.html#AP"><span class="id" title="definition">AP</span></a> 1.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="least_AP" class="idref" href="#least_AP"><span class="id" title="lemma">least_AP</span></a> : <a class="idref" href="hydras.Schutte.Well_Orders.html#least_member"><span class="id" title="definition">least_member</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#lt"><span class="id" title="axiom">lt</span></a> <a class="idref" href="hydras.Schutte.AP.html#AP"><span class="id" title="definition">AP</span></a> 1.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="AP_omega" class="idref" href="#AP_omega"><span class="id" title="lemma">AP_omega</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#In"><span class="id" title="definition">In</span></a> <a class="idref" href="hydras.Schutte.AP.html#AP"><span class="id" title="definition">AP</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#omega"><span class="id" title="abbreviation">omega</span></a>.<br/>
+
+<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Resolve</span> <span class="id" title="var">zero_lt_omega</span> : <span class="id" title="var">schutte</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="AP_finite_eq_one" class="idref" href="#AP_finite_eq_one"><span class="id" title="lemma">AP_finite_eq_one</span></a> : <span class="id" title="keyword">∀</span> <a id="n:6" class="idref" href="#n:6"><span class="id" title="binder">n</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>, <a class="idref" href="hydras.Schutte.AP.html#AP"><span class="id" title="definition">AP</span></a> <a class="idref" href="hydras.Schutte.AP.html#n:6"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.AP.html#n:6"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 1.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Thus, omega is the second additive principal 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="omega_second_AP" class="idref" href="#omega_second_AP"><span class="id" title="lemma">omega_second_AP</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.Well_Orders.html#least_member"><span class="id" title="definition">least_member</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#lt"><span class="id" title="axiom">lt</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="alpha:7" class="idref" href="#alpha:7"><span class="id" title="binder">alpha</span></a> ⇒ 1 <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:7"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#In"><span class="id" title="definition">In</span></a> <a class="idref" href="hydras.Schutte.AP.html#AP"><span class="id" title="definition">AP</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:7"><span class="id" title="variable">alpha</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.Schutte_basics.html#omega"><span class="id" title="abbreviation">omega</span></a>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="AP_plus_closed" class="idref" href="#AP_plus_closed"><span class="id" title="lemma">AP_plus_closed</span></a> (<a id="alpha:8" class="idref" href="#alpha:8"><span class="id" title="binder">alpha</span></a> <a id="beta:9" class="idref" href="#beta:9"><span class="id" title="binder">beta</span></a> <a id="gamma:10" class="idref" href="#gamma:10"><span class="id" title="binder">gamma</span></a> : <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>):<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#In"><span class="id" title="definition">In</span></a> <a class="idref" href="hydras.Schutte.AP.html#AP"><span class="id" title="definition">AP</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:8"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:9"><span class="id" title="variable">beta</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:8"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.AP.html#gamma:10"><span class="id" title="variable">gamma</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:8"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#beta:9"><span class="id" title="variable">beta</span></a> <a class="idref" href="hydras.Schutte.Addition.html#ef17d4fde9f4f9a265266bf8f6c56f86"><span class="id" title="notation">+</span></a> <a class="idref" href="hydras.Schutte.AP.html#gamma:10"><span class="id" title="variable">gamma</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:8"><span class="id" title="variable">alpha</span></a>. 
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="AP_mult_Sn_closed" class="idref" href="#AP_mult_Sn_closed"><span class="id" title="lemma">AP_mult_Sn_closed</span></a> (<a id="alpha:11" class="idref" href="#alpha:11"><span class="id" title="binder">alpha</span></a> <a id="beta:12" class="idref" href="#beta:12"><span class="id" title="binder">beta</span></a>: <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>)  :<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#AP"><span class="id" title="definition">AP</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:11"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:12"><span class="id" title="variable">beta</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:11"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">∀</span> <a id="n:13" class="idref" href="#n:13"><span class="id" title="binder">n</span></a>,  <a class="idref" href="hydras.Schutte.Addition.html#mult_Sn"><span class="id" title="definition">mult_Sn</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:12"><span class="id" title="variable">beta</span></a> <a class="idref" href="hydras.Schutte.AP.html#n:13"><span class="id" title="variable">n</span></a>  <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:11"><span class="id" title="variable">alpha</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="AP_mult_fin_r_closed" class="idref" href="#AP_mult_fin_r_closed"><span class="id" title="lemma">AP_mult_fin_r_closed</span></a>  (<a id="alpha:14" class="idref" href="#alpha:14"><span class="id" title="binder">alpha</span></a> <a id="beta:15" class="idref" href="#beta:15"><span class="id" title="binder">beta</span></a>: <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>)  :<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#AP"><span class="id" title="definition">AP</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:14"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:15"><span class="id" title="variable">beta</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:14"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">∀</span> <a id="n:16" class="idref" href="#n:16"><span class="id" title="binder">n</span></a>,  <a class="idref" href="hydras.Schutte.AP.html#beta:15"><span class="id" title="variable">beta</span></a> <a class="idref" href="hydras.Schutte.Addition.html#c07b3f4290a4e84a9a38136928201701"><span class="id" title="notation">×</span></a> <a class="idref" href="hydras.Schutte.AP.html#n:16"><span class="id" title="variable">n</span></a>  <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:14"><span class="id" title="variable">alpha</span></a>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <a id="AP_unbounded" class="idref" href="#AP_unbounded"><span class="id" title="lemma">AP_unbounded</span></a> : <a class="idref" href="hydras.Schutte.Schutte_basics.html#Unbounded"><span class="id" title="definition">Unbounded</span></a> <a class="idref" href="hydras.Schutte.AP.html#AP"><span class="id" title="definition">AP</span></a>.  
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <a id="AP_closed" class="idref" href="#AP_closed"><span class="id" title="lemma">AP_closed</span></a> : <a class="idref" href="hydras.Schutte.Schutte_basics.html#Closed"><span class="id" title="definition">Closed</span></a> <a class="idref" href="hydras.Schutte.AP.html#AP"><span class="id" title="definition">AP</span></a>. 
+<br/>
+<span class="id" title="keyword">Theorem</span> <a id="AP_o_segment" class="idref" href="#AP_o_segment"><span class="id" title="lemma">AP_o_segment</span></a> :  <a class="idref" href="hydras.Schutte.Ordering_Functions.html#the_ordering_segment"><span class="id" title="definition">the_ordering_segment</span></a> <a class="idref" href="hydras.Schutte.AP.html#AP"><span class="id" title="definition">AP</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#ordinal"><span class="id" title="abbreviation">ordinal</span></a>. 
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab186"></a><h2 class="section">Properties of <span class="inlinecode"><span class="id" title="var">phi0</span></span></h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <a id="normal_phi0" class="idref" href="#normal_phi0"><span class="id" title="lemma">normal_phi0</span></a> : <a class="idref" href="hydras.Schutte.Ordering_Functions.html#normal"><span class="id" title="definition">normal</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#AP"><span class="id" title="definition">AP</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="phi0_ordering" class="idref" href="#phi0_ordering"><span class="id" title="lemma">phi0_ordering</span></a> :  <a class="idref" href="hydras.Schutte.Ordering_Functions.html#ordering_function"><span class="id" title="class">ordering_function</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#ordinal"><span class="id" title="abbreviation">ordinal</span></a> <a class="idref" href="hydras.Schutte.AP.html#AP"><span class="id" title="definition">AP</span></a>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="phi0_elim" class="idref" href="#phi0_elim"><span class="id" title="lemma">phi0_elim</span></a> : <span class="id" title="keyword">∀</span> <a id="P:44" class="idref" href="#P:44"><span class="id" title="binder">P</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)-&gt;</span></a><span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><span class="id" title="keyword">∀</span> <a id="f:45" class="idref" href="#f:45"><span class="id" title="binder">f</span></a>: <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.Ordering_Functions.html#ordering_function"><span class="id" title="class">ordering_function</span></a> <a class="idref" href="hydras.Schutte.AP.html#f:45"><span class="id" title="variable">f</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#ordinal"><span class="id" title="abbreviation">ordinal</span></a> <a class="idref" href="hydras.Schutte.AP.html#AP"><span class="id" title="definition">AP</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.AP.html#P:44"><span class="id" title="variable">P</span></a> <a class="idref" href="hydras.Schutte.AP.html#f:45"><span class="id" title="variable">f</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#P:44"><span class="id" title="variable">P</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="AP_phi0" class="idref" href="#AP_phi0"><span class="id" title="lemma">AP_phi0</span></a> (<a id="alpha:46" class="idref" href="#alpha:46"><span class="id" title="binder">alpha</span></a> : <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>) : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#In"><span class="id" title="definition">In</span></a> <a class="idref" href="hydras.Schutte.AP.html#AP"><span class="id" title="definition">AP</span></a> (<a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:46"><span class="id" title="variable">alpha</span></a>).  
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="phi0_zero" class="idref" href="#phi0_zero"><span class="id" title="lemma">phi0_zero</span></a> : <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#zero"><span class="id" title="definition">zero</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a>  1. 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="phi0_mono" class="idref" href="#phi0_mono"><span class="id" title="lemma">phi0_mono</span></a> (<a id="alpha:47" class="idref" href="#alpha:47"><span class="id" title="binder">alpha</span></a> <a id="beta:48" class="idref" href="#beta:48"><span class="id" title="binder">beta</span></a> : <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#alpha:47"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:48"><span class="id" title="variable">beta</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a>  <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:47"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:48"><span class="id" title="variable">beta</span></a>. 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="phi0_mono_weak" class="idref" href="#phi0_mono_weak"><span class="id" title="lemma">phi0_mono_weak</span></a> (<a id="alpha:49" class="idref" href="#alpha:49"><span class="id" title="binder">alpha</span></a> <a id="beta:50" class="idref" href="#beta:50"><span class="id" title="binder">beta</span></a> : <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#alpha:49"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#13c3c4e605a8e463a22f054036895bb7"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:50"><span class="id" title="variable">beta</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a>  <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:49"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#13c3c4e605a8e463a22f054036895bb7"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:50"><span class="id" title="variable">beta</span></a>. 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="phi0_mono_R" class="idref" href="#phi0_mono_R"><span class="id" title="lemma">phi0_mono_R</span></a> (<a id="alpha:51" class="idref" href="#alpha:51"><span class="id" title="binder">alpha</span></a> <a id="beta:52" class="idref" href="#beta:52"><span class="id" title="binder">beta</span></a> : <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:51"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:52"><span class="id" title="variable">beta</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:51"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:52"><span class="id" title="variable">beta</span></a>. 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="phi0_mono_R_weak" class="idref" href="#phi0_mono_R_weak"><span class="id" title="lemma">phi0_mono_R_weak</span></a> (<a id="alpha:53" class="idref" href="#alpha:53"><span class="id" title="binder">alpha</span></a> <a id="beta:54" class="idref" href="#beta:54"><span class="id" title="binder">beta</span></a>: <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>):<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:53"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#13c3c4e605a8e463a22f054036895bb7"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:54"><span class="id" title="variable">beta</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:53"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#13c3c4e605a8e463a22f054036895bb7"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:54"><span class="id" title="variable">beta</span></a>. 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="phi0_inj" class="idref" href="#phi0_inj"><span class="id" title="lemma">phi0_inj</span></a> (<a id="alpha:55" class="idref" href="#alpha:55"><span class="id" title="binder">alpha</span></a> <a id="beta:56" class="idref" href="#beta:56"><span class="id" title="binder">beta</span></a> : <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:55"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:56"><span class="id" title="variable">beta</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:55"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:56"><span class="id" title="variable">beta</span></a>. 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="phi0_positive" class="idref" href="#phi0_positive"><span class="id" title="lemma">phi0_positive</span></a> (<a id="alpha:57" class="idref" href="#alpha:57"><span class="id" title="binder">alpha</span></a> : <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>):  <a class="idref" href="hydras.Schutte.Schutte_basics.html#zero"><span class="id" title="definition">zero</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:57"><span class="id" title="variable">alpha</span></a>. 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="plus_lt_phi0" class="idref" href="#plus_lt_phi0"><span class="id" title="lemma">plus_lt_phi0</span></a> (<a id="ksi:58" class="idref" href="#ksi:58"><span class="id" title="binder">ksi</span></a> <a id="alpha:59" class="idref" href="#alpha:59"><span class="id" title="binder">alpha</span></a>: <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>):<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#ksi:58"><span class="id" title="variable">ksi</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:59"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a>  <a class="idref" href="hydras.Schutte.AP.html#ksi:58"><span class="id" title="variable">ksi</span></a> <a class="idref" href="hydras.Schutte.Addition.html#ef17d4fde9f4f9a265266bf8f6c56f86"><span class="id" title="notation">+</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:59"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:59"><span class="id" title="variable">alpha</span></a>. 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="phi0_alpha_phi0_beta" class="idref" href="#phi0_alpha_phi0_beta"><span class="id" title="lemma">phi0_alpha_phi0_beta</span></a> (<a id="alpha:60" class="idref" href="#alpha:60"><span class="id" title="binder">alpha</span></a> <a id="beta:61" class="idref" href="#beta:61"><span class="id" title="binder">beta</span></a>: <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#alpha:60"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:61"><span class="id" title="variable">beta</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a>  <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:60"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Addition.html#ef17d4fde9f4f9a265266bf8f6c56f86"><span class="id" title="notation">+</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:61"><span class="id" title="variable">beta</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:61"><span class="id" title="variable">beta</span></a>. 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="phi0_sup" class="idref" href="#phi0_sup"><span class="id" title="lemma">phi0_sup</span></a> : <span class="id" title="keyword">∀</span> <a id="U:62" class="idref" href="#U:62"><span class="id" title="binder">U</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#Ensemble"><span class="id" title="definition">Ensemble</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#Inhabited"><span class="id" title="inductive">Inhabited</span></a> <a class="idref" href="hydras.Schutte.AP.html#U:62"><span class="id" title="variable">U</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="definition">Countable</span> <a class="idref" href="hydras.Schutte.AP.html#U:62"><span class="id" title="variable">U</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> (<a class="idref" href="hydras.Schutte.Schutte_basics.html#abe2b27667df40e2c3f74853287f2063"><span class="id" title="notation">|</span></a><a class="idref" href="hydras.Schutte.Schutte_basics.html#abe2b27667df40e2c3f74853287f2063"><span class="id" title="notation">_</span></a><a class="idref" href="hydras.Schutte.Schutte_basics.html#abe2b27667df40e2c3f74853287f2063"><span class="id" title="notation">|</span></a> <a class="idref" href="hydras.Schutte.AP.html#U:62"><span class="id" title="variable">U</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#abe2b27667df40e2c3f74853287f2063"><span class="id" title="notation">|</span></a><a class="idref" href="hydras.Schutte.Schutte_basics.html#abe2b27667df40e2c3f74853287f2063"><span class="id" title="notation">_</span></a><a class="idref" href="hydras.Schutte.Schutte_basics.html#abe2b27667df40e2c3f74853287f2063"><span class="id" title="notation">|</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#abe2b27667df40e2c3f74853287f2063"><span class="id" title="notation">(</span></a><a class="idref" href="hydras.Schutte.PartialFun.html#image"><span class="id" title="definition">image</span></a> <a class="idref" href="hydras.Schutte.AP.html#U:62"><span class="id" title="variable">U</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a><a class="idref" href="hydras.Schutte.Schutte_basics.html#abe2b27667df40e2c3f74853287f2063"><span class="id" title="notation">)</span></a>. 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="phi0_of_limit" class="idref" href="#phi0_of_limit"><span class="id" title="lemma">phi0_of_limit</span></a> (<a id="alpha:63" class="idref" href="#alpha:63"><span class="id" title="binder">alpha</span></a> : <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>)  :<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.Schutte_basics.html#is_limit"><span class="id" title="definition">is_limit</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:63"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:63"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#abe2b27667df40e2c3f74853287f2063"><span class="id" title="notation">|</span></a><a class="idref" href="hydras.Schutte.Schutte_basics.html#abe2b27667df40e2c3f74853287f2063"><span class="id" title="notation">_</span></a><a class="idref" href="hydras.Schutte.Schutte_basics.html#abe2b27667df40e2c3f74853287f2063"><span class="id" title="notation">|</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#abe2b27667df40e2c3f74853287f2063"><span class="id" title="notation">(</span></a><a class="idref" href="hydras.Schutte.PartialFun.html#image"><span class="id" title="definition">image</span></a> (<a class="idref" href="hydras.Schutte.Schutte_basics.html#members"><span class="id" title="definition">members</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:63"><span class="id" title="variable">alpha</span></a>) <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a><a class="idref" href="hydras.Schutte.Schutte_basics.html#abe2b27667df40e2c3f74853287f2063"><span class="id" title="notation">)</span></a>. 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="AP_to_phi0" class="idref" href="#AP_to_phi0"><span class="id" title="lemma">AP_to_phi0</span></a> (<a id="alpha:64" class="idref" href="#alpha:64"><span class="id" title="binder">alpha</span></a> : <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#AP"><span class="id" title="definition">AP</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:64"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a id="beta:65" class="idref" href="#beta:65"><span class="id" title="binder">beta</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">,</span></a>  <a class="idref" href="hydras.Schutte.AP.html#alpha:64"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:65"><span class="id" title="variable">beta</span></a>. 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="AP_plus_AP" class="idref" href="#AP_plus_AP"><span class="id" title="lemma">AP_plus_AP</span></a> (<a id="alpha:66" class="idref" href="#alpha:66"><span class="id" title="binder">alpha</span></a> <a id="beta:67" class="idref" href="#beta:67"><span class="id" title="binder">beta</span></a> <a id="gamma:68" class="idref" href="#gamma:68"><span class="id" title="binder">gamma</span></a> : <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.Schutte_basics.html#zero"><span class="id" title="definition">zero</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:67"><span class="id" title="variable">beta</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:66"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Addition.html#ef17d4fde9f4f9a265266bf8f6c56f86"><span class="id" title="notation">+</span></a> <a class="idref" href="hydras.Schutte.AP.html#beta:67"><span class="id" title="variable">beta</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#gamma:68"><span class="id" title="variable">gamma</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#alpha:66"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#gamma:68"><span class="id" title="variable">gamma</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a>  <a class="idref" href="hydras.Schutte.AP.html#beta:67"><span class="id" title="variable">beta</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#gamma:68"><span class="id" title="variable">gamma</span></a>. 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="is_limit_phi0" class="idref" href="#is_limit_phi0"><span class="id" title="lemma">is_limit_phi0</span></a> (<a id="alpha:69" class="idref" href="#alpha:69"><span class="id" title="binder">alpha</span></a> : <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.Schutte_basics.html#zero"><span class="id" title="definition">zero</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:69"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a>  <a class="idref" href="hydras.Schutte.Schutte_basics.html#is_limit"><span class="id" title="definition">is_limit</span></a> (<a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:69"><span class="id" title="variable">alpha</span></a>). 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="omega_eqn" class="idref" href="#omega_eqn"><span class="id" title="lemma">omega_eqn</span></a> : <a class="idref" href="hydras.Schutte.Schutte_basics.html#omega"><span class="id" title="abbreviation">omega</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> 1. 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="le_phi0" class="idref" href="#le_phi0"><span class="id" title="lemma">le_phi0</span></a> (<a id="alpha:70" class="idref" href="#alpha:70"><span class="id" title="binder">alpha</span></a> : <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>) : <a class="idref" href="hydras.Schutte.AP.html#alpha:70"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#13c3c4e605a8e463a22f054036895bb7"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:70"><span class="id" title="variable">alpha</span></a>. 
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab187"></a><h2 class="section">Properties of <span class="inlinecode"><span class="id" title="var">epsilon0</span></span></h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="epsilon0_fxp" class="idref" href="#epsilon0_fxp"><span class="id" title="lemma">epsilon0_fxp</span></a> : <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#epsilon0"><span class="id" title="definition">epsilon0</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Schutte.AP.html#epsilon0"><span class="id" title="definition">epsilon0</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="epsilon0_AP" class="idref" href="#epsilon0_AP"><span class="id" title="lemma">epsilon0_AP</span></a> : <a class="idref" href="hydras.Schutte.AP.html#AP"><span class="id" title="definition">AP</span></a> <a class="idref" href="hydras.Schutte.AP.html#epsilon0"><span class="id" title="definition">epsilon0</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="omega_tower_mono" class="idref" href="#omega_tower_mono"><span class="id" title="lemma">omega_tower_mono</span></a> (<a id="i:71" class="idref" href="#i:71"><span class="id" title="binder">i</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="hydras.Schutte.AP.html#omega_tower"><span class="id" title="definition">omega_tower</span></a> <a class="idref" href="hydras.Schutte.AP.html#i:71"><span class="id" title="variable">i</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#omega_tower"><span class="id" title="definition">omega_tower</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Schutte.AP.html#i:71"><span class="id" title="variable">i</span></a>).<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="lt_phi0" class="idref" href="#lt_phi0"><span class="id" title="lemma">lt_phi0</span></a> (<a id="alpha:72" class="idref" href="#alpha:72"><span class="id" title="binder">alpha</span></a> : <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>):<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#alpha:72"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#epsilon0"><span class="id" title="definition">epsilon0</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:72"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:72"><span class="id" title="variable">alpha</span></a>. 
+<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <a id="epsilon0_lfp" class="idref" href="#epsilon0_lfp"><span class="id" title="lemma">epsilon0_lfp</span></a> : <a class="idref" href="hydras.Schutte.Well_Orders.html#least_fixpoint"><span class="id" title="definition">least_fixpoint</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#lt"><span class="id" title="axiom">lt</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#epsilon0"><span class="id" title="definition">epsilon0</span></a>. 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="phi0_lt_epsilon0" class="idref" href="#phi0_lt_epsilon0"><span class="id" title="lemma">phi0_lt_epsilon0</span></a> (<a id="alpha:73" class="idref" href="#alpha:73"><span class="id" title="binder">alpha</span></a> : <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#alpha:73"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#epsilon0"><span class="id" title="definition">epsilon0</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:73"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#epsilon0"><span class="id" title="definition">epsilon0</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="phi0_lt_epsilon0_R" class="idref" href="#phi0_lt_epsilon0_R"><span class="id" title="lemma">phi0_lt_epsilon0_R</span></a> (<a id="alpha:74" class="idref" href="#alpha:74"><span class="id" title="binder">alpha</span></a> : <a class="idref" href="hydras.Schutte.Schutte_basics.html#Ord"><span class="id" title="axiom">Ord</span></a>):<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:74"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#epsilon0"><span class="id" title="definition">epsilon0</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.AP.html#alpha:74"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#epsilon0"><span class="id" title="definition">epsilon0</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

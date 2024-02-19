@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.OrdinalNotations.ON_plus</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.OrdinalNotations.ON_plus</h1>
+
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+The sum of two ordinal  notations 
+<div class="paragraph"> </div>
+
+ Pierre Castéran, Univ. Bordeaux and LaBRI 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Arith</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Compare_dec.html#"><span class="id" title="library">Compare_dec</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.micromega.Lia.html#"><span class="id" title="library">Lia</span></a> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Operators.html#"><span class="id" title="library">Relation_Operators</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Classes.RelationClasses.html#"><span class="id" title="library">RelationClasses</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Wellfounded.Disjoint_Union.html#"><span class="id" title="library">Disjoint_Union</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span>  <a class="idref" href="hydras.OrdinalNotations.ON_Generic.html#"><span class="id" title="library">ON_Generic</span></a> <a class="idref" href="hydras.Prelude.MoreOrders.html#"><span class="id" title="library">MoreOrders</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relations.html#"><span class="id" title="module">Relations</span></a>.<br/>
+<span class="id" title="keyword">Generalizable All Variables</span>.<br/>
+<span class="id" title="keyword">Coercion</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#is_true"><span class="id" title="definition">is_true</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#is_true"><span class="id" title="definition">:</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#is_true"><span class="id" title="definition">bool</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#is_true"><span class="id" title="definition">&gt;-&gt;</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#is_true"><span class="id" title="definition">Sortclass</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Defs" class="idref" href="#Defs"><span class="id" title="section">Defs</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `(<a id="ltA:2" class="idref" href="#ltA:2"><span class="id" title="binder">ltA</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Definitions.html#relation"><span class="id" title="definition">relation</span></a> <a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="cmpA:3" class="idref" href="#cmpA:3"><span class="id" title="binder">cmpA</span></a> : <a class="idref" href="hydras.Prelude.Comparable.html#Compare"><span class="id" title="class">Compare</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#A:1"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="NA:4" class="idref" href="#NA:4"><span class="id" title="binder">NA</span></a>: <a class="idref" href="hydras.OrdinalNotations.ON_Generic.html#ON"><span class="id" title="class">ON</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#ltA:2"><span class="id" title="variable">ltA</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#cmpA:3"><span class="id" title="variable">cmpA</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> `(<a id="ltB:6" class="idref" href="#ltB:6"><span class="id" title="binder">ltB</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Definitions.html#relation"><span class="id" title="definition">relation</span></a> <a id="B:5" class="idref" href="#B:5"><span class="id" title="binder">B</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="cmpB:7" class="idref" href="#cmpB:7"><span class="id" title="binder">cmpB</span></a> : <a class="idref" href="hydras.Prelude.Comparable.html#Compare"><span class="id" title="class">Compare</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#B:5"><span class="id" title="variable">B</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="NB:8" class="idref" href="#NB:8"><span class="id" title="binder">NB</span></a>: <a class="idref" href="hydras.OrdinalNotations.ON_Generic.html#ON"><span class="id" title="class">ON</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#ltB:6"><span class="id" title="variable">ltB</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#cmpB:7"><span class="id" title="variable">cmpB</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="t" class="idref" href="#t"><span class="id" title="definition">t</span></a> := (<a class="idref" href="hydras.OrdinalNotations.ON_plus.html#Defs.A"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#e03f39daf98516fa530d3f6f5a1b4d92"><span class="id" title="notation">+</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#Defs.B"><span class="id" title="variable">B</span></a>)%<span class="id" title="keyword">type</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Arguments</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#inl"><span class="id" title="constructor">inl</span></a> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Arguments</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#inr"><span class="id" title="constructor">inr</span></a> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>} <span class="id" title="var">_</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="lt" class="idref" href="#lt"><span class="id" title="definition">lt</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Definitions.html#relation"><span class="id" title="definition">relation</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#t"><span class="id" title="definition">t</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Operators.html#le_AsB"><span class="id" title="inductive">le_AsB</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#Defs.ltA"><span class="id" title="variable">ltA</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#Defs.ltB"><span class="id" title="variable">ltB</span></a>.<br/>
+
+<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Instance</span> <a id="compare_plus" class="idref" href="#compare_plus"><span class="id" title="instance">compare_plus</span></a> : <a class="idref" href="hydras.Prelude.Comparable.html#Compare"><span class="id" title="class">Compare</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#t"><span class="id" title="definition">t</span></a> :=<br/>
+<span class="id" title="keyword">fun</span> (<a id="alpha:9" class="idref" href="#alpha:9"><span class="id" title="binder">alpha</span></a> <a id="beta:10" class="idref" href="#beta:10"><span class="id" title="binder">beta</span></a>: <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#t"><span class="id" title="definition">t</span></a>) ⇒<br/>
+&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#alpha:9"><span class="id" title="variable">alpha</span></a>, <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#beta:10"><span class="id" title="variable">beta</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#inl"><span class="id" title="constructor">inl</span></a> <span class="id" title="var">_</span>, <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#inr"><span class="id" title="constructor">inr</span></a> <span class="id" title="var">_</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#Lt"><span class="id" title="constructor">Lt</span></a><br/>
+&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#inl"><span class="id" title="constructor">inl</span></a> <span class="id" title="var">a</span>, <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#inl"><span class="id" title="constructor">inl</span></a> <span class="id" title="var">a'</span> ⇒ <a class="idref" href="hydras.Prelude.Comparable.html#compare"><span class="id" title="definition">compare</span></a> <span class="id" title="var">a</span> <span class="id" title="var">a'</span><br/>
+&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#inr"><span class="id" title="constructor">inr</span></a> <span class="id" title="var">b</span>, <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#inr"><span class="id" title="constructor">inr</span></a> <span class="id" title="var">b'</span> ⇒ <a class="idref" href="hydras.Prelude.Comparable.html#compare"><span class="id" title="definition">compare</span></a> <span class="id" title="var">b</span> <span class="id" title="var">b'</span><br/>
+&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#inr"><span class="id" title="constructor">inr</span></a> <span class="id" title="var">_</span>, <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#inl"><span class="id" title="constructor">inl</span></a> <span class="id" title="var">_</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#Gt"><span class="id" title="constructor">Gt</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="le" class="idref" href="#le"><span class="id" title="definition">le</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Operators.html#clos_refl"><span class="id" title="inductive">clos_refl</span></a> <span class="id" title="var">_</span> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#lt"><span class="id" title="definition">lt</span></a>.<br/>
+
+<br/>
+#[<span class="id" title="var">local</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Unfold</span> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#lt"><span class="id" title="definition">lt</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#le"><span class="id" title="definition">le</span></a> : <span class="id" title="var">core</span>.<br/>
+#[<span class="id" title="var">local</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Constructors</span> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#le_AsB"><span class="id" title="inductive">le_AsB</span></a>: <span class="id" title="var">core</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Instance</span> <a id="lt_strorder" class="idref" href="#lt_strorder"><span class="id" title="instance">lt_strorder</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Classes.RelationClasses.html#StrictOrder"><span class="id" title="class">StrictOrder</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#lt"><span class="id" title="definition">lt</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="compare_reflect" class="idref" href="#compare_reflect"><span class="id" title="lemma">compare_reflect</span></a> <a id="alpha:13" class="idref" href="#alpha:13"><span class="id" title="binder">alpha</span></a> <a id="beta:14" class="idref" href="#beta:14"><span class="id" title="binder">beta</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> (<a class="idref" href="hydras.Prelude.Comparable.html#compare"><span class="id" title="definition">compare</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#alpha:13"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#beta:14"><span class="id" title="variable">beta</span></a>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#Lt"><span class="id" title="constructor">Lt</span></a> ⇒ <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#lt"><span class="id" title="definition">lt</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#alpha:13"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#beta:14"><span class="id" title="variable">beta</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#Eq"><span class="id" title="constructor">Eq</span></a> ⇒ <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#alpha:13"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#beta:14"><span class="id" title="variable">beta</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#Gt"><span class="id" title="constructor">Gt</span></a> ⇒ <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#lt"><span class="id" title="definition">lt</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#beta:14"><span class="id" title="variable">beta</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#alpha:13"><span class="id" title="variable">alpha</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="compare_correct" class="idref" href="#compare_correct"><span class="id" title="lemma">compare_correct</span></a> <a id="alpha:15" class="idref" href="#alpha:15"><span class="id" title="binder">alpha</span></a> <a id="beta:16" class="idref" href="#beta:16"><span class="id" title="binder">beta</span></a> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#CompSpec"><span class="id" title="definition">CompSpec</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#eq"><span class="id" title="inductive">eq</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#lt"><span class="id" title="definition">lt</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#alpha:15"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#beta:16"><span class="id" title="variable">beta</span></a> (<a class="idref" href="hydras.Prelude.Comparable.html#compare"><span class="id" title="definition">compare</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#alpha:15"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#beta:16"><span class="id" title="variable">beta</span></a>). 
+<br/>
+
+<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Instance</span> <a id="plus_comp" class="idref" href="#plus_comp"><span class="id" title="instance">plus_comp</span></a> : <a class="idref" href="hydras.Prelude.Comparable.html#Comparable"><span class="id" title="class">Comparable</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#lt"><span class="id" title="definition">lt</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#compare_plus"><span class="id" title="instance">compare_plus</span></a>.<br/>
+ 
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="lt_wf" class="idref" href="#lt_wf"><span class="id" title="lemma">lt_wf</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#well_founded"><span class="id" title="definition">well_founded</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#lt"><span class="id" title="definition">lt</span></a>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+#[<span class="id" title="var">global</span>] <span class="id" title="keyword">Instance</span> <a id="ON_plus" class="idref" href="#ON_plus"><span class="id" title="instance">ON_plus</span></a> : <a class="idref" href="hydras.OrdinalNotations.ON_Generic.html#ON"><span class="id" title="class">ON</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#lt"><span class="id" title="definition">lt</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#compare_plus"><span class="id" title="instance">compare_plus</span></a>.<br/>
+ 
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="lt_eq_lt_dec" class="idref" href="#lt_eq_lt_dec"><span class="id" title="lemma">lt_eq_lt_dec</span></a> <a id="alpha:17" class="idref" href="#alpha:17"><span class="id" title="binder">alpha</span></a> <a id="beta:18" class="idref" href="#beta:18"><span class="id" title="binder">beta</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#87727981cdc1579fef00b9d9c1d3b9da"><span class="id" title="notation">{</span></a><a class="idref" href="hydras.OrdinalNotations.ON_plus.html#lt"><span class="id" title="definition">lt</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#alpha:17"><span class="id" title="variable">alpha</span></a>  <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#beta:18"><span class="id" title="variable">beta</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#87727981cdc1579fef00b9d9c1d3b9da"><span class="id" title="notation">}</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#87727981cdc1579fef00b9d9c1d3b9da"><span class="id" title="notation">+</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#87727981cdc1579fef00b9d9c1d3b9da"><span class="id" title="notation">{</span></a><a class="idref" href="hydras.OrdinalNotations.ON_plus.html#alpha:17"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#beta:18"><span class="id" title="variable">beta</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#87727981cdc1579fef00b9d9c1d3b9da"><span class="id" title="notation">}</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#53e8e3b7ca0342c8b99a777b3c5faf3a"><span class="id" title="notation">+</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#53e8e3b7ca0342c8b99a777b3c5faf3a"><span class="id" title="notation">{</span></a><a class="idref" href="hydras.OrdinalNotations.ON_plus.html#lt"><span class="id" title="definition">lt</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#beta:18"><span class="id" title="variable">beta</span></a>  <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#alpha:17"><span class="id" title="variable">alpha</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Specif.html#53e8e3b7ca0342c8b99a777b3c5faf3a"><span class="id" title="notation">}</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#Defs"><span class="id" title="section">Defs</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#lt_eq_lt_dec"><span class="id" title="lemma">lt_eq_lt_dec</span></a> {<span class="id" title="var">A</span> <span class="id" title="var">ltA</span> <span class="id" title="var">cmpA</span>} <span class="id" title="var">_</span> {<span class="id" title="var">B</span> <span class="id" title="var">ltB</span>  <span class="id" title="var">cmpB</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="hydras.OrdinalNotations.ON_plus.html#ON_plus"><span class="id" title="instance">ON_plus</span></a> {<span class="id" title="var">A</span> <span class="id" title="var">ltA</span> <span class="id" title="var">cmpA</span>} <span class="id" title="var">_</span> {<span class="id" title="var">B</span> <span class="id" title="var">ltB</span> <span class="id" title="var">cmpB</span>}.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

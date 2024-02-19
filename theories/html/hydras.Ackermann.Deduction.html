@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Ackermann.Deduction</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Ackermann.Deduction</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+ FOL's deduction Lemma 
+
+<div class="paragraph"> </div>
+
+  Original file by Russel O'Connor 
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#"><span class="id" title="library">Ensembles</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#"><span class="id" title="library">List</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras.Ackermann</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.folProof.html#"><span class="id" title="library">folProof</span></a> <a class="idref" href="hydras.Ackermann.folProp.html#"><span class="id" title="library">folProp</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.fol.html#FolNotations"><span class="id" title="module">FolNotations</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Deduction_Theorem" class="idref" href="#Deduction_Theorem"><span class="id" title="section">Deduction_Theorem</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Variable</span> <a id="Deduction_Theorem.L" class="idref" href="#Deduction_Theorem.L"><span class="id" title="variable">L</span></a> : <a class="idref" href="hydras.Ackermann.fol.html#Language"><span class="id" title="record">Language</span></a>.<br/>
+<span class="id" title="keyword">Let</span> <a id="Deduction_Theorem.Formula" class="idref" href="#Deduction_Theorem.Formula"><span class="id" title="variable">Formula</span></a> := <a class="idref" href="hydras.Ackermann.fol.html#Formula"><span class="id" title="inductive">Formula</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#Deduction_Theorem.L"><span class="id" title="variable">L</span></a>.<br/>
+<span class="id" title="keyword">Let</span> <a id="Deduction_Theorem.Formulas" class="idref" href="#Deduction_Theorem.Formulas"><span class="id" title="variable">Formulas</span></a> := <a class="idref" href="hydras.Ackermann.fol.html#Formulas"><span class="id" title="definition">Formulas</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#Deduction_Theorem.L"><span class="id" title="variable">L</span></a>.<br/>
+<span class="id" title="keyword">Let</span> <a id="Deduction_Theorem.System" class="idref" href="#Deduction_Theorem.System"><span class="id" title="variable">System</span></a> := <a class="idref" href="hydras.Ackermann.fol.html#System"><span class="id" title="definition">System</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#Deduction_Theorem.L"><span class="id" title="variable">L</span></a>.<br/>
+<span class="id" title="keyword">Let</span> <a id="Deduction_Theorem.Term" class="idref" href="#Deduction_Theorem.Term"><span class="id" title="variable">Term</span></a> := <a class="idref" href="hydras.Ackermann.fol.html#Term"><span class="id" title="inductive">Term</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#Deduction_Theorem.L"><span class="id" title="variable">L</span></a>.<br/>
+<span class="id" title="keyword">Let</span> <a id="Deduction_Theorem.Terms" class="idref" href="#Deduction_Theorem.Terms"><span class="id" title="variable">Terms</span></a> := <a class="idref" href="hydras.Ackermann.fol.html#Terms"><span class="id" title="inductive">Terms</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#Deduction_Theorem.L"><span class="id" title="variable">L</span></a>.<br/>
+<span class="id" title="keyword">Let</span> <a id="Deduction_Theorem.Prf" class="idref" href="#Deduction_Theorem.Prf"><span class="id" title="variable">Prf</span></a> := <a class="idref" href="hydras.Ackermann.folProof.html#Prf"><span class="id" title="inductive">Prf</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#Deduction_Theorem.L"><span class="id" title="variable">L</span></a>.<br/>
+<span class="id" title="keyword">Let</span> <a id="Deduction_Theorem.SysPrf" class="idref" href="#Deduction_Theorem.SysPrf"><span class="id" title="variable">SysPrf</span></a> := <a class="idref" href="hydras.Ackermann.folProof.html#SysPrf"><span class="id" title="definition">SysPrf</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#Deduction_Theorem.L"><span class="id" title="variable">L</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Let</span> <a id="Deduction_Theorem.list_incl" class="idref" href="#Deduction_Theorem.list_incl"><span class="id" title="variable">list_incl</span></a> (<a id="X:2" class="idref" href="#X:2"><span class="id" title="binder">X</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#Ensemble"><span class="id" title="definition">Ensemble</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#Deduction_Theorem.Formula"><span class="id" title="variable">Formula</span></a>) (<a id="l:3" class="idref" href="#l:3"><span class="id" title="binder">l</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#Deduction_Theorem.Formula"><span class="id" title="variable">Formula</span></a>) :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="x:4" class="idref" href="#x:4"><span class="id" title="binder">x</span></a>, <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#In"><span class="id" title="definition">List.In</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#x:4"><span class="id" title="variable">x</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#l:3"><span class="id" title="variable">l</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Ackermann.fol.html#mem"><span class="id" title="definition">mem</span></a> <span class="id" title="var">_</span> <a class="idref" href="hydras.Ackermann.Deduction.html#X:2"><span class="id" title="variable">X</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#x:4"><span class="id" title="variable">x</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="SysPrf_rephrase" class="idref" href="#SysPrf_rephrase"><span class="id" title="lemma">SysPrf_rephrase</span></a> <a id="X:5" class="idref" href="#X:5"><span class="id" title="binder">X</span></a> <a id="F:6" class="idref" href="#F:6"><span class="id" title="binder">F</span></a> : <a class="idref" href="hydras.Ackermann.Deduction.html#Deduction_Theorem.SysPrf"><span class="id" title="variable">SysPrf</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#X:5"><span class="id" title="variable">X</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#F:6"><span class="id" title="variable">F</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a id="s:7" class="idref" href="#s:7"><span class="id" title="binder">s</span></a> (<span class="id" title="var">_</span> : <a class="idref" href="hydras.Ackermann.Deduction.html#Deduction_Theorem.Prf"><span class="id" title="variable">Prf</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#s:7"><span class="id" title="variable">s</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#F:6"><span class="id" title="variable">F</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">),</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#Deduction_Theorem.list_incl"><span class="id" title="variable">list_incl</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#X:5"><span class="id" title="variable">X</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#s:7"><span class="id" title="variable">s</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <a id="DeductionTheorem" class="idref" href="#DeductionTheorem"><span class="id" title="lemma">DeductionTheorem</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<a id="T:8" class="idref" href="#T:8"><span class="id" title="binder">T</span></a> : <a class="idref" href="hydras.Ackermann.Deduction.html#Deduction_Theorem.System"><span class="id" title="variable">System</span></a>) (<a id="f:9" class="idref" href="#f:9"><span class="id" title="binder">f</span></a> <a id="g:10" class="idref" href="#g:10"><span class="id" title="binder">g</span></a> : <a class="idref" href="hydras.Ackermann.Deduction.html#Deduction_Theorem.Formula"><span class="id" title="variable">Formula</span></a>) <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="prf:11" class="idref" href="#prf:11"><span class="id" title="binder">prf</span></a> : <a class="idref" href="hydras.Ackermann.Deduction.html#Deduction_Theorem.SysPrf"><span class="id" title="variable">SysPrf</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#Add"><span class="id" title="definition">Ensembles.Add</span></a> <span class="id" title="var">_</span> <a class="idref" href="hydras.Ackermann.Deduction.html#T:8"><span class="id" title="variable">T</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#g:10"><span class="id" title="variable">g</span></a>) <a class="idref" href="hydras.Ackermann.Deduction.html#f:9"><span class="id" title="variable">f</span></a>),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.Deduction.html#Deduction_Theorem.SysPrf"><span class="id" title="variable">SysPrf</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#T:8"><span class="id" title="variable">T</span></a> (<a class="idref" href="hydras.Ackermann.Deduction.html#g:10"><span class="id" title="variable">g</span></a> <a class="idref" href="hydras.Ackermann.fol.html#FolNotations.::fol_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Ackermann.Deduction.html#f:9"><span class="id" title="variable">f</span></a>)%<span class="id" title="var">fol</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Ackermann.Deduction.html#Deduction_Theorem"><span class="id" title="section">Deduction_Theorem</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

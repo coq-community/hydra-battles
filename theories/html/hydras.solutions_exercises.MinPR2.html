@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.solutions_exercises.MinPR2</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.solutions_exercises.MinPR2</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+Prove that Stdlib's function Min is primitive recursive  this is a variant of the exercise MinPR 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span>  <a class="idref" href="hydras.Ackermann.primRec.html#"><span class="id" title="library">primRec</span></a> <a class="idref" href="hydras.Ackermann.extEqualNat.html#"><span class="id" title="library">extEqualNat</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.setoid_ring.ArithRing.html#"><span class="id" title="library">ArithRing</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.micromega.Lia.html#"><span class="id" title="library">Lia</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Compare_dec.html#"><span class="id" title="library">Compare_dec</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Define an n-ary if-then-else 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="naryIf" class="idref" href="#naryIf"><span class="id" title="definition">naryIf</span></a> (<a id="n:1" class="idref" href="#n:1"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.extEqualNat.html#naryRel"><span class="id" title="definition">naryRel</span></a> <a class="idref" href="hydras.solutions_exercises.MinPR2.html#n:1"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> <a class="idref" href="hydras.solutions_exercises.MinPR2.html#n:1"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> <a class="idref" href="hydras.solutions_exercises.MinPR2.html#n:1"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> <a class="idref" href="hydras.solutions_exercises.MinPR2.html#n:1"><span class="id" title="variable">n</span></a><br/>
+&nbsp;&nbsp;:=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.solutions_exercises.MinPR2.html#n:1"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">return</span> (<a class="idref" href="hydras.Ackermann.extEqualNat.html#naryRel"><span class="id" title="definition">naryRel</span></a> <a class="idref" href="hydras.solutions_exercises.MinPR2.html#n:3"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> <a class="idref" href="hydras.solutions_exercises.MinPR2.html#n:3"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> <a class="idref" href="hydras.solutions_exercises.MinPR2.html#n:3"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> <a class="idref" href="hydras.solutions_exercises.MinPR2.html#n:3"><span class="id" title="variable">n</span></a>) <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 ⇒ (<span class="id" title="keyword">fun</span> <a id="b:4" class="idref" href="#b:4"><span class="id" title="binder">b</span></a> <a id="x:5" class="idref" href="#x:5"><span class="id" title="binder">x</span></a> <a id="y:6" class="idref" href="#y:6"><span class="id" title="binder">y</span></a> ⇒  <span class="id" title="keyword">if</span> <a class="idref" href="hydras.solutions_exercises.MinPR2.html#b:4"><span class="id" title="variable">b</span></a> <span class="id" title="keyword">then</span> <a class="idref" href="hydras.solutions_exercises.MinPR2.html#x:5"><span class="id" title="variable">x</span></a> <span class="id" title="keyword">else</span> <a class="idref" href="hydras.solutions_exercises.MinPR2.html#y:6"><span class="id" title="variable">y</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">m</span> ⇒ <span class="id" title="keyword">fun</span> (<a id="p':7" class="idref" href="#p':7"><span class="id" title="binder">p'</span></a>: <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryRel"><span class="id" title="definition">naryRel</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">m</span>)) (<a id="g:8" class="idref" href="#g:8"><span class="id" title="binder">g</span></a> <a id="h:9" class="idref" href="#h:9"><span class="id" title="binder">h</span></a>: <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">m</span>)) ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <a id="x:10" class="idref" href="#x:10"><span class="id" title="binder">x</span></a> ⇒ <a class="idref" href="hydras.solutions_exercises.MinPR2.html#naryIf:2"><span class="id" title="definition">naryIf</span></a> <span class="id" title="var">m</span> (<a class="idref" href="hydras.solutions_exercises.MinPR2.html#p':7"><span class="id" title="variable">p'</span></a> <a class="idref" href="hydras.solutions_exercises.MinPR2.html#x:10"><span class="id" title="variable">x</span></a>) (<a class="idref" href="hydras.solutions_exercises.MinPR2.html#g:8"><span class="id" title="variable">g</span></a> <a class="idref" href="hydras.solutions_exercises.MinPR2.html#x:10"><span class="id" title="variable">x</span></a>) (<a class="idref" href="hydras.solutions_exercises.MinPR2.html#h:9"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.solutions_exercises.MinPR2.html#x:10"><span class="id" title="variable">x</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="If2IsPR" class="idref" href="#If2IsPR"><span class="id" title="instance">If2IsPR</span></a> (<a id="p:11" class="idref" href="#p:11"><span class="id" title="binder">p</span></a>: <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryRel"><span class="id" title="definition">naryRel</span></a> 2)(<a id="f:12" class="idref" href="#f:12"><span class="id" title="binder">f</span></a> <a id="g:13" class="idref" href="#g:13"><span class="id" title="binder">g</span></a> : <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 2):<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.primRec.html#isPRrel"><span class="id" title="class">isPRrel</span></a> 2 <a class="idref" href="hydras.solutions_exercises.MinPR2.html#p:11"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 2 <a class="idref" href="hydras.solutions_exercises.MinPR2.html#f:12"><span class="id" title="variable">f</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 2 <a class="idref" href="hydras.solutions_exercises.MinPR2.html#g:13"><span class="id" title="variable">g</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 2 (<a class="idref" href="hydras.solutions_exercises.MinPR2.html#naryIf"><span class="id" title="definition">naryIf</span></a> 2 <a class="idref" href="hydras.solutions_exercises.MinPR2.html#p:11"><span class="id" title="variable">p</span></a> <a class="idref" href="hydras.solutions_exercises.MinPR2.html#f:12"><span class="id" title="variable">f</span></a> <a class="idref" href="hydras.solutions_exercises.MinPR2.html#g:13"><span class="id" title="variable">g</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Proof_of_MinIsPR" class="idref" href="#Proof_of_MinIsPR"><span class="id" title="section">Proof_of_MinIsPR</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Proof_of_MinIsPR.minPR" class="idref" href="#Proof_of_MinIsPR.minPR"><span class="id" title="variable">minPR</span></a> : <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 2 :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.solutions_exercises.MinPR2.html#naryIf"><span class="id" title="definition">naryIf</span></a> 2 <a class="idref" href="hydras.Ackermann.primRec.html#leBool"><span class="id" title="definition">leBool</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="x:18" class="idref" href="#x:18"><span class="id" title="binder">x</span></a> <span class="id" title="var">_</span> ⇒ <a class="idref" href="hydras.solutions_exercises.MinPR2.html#x:18"><span class="id" title="variable">x</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <a id="y:19" class="idref" href="#y:19"><span class="id" title="binder">y</span></a> ⇒ <a class="idref" href="hydras.solutions_exercises.MinPR2.html#y:19"><span class="id" title="variable">y</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="minPR_correct" class="idref" href="#minPR_correct"><span class="id" title="lemma">minPR_correct</span></a> : <a class="idref" href="hydras.Ackermann.extEqualNat.html#extEqual"><span class="id" title="definition">extEqual</span></a> 2 <a class="idref" href="hydras.solutions_exercises.MinPR2.html#Proof_of_MinIsPR.minPR"><span class="id" title="variable">minPR</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.PeanoNat.html#Nat.min"><span class="id" title="definition">PeanoNat.Nat.min</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">local</span>] <span class="id" title="keyword">Instance</span> <a id="minPR_PR" class="idref" href="#minPR_PR"><span class="id" title="instance">minPR_PR</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 2 <a class="idref" href="hydras.solutions_exercises.MinPR2.html#Proof_of_MinIsPR.minPR"><span class="id" title="variable">minPR</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="minIsPR" class="idref" href="#minIsPR"><span class="id" title="instance">minIsPR</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#min"><span class="id" title="abbreviation">min</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.solutions_exercises.MinPR2.html#Proof_of_MinIsPR"><span class="id" title="section">Proof_of_MinIsPR</span></a>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

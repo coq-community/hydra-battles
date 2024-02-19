@@ -1,0 +1,481 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.MoreAck.PrimRecExamples</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.MoreAck.PrimRecExamples</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Arith</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.setoid_ring.ArithRing.html#"><span class="id" title="library">ArithRing</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#"><span class="id" title="library">List</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Vectors.Vector.html#"><span class="id" title="library">Vector</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Unicode.Utf8.html#"><span class="id" title="library">Utf8</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Vectors.Vector.html#VectorNotations"><span class="id" title="module">VectorNotations</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.primRec.html#"><span class="id" title="library">primRec</span></a> <a class="idref" href="hydras.Ackermann.cPair.html#"><span class="id" title="library">cPair</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.extEqualNat.html#"><span class="id" title="module">extEqualNat</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#PRNotations"><span class="id" title="module">PRNotations</span></a>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Ackermann.primRec.html#leBool"><span class="id" title="definition">leBool</span></a> : <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryRel"><span class="id" title="definition">naryRel</span></a> 2.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#plus"><span class="id" title="abbreviation">plus</span></a>: <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 2.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> 42: <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> (<span class="id" title="keyword">fun</span> <a id="n:1" class="idref" href="#n:1"><span class="id" title="binder">n</span></a> <a id="p:2" class="idref" href="#p:2"><span class="id" title="binder">p</span></a> <a id="q:3" class="idref" href="#q:3"><span class="id" title="binder">q</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> ⇒  <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#n:1"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#p:2"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#q:3"><span class="id" title="variable">q</span></a>): <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 3.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="extEqual_ex1" class="idref" href="#extEqual_ex1"><span class="id" title="definition">extEqual_ex1</span></a>: <a class="idref" href="hydras.Ackermann.primRec.html#0a87cec6db386ad672945a4ad4643c14"><span class="id" title="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.PeanoNat.html#Nat.mul"><span class="id" title="definition">Nat.mul</span></a>: <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 2<a class="idref" href="hydras.Ackermann.primRec.html#0a87cec6db386ad672945a4ad4643c14"><span class="id" title="notation">)</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#0a87cec6db386ad672945a4ad4643c14"><span class="id" title="notation">=</span></a><a class="idref" href="hydras.Ackermann.primRec.html#0a87cec6db386ad672945a4ad4643c14"><span class="id" title="notation">x</span></a><a class="idref" href="hydras.Ackermann.primRec.html#0a87cec6db386ad672945a4ad4643c14"><span class="id" title="notation">=</span></a> <span class="id" title="keyword">fun</span> <a id="x:4" class="idref" href="#x:4"><span class="id" title="binder">x</span></a> <a id="y:5" class="idref" href="#y:5"><span class="id" title="binder">y</span></a> ⇒  <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#y:5"><span class="id" title="variable">y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:4"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:4"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#::nat_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:4"><span class="id" title="variable">x</span></a>.  
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab330"></a><h2 class="section">Examples of terms of type <span class="inlinecode"><span class="id" title="var">PrimRec</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> and their interpretation</h2>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="Ex1" class="idref" href="#Ex1"><span class="id" title="definition">Ex1</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#PReval"><span class="id" title="abbreviation">PReval</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#zeroFunc"><span class="id" title="constructor">zeroFunc</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 0.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Example</span> <a id="Ex2" class="idref" href="#Ex2"><span class="id" title="definition">Ex2</span></a> <a id="a:6" class="idref" href="#a:6"><span class="id" title="binder">a</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#PReval"><span class="id" title="abbreviation">PReval</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#succFunc"><span class="id" title="constructor">succFunc</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#a:6"><span class="id" title="variable">a</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#a:6"><span class="id" title="variable">a</span></a><a class="idref" href="hydras.Prelude.ssrnat_extracts.html#bda89d73ec4a8f23ae92b565ffb5aaa6"><span class="id" title="notation">.+1</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Example</span> <a id="Ex3" class="idref" href="#Ex3"><span class="id" title="definition">Ex3</span></a> <a id="a:7" class="idref" href="#a:7"><span class="id" title="binder">a</span></a> <a id="b:8" class="idref" href="#b:8"><span class="id" title="binder">b</span></a> <a id="c:9" class="idref" href="#c:9"><span class="id" title="binder">c</span></a> <a id="d:10" class="idref" href="#d:10"><span class="id" title="binder">d</span></a> <a id="e:11" class="idref" href="#e:11"><span class="id" title="binder">e</span></a> <a id="f:12" class="idref" href="#f:12"><span class="id" title="binder">f</span></a>: <span class="id" title="keyword">∀</span> (<a id="H:13" class="idref" href="#H:13"><span class="id" title="binder">H</span></a>: 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#::nat_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> 6),<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.primRec.html#PReval"><span class="id" title="abbreviation">PReval</span></a> (<a class="idref" href="hydras.Ackermann.primRec.html#projFunc"><span class="id" title="constructor">projFunc</span></a> 6 2 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#H:13"><span class="id" title="variable">H</span></a>) <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#a:7"><span class="id" title="variable">a</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#b:8"><span class="id" title="variable">b</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#c:9"><span class="id" title="variable">c</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#d:10"><span class="id" title="variable">d</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#e:11"><span class="id" title="variable">e</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#f:12"><span class="id" title="variable">f</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#d:10"><span class="id" title="variable">d</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Example</span> <a id="Ex4" class="idref" href="#Ex4"><span class="id" title="definition">Ex4</span></a> : <a class="idref" href="hydras.Ackermann.extEqualNat.html#extEqual"><span class="id" title="definition">extEqual</span></a> 4 (<span class="id" title="keyword">fun</span> <a id="a:14" class="idref" href="#a:14"><span class="id" title="binder">a</span></a> <a id="b:15" class="idref" href="#b:15"><span class="id" title="binder">b</span></a> <a id="c:16" class="idref" href="#c:16"><span class="id" title="binder">c</span></a> <a id="d:17" class="idref" href="#d:17"><span class="id" title="binder">d</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> ⇒ 0)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Ackermann.primRec.html#PReval"><span class="id" title="abbreviation">PReval</span></a> (<a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.PRcomp"><span class="id" title="abbreviation">PRcomp</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#zeroFunc"><span class="id" title="constructor">zeroFunc</span></a> (<a class="idref" href="hydras.Ackermann.primRec.html#PRnil"><span class="id" title="constructor">PRnil</span></a> <span class="id" title="var">_</span>))).<br/>
+ 
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Composition" class="idref" href="#Composition"><span class="id" title="section">Composition</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> (<a id="Composition.x" class="idref" href="#Composition.x"><span class="id" title="variable">x</span></a> <a id="Composition.y" class="idref" href="#Composition.y"><span class="id" title="variable">y</span></a> <a id="Composition.z" class="idref" href="#Composition.z"><span class="id" title="variable">z</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#PrimRec"><span class="id" title="inductive">PrimRec</span></a> 2) (<a id="Composition.t" class="idref" href="#Composition.t"><span class="id" title="variable">t</span></a>: <a class="idref" href="hydras.Ackermann.primRec.html#PrimRec"><span class="id" title="inductive">PrimRec</span></a> 3).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Composition.u" class="idref" href="#Composition.u"><span class="id" title="variable">u</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#PrimRec"><span class="id" title="inductive">PrimRec</span></a> 2 := <a class="idref" href="hydras.Ackermann.primRec.html#composeFunc"><span class="id" title="constructor">composeFunc</span></a> 2 3 <a class="idref" href="hydras.Ackermann.primRec.html#0d92c10e9c6b3f86aa7104ae219ede74"><span class="id" title="notation">[</span></a><a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Composition.x"><span class="id" title="variable">x</span></a><a class="idref" href="hydras.Ackermann.primRec.html#0d92c10e9c6b3f86aa7104ae219ede74"><span class="id" title="notation">;</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Composition.y"><span class="id" title="variable">y</span></a><a class="idref" href="hydras.Ackermann.primRec.html#0d92c10e9c6b3f86aa7104ae219ede74"><span class="id" title="notation">;</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Composition.z"><span class="id" title="variable">z</span></a><a class="idref" href="hydras.Ackermann.primRec.html#0d92c10e9c6b3f86aa7104ae219ede74"><span class="id" title="notation">]</span></a>%<span class="id" title="var">pr</span> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Composition.t"><span class="id" title="variable">t</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Composition.f" class="idref" href="#Composition.f"><span class="id" title="variable">f</span></a> := <a class="idref" href="hydras.Ackermann.primRec.html#PReval"><span class="id" title="abbreviation">PReval</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Composition.x"><span class="id" title="variable">x</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Composition.g" class="idref" href="#Composition.g"><span class="id" title="variable">g</span></a> := <a class="idref" href="hydras.Ackermann.primRec.html#PReval"><span class="id" title="abbreviation">PReval</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Composition.y"><span class="id" title="variable">y</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Composition.h" class="idref" href="#Composition.h"><span class="id" title="variable">h</span></a> := <a class="idref" href="hydras.Ackermann.primRec.html#PReval"><span class="id" title="abbreviation">PReval</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Composition.z"><span class="id" title="variable">z</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Composition.k" class="idref" href="#Composition.k"><span class="id" title="variable">k</span></a> := <a class="idref" href="hydras.Ackermann.primRec.html#PReval"><span class="id" title="abbreviation">PReval</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Composition.t"><span class="id" title="variable">t</span></a>.<br/>
+&nbsp;<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">∀</span></a> <a id="n:22" class="idref" href="#n:22"><span class="id" title="binder">n</span></a> <a id="p:23" class="idref" href="#p:23"><span class="id" title="binder">p</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">,</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">PReval</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">u</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">n</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">p</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">k</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">(</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">f</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">n</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">p</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">)</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">(</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">g</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">n</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">p</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">)</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">(</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">h</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">n</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">p</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">)</span></a>.<br/>
+ 
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Composition.v" class="idref" href="#Composition.v"><span class="id" title="variable">v</span></a> := (<a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.PRcomp"><span class="id" title="abbreviation">PRcomp</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Composition.t"><span class="id" title="variable">t</span></a>  <a class="idref" href="hydras.Ackermann.primRec.html#0d92c10e9c6b3f86aa7104ae219ede74"><span class="id" title="notation">[</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.pi1_2"><span class="id" title="abbreviation">pi1_2</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#0d92c10e9c6b3f86aa7104ae219ede74"><span class="id" title="notation">;</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.pi1_2"><span class="id" title="abbreviation">pi1_2</span></a><a class="idref" href="hydras.Ackermann.primRec.html#0d92c10e9c6b3f86aa7104ae219ede74"><span class="id" title="notation">;</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.pi2_2"><span class="id" title="abbreviation">pi2_2</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#0d92c10e9c6b3f86aa7104ae219ede74"><span class="id" title="notation">]</span></a>)%<span class="id" title="var">pr</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Eval</span> <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> <a class="idref" href="hydras.Ackermann.primRec.html#PReval"><span class="id" title="abbreviation">PReval</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Composition.v"><span class="id" title="variable">v</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Composition"><span class="id" title="section">Composition</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Primitive_recursion" class="idref" href="#Primitive_recursion"><span class="id" title="section">Primitive_recursion</span></a>.<br/>
+&nbsp;<span class="id" title="keyword">Variables</span> (<a id="Primitive_recursion.x" class="idref" href="#Primitive_recursion.x"><span class="id" title="variable">x</span></a>: <a class="idref" href="hydras.Ackermann.primRec.html#PrimRec"><span class="id" title="inductive">PrimRec</span></a> 2)(<a id="Primitive_recursion.y" class="idref" href="#Primitive_recursion.y"><span class="id" title="variable">y</span></a>: <a class="idref" href="hydras.Ackermann.primRec.html#PrimRec"><span class="id" title="inductive">PrimRec</span></a> 4).<br/>
+&nbsp;<span class="id" title="keyword">Let</span> <a id="Primitive_recursion.z" class="idref" href="#Primitive_recursion.z"><span class="id" title="variable">z</span></a> := (<a class="idref" href="hydras.Ackermann.primRec.html#primRecFunc"><span class="id" title="constructor">primRecFunc</span></a> <span class="id" title="var">_</span> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Primitive_recursion.x"><span class="id" title="variable">x</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Primitive_recursion.y"><span class="id" title="variable">y</span></a>).<br/>
+&nbsp;<span class="id" title="keyword">Let</span> <a id="Primitive_recursion.g" class="idref" href="#Primitive_recursion.g"><span class="id" title="variable">g</span></a> := <a class="idref" href="hydras.Ackermann.primRec.html#PReval"><span class="id" title="abbreviation">PReval</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Primitive_recursion.x"><span class="id" title="variable">x</span></a>.<br/>
+&nbsp;<span class="id" title="keyword">Let</span> <a id="Primitive_recursion.h" class="idref" href="#Primitive_recursion.h"><span class="id" title="variable">h</span></a> := <a class="idref" href="hydras.Ackermann.primRec.html#PReval"><span class="id" title="abbreviation">PReval</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Primitive_recursion.y"><span class="id" title="variable">y</span></a>.<br/>
+&nbsp;<span class="id" title="keyword">Let</span> <a id="Primitive_recursion.f" class="idref" href="#Primitive_recursion.f"><span class="id" title="variable">f</span></a> := <a class="idref" href="hydras.Ackermann.primRec.html#PReval"><span class="id" title="abbreviation">PReval</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Primitive_recursion.z"><span class="id" title="variable">z</span></a>.<br/>
+&nbsp;<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">∀</span></a> <a id="a:26" class="idref" href="#a:26"><span class="id" title="binder">a</span></a> <a id="b:27" class="idref" href="#b:27"><span class="id" title="binder">b</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">,</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">f</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">0</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">a</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">b</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">g</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">a</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">b</span></a>.<br/>
+ 
+<br/>
+&nbsp;<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">∀</span></a> <a id="n:28" class="idref" href="#n:28"><span class="id" title="binder">n</span></a> <a id="a:29" class="idref" href="#a:29"><span class="id" title="binder">a</span></a> <a id="b:30" class="idref" href="#b:30"><span class="id" title="binder">b</span></a><a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">,</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">f</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">n</span></a><a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">.+1</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">a</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">b</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">=</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">h</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">n</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">(</span></a><a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">f</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">n</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">a</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">b</span></a><a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">)</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">a</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">b</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Primitive_recursion"><span class="id" title="section">Primitive_recursion</span></a>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="compose2Examples" class="idref" href="#compose2Examples"><span class="id" title="section">compose2Examples</span></a>.<br/>
+<span class="id" title="keyword">Variables</span> (<a id="compose2Examples.f" class="idref" href="#compose2Examples.f"><span class="id" title="variable">f</span></a>: <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 1) (<a id="compose2Examples.g" class="idref" href="#compose2Examples.g"><span class="id" title="variable">g</span></a>: <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 2) (<a id="compose2Examples.h" class="idref" href="#compose2Examples.h"><span class="id" title="variable">h</span></a>: <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 3)<br/>
+&nbsp;&nbsp;(<a id="compose2Examples.f'" class="idref" href="#compose2Examples.f'"><span class="id" title="variable">f'</span></a>: <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 4) (<a id="compose2Examples.g'" class="idref" href="#compose2Examples.g'"><span class="id" title="variable">g'</span></a>: <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 5).<br/>
+
+<br/>
+<span class="id" title="keyword">Eval</span> <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> <a class="idref" href="hydras.Ackermann.primRec.html#compose2"><span class="id" title="definition">compose2</span></a> 1 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#compose2Examples.f"><span class="id" title="variable">f</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#compose2Examples.g"><span class="id" title="variable">g</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Eval</span> <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> <a class="idref" href="hydras.Ackermann.primRec.html#compose2"><span class="id" title="definition">compose2</span></a> 2 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#compose2Examples.g"><span class="id" title="variable">g</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#compose2Examples.h"><span class="id" title="variable">h</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Eval</span> <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> <a class="idref" href="hydras.Ackermann.primRec.html#compose2"><span class="id" title="definition">compose2</span></a> <span class="id" title="var">_</span> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#compose2Examples.f'"><span class="id" title="variable">f'</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#compose2Examples.g'"><span class="id" title="variable">g'</span></a>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#compose2Examples"><span class="id" title="section">compose2Examples</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <a id="MoreExamples" class="idref" href="#MoreExamples"><span class="id" title="module">MoreExamples</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The unary constant function which returns 0 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="MoreExamples.cst0" class="idref" href="#MoreExamples.cst0"><span class="id" title="definition">cst0</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#PrimRec"><span class="id" title="inductive">PrimRec</span></a> 1 := (<a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.PRcomp"><span class="id" title="abbreviation">PRcomp</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#zeroFunc"><span class="id" title="constructor">zeroFunc</span></a> (<a class="idref" href="hydras.Ackermann.primRec.html#PRnil"><span class="id" title="constructor">PRnil</span></a> <span class="id" title="var">_</span>))%<span class="id" title="var">pr</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The unary constant function which returns i 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <a id="MoreExamples.cst" class="idref" href="#MoreExamples.cst"><span class="id" title="definition">cst</span></a> (<a id="i:36" class="idref" href="#i:36"><span class="id" title="binder">i</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="hydras.Ackermann.primRec.html#PrimRec"><span class="id" title="inductive">PrimRec</span></a> 1 :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#i:36"><span class="id" title="variable">i</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;0 ⇒ <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#MoreExamples.cst0"><span class="id" title="definition">cst0</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">j</span> ⇒ (<a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.PRcomp"><span class="id" title="abbreviation">PRcomp</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#succFunc"><span class="id" title="constructor">succFunc</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#7270cfdd80e3adbb7f438dd90c04a50e"><span class="id" title="notation">[</span></a><a class="idref" href="hydras.MoreAck.PrimRecExamples.html#cst:37"><span class="id" title="definition">cst</span></a> <span class="id" title="var">j</span><a class="idref" href="hydras.Ackermann.primRec.html#7270cfdd80e3adbb7f438dd90c04a50e"><span class="id" title="notation">]</span></a>)%<span class="id" title="var">pr</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Addition 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="MoreExamples.plus" class="idref" href="#MoreExamples.plus"><span class="id" title="definition">plus</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#PrimRec"><span class="id" title="inductive">PrimRec</span></a> 2 := <br/>
+&nbsp;&nbsp;(<a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.PRrec"><span class="id" title="abbreviation">PRrec</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.pi1_1"><span class="id" title="abbreviation">pi1_1</span></a> (<a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.PRcomp"><span class="id" title="abbreviation">PRcomp</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#succFunc"><span class="id" title="constructor">succFunc</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#7270cfdd80e3adbb7f438dd90c04a50e"><span class="id" title="notation">[</span></a><a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.pi2_3"><span class="id" title="abbreviation">pi2_3</span></a><a class="idref" href="hydras.Ackermann.primRec.html#7270cfdd80e3adbb7f438dd90c04a50e"><span class="id" title="notation">]</span></a>))%<span class="id" title="var">pr</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Multiplication 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="MoreExamples.mult" class="idref" href="#MoreExamples.mult"><span class="id" title="definition">mult</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#PrimRec"><span class="id" title="inductive">PrimRec</span></a> 2 :=<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.PRrec"><span class="id" title="abbreviation">PRrec</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#MoreExamples.cst0"><span class="id" title="definition">cst0</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.PRcomp"><span class="id" title="abbreviation">PRcomp</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#MoreExamples.plus"><span class="id" title="definition">plus</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#0d92c10e9c6b3f86aa7104ae219ede74"><span class="id" title="notation">[</span></a><a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.pi2_3"><span class="id" title="abbreviation">pi2_3</span></a><a class="idref" href="hydras.Ackermann.primRec.html#0d92c10e9c6b3f86aa7104ae219ede74"><span class="id" title="notation">;</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.pi3_3"><span class="id" title="abbreviation">pi3_3</span></a><a class="idref" href="hydras.Ackermann.primRec.html#0d92c10e9c6b3f86aa7104ae219ede74"><span class="id" title="notation">]</span></a>%<span class="id" title="var">pr</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Factorial function 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <a id="MoreExamples.fact" class="idref" href="#MoreExamples.fact"><span class="id" title="definition">fact</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#PrimRec"><span class="id" title="inductive">PrimRec</span></a> 1 := <br/>
+&nbsp;&nbsp;(<a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.PRrec"><span class="id" title="abbreviation">PRrec</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.PRcomp"><span class="id" title="abbreviation">PRcomp</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#succFunc"><span class="id" title="constructor">succFunc</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#7270cfdd80e3adbb7f438dd90c04a50e"><span class="id" title="notation">[</span></a><a class="idref" href="hydras.Ackermann.primRec.html#zeroFunc"><span class="id" title="constructor">zeroFunc</span></a><a class="idref" href="hydras.Ackermann.primRec.html#7270cfdd80e3adbb7f438dd90c04a50e"><span class="id" title="notation">]</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.PRcomp"><span class="id" title="abbreviation">PRcomp</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#MoreExamples.mult"><span class="id" title="definition">mult</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#0d92c10e9c6b3f86aa7104ae219ede74"><span class="id" title="notation">[</span></a><a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.pi2_2"><span class="id" title="abbreviation">pi2_2</span></a><a class="idref" href="hydras.Ackermann.primRec.html#0d92c10e9c6b3f86aa7104ae219ede74"><span class="id" title="notation">;</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.PRcomp"><span class="id" title="abbreviation">PRcomp</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#succFunc"><span class="id" title="constructor">succFunc</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#7270cfdd80e3adbb7f438dd90c04a50e"><span class="id" title="notation">[</span></a><a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.pi1_2"><span class="id" title="abbreviation">pi1_2</span></a><a class="idref" href="hydras.Ackermann.primRec.html#7270cfdd80e3adbb7f438dd90c04a50e"><span class="id" title="notation">]</span></a><a class="idref" href="hydras.Ackermann.primRec.html#0d92c10e9c6b3f86aa7104ae219ede74"><span class="id" title="notation">]</span></a>))%<span class="id" title="var">pr</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#MoreExamples"><span class="id" title="module">MoreExamples</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#MoreExamples"><span class="id" title="module">MoreExamples</span></a>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="cst0_correct" class="idref" href="#cst0_correct"><span class="id" title="lemma">cst0_correct</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#PRcorrect"><span class="id" title="definition">PRcorrect</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#cst0"><span class="id" title="definition">cst0</span></a> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ 0).<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="cst_correct" class="idref" href="#cst_correct"><span class="id" title="lemma">cst_correct</span></a> (<a id="k:40" class="idref" href="#k:40"><span class="id" title="binder">k</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) :  <a class="idref" href="hydras.Ackermann.primRec.html#PRcorrect"><span class="id" title="definition">PRcorrect</span></a> (<a class="idref" href="hydras.MoreAck.PrimRecExamples.html#cst"><span class="id" title="definition">cst</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#k:40"><span class="id" title="variable">k</span></a>) (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#k:40"><span class="id" title="variable">k</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="plus_correct" class="idref" href="#plus_correct"><span class="id" title="lemma">plus_correct</span></a>:  <a class="idref" href="hydras.Ackermann.primRec.html#PRcorrect"><span class="id" title="definition">PRcorrect</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#plus"><span class="id" title="definition">plus</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.PeanoNat.html#Nat.add"><span class="id" title="definition">Nat.add</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Remark</span> <a id="mult_eqn1" class="idref" href="#mult_eqn1"><span class="id" title="lemma">mult_eqn1</span></a> <a id="n:41" class="idref" href="#n:41"><span class="id" title="binder">n</span></a> <a id="p:42" class="idref" href="#p:42"><span class="id" title="binder">p</span></a>: <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.primRec.html#PReval"><span class="id" title="abbreviation">PReval</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#mult"><span class="id" title="definition">mult</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#n:41"><span class="id" title="variable">n</span></a>) <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#p:42"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.primRec.html#PReval"><span class="id" title="abbreviation">PReval</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#plus"><span class="id" title="definition">plus</span></a> (<a class="idref" href="hydras.Ackermann.primRec.html#PReval"><span class="id" title="abbreviation">PReval</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#mult"><span class="id" title="definition">mult</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#n:41"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#p:42"><span class="id" title="variable">p</span></a>) <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#p:42"><span class="id" title="variable">p</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="mult_correct" class="idref" href="#mult_correct"><span class="id" title="lemma">mult_correct</span></a>: <a class="idref" href="hydras.Ackermann.primRec.html#PRcorrect"><span class="id" title="definition">PRcorrect</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#mult"><span class="id" title="definition">mult</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.PeanoNat.html#Nat.mul"><span class="id" title="definition">Nat.mul</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="fact_correct" class="idref" href="#fact_correct"><span class="id" title="lemma">fact_correct</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#PRcorrect"><span class="id" title="definition">PRcorrect</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#fact"><span class="id" title="definition">fact</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Factorial.html#fact"><span class="id" title="definition">Coq.Arith.Factorial.fact</span></a>.<br/>
+ 
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab331"></a><h2 class="section">Understanding some constructions ...</h2>
+
+
+<div class="paragraph"> </div>
+
+ These lemmas are trivial and theoretically useless, but they may help to 
+   make the construction more   concrete 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="PRcompose1" class="idref" href="#PRcompose1"><span class="id" title="definition">PRcompose1</span></a> (<a id="g:45" class="idref" href="#g:45"><span class="id" title="binder">g</span></a> <a id="f:46" class="idref" href="#f:46"><span class="id" title="binder">f</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#PrimRec"><span class="id" title="inductive">PrimRec</span></a> 1) : <a class="idref" href="hydras.Ackermann.primRec.html#PrimRec"><span class="id" title="inductive">PrimRec</span></a> 1 := <a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.PRcomp"><span class="id" title="abbreviation">PRcomp</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#g:45"><span class="id" title="variable">g</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#7270cfdd80e3adbb7f438dd90c04a50e"><span class="id" title="notation">[</span></a><a class="idref" href="hydras.MoreAck.PrimRecExamples.html#f:46"><span class="id" title="variable">f</span></a><a class="idref" href="hydras.Ackermann.primRec.html#7270cfdd80e3adbb7f438dd90c04a50e"><span class="id" title="notation">]</span></a>%<span class="id" title="var">pr</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">∀</span></a> <a id="f:47" class="idref" href="#f:47"><span class="id" title="binder">f</span></a> <a id="g:48" class="idref" href="#g:48"><span class="id" title="binder">g</span></a> <a id="x:49" class="idref" href="#x:49"><span class="id" title="binder">x</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">,</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">evalPrimRec</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">1</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">(</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">PRcompose1</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">g</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">f</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">)</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">x</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">=</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">evalPrimRec</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">1</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">g</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">(</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">evalPrimRec</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">1</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">f</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">x</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">)</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Remark</span> <a id="compose2_0" class="idref" href="#compose2_0"><span class="id" title="lemma">compose2_0</span></a> (<a id="a:50" class="idref" href="#a:50"><span class="id" title="binder">a</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="g:51" class="idref" href="#g:51"><span class="id" title="binder">g</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="hydras.Ackermann.primRec.html#compose2"><span class="id" title="definition">compose2</span></a> 0 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#a:50"><span class="id" title="variable">a</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#g:51"><span class="id" title="variable">g</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#g:51"><span class="id" title="variable">g</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#a:50"><span class="id" title="variable">a</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Remark</span> <a id="compose2_1" class="idref" href="#compose2_1"><span class="id" title="lemma">compose2_1</span></a> (<a id="f:52" class="idref" href="#f:52"><span class="id" title="binder">f</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="g:53" class="idref" href="#g:53"><span class="id" title="binder">g</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) <a id="x:54" class="idref" href="#x:54"><span class="id" title="binder">x</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="hydras.Ackermann.primRec.html#compose2"><span class="id" title="definition">compose2</span></a> 1 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#f:52"><span class="id" title="variable">f</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#g:53"><span class="id" title="variable">g</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:54"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#g:53"><span class="id" title="variable">g</span></a> (<a class="idref" href="hydras.MoreAck.PrimRecExamples.html#f:52"><span class="id" title="variable">f</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:54"><span class="id" title="variable">x</span></a>) <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:54"><span class="id" title="variable">x</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Remark</span> <a id="compose2_2" class="idref" href="#compose2_2"><span class="id" title="lemma">compose2_2</span></a>  (<a id="f:55" class="idref" href="#f:55"><span class="id" title="binder">f</span></a>: <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 2) (<a id="g:56" class="idref" href="#g:56"><span class="id" title="binder">g</span></a> : <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 3) <a id="x:57" class="idref" href="#x:57"><span class="id" title="binder">x</span></a> <a id="y:58" class="idref" href="#y:58"><span class="id" title="binder">y</span></a><br/>
+&nbsp;&nbsp;: <a class="idref" href="hydras.Ackermann.primRec.html#compose2"><span class="id" title="definition">compose2</span></a> 2 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#f:55"><span class="id" title="variable">f</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#g:56"><span class="id" title="variable">g</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:57"><span class="id" title="variable">x</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#y:58"><span class="id" title="variable">y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#g:56"><span class="id" title="variable">g</span></a> (<a class="idref" href="hydras.MoreAck.PrimRecExamples.html#f:55"><span class="id" title="variable">f</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:57"><span class="id" title="variable">x</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#y:58"><span class="id" title="variable">y</span></a>) <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:57"><span class="id" title="variable">x</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#y:58"><span class="id" title="variable">y</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Remark</span> <a id="compose2_3" class="idref" href="#compose2_3"><span class="id" title="lemma">compose2_3</span></a>  (<a id="f:59" class="idref" href="#f:59"><span class="id" title="binder">f</span></a>: <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 3) (<a id="g:60" class="idref" href="#g:60"><span class="id" title="binder">g</span></a> : <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 4) <a id="x:61" class="idref" href="#x:61"><span class="id" title="binder">x</span></a> <a id="y:62" class="idref" href="#y:62"><span class="id" title="binder">y</span></a> <a id="z:63" class="idref" href="#z:63"><span class="id" title="binder">z</span></a> <br/>
+&nbsp;&nbsp;: <a class="idref" href="hydras.Ackermann.primRec.html#compose2"><span class="id" title="definition">compose2</span></a> 3 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#f:59"><span class="id" title="variable">f</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#g:60"><span class="id" title="variable">g</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:61"><span class="id" title="variable">x</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#y:62"><span class="id" title="variable">y</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#z:63"><span class="id" title="variable">z</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#g:60"><span class="id" title="variable">g</span></a> (<a class="idref" href="hydras.MoreAck.PrimRecExamples.html#f:59"><span class="id" title="variable">f</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:61"><span class="id" title="variable">x</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#y:62"><span class="id" title="variable">y</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#z:63"><span class="id" title="variable">z</span></a>) <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:61"><span class="id" title="variable">x</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#y:62"><span class="id" title="variable">y</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#z:63"><span class="id" title="variable">z</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Remark</span> <a id="PrimRec_0_0" class="idref" href="#PrimRec_0_0"><span class="id" title="lemma">PrimRec_0_0</span></a> (<a id="a:64" class="idref" href="#a:64"><span class="id" title="binder">a</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>)(<a id="g:65" class="idref" href="#g:65"><span class="id" title="binder">g</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.primRec.html#evalPrimRecFunc"><span class="id" title="definition">evalPrimRecFunc</span></a> 0 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#a:64"><span class="id" title="variable">a</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#g:65"><span class="id" title="variable">g</span></a> 0 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#a:64"><span class="id" title="variable">a</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Remark</span> <a id="PrimRec_0_S" class="idref" href="#PrimRec_0_S"><span class="id" title="lemma">PrimRec_0_S</span></a> (<a id="a:66" class="idref" href="#a:66"><span class="id" title="binder">a</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="g:67" class="idref" href="#g:67"><span class="id" title="binder">g</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="i:68" class="idref" href="#i:68"><span class="id" title="binder">i</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>):<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <a id="phi:69" class="idref" href="#phi:69"><span class="id" title="binder">phi</span></a> :=  <a class="idref" href="hydras.Ackermann.primRec.html#evalPrimRecFunc"><span class="id" title="definition">evalPrimRecFunc</span></a> 0 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#a:66"><span class="id" title="variable">a</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#g:67"><span class="id" title="variable">g</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">in</span> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#phi:69"><span class="id" title="variable">phi</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#i:68"><span class="id" title="variable">i</span></a>)  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#g:67"><span class="id" title="variable">g</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#i:68"><span class="id" title="variable">i</span></a> (<a class="idref" href="hydras.MoreAck.PrimRecExamples.html#phi:69"><span class="id" title="variable">phi</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#i:68"><span class="id" title="variable">i</span></a>).<br/>
+ 
+<br/>
+<span class="id" title="keyword">Remark</span> <a id="PrimRec_1_0" class="idref" href="#PrimRec_1_0"><span class="id" title="lemma">PrimRec_1_0</span></a> (<a id="f:70" class="idref" href="#f:70"><span class="id" title="binder">f</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>)(<a id="g:71" class="idref" href="#g:71"><span class="id" title="binder">g</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="x:72" class="idref" href="#x:72"><span class="id" title="binder">x</span></a>,  <a class="idref" href="hydras.Ackermann.primRec.html#evalPrimRecFunc"><span class="id" title="definition">evalPrimRecFunc</span></a> 1 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#f:70"><span class="id" title="variable">f</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#g:71"><span class="id" title="variable">g</span></a> 0 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:72"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#f:70"><span class="id" title="variable">f</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:72"><span class="id" title="variable">x</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Remark</span> <a id="PrimRec_1_S" class="idref" href="#PrimRec_1_S"><span class="id" title="lemma">PrimRec_1_S</span></a> (<a id="f:73" class="idref" href="#f:73"><span class="id" title="binder">f</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="g:74" class="idref" href="#g:74"><span class="id" title="binder">g</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) (<a id="i:75" class="idref" href="#i:75"><span class="id" title="binder">i</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>):<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <a id="phi:76" class="idref" href="#phi:76"><span class="id" title="binder">phi</span></a> := <a class="idref" href="hydras.Ackermann.primRec.html#evalPrimRecFunc"><span class="id" title="definition">evalPrimRecFunc</span></a> 1  <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#f:73"><span class="id" title="variable">f</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#g:74"><span class="id" title="variable">g</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">in</span> <span class="id" title="keyword">∀</span> <a id="x:77" class="idref" href="#x:77"><span class="id" title="binder">x</span></a>,  <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#phi:76"><span class="id" title="variable">phi</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#i:75"><span class="id" title="variable">i</span></a>) <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:77"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#g:74"><span class="id" title="variable">g</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#i:75"><span class="id" title="variable">i</span></a> (<a class="idref" href="hydras.MoreAck.PrimRecExamples.html#phi:76"><span class="id" title="variable">phi</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#i:75"><span class="id" title="variable">i</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:77"><span class="id" title="variable">x</span></a>) <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:77"><span class="id" title="variable">x</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Remark</span> <a id="PrimRec_2_0" class="idref" href="#PrimRec_2_0"><span class="id" title="lemma">PrimRec_2_0</span></a> (<a id="f:78" class="idref" href="#f:78"><span class="id" title="binder">f</span></a> : <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 2) (<a id="g:79" class="idref" href="#g:79"><span class="id" title="binder">g</span></a> : <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 4) :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="x:80" class="idref" href="#x:80"><span class="id" title="binder">x</span></a> <a id="y:81" class="idref" href="#y:81"><span class="id" title="binder">y</span></a>, <a class="idref" href="hydras.Ackermann.primRec.html#evalPrimRecFunc"><span class="id" title="definition">evalPrimRecFunc</span></a> 2 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#f:78"><span class="id" title="variable">f</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#g:79"><span class="id" title="variable">g</span></a> 0 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:80"><span class="id" title="variable">x</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#y:81"><span class="id" title="variable">y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#f:78"><span class="id" title="variable">f</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:80"><span class="id" title="variable">x</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#y:81"><span class="id" title="variable">y</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Remark</span> <a id="PrimRec_2_S" class="idref" href="#PrimRec_2_S"><span class="id" title="lemma">PrimRec_2_S</span></a>  (<a id="f:82" class="idref" href="#f:82"><span class="id" title="binder">f</span></a>: <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 2) (<a id="g:83" class="idref" href="#g:83"><span class="id" title="binder">g</span></a> : <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 4) (<a id="i:84" class="idref" href="#i:84"><span class="id" title="binder">i</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">let</span> <a id="phi:85" class="idref" href="#phi:85"><span class="id" title="binder">phi</span></a> := <a class="idref" href="hydras.Ackermann.primRec.html#evalPrimRecFunc"><span class="id" title="definition">evalPrimRecFunc</span></a> 2  <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#f:82"><span class="id" title="variable">f</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#g:83"><span class="id" title="variable">g</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="tactic">in</span>  <span class="id" title="keyword">∀</span> <a id="x:86" class="idref" href="#x:86"><span class="id" title="binder">x</span></a> <a id="y:87" class="idref" href="#y:87"><span class="id" title="binder">y</span></a>,  <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#phi:85"><span class="id" title="variable">phi</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#i:84"><span class="id" title="variable">i</span></a>) <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:86"><span class="id" title="variable">x</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#y:87"><span class="id" title="variable">y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#g:83"><span class="id" title="variable">g</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#i:84"><span class="id" title="variable">i</span></a> (<a class="idref" href="hydras.MoreAck.PrimRecExamples.html#phi:85"><span class="id" title="variable">phi</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#i:84"><span class="id" title="variable">i</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:86"><span class="id" title="variable">x</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#y:87"><span class="id" title="variable">y</span></a>) <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:86"><span class="id" title="variable">x</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#y:87"><span class="id" title="variable">y</span></a>.<br/>
+ 
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab332"></a><h1 class="section">First proofs of isPR statements</h1>
+
+
+<div class="paragraph"> </div>
+
+  The module <span class="inlinecode"><span class="id" title="var">Alt</span></span> presents proofs of lemmas already proven in <span class="inlinecode"><span class="id" title="var">primRec.v</span></span>
+  We just hope that such a redundancy will help the reader to get familiar 
+  with the various patterns allowed by that library.
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <a id="Alt" class="idref" href="#Alt"><span class="id" title="module">Alt</span></a>.<br/>
+
+<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="Alt.zeroIsPR" class="idref" href="#Alt.zeroIsPR"><span class="id" title="instance">zeroIsPR</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 0 0.  
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="Alt.succIsPR" class="idref" href="#Alt.succIsPR"><span class="id" title="instance">succIsPR</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a>.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="Alt.addIsPR" class="idref" href="#Alt.addIsPR"><span class="id" title="instance">addIsPR</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.PeanoNat.html#Nat.add"><span class="id" title="definition">Nat.add</span></a>.<br/>
+ 
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="Alt.pi2_5IsPR" class="idref" href="#Alt.pi2_5IsPR"><span class="id" title="instance">pi2_5IsPR</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 5 (<span class="id" title="keyword">fun</span> <a id="a:88" class="idref" href="#a:88"><span class="id" title="binder">a</span></a> <a id="b:89" class="idref" href="#b:89"><span class="id" title="binder">b</span></a> <a id="c:90" class="idref" href="#c:90"><span class="id" title="binder">c</span></a> <a id="d:91" class="idref" href="#d:91"><span class="id" title="binder">d</span></a> <a id="e:92" class="idref" href="#e:92"><span class="id" title="binder">e</span></a> ⇒ <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#b:89"><span class="id" title="variable">b</span></a>).<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Ackermann.primRec.html#composeFunc"><span class="id" title="constructor">composeFunc</span></a> 0 1.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Remark</span> <a id="Alt.compose_01" class="idref" href="#Alt.compose_01"><span class="id" title="lemma">compose_01</span></a>  (<a id="x:93" class="idref" href="#x:93"><span class="id" title="binder">x</span></a>:<a class="idref" href="hydras.Ackermann.primRec.html#PrimRec"><span class="id" title="inductive">PrimRec</span></a> 0) (<a id="t:94" class="idref" href="#t:94"><span class="id" title="binder">t</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#PrimRec"><span class="id" title="inductive">PrimRec</span></a> 1) :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.primRec.html#PReval"><span class="id" title="abbreviation">PReval</span></a> (<a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.PRcomp"><span class="id" title="abbreviation">PRcomp</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#t:94"><span class="id" title="variable">t</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#7270cfdd80e3adbb7f438dd90c04a50e"><span class="id" title="notation">[</span></a><a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:93"><span class="id" title="variable">x</span></a><a class="idref" href="hydras.Ackermann.primRec.html#7270cfdd80e3adbb7f438dd90c04a50e"><span class="id" title="notation">]</span></a>)%<span class="id" title="var">pr</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#PReval"><span class="id" title="abbreviation">PReval</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#t:94"><span class="id" title="variable">t</span></a> (<a class="idref" href="hydras.Ackermann.primRec.html#PReval"><span class="id" title="abbreviation">PReval</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:93"><span class="id" title="variable">x</span></a>).<br/>
+ 
+<br/>
+
+<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span>  <a id="Alt.const0_NIsPR" class="idref" href="#Alt.const0_NIsPR"><span class="id" title="instance">const0_NIsPR</span></a> <a id="n:95" class="idref" href="#n:95"><span class="id" title="binder">n</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 0 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#n:95"><span class="id" title="variable">n</span></a>.  
+<br/>
+<span class="id" title="keyword">Search</span> (<a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 2 (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat_rec"><span class="id" title="definition">nat_rec</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Ackermann.primRec.html#isPRextEqual"><span class="id" title="instance">isPRextEqual</span></a>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Ackermann.primRec.html#filter010IsPR"><span class="id" title="instance">filter010IsPR</span></a>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Alt.add'" class="idref" href="#Alt.add'"><span class="id" title="definition">add'</span></a> <a id="x:96" class="idref" href="#x:96"><span class="id" title="binder">x</span></a> <a id="y:97" class="idref" href="#y:97"><span class="id" title="binder">y</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat_rec"><span class="id" title="definition">nat_rec</span></a> (<span class="id" title="keyword">fun</span> <a id="n:100" class="idref" href="#n:100"><span class="id" title="binder">n</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.MoreAck.PrimRecExamples.html#y:97"><span class="id" title="variable">y</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <a id="z:98" class="idref" href="#z:98"><span class="id" title="binder">z</span></a> <a id="t:99" class="idref" href="#t:99"><span class="id" title="binder">t</span></a> ⇒  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#t:99"><span class="id" title="variable">t</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:96"><span class="id" title="variable">x</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="Alt.add'_ok" class="idref" href="#Alt.add'_ok"><span class="id" title="lemma">add'_ok</span></a>:<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Ackermann.extEqualNat.html#extEqual"><span class="id" title="definition">extEqual</span></a> 2 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Alt.add'"><span class="id" title="definition">add'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.PeanoNat.html#Nat.add"><span class="id" title="definition">Nat.add</span></a>.<br/>
+
+<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="Alt.addIsPR'" class="idref" href="#Alt.addIsPR'"><span class="id" title="instance">addIsPR'</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.PeanoNat.html#Nat.add"><span class="id" title="definition">Nat.add</span></a>.  
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="Alt.xpred" class="idref" href="#Alt.xpred"><span class="id" title="definition">xpred</span></a> := <a class="idref" href="hydras.Ackermann.primRec.html#primRecFunc"><span class="id" title="constructor">primRecFunc</span></a> 0 <a class="idref" href="hydras.Ackermann.primRec.html#zeroFunc"><span class="id" title="constructor">zeroFunc</span></a> <a class="idref" href="hydras.Ackermann.primRec.html#PRNotations.pi1_2"><span class="id" title="abbreviation">pi1_2</span></a>.<br/>
+
+<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="Alt.predIsPR" class="idref" href="#Alt.predIsPR"><span class="id" title="instance">predIsPR</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.PeanoNat.html#Nat.pred"><span class="id" title="definition">Nat.pred</span></a>.  
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Alt"><span class="id" title="module">Alt</span></a>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="double" class="idref" href="#double"><span class="id" title="definition">double</span></a> (<a id="n:101" class="idref" href="#n:101"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) := 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#n:101"><span class="id" title="variable">n</span></a>.<br/>
+
+<br/>
+#[<span class="id" title="var">export</span>] <span class="id" title="keyword">Instance</span> <a id="doubleIsPR" class="idref" href="#doubleIsPR"><span class="id" title="instance">doubleIsPR</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#double"><span class="id" title="definition">double</span></a>.  
+<br/>
+</div>
+
+<div class="doc">
+using cPair 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Exs" class="idref" href="#Exs"><span class="id" title="section">Exs</span></a>.<br/>
+<span class="id" title="keyword">Let</span> <a id="Exs.f" class="idref" href="#Exs.f"><span class="id" title="variable">f</span></a>: <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 2 := <span class="id" title="keyword">fun</span> <a id="x:102" class="idref" href="#x:102"><span class="id" title="binder">x</span></a> <a id="y:103" class="idref" href="#y:103"><span class="id" title="binder">y</span></a> ⇒ <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#x:102"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#pred"><span class="id" title="abbreviation">pred</span></a> (<a class="idref" href="hydras.Ackermann.cPair.html#cPairPi1"><span class="id" title="definition">cPairPi1</span></a> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#y:103"><span class="id" title="variable">y</span></a>).<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Exs.ffib" class="idref" href="#Exs.ffib"><span class="id" title="variable">ffib</span></a> : <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 2 :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <a id="c:104" class="idref" href="#c:104"><span class="id" title="binder">c</span></a> <a id="A:105" class="idref" href="#A:105"><span class="id" title="binder">A</span></a> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#c:104"><span class="id" title="variable">c</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 | 1 ⇒ 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <a class="idref" href="hydras.Ackermann.cPair.html#codeNth"><span class="id" title="definition">codeNth</span></a> 0 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#A:105"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="hydras.Ackermann.cPair.html#codeNth"><span class="id" title="definition">codeNth</span></a> 1 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#A:105"><span class="id" title="variable">A</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Exs.fdiv2" class="idref" href="#Exs.fdiv2"><span class="id" title="variable">fdiv2</span></a> : <a class="idref" href="hydras.Ackermann.extEqualNat.html#naryFunc"><span class="id" title="definition">naryFunc</span></a> 2 :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">fun</span> (<a id="n:107" class="idref" href="#n:107"><span class="id" title="binder">n</span></a> <a id="acc:108" class="idref" href="#acc:108"><span class="id" title="binder">acc</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#n:107"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 | 1 ⇒ 0<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="hydras.Ackermann.cPair.html#codeNth"><span class="id" title="definition">codeNth</span></a> 1 <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#acc:108"><span class="id" title="variable">acc</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.MoreAck.PrimRecExamples.html#Exs"><span class="id" title="section">Exs</span></a>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

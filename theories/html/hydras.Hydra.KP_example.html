@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Hydra.KP_example</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Hydra.KP_example</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+Pierre Casteran, Univ. Bordeaux and LaBRI  
+</div>
+<div class="code">
+
+<br/>
+&nbsp;<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#"><span class="id" title="library">Hydra_Definitions</span></a> <a class="idref" href="hydras.Hydra.Hydra_Lemmas.html#"><span class="id" title="library">Hydra_Lemmas</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The hydra from page 286 of <span class="inlinecode"><span class="id" title="var">KP</span></span> 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="KP" class="idref" href="#KP"><span class="id" title="section">KP</span></a>.<br/>
+</div>
+
+<div class="doc">
+initial state 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="h0" class="idref" href="#h0"><span class="id" title="definition">h0</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd2"><span class="id" title="abbreviation">hyd2</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd2"><span class="id" title="abbreviation">hyd2</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd_mult"><span class="id" title="definition">hyd_mult</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a> 3)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd1"><span class="id" title="abbreviation">hyd1</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd1"><span class="id" title="abbreviation">hyd1</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a>)))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd2"><span class="id" title="abbreviation">hyd2</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd2"><span class="id" title="abbreviation">hyd2</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Fact</span> <a id="F1" class="idref" href="#F1"><span class="id" title="lemma">F1</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hsize"><span class="id" title="definition">hsize</span></a> <a class="idref" href="hydras.Hydra.KP_example.html#h0"><span class="id" title="definition">h0</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 14.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Fact</span> <a id="F2" class="idref" href="#F2"><span class="id" title="lemma">F2</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#height"><span class="id" title="definition">height</span></a> <a class="idref" href="hydras.Hydra.KP_example.html#h0"><span class="id" title="definition">h0</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> 4.<br/>
+ 
+<br/>
+</div>
+
+<div class="doc">
+ after stage 1 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="h1" class="idref" href="#h1"><span class="id" title="definition">h1</span></a> :=<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd2"><span class="id" title="abbreviation">hyd2</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd3"><span class="id" title="abbreviation">hyd3</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd_mult"><span class="id" title="definition">hyd_mult</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a> 2)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd_mult"><span class="id" title="definition">hyd_mult</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a> 2)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd1"><span class="id" title="abbreviation">hyd1</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd1"><span class="id" title="abbreviation">hyd1</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a>)))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd2"><span class="id" title="abbreviation">hyd2</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd2"><span class="id" title="abbreviation">hyd2</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a>)).<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+After stage 2 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="hyd4" class="idref" href="#hyd4"><span class="id" title="abbreviation">hyd4</span></a> <span class="id" title="var">h1</span> <span class="id" title="var">h2</span> <span class="id" title="var">h3</span> <span class="id" title="var">h4</span> :=<br/>
+&nbsp;&nbsp;(<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#node"><span class="id" title="constructor">node</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h1</span> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h2</span> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h3</span> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> <span class="id" title="var">h4</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hnil"><span class="id" title="constructor">hnil</span></a>))))).<br/>
+
+<br/>
+<span class="id" title="keyword">Let</span>  <a id="KP.h'" class="idref" href="#KP.h'"><span class="id" title="variable">h'</span></a> := <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd1"><span class="id" title="abbreviation">hyd1</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd_mult"><span class="id" title="definition">hyd_mult</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a> 2).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="h2" class="idref" href="#h2"><span class="id" title="definition">h2</span></a> := <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.KP_example.html#hyd4"><span class="id" title="abbreviation">hyd4</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd3"><span class="id" title="abbreviation">hyd3</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd_mult"><span class="id" title="definition">hyd_mult</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a> 2)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd_mult"><span class="id" title="definition">hyd_mult</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a> 2)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd1"><span class="id" title="abbreviation">hyd1</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd1"><span class="id" title="abbreviation">hyd1</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a>)))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.KP_example.html#KP.h'"><span class="id" title="variable">h'</span></a>  <a class="idref" href="hydras.Hydra.KP_example.html#KP.h'"><span class="id" title="variable">h'</span></a> <a class="idref" href="hydras.Hydra.KP_example.html#KP.h'"><span class="id" title="variable">h'</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+After stage 3 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="h3" class="idref" href="#h3"><span class="id" title="definition">h3</span></a> := <a class="idref" href="hydras.Hydra.KP_example.html#hyd4"><span class="id" title="abbreviation">hyd4</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#node"><span class="id" title="constructor">node</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons_mult"><span class="id" title="definition">hcons_mult</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd1"><span class="id" title="abbreviation">hyd1</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a>) 4<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd2"><span class="id" title="abbreviation">hyd2</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hcons"><span class="id" title="constructor">hcons</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd1"><span class="id" title="abbreviation">hyd1</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hyd1"><span class="id" title="abbreviation">hyd1</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#head"><span class="id" title="abbreviation">head</span></a>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#hnil"><span class="id" title="constructor">hnil</span></a>))))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.KP_example.html#KP.h'"><span class="id" title="variable">h'</span></a> <a class="idref" href="hydras.Hydra.KP_example.html#KP.h'"><span class="id" title="variable">h'</span></a> <a class="idref" href="hydras.Hydra.KP_example.html#KP.h'"><span class="id" title="variable">h'</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fact</span> <a id="h0_h1" class="idref" href="#h0_h1"><span class="id" title="lemma">h0_h1</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round_n"><span class="id" title="definition">round_n</span></a> 1 <a class="idref" href="hydras.Hydra.KP_example.html#h0"><span class="id" title="definition">h0</span></a> <a class="idref" href="hydras.Hydra.KP_example.html#h1"><span class="id" title="definition">h1</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fact</span> <a id="h1_h2" class="idref" href="#h1_h2"><span class="id" title="lemma">h1_h2</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round_n"><span class="id" title="definition">round_n</span></a> 2 <a class="idref" href="hydras.Hydra.KP_example.html#h1"><span class="id" title="definition">h1</span></a> <a class="idref" href="hydras.Hydra.KP_example.html#h2"><span class="id" title="definition">h2</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fact</span> <a id="h2_h3" class="idref" href="#h2_h3"><span class="id" title="lemma">h2_h3</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round_n"><span class="id" title="definition">round_n</span></a> 3 <a class="idref" href="hydras.Hydra.KP_example.html#h2"><span class="id" title="definition">h2</span></a> <a class="idref" href="hydras.Hydra.KP_example.html#h3"><span class="id" title="definition">h3</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="battle_example" class="idref" href="#battle_example"><span class="id" title="lemma">battle_example</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#rounds"><span class="id" title="inductive">rounds</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#standard"><span class="id" title="instance">standard</span></a> 1 <a class="idref" href="hydras.Hydra.KP_example.html#h0"><span class="id" title="definition">h0</span></a> 4 <a class="idref" href="hydras.Hydra.KP_example.html#h3"><span class="id" title="definition">h3</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+= 28 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Hydra.KP_example.html#KP"><span class="id" title="section">KP</span></a>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

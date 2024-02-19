@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>gaia_hydras.T1Choice</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library gaia_hydras.T1Choice</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+Experimental !!!!  This file is a draft !!! 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">mathcomp</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="library">all_ssreflect</span> <span class="id" title="library">zify</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Eqdep_dec.html#"><span class="id" title="library">Logic.Eqdep_dec</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Prelude.DecPreOrder.html#"><span class="id" title="library">DecPreOrder</span></a> <a class="idref" href="hydras.OrdinalNotations.ON_Generic.html#"><span class="id" title="library">ON_Generic</span></a>  <a class="idref" href="hydras.Epsilon0.T1.html#"><span class="id" title="library">T1</span></a> <a class="idref" href="hydras.Epsilon0.E0.html#"><span class="id" title="library">E0</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">gaia</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <span class="id" title="library">ssete9</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">gaia_hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="gaia_hydras.T1Bridge.html#"><span class="id" title="library">T1Bridge</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+ Type <span class="inlinecode"><span class="id" title="var">T1</span></span> vs generic trees 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="T12Tree" class="idref" href="#T12Tree"><span class="id" title="definition">T12Tree</span></a> (<a id="a:1" class="idref" href="#a:1"><span class="id" title="binder">a</span></a>: <span class="id" title="inductive">T1</span>): <span class="id" title="inductive">GenTree.tree</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">if</span> <a class="idref" href="gaia_hydras.T1Choice.html#a:1"><span class="id" title="variable">a</span></a> <span class="id" title="keyword">is</span> <span class="id" title="constructor">cons</span> <span class="id" title="var">b</span> <span class="id" title="var">n</span> <span class="id" title="var">c</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="constructor">GenTree.Node</span> <span class="id" title="var">n</span> <span class="id" title="notation">[::</span> <a class="idref" href="gaia_hydras.T1Choice.html#T12Tree:2"><span class="id" title="definition">T12Tree</span></a> <span class="id" title="var">b</span><span class="id" title="notation">;</span> <a class="idref" href="gaia_hydras.T1Choice.html#T12Tree:2"><span class="id" title="definition">T12Tree</span></a> <span class="id" title="var">c</span><span class="id" title="notation">]</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="constructor">GenTree.Leaf</span> 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="Tree2T1" class="idref" href="#Tree2T1"><span class="id" title="definition">Tree2T1</span></a> (<a id="t:4" class="idref" href="#t:4"><span class="id" title="binder">t</span></a>: <span class="id" title="inductive">GenTree.tree</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>): <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#option"><span class="id" title="inductive">option</span></a> <span class="id" title="inductive">T1</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="gaia_hydras.T1Choice.html#t:4"><span class="id" title="variable">t</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="constructor">GenTree.Leaf</span> 0 ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#Some"><span class="id" title="constructor">Some</span></a> <span class="id" title="constructor">zero</span><br/>
+&nbsp;&nbsp;| <span class="id" title="constructor">GenTree.Node</span> <span class="id" title="var">n</span> <span class="id" title="notation">[::</span> <span class="id" title="var">t1</span><span class="id" title="notation">;</span> <span class="id" title="var">t2</span><span class="id" title="notation">]</span> ⇒<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="gaia_hydras.T1Choice.html#Tree2T1:5"><span class="id" title="definition">Tree2T1</span></a> <span class="id" title="var">t1</span>, <a class="idref" href="gaia_hydras.T1Choice.html#Tree2T1:5"><span class="id" title="definition">Tree2T1</span></a> <span class="id" title="var">t2</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#Some"><span class="id" title="constructor">Some</span></a> <span class="id" title="var">b</span>, <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#Some"><span class="id" title="constructor">Some</span></a> <span class="id" title="var">c</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#Some"><span class="id" title="constructor">Some</span></a> (<span class="id" title="constructor">cons</span> <span class="id" title="var">b</span> <span class="id" title="var">n</span> <span class="id" title="var">c</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">_</span>, <span class="id" title="var">_</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#None"><span class="id" title="constructor">None</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">_</span> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#None"><span class="id" title="constructor">None</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="TreeT1K" class="idref" href="#TreeT1K"><span class="id" title="lemma">TreeT1K</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssrfun.html#pcancel"><span class="id" title="definition">pcancel</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#T12Tree"><span class="id" title="definition">T12Tree</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#Tree2T1"><span class="id" title="definition">Tree2T1</span></a>.<br/>
+ 
+<br/>
+</div>
+
+<div class="doc">
+to remove (useless) 
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span>  <a id="T12Tree_inj" class="idref" href="#T12Tree_inj"><span class="id" title="lemma">T12Tree_inj</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssrfun.html#injective"><span class="id" title="definition">injective</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#T12Tree"><span class="id" title="definition">T12Tree</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="T1mixin" class="idref" href="#T1mixin"><span class="id" title="definition">T1mixin</span></a> :<br/>
+&nbsp;&nbsp;<span class="id" title="record">Countable.mixin_of</span> <span class="id" title="inductive">T1</span> := <span class="id" title="definition">PcanCountMixin</span> <a class="idref" href="gaia_hydras.T1Choice.html#TreeT1K"><span class="id" title="lemma">TreeT1K</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Canonical</span> <a id="T1Choice" class="idref" href="#T1Choice"><span class="id" title="definition">T1Choice</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Eval</span> <span class="id" title="tactic">hnf</span> <span class="id" title="tactic">in</span> <span class="id" title="abbreviation">ChoiceType</span> <span class="id" title="inductive">T1</span> (<span class="id" title="abbreviation">CountChoiceMixin</span> <a class="idref" href="gaia_hydras.T1Choice.html#T1mixin"><span class="id" title="definition">T1mixin</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="ex_pos" class="idref" href="#ex_pos"><span class="id" title="definition">ex_pos</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a id="alpha:7" class="idref" href="#alpha:7"><span class="id" title="binder">alpha</span></a>: <span class="id" title="inductive">T1</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">,</span></a> <span class="id" title="constructor">zero</span> <span class="id" title="notation">!=</span> <a class="idref" href="gaia_hydras.T1Choice.html#alpha:7"><span class="id" title="variable">alpha</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Example</span> <a id="some_pos" class="idref" href="#some_pos"><span class="id" title="definition">some_pos</span></a>: <span class="id" title="inductive">T1</span> := <span class="id" title="definition">xchoose</span> <a class="idref" href="gaia_hydras.T1Choice.html#ex_pos"><span class="id" title="definition">ex_pos</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="some_pos'" class="idref" href="#some_pos'"><span class="id" title="definition">some_pos'</span></a> : <span class="id" title="inductive">T1</span> := <span class="id" title="definition">choose</span> (<span class="id" title="keyword">fun</span> <a id="p:8" class="idref" href="#p:8"><span class="id" title="binder">p</span></a> : <span class="id" title="inductive">T1</span> ⇒ <span class="id" title="constructor">zero</span> <span class="id" title="notation">!=</span> <a class="idref" href="gaia_hydras.T1Choice.html#p:8"><span class="id" title="variable">p</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="definition">T1omega</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">(</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">zero</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">:</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">T1Choice</span></a><a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">)</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">!=</span></a> <a id="Unnamed_thm" class="idref" href="#Unnamed_thm"><span class="id" title="definition">some_pos'</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+   = EqType T1 (EqMixin (@T1eqP))
+     : eqType 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+   = Choice.Pack
+         {|
+           Choice.base := EqMixin (@T1eqP);
+           Choice.mixin := PcanChoiceMixin (pcan_pickleK TreeT1K)
+         |}
+     : choiceType
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="T1_le_Mixin" class="idref" href="#T1_le_Mixin"><span class="id" title="definition">T1_le_Mixin</span></a> := <span class="id" title="abbreviation">leOrderMixin</span> <a class="idref" href="gaia_hydras.T1Choice.html#T1Choice"><span class="id" title="definition">T1Choice</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="T1min" class="idref" href="#T1min"><span class="id" title="definition">T1min</span></a> <a id="a:10" class="idref" href="#a:10"><span class="id" title="binder">a</span></a> <a id="b:11" class="idref" href="#b:11"><span class="id" title="binder">b</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::boolean_if_scope:'if'_x_'then'_x_'else'_x"><span class="id" title="notation">if</span></a> <span class="id" title="definition">T1lt</span> <a class="idref" href="gaia_hydras.T1Choice.html#a:10"><span class="id" title="variable">a</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#b:11"><span class="id" title="variable">b</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::boolean_if_scope:'if'_x_'then'_x_'else'_x"><span class="id" title="notation">then</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#a:10"><span class="id" title="variable">a</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::boolean_if_scope:'if'_x_'then'_x_'else'_x"><span class="id" title="notation">else</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#b:11"><span class="id" title="variable">b</span></a>.<br/>
+<span class="id" title="keyword">Definition</span> <a id="T1max" class="idref" href="#T1max"><span class="id" title="definition">T1max</span></a> <a id="a:12" class="idref" href="#a:12"><span class="id" title="binder">a</span></a> <a id="b:13" class="idref" href="#b:13"><span class="id" title="binder">b</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::boolean_if_scope:'if'_x_'then'_x_'else'_x"><span class="id" title="notation">if</span></a> <span class="id" title="definition">T1lt</span> <a class="idref" href="gaia_hydras.T1Choice.html#a:12"><span class="id" title="variable">a</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#b:13"><span class="id" title="variable">b</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::boolean_if_scope:'if'_x_'then'_x_'else'_x"><span class="id" title="notation">then</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#b:13"><span class="id" title="variable">b</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::boolean_if_scope:'if'_x_'then'_x_'else'_x"><span class="id" title="notation">else</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#a:12"><span class="id" title="variable">a</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="T1ltE" class="idref" href="#T1ltE"><span class="id" title="lemma">T1ltE</span></a> <a id="x:14" class="idref" href="#x:14"><span class="id" title="binder">x</span></a> <a id="y:15" class="idref" href="#y:15"><span class="id" title="binder">y</span></a> : <span class="id" title="definition">T1lt</span> <a class="idref" href="gaia_hydras.T1Choice.html#x:14"><span class="id" title="variable">x</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#y:15"><span class="id" title="variable">y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::bool_scope:x_'&amp;&amp;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="gaia_hydras.T1Choice.html#y:15"><span class="id" title="variable">y</span></a> <span class="id" title="notation">!=</span> <a class="idref" href="gaia_hydras.T1Choice.html#x:14"><span class="id" title="variable">x</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::bool_scope:x_'&amp;&amp;'_x"><span class="id" title="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::bool_scope:x_'&amp;&amp;'_x"><span class="id" title="notation">&amp;&amp;</span></a> <span class="id" title="definition">T1le</span> <a class="idref" href="gaia_hydras.T1Choice.html#x:14"><span class="id" title="variable">x</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#y:15"><span class="id" title="variable">y</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="T1minE" class="idref" href="#T1minE"><span class="id" title="lemma">T1minE</span></a> <a id="x:16" class="idref" href="#x:16"><span class="id" title="binder">x</span></a> <a id="y:17" class="idref" href="#y:17"><span class="id" title="binder">y</span></a> : <a class="idref" href="gaia_hydras.T1Choice.html#T1min"><span class="id" title="definition">T1min</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#x:16"><span class="id" title="variable">x</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#y:17"><span class="id" title="variable">y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::boolean_if_scope:'if'_x_'then'_x_'else'_x"><span class="id" title="notation">if</span></a> <span class="id" title="definition">T1lt</span> <a class="idref" href="gaia_hydras.T1Choice.html#x:16"><span class="id" title="variable">x</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#y:17"><span class="id" title="variable">y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::boolean_if_scope:'if'_x_'then'_x_'else'_x"><span class="id" title="notation">then</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#x:16"><span class="id" title="variable">x</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::boolean_if_scope:'if'_x_'then'_x_'else'_x"><span class="id" title="notation">else</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#y:17"><span class="id" title="variable">y</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">)</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="T1maxE" class="idref" href="#T1maxE"><span class="id" title="lemma">T1maxE</span></a> <a id="x:18" class="idref" href="#x:18"><span class="id" title="binder">x</span></a> <a id="y:19" class="idref" href="#y:19"><span class="id" title="binder">y</span></a> : <a class="idref" href="gaia_hydras.T1Choice.html#T1max"><span class="id" title="definition">T1max</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#x:18"><span class="id" title="variable">x</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#y:19"><span class="id" title="variable">y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::boolean_if_scope:'if'_x_'then'_x_'else'_x"><span class="id" title="notation">if</span></a> <span class="id" title="definition">T1lt</span> <a class="idref" href="gaia_hydras.T1Choice.html#x:18"><span class="id" title="variable">x</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#y:19"><span class="id" title="variable">y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::boolean_if_scope:'if'_x_'then'_x_'else'_x"><span class="id" title="notation">then</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#y:19"><span class="id" title="variable">y</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::boolean_if_scope:'if'_x_'then'_x_'else'_x"><span class="id" title="notation">else</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#x:18"><span class="id" title="variable">x</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">)</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="T1le_asym" class="idref" href="#T1le_asym"><span class="id" title="lemma">T1le_asym</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssrbool.html#antisymmetric"><span class="id" title="definition">ssrbool.antisymmetric</span></a> <span class="id" title="definition">T1le</span>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="T1leOrderMixin" class="idref" href="#T1leOrderMixin"><span class="id" title="definition">T1leOrderMixin</span></a> : <span class="id" title="abbreviation">leOrderMixin</span> <a class="idref" href="gaia_hydras.T1Choice.html#T1Choice"><span class="id" title="definition">T1Choice</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="abbreviation">LeOrderMixin</span> <a class="idref" href="gaia_hydras.T1Choice.html#T1ltE"><span class="id" title="lemma">T1ltE</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#T1minE"><span class="id" title="lemma">T1minE</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#T1maxE"><span class="id" title="lemma">T1maxE</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#T1le_asym"><span class="id" title="lemma">T1le_asym</span></a> <span class="id" title="lemma">T1le_trans</span> <span class="id" title="lemma">T1le_total</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Canonical</span> <a id="T1orderType" class="idref" href="#T1orderType"><span class="id" title="definition">T1orderType</span></a> :=<br/>
+&nbsp;&nbsp;@<span class="id" title="definition">OrderOfChoiceType</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#tt"><span class="id" title="constructor">tt</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#T1Choice"><span class="id" title="definition">T1Choice</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#T1leOrderMixin"><span class="id" title="definition">T1leOrderMixin</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">@</span></a><a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">Order.le</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">tt</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">T1orderType</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">T1omega</span></a> <a id="Unnamed_thm0" class="idref" href="#Unnamed_thm0"><span class="id" title="definition">T1omega</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="definition">T1omega</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::core_scope:x_':'_x"><span class="id" title="notation">:</span></a> <a class="idref" href="gaia_hydras.T1Choice.html#T1orderType"><span class="id" title="definition">T1orderType</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">((</span></a><a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">T1omega</span></a><a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">:</span></a><a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">T1orderType</span></a><a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">)</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">≤</span></a> <a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">(</span></a><a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">T1omega</span></a><a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">:</span></a><a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">T1orderType</span></a><a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">))%</span></a><a id="Unnamed_thm1" class="idref" href="#Unnamed_thm1"><span class="id" title="definition">O</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id="b8382ebd4d1ecdc4b5385bb249fc75b4" class="idref" href="#b8382ebd4d1ecdc4b5385bb249fc75b4"><span class="id" title="notation">&quot;</span></a>x &lt;= y" := (@<span class="id" title="definition">Order.le</span> <span class="id" title="var">_</span> <a class="idref" href="gaia_hydras.T1Choice.html#T1orderType"><span class="id" title="definition">T1orderType</span></a>  <span class="id" title="var">x</span> <span class="id" title="var">y</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> <a id=":::x_'&lt;'_x" class="idref" href="#:::x_'&lt;'_x"><span class="id" title="notation">&quot;</span></a>x &lt; y" := (@<span class="id" title="definition">Order.lt</span> <span class="id" title="var">_</span> <a class="idref" href="gaia_hydras.T1Choice.html#T1orderType"><span class="id" title="definition">T1orderType</span></a>  <span class="id" title="var">x</span> <span class="id" title="var">y</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">About</span> <span class="id" title="definition">Order.le</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">@</span></a><a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">Order.le</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">tt</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">T1orderType</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">T1omega</span></a> <a id="Unnamed_thm2" class="idref" href="#Unnamed_thm2"><span class="id" title="definition">T1omega</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <span class="id" title="module">Order.POrderTheory</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">T1omega</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">≤</span></a> <a id="Unnamed_thm3" class="idref" href="#Unnamed_thm3"><span class="id" title="definition">T1omega</span></a>.<br/>
+<span class="id" title="keyword">Set Printing All</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">T1omega</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">&lt;</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">T1succ</span></a> <a id="Unnamed_thm4" class="idref" href="#Unnamed_thm4"><span class="id" title="definition">T1omega</span></a>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span>  <a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">~~</span></a> <a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">(&lt;%</span></a><a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">O</span></a> <a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">(</span></a><a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">T1omega</span></a><a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">:</span></a><a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">T1orderType</span></a><a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">)</span></a> <a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">(</span></a><a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">T1omega</span></a><a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">:</span></a><a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">T1orderType</span></a><a id="Unnamed_thm5" class="idref" href="#Unnamed_thm5"><span class="id" title="definition">))</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">~~(</span></a><a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">T1omega</span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">&lt;</span></a> <a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">T1omega</span></a><a id="Unnamed_thm6" class="idref" href="#Unnamed_thm6"><span class="id" title="definition">)</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">~~</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">@</span></a><a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">Order.lt</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">tt</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">(</span></a><a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">T1orderType</span></a><a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">)</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">T1omega</span></a> <a id="Unnamed_thm7" class="idref" href="#Unnamed_thm7"><span class="id" title="definition">T1omega</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Goal</span> <a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">T1omega</span></a> <a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">≤</span></a> <a id="Unnamed_thm8" class="idref" href="#Unnamed_thm8"><span class="id" title="definition">T1omega</span></a>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <a class="idref" href="gaia_hydras.T1Bridge.html#E0"><span class="id" title="record">E0</span></a>.<br/>
+
+<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

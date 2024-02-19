@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Hydra.Hydra_Theorems</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Hydra.Hydra_Theorems</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+Pierre Castéran, Univ. Bordeaux and LaBRI 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Hydra.Hydra_Lemmas.html#"><span class="id" title="library">Hydra_Lemmas</span></a>  <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Free.html#"><span class="id" title="library">Epsilon0_Needed_Free</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Epsilon0_Needed_Std.html#"><span class="id" title="library">Epsilon0_Needed_Std</span></a>  <a class="idref" href="hydras.Hydra.Hydra_Termination.html#"><span class="id" title="library">Hydra_Termination</span></a> <a class="idref" href="hydras.Epsilon0.L_alpha.html#"><span class="id" title="library">L_alpha</span></a> <a class="idref" href="hydras.Hydra.Battle_length.html#"><span class="id" title="library">Battle_length</span></a> <a class="idref" href="hydras.MoreAck.Ack.html#"><span class="id" title="library">Ack</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Epsilon0.E0.html#"><span class="id" title="module">E0</span></a> <a class="idref" href="hydras.Epsilon0.Large_Sets.html#"><span class="id" title="module">Large_Sets</span></a> <a class="idref" href="hydras.Epsilon0.Hprime.html#"><span class="id" title="module">Hprime</span></a> <a class="idref" href="hydras.Epsilon0.Paths.html#"><span class="id" title="module">Paths</span></a> <a class="idref" href="hydras.Prelude.MoreLists.html#"><span class="id" title="module">MoreLists</span></a>  <a class="idref" href="hydras.Hydra.O2H.html#"><span class="id" title="module">O2H</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#"><span class="id" title="module">Hydra_Definitions</span></a> <a class="idref" href="hydras.Prelude.Iterates.html#"><span class="id" title="module">Iterates</span></a>.<br/>
+<span class="id" title="keyword">Export</span> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#"><span class="id" title="module">Hydra_Definitions</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab221"></a><h2 class="section">Liveness</h2>
+
+
+<div class="paragraph"> </div>
+
+  If the hydra is not reduced to one  head, then Hercules can chop off 
+  some head
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Corollary</span> <a id="Alive_free" class="idref" href="#Alive_free"><span class="id" title="lemma">Alive_free</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Alive"><span class="id" title="definition">Alive</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#free"><span class="id" title="instance">free</span></a>. 
+<br/>
+<span class="id" title="keyword">Corollary</span> <a id="Alive_standard" class="idref" href="#Alive_standard"><span class="id" title="lemma">Alive_standard</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Alive"><span class="id" title="definition">Alive</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#standard"><span class="id" title="instance">standard</span></a>. 
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab222"></a><h2 class="section">Termination of free battles</h2>
+
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <a id="Variant_LT_free_0" class="idref" href="#Variant_LT_free_0"><span class="id" title="lemma">Variant_LT_free_0</span></a> :  @<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hvariant"><span class="id" title="class">Hvariant</span></a>  <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="hydras.Epsilon0.T1.html#T1_wf"><span class="id" title="lemma">T1_wf</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#free"><span class="id" title="instance">free</span></a> <a class="idref" href="hydras.Hydra.Hydra_Termination.html#m"><span class="id" title="definition">Hydra_Termination.m</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Theorem</span> <a id="Variant_lt_free" class="idref" href="#Variant_lt_free"><span class="id" title="lemma">Variant_lt_free</span></a>:  @<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hvariant"><span class="id" title="class">Hvariant</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="hydras.Epsilon0.E0.html#E0lt_wf"><span class="id" title="lemma">E0lt_wf</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#free"><span class="id" title="instance">free</span></a> <a class="idref" href="hydras.Hydra.Hydra_Termination.html#var"><span class="id" title="instance">Hydra_Termination.var</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">Theorem</span> <a id="Variant_LT_standard" class="idref" href="#Variant_LT_standard"><span class="id" title="lemma">Variant_LT_standard</span></a> : @<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hvariant"><span class="id" title="class">Hvariant</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="hydras.Epsilon0.T1.html#T1_wf"><span class="id" title="lemma">T1_wf</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#standard"><span class="id" title="instance">standard</span></a> <a class="idref" href="hydras.Hydra.Hydra_Termination.html#m"><span class="id" title="definition">Hydra_Termination.m</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <a id="Variant_lt_standard" class="idref" href="#Variant_lt_standard"><span class="id" title="lemma">Variant_lt_standard</span></a> : @<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hvariant"><span class="id" title="class">Hvariant</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="hydras.Epsilon0.E0.html#E0lt_wf"><span class="id" title="lemma">E0lt_wf</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#standard"><span class="id" title="instance">standard</span></a> <a class="idref" href="hydras.Hydra.Hydra_Termination.html#var"><span class="id" title="instance">Hydra_Termination.var</span></a>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab223"></a><h2 class="section">Impossibility theorems</h2>
+
+
+<div class="paragraph"> </div>
+
+  Termination of free battles cannot be proven with a variant from hydras into a segment  with  
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  Impossiblity to define a variant bounded by some ordinal less than 
+     <span class="inlinecode"><span class="id" title="var">epsilon0</span></span> 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Free.html#Impossibility_free"><span class="id" title="lemma">Impossibility_free</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">About</span>  <a class="idref" href="hydras.Hydra.Battle_length.html#battle_length_std"><span class="id" title="lemma">battle_length_std</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <a id="battle_length_std_Hardy" class="idref" href="#battle_length_std_Hardy"><span class="id" title="lemma">battle_length_std_Hardy</span></a> (<a id="alpha:1" class="idref" href="#alpha:1"><span class="id" title="binder">alpha</span></a> : <a class="idref" href="hydras.Epsilon0.E0.html#E0"><span class="id" title="class">E0</span></a>) :<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Theorems.html#alpha:1"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="hydras.Epsilon0.E0.html#E0zero"><span class="id" title="instance">E0zero</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="k:2" class="idref" href="#k:2"><span class="id" title="binder">k</span></a> , 1 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#k:2"><span class="id" title="variable">k</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a id="l:3" class="idref" href="#l:3"><span class="id" title="binder">l</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">,</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Epsilon0.Hprime.html#H'_"><span class="id" title="definition">H'_</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#alpha:1"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#k:2"><span class="id" title="variable">k</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#::nat_scope:x_'-'_x"><span class="id" title="notation">-</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#k:2"><span class="id" title="variable">k</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#l:3"><span class="id" title="variable">l</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Hydra.Hydra_Definitions.html#battle_length"><span class="id" title="definition">battle_length</span></a> <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#standard"><span class="id" title="instance">standard</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#k:2"><span class="id" title="variable">k</span></a> (<a class="idref" href="hydras.Hydra.O2H.html#iota"><span class="id" title="definition">iota</span></a> (<a class="idref" href="hydras.Epsilon0.E0.html#cnf"><span class="id" title="method">cnf</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#alpha:1"><span class="id" title="variable">alpha</span></a>)) <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#l:3"><span class="id" title="variable">l</span></a>.<br/>
+ 
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab224"></a><h2 class="section">Battle length is not PR</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.primRec.html#"><span class="id" title="library">primRec</span></a> <a class="idref" href="hydras.Epsilon0.F_alpha.html#"><span class="id" title="library">F_alpha</span></a>  <a class="idref" href="hydras.MoreAck.AckNotPR.html#"><span class="id" title="library">AckNotPR</span></a> <br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.MoreAck.PrimRecExamples.html#"><span class="id" title="library">PrimRecExamples</span></a> <a class="idref" href="hydras.Epsilon0.F_omega.html#"><span class="id" title="library">F_omega</span></a>.<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Epsilon0.E0.html#"><span class="id" title="module">E0</span></a>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="battle_length_notPR" class="idref" href="#battle_length_notPR"><span class="id" title="section">battle_length_notPR</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="H:5" class="idref" href="#H:5"><span class="id" title="binder">H</span></a>: <span class="id" title="keyword">∀</span> <a id="alpha:4" class="idref" href="#alpha:4"><span class="id" title="binder">alpha</span></a>, <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 (<a class="idref" href="hydras.Hydra.Battle_length.html#l_std"><span class="id" title="definition">l_std</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#alpha:4"><span class="id" title="variable">alpha</span></a>)).<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A counter example 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="battle_length_notPR.alpha" class="idref" href="#battle_length_notPR.alpha"><span class="id" title="variable">alpha</span></a> := <a class="idref" href="hydras.Epsilon0.E0.html#E0_phi0"><span class="id" title="instance">E0_phi0</span></a> <a class="idref" href="hydras.Epsilon0.E0.html#E0_omega"><span class="id" title="instance">E0_omega</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="battle_length_notPR.h" class="idref" href="#battle_length_notPR.h"><span class="id" title="variable">h</span></a> := <a class="idref" href="hydras.Hydra.O2H.html#iota"><span class="id" title="definition">iota</span></a> (<a class="idref" href="hydras.Epsilon0.E0.html#cnf"><span class="id" title="method">cnf</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#battle_length_notPR.alpha"><span class="id" title="variable">alpha</span></a>).<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+let us get rid of the substraction ... 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="battle_length_notPR.m" class="idref" href="#battle_length_notPR.m"><span class="id" title="variable">m</span></a> <a id="k:6" class="idref" href="#k:6"><span class="id" title="binder">k</span></a> := <a class="idref" href="hydras.Epsilon0.L_alpha.html#L_"><span class="id" title="definition">L_</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#battle_length_notPR.alpha"><span class="id" title="variable">alpha</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#k:6"><span class="id" title="variable">k</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="m_eqn" class="idref" href="#m_eqn"><span class="id" title="lemma">m_eqn</span></a> : <span class="id" title="keyword">∀</span> <a id="k:7" class="idref" href="#k:7"><span class="id" title="binder">k</span></a>, <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#battle_length_notPR.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#k:7"><span class="id" title="variable">k</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> (<a class="idref" href="hydras.Hydra.Battle_length.html#l_std"><span class="id" title="definition">l_std</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#battle_length_notPR.alpha"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#k:7"><span class="id" title="variable">k</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#k:7"><span class="id" title="variable">k</span></a>)%<span class="id" title="var">nat</span>. 
+<br/>
+
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">local</span>] <span class="id" title="keyword">Instance</span> <a id="mIsPR" class="idref" href="#mIsPR"><span class="id" title="instance">mIsPR</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#battle_length_notPR.m"><span class="id" title="variable">m</span></a>. 
+<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="m_ge_F_omega" class="idref" href="#m_ge_F_omega"><span class="id" title="lemma">m_ge_F_omega</span></a> <a id="k:10" class="idref" href="#k:10"><span class="id" title="binder">k</span></a>: <a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a> <a class="idref" href="hydras.Epsilon0.E0.html#E0_omega"><span class="id" title="instance">E0_omega</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#k:10"><span class="id" title="variable">k</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#battle_length_notPR.m"><span class="id" title="variable">m</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#k:10"><span class="id" title="variable">k</span></a>). 
+<br/>
+</div>
+
+<div class="doc">
+We compare <span class="inlinecode"><span class="id" title="var">m</span></span> with the Ackermann function 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="m_ge_Ack" class="idref" href="#m_ge_Ack"><span class="id" title="lemma">m_ge_Ack</span></a>:  <span class="id" title="keyword">∀</span> <a id="n:11" class="idref" href="#n:11"><span class="id" title="binder">n</span></a>, 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#n:11"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.MoreAck.Ack.html#Ack"><span class="id" title="definition">Ack</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#n:11"><span class="id" title="variable">n</span></a>) (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#n:11"><span class="id" title="variable">n</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#battle_length_notPR.m"><span class="id" title="variable">m</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#n:11"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="m_dominates_Ack_from_3" class="idref" href="#m_dominates_Ack_from_3"><span class="id" title="lemma">m_dominates_Ack_from_3</span></a> : <span class="id" title="keyword">∀</span> <a id="n:12" class="idref" href="#n:12"><span class="id" title="binder">n</span></a>, 3 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#n:12"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.MoreAck.Ack.html#Ack"><span class="id" title="definition">Ack</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#n:12"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#n:12"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#battle_length_notPR.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#n:12"><span class="id" title="variable">n</span></a>.<br/>
+ 
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="m_dominates_Ack" class="idref" href="#m_dominates_Ack"><span class="id" title="lemma">m_dominates_Ack</span></a> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Prelude.Iterates.html#dominates"><span class="id" title="definition">dominates</span></a> (<span class="id" title="keyword">fun</span> <a id="n:13" class="idref" href="#n:13"><span class="id" title="binder">n</span></a> ⇒  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Theorems.html#battle_length_notPR.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#n:13"><span class="id" title="variable">n</span></a>)) (<span class="id" title="keyword">fun</span> <a id="n:14" class="idref" href="#n:14"><span class="id" title="binder">n</span></a> ⇒ <a class="idref" href="hydras.MoreAck.Ack.html#Ack"><span class="id" title="definition">Ack.Ack</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#n:14"><span class="id" title="variable">n</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#n:14"><span class="id" title="variable">n</span></a>).  
+<br/>
+
+<br/>
+&nbsp;<span class="id" title="keyword">Lemma</span> <a id="SmNotPR" class="idref" href="#SmNotPR"><span class="id" title="lemma">SmNotPR</span></a> : <a class="idref" href="hydras.Ackermann.primRec.html#isPR"><span class="id" title="class">isPR</span></a> 1 (<span class="id" title="keyword">fun</span> <a id="n:15" class="idref" href="#n:15"><span class="id" title="binder">n</span></a> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> (<a class="idref" href="hydras.Hydra.Hydra_Theorems.html#battle_length_notPR.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#n:15"><span class="id" title="variable">n</span></a>)) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#False"><span class="id" title="inductive">False</span></a>. 
+<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Theorem</span> <a id="LNotPR" class="idref" href="#LNotPR"><span class="id" title="lemma">LNotPR</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#False"><span class="id" title="inductive">False</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#battle_length_notPR"><span class="id" title="section">battle_length_notPR</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Hydra.Battle_length.html#l_std_ok"><span class="id" title="lemma">l_std_ok</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <a class="idref" href="hydras.Hydra.Hydra_Theorems.html#LNotPR"><span class="id" title="lemma">LNotPR</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Search</span> <a class="idref" href="hydras.Epsilon0.L_alpha.html#L_"><span class="id" title="definition">L_</span></a> <a class="idref" href="hydras.Epsilon0.F_alpha.html#F_"><span class="id" title="definition">F_</span></a>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

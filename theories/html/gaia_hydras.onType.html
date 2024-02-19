@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>gaia_hydras.onType</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library gaia_hydras.onType</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+Ordinal Notations (Experimental !!!!)  Warning:  This file is a draft !!!   We try to adapt to Gaia the ON class of ordinal notations 
+   (defined as a naïve (pre Stdpp) type class).
+
+<div class="paragraph"> </div>
+
+ An Ordinal  Notation is just a well-founded ordered type, with 
+    a trichotomic comparison 
+
+<div class="paragraph"> </div>
+
+    Notions of ordinal arithmetics should be defined in substructures
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">mathcomp</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="library">all_ssreflect</span> <span class="id" title="library">zify</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">mathcomp</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="library">fintype</span>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Eqdep_dec.html#"><span class="id" title="library">Logic.Eqdep_dec</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Wellfounded.Inclusion.html#"><span class="id" title="library">Wellfounded.Inclusion</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Wf_nat.html#"><span class="id" title="library">Wf_nat</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Wellfounded.Inverse_Image.html#"><span class="id" title="library">Inverse_Image</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Set Implicit Arguments</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab472"></a><h1 class="section">Preliminaries</h1>
+ restriction of a decidable relation 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="restrict" class="idref" href="#restrict"><span class="id" title="definition">restrict</span></a> {<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a>} (<a id="p:2" class="idref" href="#p:2"><span class="id" title="binder">p</span></a>: <a class="idref" href="gaia_hydras.onType.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a>) (<a id="r:3" class="idref" href="#r:3"><span class="id" title="binder">r</span></a>: <a class="idref" href="gaia_hydras.onType.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="gaia_hydras.onType.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#bool"><span class="id" title="inductive">bool</span></a>):=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fun</span> <a id="x:4" class="idref" href="#x:4"><span class="id" title="binder">x</span></a> <a id="y:5" class="idref" href="#y:5"><span class="id" title="binder">y</span></a> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssrbool.html#5a7d806905be2a0d04047156433535f1"><span class="id" title="notation">[&amp;&amp;</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssrbool.html#5a7d806905be2a0d04047156433535f1"><span class="id" title="notation">(</span></a><a class="idref" href="gaia_hydras.onType.html#p:2"><span class="id" title="variable">p</span></a> <a class="idref" href="gaia_hydras.onType.html#x:4"><span class="id" title="variable">x</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssrbool.html#5a7d806905be2a0d04047156433535f1"><span class="id" title="notation">),</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssrbool.html#5a7d806905be2a0d04047156433535f1"><span class="id" title="notation">(</span></a><a class="idref" href="gaia_hydras.onType.html#p:2"><span class="id" title="variable">p</span></a> <a class="idref" href="gaia_hydras.onType.html#y:5"><span class="id" title="variable">y</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssrbool.html#5a7d806905be2a0d04047156433535f1"><span class="id" title="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssrbool.html#5a7d806905be2a0d04047156433535f1"><span class="id" title="notation">&amp;</span></a> <a class="idref" href="gaia_hydras.onType.html#r:3"><span class="id" title="variable">r</span></a> <a class="idref" href="gaia_hydras.onType.html#x:4"><span class="id" title="variable">x</span></a> <a class="idref" href="gaia_hydras.onType.html#y:5"><span class="id" title="variable">y</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssrbool.html#5a7d806905be2a0d04047156433535f1"><span class="id" title="notation">]</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab473"></a><h2 class="section">Complements on orderType</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="MoreOrderType" class="idref" href="#MoreOrderType"><span class="id" title="section">MoreOrderType</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="MoreOrderType.disp" class="idref" href="#MoreOrderType.disp"><span class="id" title="variable">disp</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#unit"><span class="id" title="inductive">unit</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="MoreOrderType.T" class="idref" href="#MoreOrderType.T"><span class="id" title="variable">T</span></a>: <span class="id" title="abbreviation">orderType</span> <a class="idref" href="gaia_hydras.onType.html#MoreOrderType.disp"><span class="id" title="variable">disp</span></a>.<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="limit_v2" class="idref" href="#limit_v2"><span class="id" title="definition">limit_v2</span></a> (<a id="f:8" class="idref" href="#f:8"><span class="id" title="binder">f</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="gaia_hydras.onType.html#MoreOrderType.T"><span class="id" title="variable">T</span></a>)(<a id="x:9" class="idref" href="#x:9"><span class="id" title="binder">x</span></a>: <a class="idref" href="gaia_hydras.onType.html#MoreOrderType.T"><span class="id" title="variable">T</span></a>) :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">(</span></a><span class="id" title="keyword">∀</span> (<a id="n:10" class="idref" href="#n:10"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>), (<a class="idref" href="gaia_hydras.onType.html#f:8"><span class="id" title="variable">f</span></a> <a class="idref" href="gaia_hydras.onType.html#n:10"><span class="id" title="variable">n</span></a> <span class="id" title="notation">&lt;</span> <a class="idref" href="gaia_hydras.onType.html#x:9"><span class="id" title="variable">x</span></a>)%<span class="id" title="var">O</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">(</span></a><span class="id" title="keyword">∀</span> <a id="y:11" class="idref" href="#y:11"><span class="id" title="binder">y</span></a> : <a class="idref" href="gaia_hydras.onType.html#MoreOrderType.T"><span class="id" title="variable">T</span></a>,  (<a class="idref" href="gaia_hydras.onType.html#y:11"><span class="id" title="variable">y</span></a> <span class="id" title="notation">&lt;</span> <a class="idref" href="gaia_hydras.onType.html#x:9"><span class="id" title="variable">x</span></a>)%<span class="id" title="var">O</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a id="n:12" class="idref" href="#n:12"><span class="id" title="binder">n</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">,</span></a> (<a class="idref" href="gaia_hydras.onType.html#y:11"><span class="id" title="variable">y</span></a> <span class="id" title="notation">≤</span> <a class="idref" href="gaia_hydras.onType.html#f:8"><span class="id" title="variable">f</span></a> <a class="idref" href="gaia_hydras.onType.html#n:12"><span class="id" title="variable">n</span></a>)%<span class="id" title="var">O</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">)</span></a>.<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="limit_of" class="idref" href="#limit_of"><span class="id" title="definition">limit_of</span></a> (<a id="f:13" class="idref" href="#f:13"><span class="id" title="binder">f</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="gaia_hydras.onType.html#MoreOrderType.T"><span class="id" title="variable">T</span></a>) <a id="x:14" class="idref" href="#x:14"><span class="id" title="binder">x</span></a> := <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">(</span></a><span class="id" title="keyword">∀</span> <a id="n:15" class="idref" href="#n:15"><span class="id" title="binder">n</span></a> <a id="m:16" class="idref" href="#m:16"><span class="id" title="binder">m</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>, (<a class="idref" href="gaia_hydras.onType.html#n:15"><span class="id" title="variable">n</span></a> <span class="id" title="notation">&lt;</span> <a class="idref" href="gaia_hydras.onType.html#m:16"><span class="id" title="variable">m</span></a>)%<span class="id" title="var">nat</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> (<a class="idref" href="gaia_hydras.onType.html#f:13"><span class="id" title="variable">f</span></a> <a class="idref" href="gaia_hydras.onType.html#n:15"><span class="id" title="variable">n</span></a> <span class="id" title="notation">&lt;</span> <a class="idref" href="gaia_hydras.onType.html#f:13"><span class="id" title="variable">f</span></a> <a class="idref" href="gaia_hydras.onType.html#m:16"><span class="id" title="variable">m</span></a>)%<span class="id" title="var">O</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a> <a class="idref" href="gaia_hydras.onType.html#limit_v2"><span class="id" title="definition">limit_v2</span></a> <a class="idref" href="gaia_hydras.onType.html#f:13"><span class="id" title="variable">f</span></a> <a class="idref" href="gaia_hydras.onType.html#x:14"><span class="id" title="variable">x</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="is_successor_of" class="idref" href="#is_successor_of"><span class="id" title="definition">is_successor_of</span></a>  (<a id="x:17" class="idref" href="#x:17"><span class="id" title="binder">x</span></a> <a id="y:18" class="idref" href="#y:18"><span class="id" title="binder">y</span></a>: <a class="idref" href="gaia_hydras.onType.html#MoreOrderType.T"><span class="id" title="variable">T</span></a>):= <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="gaia_hydras.onType.html#x:17"><span class="id" title="variable">x</span></a> <span class="id" title="notation">&lt;</span> <a class="idref" href="gaia_hydras.onType.html#y:18"><span class="id" title="variable">y</span></a>)%<span class="id" title="var">O</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a> <span class="id" title="keyword">∀</span> <a id="z:19" class="idref" href="#z:19"><span class="id" title="binder">z</span></a>,  (<a class="idref" href="gaia_hydras.onType.html#x:17"><span class="id" title="variable">x</span></a> <span class="id" title="notation">&lt;</span> <a class="idref" href="gaia_hydras.onType.html#z:19"><span class="id" title="variable">z</span></a>)%<span class="id" title="var">O</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssrbool.html#b3ebd0deddd84fd60e149cb5ef719351"><span class="id" title="notation">~~</span></a> (<a class="idref" href="gaia_hydras.onType.html#z:19"><span class="id" title="variable">z</span></a> <span class="id" title="notation">&lt;</span>  <a class="idref" href="gaia_hydras.onType.html#y:18"><span class="id" title="variable">y</span></a>)%<span class="id" title="var">O</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="MoreOrderType.Succ_no_limit" class="idref" href="#MoreOrderType.Succ_no_limit"><span class="id" title="section">Succ_no_limit</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> (<a id="MoreOrderType.Succ_no_limit.x" class="idref" href="#MoreOrderType.Succ_no_limit.x"><span class="id" title="variable">x</span></a> <a id="MoreOrderType.Succ_no_limit.y" class="idref" href="#MoreOrderType.Succ_no_limit.y"><span class="id" title="variable">y</span></a>: <a class="idref" href="gaia_hydras.onType.html#MoreOrderType.T"><span class="id" title="variable">T</span></a>) (<a id="MoreOrderType.Succ_no_limit.s" class="idref" href="#MoreOrderType.Succ_no_limit.s"><span class="id" title="variable">s</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="gaia_hydras.onType.html#MoreOrderType.T"><span class="id" title="variable">T</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Hypothesis</span> <a id="MoreOrderType.Succ_no_limit.Hsucc" class="idref" href="#MoreOrderType.Succ_no_limit.Hsucc"><span class="id" title="variable">Hsucc</span></a> : <a class="idref" href="gaia_hydras.onType.html#is_successor_of"><span class="id" title="definition">is_successor_of</span></a> <a class="idref" href="gaia_hydras.onType.html#MoreOrderType.Succ_no_limit.x"><span class="id" title="variable">x</span></a> <a class="idref" href="gaia_hydras.onType.html#MoreOrderType.Succ_no_limit.y"><span class="id" title="variable">y</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Hypothesis</span> <a id="MoreOrderType.Succ_no_limit.Hlim" class="idref" href="#MoreOrderType.Succ_no_limit.Hlim"><span class="id" title="variable">Hlim</span></a> : <a class="idref" href="gaia_hydras.onType.html#limit_of"><span class="id" title="definition">limit_of</span></a> <a class="idref" href="gaia_hydras.onType.html#MoreOrderType.Succ_no_limit.s"><span class="id" title="variable">s</span></a>  <a class="idref" href="gaia_hydras.onType.html#MoreOrderType.Succ_no_limit.y"><span class="id" title="variable">y</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="R0" class="idref" href="#R0"><span class="id" title="lemma">R0</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">(</span></a><a id="n:25" class="idref" href="#n:25"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">),</span></a> (<a class="idref" href="gaia_hydras.onType.html#MoreOrderType.Succ_no_limit.x"><span class="id" title="variable">x</span></a> <span class="id" title="notation">≤</span> <span class="id" title="notation">(</span><a class="idref" href="gaia_hydras.onType.html#MoreOrderType.Succ_no_limit.s"><span class="id" title="variable">s</span></a> <a class="idref" href="gaia_hydras.onType.html#n:25"><span class="id" title="variable">n</span></a><span class="id" title="notation">)</span>)%<span class="id" title="var">O</span>.<br/>
+ 
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="R1" class="idref" href="#R1"><span class="id" title="lemma">R1</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a id="z:26" class="idref" href="#z:26"><span class="id" title="binder">z</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">,</span></a> (<a class="idref" href="gaia_hydras.onType.html#MoreOrderType.Succ_no_limit.x"><span class="id" title="variable">x</span></a> <span class="id" title="notation">&lt;</span> <a class="idref" href="gaia_hydras.onType.html#z:26"><span class="id" title="variable">z</span></a> <span class="id" title="notation">&lt;</span> <a class="idref" href="gaia_hydras.onType.html#MoreOrderType.Succ_no_limit.y"><span class="id" title="variable">y</span></a>)%<span class="id" title="var">O</span>.<br/>
+ 
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="F" class="idref" href="#F"><span class="id" title="lemma">F</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#False"><span class="id" title="inductive">False</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="gaia_hydras.onType.html#MoreOrderType.Succ_no_limit"><span class="id" title="section">Succ_no_limit</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="gaia_hydras.onType.html#MoreOrderType"><span class="id" title="section">MoreOrderType</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Type for ordinal notations 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <a id="ONDef" class="idref" href="#ONDef"><span class="id" title="module">ONDef</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Record</span> <a id="ONDef.mixin_of" class="idref" href="#ONDef.mixin_of"><span class="id" title="record">mixin_of</span></a> <a id="disp:27" class="idref" href="#disp:27"><span class="id" title="binder">disp</span></a> (<a id="T:28" class="idref" href="#T:28"><span class="id" title="binder">T</span></a>: <span class="id" title="abbreviation">orderType</span> <a class="idref" href="gaia_hydras.onType.html#disp:27"><span class="id" title="variable">disp</span></a>)  :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a id="ONDef.Mixin" class="idref" href="#ONDef.Mixin"><span class="id" title="constructor">Mixin</span></a> {<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">_</span> : @<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#well_founded"><span class="id" title="definition">well_founded</span></a> <a class="idref" href="gaia_hydras.onType.html#T:28"><span class="id" title="variable">T</span></a> <span class="id" title="notation">&lt;%</span><span class="id" title="notation">O</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="ONDef.Packing" class="idref" href="#ONDef.Packing"><span class="id" title="section">Packing</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="ONDef.Packing.disp" class="idref" href="#ONDef.Packing.disp"><span class="id" title="variable">disp</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#unit"><span class="id" title="inductive">unit</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Structure</span> <a id="ONDef.pack_type" class="idref" href="#ONDef.pack_type"><span class="id" title="record">pack_type</span></a> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="ONDef.Pack" class="idref" href="#ONDef.Pack"><span class="id" title="constructor">Pack</span></a>{ <a id="ONDef.type" class="idref" href="#ONDef.type"><span class="id" title="projection">type</span></a>: <span class="id" title="abbreviation">orderType</span> <a class="idref" href="gaia_hydras.onType.html#ONDef.Packing.disp"><span class="id" title="variable">disp</span></a>; <span class="id" title="var">_</span> : <a class="idref" href="gaia_hydras.onType.html#ONDef.mixin_of"><span class="id" title="record">mixin_of</span></a> <a class="idref" href="gaia_hydras.onType.html#type:32"><span class="id" title="method">type</span></a>}.<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="ONDef.Packing.cT" class="idref" href="#ONDef.Packing.cT"><span class="id" title="variable">cT</span></a>: <a class="idref" href="gaia_hydras.onType.html#ONDef.pack_type"><span class="id" title="record">pack_type</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="ONDef.on_struct" class="idref" href="#ONDef.on_struct"><span class="id" title="definition">on_struct</span></a>: <a class="idref" href="gaia_hydras.onType.html#ONDef.mixin_of"><span class="id" title="record">mixin_of</span></a> <a class="idref" href="gaia_hydras.onType.html#ONDef.Packing.cT"><span class="id" title="variable">cT</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">let</span>: <a class="idref" href="gaia_hydras.onType.html#ONDef.Pack"><span class="id" title="constructor">Pack</span></a> <span class="id" title="var">_</span> <span class="id" title="var">c</span> := <a class="idref" href="gaia_hydras.onType.html#ONDef.Packing.cT"><span class="id" title="variable">cT</span></a> <span class="id" title="keyword">return</span> <a class="idref" href="gaia_hydras.onType.html#ONDef.mixin_of"><span class="id" title="record">mixin_of</span></a> <a class="idref" href="gaia_hydras.onType.html#cT:34"><span class="id" title="variable">cT</span></a> <span class="id" title="tactic">in</span> <span class="id" title="var">c</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="gaia_hydras.onType.html#ONDef.Packing"><span class="id" title="section">Packing</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Module</span> <a id="ONDef.Exports" class="idref" href="#ONDef.Exports"><span class="id" title="module">Exports</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="ONDef.Exports.on" class="idref" href="#ONDef.Exports.on"><span class="id" title="abbreviation">on</span></a> := (<a class="idref" href="gaia_hydras.onType.html#ONDef.pack_type"><span class="id" title="record">pack_type</span></a> ).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="ONDef.Exports.ONMixin" class="idref" href="#ONDef.Exports.ONMixin"><span class="id" title="abbreviation">ONMixin</span></a> := <a class="idref" href="gaia_hydras.onType.html#ONDef.Mixin"><span class="id" title="constructor">Mixin</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="ONDef.Exports.ON" class="idref" href="#ONDef.Exports.ON"><span class="id" title="abbreviation">ON</span></a> <span class="id" title="var">T</span> <span class="id" title="var">m</span> := (@<a class="idref" href="gaia_hydras.onType.html#ONDef.Pack"><span class="id" title="constructor">Pack</span></a> <span class="id" title="var">T</span> <span class="id" title="var">m</span>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Coercion</span> <a class="idref" href="gaia_hydras.onType.html#ONDef.type"><span class="id" title="projection">type</span></a> <a class="idref" href="gaia_hydras.onType.html#ONDef.type"><span class="id" title="projection">:</span></a> <a class="idref" href="gaia_hydras.onType.html#ONDef.type"><span class="id" title="projection">pack_type</span></a> <a class="idref" href="gaia_hydras.onType.html#ONDef.type"><span class="id" title="projection">&gt;-&gt;</span></a> <a class="idref" href="gaia_hydras.onType.html#ONDef.type"><span class="id" title="projection">orderType</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="ONDef.Exports.Lemmas" class="idref" href="#ONDef.Exports.Lemmas"><span class="id" title="section">Lemmas</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="ONDef.Exports.Lemmas.disp" class="idref" href="#ONDef.Exports.Lemmas.disp"><span class="id" title="variable">disp</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#unit"><span class="id" title="inductive">unit</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="ONDef.Exports.Lemmas.U" class="idref" href="#ONDef.Exports.Lemmas.U"><span class="id" title="variable">U</span></a>: @<a class="idref" href="gaia_hydras.onType.html#ONDef.Exports.on"><span class="id" title="abbreviation">on</span></a>  <a class="idref" href="gaia_hydras.onType.html#ONDef.Exports.Lemmas.disp"><span class="id" title="variable">disp</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="ONDef.Exports.tricho" class="idref" href="#ONDef.Exports.tricho"><span class="id" title="definition">tricho</span></a> (<a id="a:37" class="idref" href="#a:37"><span class="id" title="binder">a</span></a> <a id="b:38" class="idref" href="#b:38"><span class="id" title="binder">b</span></a>: <a class="idref" href="gaia_hydras.onType.html#ONDef.Exports.Lemmas.U"><span class="id" title="variable">U</span></a>) := <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::boolean_if_scope:'if'_x_'then'_x_'else'_x"><span class="id" title="notation">if</span></a> (<a class="idref" href="gaia_hydras.onType.html#a:37"><span class="id" title="variable">a</span></a> <span class="id" title="notation">==</span> <a class="idref" href="gaia_hydras.onType.html#b:38"><span class="id" title="variable">b</span></a>)%<span class="id" title="var">O</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::boolean_if_scope:'if'_x_'then'_x_'else'_x"><span class="id" title="notation">then</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#Eq"><span class="id" title="constructor">Eq</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::boolean_if_scope:'if'_x_'then'_x_'else'_x"><span class="id" title="notation">else</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::boolean_if_scope:'if'_x_'then'_x_'else'_x"><span class="id" title="notation">if</span></a> (<a class="idref" href="gaia_hydras.onType.html#a:37"><span class="id" title="variable">a</span></a> <span class="id" title="notation">&lt;</span> <a class="idref" href="gaia_hydras.onType.html#b:38"><span class="id" title="variable">b</span></a>)%<span class="id" title="var">O</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::boolean_if_scope:'if'_x_'then'_x_'else'_x"><span class="id" title="notation">then</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#Lt"><span class="id" title="constructor">Lt</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssreflect.html#::boolean_if_scope:'if'_x_'then'_x_'else'_x"><span class="id" title="notation">else</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#Gt"><span class="id" title="constructor">Gt</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="ONDef.Exports.trichoP" class="idref" href="#ONDef.Exports.trichoP"><span class="id" title="lemma">trichoP</span></a> (<a id="a:39" class="idref" href="#a:39"><span class="id" title="binder">a</span></a> <a id="b:40" class="idref" href="#b:40"><span class="id" title="binder">b</span></a>: <a class="idref" href="gaia_hydras.onType.html#ONDef.Exports.Lemmas.U"><span class="id" title="variable">U</span></a>) :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#CompareSpec"><span class="id" title="inductive">CompareSpec</span></a> (<a class="idref" href="gaia_hydras.onType.html#a:39"><span class="id" title="variable">a</span></a> <span class="id" title="notation">==</span> <a class="idref" href="gaia_hydras.onType.html#b:40"><span class="id" title="variable">b</span></a>) (<a class="idref" href="gaia_hydras.onType.html#a:39"><span class="id" title="variable">a</span></a> <span class="id" title="notation">&lt;</span> <a class="idref" href="gaia_hydras.onType.html#b:40"><span class="id" title="variable">b</span></a>)%<span class="id" title="var">O</span> (<a class="idref" href="gaia_hydras.onType.html#b:40"><span class="id" title="variable">b</span></a> <span class="id" title="notation">&lt;</span> <a class="idref" href="gaia_hydras.onType.html#a:39"><span class="id" title="variable">a</span></a>)%<span class="id" title="var">O</span> (<a class="idref" href="gaia_hydras.onType.html#ONDef.Exports.tricho"><span class="id" title="definition">tricho</span></a> <a class="idref" href="gaia_hydras.onType.html#a:39"><span class="id" title="variable">a</span></a> <a class="idref" href="gaia_hydras.onType.html#b:40"><span class="id" title="variable">b</span></a>).<br/>
+ 
+<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="ONDef.Exports.wf" class="idref" href="#ONDef.Exports.wf"><span class="id" title="lemma">wf</span></a> : @<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#well_founded"><span class="id" title="definition">well_founded</span></a> <a class="idref" href="gaia_hydras.onType.html#ONDef.Exports.Lemmas.U"><span class="id" title="variable">U</span></a> <span class="id" title="notation">&lt;%</span><span class="id" title="notation">O</span>.<br/>
+ 
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="gaia_hydras.onType.html#ONDef.Exports.Lemmas"><span class="id" title="section">Lemmas</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="gaia_hydras.onType.html#ONDef.Exports"><span class="id" title="module">Exports</span></a>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="gaia_hydras.onType.html#ONDef"><span class="id" title="module">ONDef</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Export</span> <a class="idref" href="gaia_hydras.onType.html#ONDef.Exports"><span class="id" title="module">ONDef.Exports</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab474"></a><h1 class="section">First instances of ON</h1>
+
+<div class="paragraph"> </div>
+
+<a id="lab475"></a><h2 class="section">The Ordinal notation for 'I_i</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="wf_ltn" class="idref" href="#wf_ltn"><span class="id" title="lemma">wf_ltn</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#well_founded"><span class="id" title="definition">well_founded</span></a> (<span class="id" title="keyword">fun</span> <a id="n:41" class="idref" href="#n:41"><span class="id" title="binder">n</span></a> ⇒ <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssrfun.html#20b75710d0541e9ffd06f8e723fd3daf"><span class="id" title="notation">[</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssrfun.html#20b75710d0541e9ffd06f8e723fd3daf"><span class="id" title="notation">eta</span></a> <span class="id" title="definition">ltn</span> <a class="idref" href="gaia_hydras.onType.html#n:41"><span class="id" title="variable">n</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ssr.ssrfun.html#20b75710d0541e9ffd06f8e723fd3daf"><span class="id" title="notation">]</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="onFiniteDef" class="idref" href="#onFiniteDef"><span class="id" title="section">onFiniteDef</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="onFiniteDef.i" class="idref" href="#onFiniteDef.i"><span class="id" title="variable">i</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>.<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="I_i_wf" class="idref" href="#I_i_wf"><span class="id" title="lemma">I_i_wf</span></a>: @<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#well_founded"><span class="id" title="definition">well_founded</span></a> <span class="id" title="notation">'</span><span class="id" title="notation">I_i</span> (<span class="id" title="notation">&lt;%</span><span class="id" title="notation">O</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="onFiniteMixin" class="idref" href="#onFiniteMixin"><span class="id" title="definition">onFiniteMixin</span></a> := <a class="idref" href="gaia_hydras.onType.html#ONMixin"><span class="id" title="abbreviation">ONMixin</span></a> <a class="idref" href="gaia_hydras.onType.html#I_i_wf"><span class="id" title="lemma">I_i_wf</span></a>.<br/>
+<span class="id" title="keyword">Canonical</span> <a id="onFiniteType" class="idref" href="#onFiniteType"><span class="id" title="definition">onFiniteType</span></a> := <a class="idref" href="gaia_hydras.onType.html#ON"><span class="id" title="abbreviation">ON</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="gaia_hydras.onType.html#onFiniteMixin"><span class="id" title="definition">onFiniteMixin</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="gaia_hydras.onType.html#onFiniteDef"><span class="id" title="section">onFiniteDef</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Tests 
+Definition O12_33: onFiniteType 33. 
+by exists 12.
+Defined. 
+
+<div class="paragraph"> </div>
+
+Compute tricho O12_33 O12_33.
+
+<div class="paragraph"> </div>
+
+Goal (O12_33 &lt;= O12_33)
+<div class="paragraph"> </div>
+
+<a id="lab476"></a><h2 class="section">An ordinal notation for omega</h2>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="onOmegaDef" class="idref" href="#onOmegaDef"><span class="id" title="section">onOmegaDef</span></a>.<br/>
+
+<br/>
+&nbsp;<span class="id" title="keyword">Lemma</span> <a id="omega_lt_wf" class="idref" href="#omega_lt_wf"><span class="id" title="lemma">omega_lt_wf</span></a> : @<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Wf.html#well_founded"><span class="id" title="definition">well_founded</span></a> <span class="id" title="definition">Order.NatOrder.orderType</span> <span class="id" title="notation">&lt;%</span><span class="id" title="notation">O</span>.<br/>
+ 
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="onOmegaMixin" class="idref" href="#onOmegaMixin"><span class="id" title="definition">onOmegaMixin</span></a> := <a class="idref" href="gaia_hydras.onType.html#ONMixin"><span class="id" title="abbreviation">ONMixin</span></a> <a class="idref" href="gaia_hydras.onType.html#omega_lt_wf"><span class="id" title="lemma">omega_lt_wf</span></a>.<br/>
+<span class="id" title="keyword">Canonical</span> <a id="onOmegaType" class="idref" href="#onOmegaType"><span class="id" title="definition">onOmegaType</span></a> := <a class="idref" href="gaia_hydras.onType.html#ON"><span class="id" title="abbreviation">ON</span></a> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <a class="idref" href="gaia_hydras.onType.html#onOmegaMixin"><span class="id" title="definition">onOmegaMixin</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="gaia_hydras.onType.html#onOmegaDef"><span class="id" title="section">onOmegaDef</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <a id="om12" class="idref" href="#om12"><span class="id" title="definition">om12</span></a> : <a class="idref" href="gaia_hydras.onType.html#onOmegaType"><span class="id" title="definition">onOmegaType</span></a> := 12.<br/>
+<span class="id" title="keyword">Example</span> <a id="om67" class="idref" href="#om67"><span class="id" title="definition">om67</span></a> : <a class="idref" href="gaia_hydras.onType.html#onOmegaType"><span class="id" title="definition">onOmegaType</span></a> := 67.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+To do :  Notation for epsilon0 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">gaia_hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="gaia_hydras.T1Bridge.html#"><span class="id" title="library">T1Bridge</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="ONEpsilon0Def" class="idref" href="#ONEpsilon0Def"><span class="id" title="section">ONEpsilon0Def</span></a>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="gaia_hydras.onType.html#ONEpsilon0Def"><span class="id" title="section">ONEpsilon0Def</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

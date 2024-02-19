@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Schutte.GRelations</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Schutte.GRelations</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+General relations  
+<div class="paragraph"> </div>
+
+  by  Florian Hatat, ENS-Lyon 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#"><span class="id" title="library">Ensembles</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Logic.Classical.html#"><span class="id" title="library">Classical</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.micromega.Lia.html#"><span class="id" title="library">Lia</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Arith</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Schutte.PartialFun.html#"><span class="id" title="library">PartialFun</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="General_Relations" class="idref" href="#General_Relations"><span class="id" title="section">General_Relations</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="General_Relations.Definitions" class="idref" href="#General_Relations.Definitions"><span class="id" title="section">Definitions</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="General_Relations.Definitions.A" class="idref" href="#General_Relations.Definitions.A"><span class="id" title="variable">A</span></a> <a id="General_Relations.Definitions.B" class="idref" href="#General_Relations.Definitions.B"><span class="id" title="variable">B</span></a> : <span class="id" title="keyword">Type</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+domain 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="General_Relations.Definitions.DA" class="idref" href="#General_Relations.Definitions.DA"><span class="id" title="variable">DA</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#Ensemble"><span class="id" title="definition">Ensemble</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.A"><span class="id" title="variable">A</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+codomain 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="General_Relations.Definitions.DB" class="idref" href="#General_Relations.Definitions.DB"><span class="id" title="variable">DB</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#Ensemble"><span class="id" title="definition">Ensemble</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.B"><span class="id" title="variable">B</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="GRelation" class="idref" href="#GRelation"><span class="id" title="definition">GRelation</span></a> := <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.A"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.B"><span class="id" title="variable">B</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <span class="id" title="keyword">Prop</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="General_Relations.Definitions.R" class="idref" href="#General_Relations.Definitions.R"><span class="id" title="variable">R</span></a> : <a class="idref" href="hydras.Schutte.GRelations.html#GRelation"><span class="id" title="definition">GRelation</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Inductive</span> <a id="rel_injection" class="idref" href="#rel_injection"><span class="id" title="inductive">rel_injection</span></a> : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="rel_inj_i" class="idref" href="#rel_inj_i"><span class="id" title="constructor">rel_inj_i</span></a> : <a class="idref" href="hydras.Schutte.PartialFun.html#rel_domain"><span class="id" title="definition">rel_domain</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.DA"><span class="id" title="variable">DA</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.R"><span class="id" title="variable">R</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.PartialFun.html#rel_codomain"><span class="id" title="definition">rel_codomain</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.DA"><span class="id" title="variable">DA</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.DB"><span class="id" title="variable">DB</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.R"><span class="id" title="variable">R</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.PartialFun.html#rel_inj"><span class="id" title="definition">rel_inj</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.DA"><span class="id" title="variable">DA</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.R"><span class="id" title="variable">R</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.GRelations.html#rel_injection:6"><span class="id" title="inductive">rel_injection</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Inductive</span>  <a id="rel_surjection" class="idref" href="#rel_surjection"><span class="id" title="inductive">rel_surjection</span></a> : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="rel_surj_i" class="idref" href="#rel_surj_i"><span class="id" title="constructor">rel_surj_i</span></a> : <a class="idref" href="hydras.Schutte.PartialFun.html#rel_codomain"><span class="id" title="definition">rel_codomain</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.DA"><span class="id" title="variable">DA</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.DB"><span class="id" title="variable">DB</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.R"><span class="id" title="variable">R</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.PartialFun.html#rel_functional"><span class="id" title="definition">rel_functional</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.DA"><span class="id" title="variable">DA</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.R"><span class="id" title="variable">R</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.PartialFun.html#rel_onto"><span class="id" title="definition">rel_onto</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.DA"><span class="id" title="variable">DA</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.DB"><span class="id" title="variable">DB</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions.R"><span class="id" title="variable">R</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.GRelations.html#rel_surjection:8"><span class="id" title="inductive">rel_surjection</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.Definitions"><span class="id" title="section">Definitions</span></a>.<br/>
+
+<br/>
+&nbsp;<span class="id" title="keyword">Arguments</span> <a class="idref" href="hydras.Schutte.GRelations.html#rel_injection"><span class="id" title="inductive">rel_injection</span></a> [<span class="id" title="var">A</span> <span class="id" title="var">B</span>].<br/>
+&nbsp;<span class="id" title="keyword">Arguments</span> <a class="idref" href="hydras.Schutte.GRelations.html#rel_surjection"><span class="id" title="inductive">rel_surjection</span></a> [<span class="id" title="var">A</span> <span class="id" title="var">B</span>].<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="General_Relations.A" class="idref" href="#General_Relations.A"><span class="id" title="variable">A</span></a> <a id="General_Relations.B" class="idref" href="#General_Relations.B"><span class="id" title="variable">B</span></a> : <span class="id" title="keyword">Type</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="General_Relations.DA" class="idref" href="#General_Relations.DA"><span class="id" title="variable">DA</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#Ensemble"><span class="id" title="definition">Ensemble</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.A"><span class="id" title="variable">A</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="General_Relations.DB" class="idref" href="#General_Relations.DB"><span class="id" title="variable">DB</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Sets.Ensembles.html#Ensemble"><span class="id" title="definition">Ensemble</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.B"><span class="id" title="variable">B</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="General_Relations.injection2surjection" class="idref" href="#General_Relations.injection2surjection"><span class="id" title="section">injection2surjection</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="General_Relations.injection2surjection.R" class="idref" href="#General_Relations.injection2surjection.R"><span class="id" title="variable">R</span></a> : <a class="idref" href="hydras.Schutte.GRelations.html#GRelation"><span class="id" title="definition">GRelation</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.A"><span class="id" title="variable">A</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.B"><span class="id" title="variable">B</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Hypothesis</span> <a id="General_Relations.injection2surjection.R_inj" class="idref" href="#General_Relations.injection2surjection.R_inj"><span class="id" title="variable">R_inj</span></a> : <a class="idref" href="hydras.Schutte.GRelations.html#rel_injection"><span class="id" title="inductive">rel_injection</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.DA"><span class="id" title="variable">DA</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.DB"><span class="id" title="variable">DB</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.injection2surjection.R"><span class="id" title="variable">R</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="R_inv_surj" class="idref" href="#R_inv_surj"><span class="id" title="lemma">R_inv_surj</span></a> : <a class="idref" href="hydras.Schutte.GRelations.html#rel_surjection"><span class="id" title="inductive">rel_surjection</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.DB"><span class="id" title="variable">DB</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.DA"><span class="id" title="variable">DA</span></a> (<a class="idref" href="hydras.Schutte.PartialFun.html#rel_inv"><span class="id" title="definition">rel_inv</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.DA"><span class="id" title="variable">DA</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.DB"><span class="id" title="variable">DB</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.injection2surjection.R"><span class="id" title="variable">R</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.injection2surjection"><span class="id" title="section">injection2surjection</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="General_Relations.surjection2injection" class="idref" href="#General_Relations.surjection2injection"><span class="id" title="section">surjection2injection</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="General_Relations.surjection2injection.R" class="idref" href="#General_Relations.surjection2injection.R"><span class="id" title="variable">R</span></a> : <a class="idref" href="hydras.Schutte.GRelations.html#GRelation"><span class="id" title="definition">GRelation</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.A"><span class="id" title="variable">A</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.B"><span class="id" title="variable">B</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Hypothesis</span> <a id="General_Relations.surjection2injection.R_surj" class="idref" href="#General_Relations.surjection2injection.R_surj"><span class="id" title="variable">R_surj</span></a> : <a class="idref" href="hydras.Schutte.GRelations.html#rel_surjection"><span class="id" title="inductive">rel_surjection</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.DA"><span class="id" title="variable">DA</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.DB"><span class="id" title="variable">DB</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.surjection2injection.R"><span class="id" title="variable">R</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="R_inv" class="idref" href="#R_inv"><span class="id" title="definition">R_inv</span></a> := <a class="idref" href="hydras.Schutte.PartialFun.html#rel_inv"><span class="id" title="definition">rel_inv</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.DA"><span class="id" title="variable">DA</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.DB"><span class="id" title="variable">DB</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.surjection2injection.R"><span class="id" title="variable">R</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="R_inv_inj" class="idref" href="#R_inv_inj"><span class="id" title="lemma">R_inv_inj</span></a> : <a class="idref" href="hydras.Schutte.GRelations.html#rel_injection"><span class="id" title="inductive">rel_injection</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.DB"><span class="id" title="variable">DB</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.DA"><span class="id" title="variable">DA</span></a> (<a class="idref" href="hydras.Schutte.PartialFun.html#rel_inv"><span class="id" title="definition">rel_inv</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.DA"><span class="id" title="variable">DA</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.DB"><span class="id" title="variable">DB</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.surjection2injection.R"><span class="id" title="variable">R</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.surjection2injection"><span class="id" title="section">surjection2injection</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="General_Relations.elagage" class="idref" href="#General_Relations.elagage"><span class="id" title="section">elagage</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="General_Relations.elagage.to_nat_elagage" class="idref" href="#General_Relations.elagage.to_nat_elagage"><span class="id" title="section">to_nat_elagage</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="General_Relations.elagage.to_nat_elagage.R" class="idref" href="#General_Relations.elagage.to_nat_elagage.R"><span class="id" title="variable">R</span></a> : <a class="idref" href="hydras.Schutte.GRelations.html#GRelation"><span class="id" title="definition">GRelation</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.A"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="R_nat_elaguee" class="idref" href="#R_nat_elaguee"><span class="id" title="definition">R_nat_elaguee</span></a> (<a id="x:19" class="idref" href="#x:19"><span class="id" title="binder">x</span></a> : <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.A"><span class="id" title="variable">A</span></a>) (<a id="n:20" class="idref" href="#n:20"><span class="id" title="binder">n</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.elagage.to_nat_elagage.R"><span class="id" title="variable">R</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#x:19"><span class="id" title="variable">x</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#n:20"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">∧</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">(</span></a><span class="id" title="keyword">∀</span> <a id="p:21" class="idref" href="#p:21"><span class="id" title="binder">p</span></a>, <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.elagage.to_nat_elagage.R"><span class="id" title="variable">R</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#x:19"><span class="id" title="variable">x</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#p:21"><span class="id" title="variable">p</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#n:20"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#cb53cf0ee22c036a03b4a9281c68b5a3"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#p:21"><span class="id" title="variable">p</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#ba2b0e492d2b4675a0acf3ea92aabadd"><span class="id" title="notation">)</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="R_nat_elaguee_fun" class="idref" href="#R_nat_elaguee_fun"><span class="id" title="lemma">R_nat_elaguee_fun</span></a> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.PartialFun.html#rel_functional"><span class="id" title="definition">rel_functional</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.DA"><span class="id" title="variable">DA</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#R_nat_elaguee"><span class="id" title="definition">R_nat_elaguee</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="R_nat_elaguee_domain" class="idref" href="#R_nat_elaguee_domain"><span class="id" title="lemma">R_nat_elaguee_domain</span></a> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="y:22" class="idref" href="#y:22"><span class="id" title="binder">y</span></a> <a id="n:23" class="idref" href="#n:23"><span class="id" title="binder">n</span></a>, <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.elagage.to_nat_elagage.R"><span class="id" title="variable">R</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#y:22"><span class="id" title="variable">y</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#n:23"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a id="p:24" class="idref" href="#p:24"><span class="id" title="binder">p</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">,</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#R_nat_elaguee"><span class="id" title="definition">R_nat_elaguee</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#y:22"><span class="id" title="variable">y</span></a> <a class="idref" href="hydras.Schutte.GRelations.html#p:24"><span class="id" title="variable">p</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.elagage.to_nat_elagage"><span class="id" title="section">to_nat_elagage</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations.elagage"><span class="id" title="section">elagage</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Schutte.GRelations.html#General_Relations"><span class="id" title="section">General_Relations</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="hydras.Schutte.GRelations.html#rel_injection"><span class="id" title="inductive">rel_injection</span></a> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="hydras.Schutte.GRelations.html#rel_surjection"><span class="id" title="inductive">rel_surjection</span></a> {<span class="id" title="var">A</span> <span class="id" title="var">B</span>}.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

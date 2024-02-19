@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.solutions_exercises.schutte_cnf_counter_example</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.solutions_exercises.schutte_cnf_counter_example</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Schutte.Schutte.html#"><span class="id" title="library">Schutte</span></a> <a class="idref" href="hydras.Schutte.AP.html#"><span class="id" title="library">AP</span></a> <a class="idref" href="hydras.Schutte.CNF.html#"><span class="id" title="library">CNF</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#"><span class="id" title="library">List</span></a>.<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">schutte_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Cter_example" class="idref" href="#Cter_example"><span class="id" title="section">Cter_example</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Hypothesis</span>  <a id="Cter_example.cnf_lt_epsilon0_iff" class="idref" href="#Cter_example.cnf_lt_epsilon0_iff"><span class="id" title="variable">cnf_lt_epsilon0_iff</span></a> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="l:1" class="idref" href="#l:1"><span class="id" title="binder">l</span></a> <a id="alpha:2" class="idref" href="#alpha:2"><span class="id" title="binder">alpha</span></a>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="hydras.Schutte.CNF.html#is_cnf_of"><span class="id" title="definition">is_cnf_of</span></a> <a class="idref" href="hydras.solutions_exercises.schutte_cnf_counter_example.html#alpha:2"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.solutions_exercises.schutte_cnf_counter_example.html#l:1"><span class="id" title="variable">l</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">(</span></a><a class="idref" href="hydras.solutions_exercises.schutte_cnf_counter_example.html#alpha:2"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Schutte.AP.html#epsilon0"><span class="id" title="definition">epsilon0</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;-&gt;'_x"><span class="id" title="notation">↔</span></a>  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#Forall"><span class="id" title="inductive">Forall</span></a> (<span class="id" title="keyword">fun</span> <a id="beta:3" class="idref" href="#beta:3"><span class="id" title="binder">beta</span></a> ⇒  <a class="idref" href="hydras.solutions_exercises.schutte_cnf_counter_example.html#beta:3"><span class="id" title="variable">beta</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.solutions_exercises.schutte_cnf_counter_example.html#alpha:2"><span class="id" title="variable">alpha</span></a>) <a class="idref" href="hydras.solutions_exercises.schutte_cnf_counter_example.html#l:1"><span class="id" title="variable">l</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">)</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Cter_example.alpha" class="idref" href="#Cter_example.alpha"><span class="id" title="variable">alpha</span></a> := <a class="idref" href="hydras.Schutte.AP.html#phi0"><span class="id" title="abbreviation">phi0</span></a> (<a class="idref" href="hydras.Schutte.Schutte_basics.html#succ"><span class="id" title="definition">succ</span></a> <a class="idref" href="hydras.Schutte.AP.html#epsilon0"><span class="id" title="definition">epsilon0</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Cter_example.l" class="idref" href="#Cter_example.l"><span class="id" title="variable">l</span></a> := <a class="idref" href="hydras.Schutte.Schutte_basics.html#succ"><span class="id" title="definition">succ</span></a> <a class="idref" href="hydras.Schutte.AP.html#epsilon0"><span class="id" title="definition">epsilon0</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nil"><span class="id" title="constructor">nil</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="R1" class="idref" href="#R1"><span class="id" title="lemma">R1</span></a> : <a class="idref" href="hydras.Schutte.AP.html#epsilon0"><span class="id" title="definition">epsilon0</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.solutions_exercises.schutte_cnf_counter_example.html#Cter_example.alpha"><span class="id" title="variable">alpha</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="R2" class="idref" href="#R2"><span class="id" title="lemma">R2</span></a> : <a class="idref" href="hydras.Schutte.CNF.html#is_cnf_of"><span class="id" title="definition">is_cnf_of</span></a> <a class="idref" href="hydras.solutions_exercises.schutte_cnf_counter_example.html#Cter_example.alpha"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.solutions_exercises.schutte_cnf_counter_example.html#Cter_example.l"><span class="id" title="variable">l</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="R3" class="idref" href="#R3"><span class="id" title="lemma">R3</span></a> :  <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#Forall"><span class="id" title="inductive">Forall</span></a> (<span class="id" title="keyword">fun</span> <a id="beta:5" class="idref" href="#beta:5"><span class="id" title="binder">beta</span></a> ⇒  <a class="idref" href="hydras.solutions_exercises.schutte_cnf_counter_example.html#beta:5"><span class="id" title="variable">beta</span></a> <a class="idref" href="hydras.Schutte.Schutte_basics.html#::schutte_scope:x_'&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.solutions_exercises.schutte_cnf_counter_example.html#Cter_example.alpha"><span class="id" title="variable">alpha</span></a>) <a class="idref" href="hydras.solutions_exercises.schutte_cnf_counter_example.html#Cter_example.l"><span class="id" title="variable">l</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="counter_ex" class="idref" href="#counter_ex"><span class="id" title="lemma">counter_ex</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#False"><span class="id" title="inductive">False</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.solutions_exercises.schutte_cnf_counter_example.html#Cter_example"><span class="id" title="section">Cter_example</span></a>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

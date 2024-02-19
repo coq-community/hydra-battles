@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.solutions_exercises.predSuccUnicity</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.solutions_exercises.predSuccUnicity</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.OrdinalNotations.ON_Generic.html#"><span class="id" title="library">OrdinalNotations.ON_Generic</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relations.html#"><span class="id" title="library">Relations</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Proofs_of_unicity" class="idref" href="#Proofs_of_unicity"><span class="id" title="section">Proofs_of_unicity</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Context</span> (<a id="A:1" class="idref" href="#A:1"><span class="id" title="binder">A</span></a>:<span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="lt:2" class="idref" href="#lt:2"><span class="id" title="binder">lt</span></a> <a id="le:3" class="idref" href="#le:3"><span class="id" title="binder">le</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Definitions.html#relation"><span class="id" title="definition">relation</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#A:1"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="cmp:4" class="idref" href="#cmp:4"><span class="id" title="binder">cmp</span></a> : <a class="idref" href="hydras.Prelude.Comparable.html#Compare"><span class="id" title="class">Compare</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#A:1"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="On:5" class="idref" href="#On:5"><span class="id" title="binder">On</span></a> : <a class="idref" href="hydras.OrdinalNotations.ON_Generic.html#ON"><span class="id" title="class">ON</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#lt:2"><span class="id" title="variable">lt</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#cmp:4"><span class="id" title="variable">cmp</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Proofs_of_unicity.Proofs" class="idref" href="#Proofs_of_unicity.Proofs"><span class="id" title="section">Proofs</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> <a id="Proofs_of_unicity.Proofs.alpha" class="idref" href="#Proofs_of_unicity.Proofs.alpha"><span class="id" title="variable">alpha</span></a> <a id="Proofs_of_unicity.Proofs.beta" class="idref" href="#Proofs_of_unicity.Proofs.beta"><span class="id" title="variable">beta</span></a> : <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity.A"><span class="id" title="variable">A</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+beta is a successor of alpha 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Hypothesis</span> <a id="Proofs_of_unicity.Proofs.Halphabeta" class="idref" href="#Proofs_of_unicity.Proofs.Halphabeta"><span class="id" title="variable">Halphabeta</span></a> : <a class="idref" href="hydras.Prelude.MoreOrders.html#Successor"><span class="id" title="definition">Successor</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity.Proofs.beta"><span class="id" title="variable">beta</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity.Proofs.alpha"><span class="id" title="variable">alpha</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="Proofs_of_unicity.Proofs.S1" class="idref" href="#Proofs_of_unicity.Proofs.S1"><span class="id" title="section">S1</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="Proofs_of_unicity.Proofs.S1.gamma" class="idref" href="#Proofs_of_unicity.Proofs.S1.gamma"><span class="id" title="variable">gamma</span></a>: <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity.A"><span class="id" title="variable">A</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Hypothesis</span> <a id="Proofs_of_unicity.Proofs.S1.Halphagamma" class="idref" href="#Proofs_of_unicity.Proofs.S1.Halphagamma"><span class="id" title="variable">Halphagamma</span></a> :   <a class="idref" href="hydras.Prelude.MoreOrders.html#Successor"><span class="id" title="definition">Successor</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity.Proofs.S1.gamma"><span class="id" title="variable">gamma</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity.Proofs.alpha"><span class="id" title="variable">alpha</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="L1" class="idref" href="#L1"><span class="id" title="lemma">L1</span></a> :  <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity.Proofs.S1.gamma"><span class="id" title="variable">gamma</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity.Proofs.beta"><span class="id" title="variable">beta</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity.Proofs.S1"><span class="id" title="section">S1</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="Proofs_of_unicity.Proofs.S2" class="idref" href="#Proofs_of_unicity.Proofs.S2"><span class="id" title="section">S2</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="Proofs_of_unicity.Proofs.S2.gamma" class="idref" href="#Proofs_of_unicity.Proofs.S2.gamma"><span class="id" title="variable">gamma</span></a>: <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity.A"><span class="id" title="variable">A</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Hypothesis</span> <a id="Proofs_of_unicity.Proofs.S2.Hgammaalpha" class="idref" href="#Proofs_of_unicity.Proofs.S2.Hgammaalpha"><span class="id" title="variable">Hgammaalpha</span></a> : <a class="idref" href="hydras.Prelude.MoreOrders.html#Successor"><span class="id" title="definition">Successor</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity.Proofs.beta"><span class="id" title="variable">beta</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity.Proofs.S2.gamma"><span class="id" title="variable">gamma</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="L2" class="idref" href="#L2"><span class="id" title="lemma">L2</span></a> : <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity.Proofs.S2.gamma"><span class="id" title="variable">gamma</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity.Proofs.alpha"><span class="id" title="variable">alpha</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity.Proofs.S2"><span class="id" title="section">S2</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity.Proofs"><span class="id" title="section">Proofs</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Please remind that <span class="inlinecode"><span class="id" title="var">Successor</span></span> <span class="inlinecode"><span class="id" title="keyword">beta</span></span> <span class="inlinecode"><span class="id" title="var">alpha</span></span> must be read as
+    "<span class="inlinecode"><span class="id" title="keyword">beta</span></span> is a successor of <span class="inlinecode"><span class="id" title="var">alpha</span></span>" 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="Successor_unicity" class="idref" href="#Successor_unicity"><span class="id" title="lemma">Successor_unicity</span></a> (<a id="alpha:13" class="idref" href="#alpha:13"><span class="id" title="binder">alpha</span></a> <a id="beta:14" class="idref" href="#beta:14"><span class="id" title="binder">beta</span></a> <a id="gamma:15" class="idref" href="#gamma:15"><span class="id" title="binder">gamma</span></a> : <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity.A"><span class="id" title="variable">A</span></a>):<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Prelude.MoreOrders.html#Successor"><span class="id" title="definition">Successor</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#beta:14"><span class="id" title="variable">beta</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#alpha:13"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Prelude.MoreOrders.html#Successor"><span class="id" title="definition">Successor</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#gamma:15"><span class="id" title="variable">gamma</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#alpha:13"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#gamma:15"><span class="id" title="variable">gamma</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#beta:14"><span class="id" title="variable">beta</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="Predecessor_unicity" class="idref" href="#Predecessor_unicity"><span class="id" title="lemma">Predecessor_unicity</span></a> (<a id="alpha:16" class="idref" href="#alpha:16"><span class="id" title="binder">alpha</span></a> <a id="beta:17" class="idref" href="#beta:17"><span class="id" title="binder">beta</span></a> <a id="gamma:18" class="idref" href="#gamma:18"><span class="id" title="binder">gamma</span></a> : <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity.A"><span class="id" title="variable">A</span></a>):<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Prelude.MoreOrders.html#Successor"><span class="id" title="definition">Successor</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#beta:17"><span class="id" title="variable">beta</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#alpha:16"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.Prelude.MoreOrders.html#Successor"><span class="id" title="definition">Successor</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#beta:17"><span class="id" title="variable">beta</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#gamma:18"><span class="id" title="variable">gamma</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#gamma:18"><span class="id" title="variable">gamma</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#alpha:16"><span class="id" title="variable">alpha</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.solutions_exercises.predSuccUnicity.html#Proofs_of_unicity"><span class="id" title="section">Proofs_of_unicity</span></a>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.Hydra.Epsilon0_Needed_Generic</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.Hydra.Epsilon0_Needed_Generic</h1>
+
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+ Pierre Castéran, LaBRI and University of Bordeaux  
+<div class="paragraph"> </div>
+
+ Technical definitions and lemmas about variants bounded by some ordinal 
+    les than <span class="inlinecode"><span class="id" title="var">epsilon0</span></span> 
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Hydra.Hydra_Lemmas.html#"><span class="id" title="library">Hydra_Lemmas</span></a> <a class="idref" href="hydras.Epsilon0.Epsilon0.html#"><span class="id" title="library">Epsilon0</span></a> <a class="idref" href="hydras.Epsilon0.Canon.html#"><span class="id" title="library">Canon</span></a> <a class="idref" href="hydras.Epsilon0.Paths.html#"><span class="id" title="library">Paths</span></a> <a class="idref" href="hydras.Hydra.O2H.html#"><span class="id" title="library">O2H</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Relations.Relation_Operators.html#"><span class="id" title="library">Relation_Operators</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">t1_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Bounded" class="idref" href="#Bounded"><span class="id" title="section">Bounded</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Context</span> (<a id="B:1" class="idref" href="#B:1"><span class="id" title="binder">B</span></a>: <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Battle"><span class="id" title="class">Battle</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="mu:2" class="idref" href="#mu:2"><span class="id" title="binder">mu</span></a>: <a class="idref" href="hydras.Epsilon0.T1.html#T1"><span class="id" title="inductive">T1</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="Hmu:3" class="idref" href="#Hmu:3"><span class="id" title="binder">Hmu</span></a>: <a class="idref" href="hydras.Epsilon0.T1.html#nf"><span class="id" title="definition">nf</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#mu:2"><span class="id" title="variable">mu</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="m:4" class="idref" href="#m:4"><span class="id" title="binder">m</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hydra"><span class="id" title="inductive">Hydra</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#T1"><span class="id" title="inductive">T1</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="Var:5" class="idref" href="#Var:5"><span class="id" title="binder">Var</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#Hvariant"><span class="id" title="class">Hvariant</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#T1_wf"><span class="id" title="lemma">T1_wf</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#B:1"><span class="id" title="variable">B</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#m:4"><span class="id" title="variable">m</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="Hy:6" class="idref" href="#Hy:6"><span class="id" title="binder">Hy</span></a> : <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#BoundedVariant"><span class="id" title="class">BoundedVariant</span></a>  <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#Var:5"><span class="id" title="variable">Var</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#mu:2"><span class="id" title="variable">mu</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Hypothesis</span> <a id="Bounded.m_decrease" class="idref" href="#Bounded.m_decrease"><span class="id" title="variable">m_decrease</span></a> : <span class="id" title="keyword">∀</span>  <a id="i:7" class="idref" href="#i:7"><span class="id" title="binder">i</span></a> <a id="h:8" class="idref" href="#h:8"><span class="id" title="binder">h</span></a> <a id="h':9" class="idref" href="#h':9"><span class="id" title="binder">h'</span></a>, <a class="idref" href="hydras.Hydra.Hydra_Definitions.html#round_n"><span class="id" title="definition">round_n</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#i:7"><span class="id" title="variable">i</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#h:8"><span class="id" title="variable">h</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#h':9"><span class="id" title="variable">h'</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#Bounded.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#h':9"><span class="id" title="variable">h'</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#::t1_scope:x_'t1&lt;'_x"><span class="id" title="notation">t1</span></a><a class="idref" href="hydras.Epsilon0.T1.html#::t1_scope:x_'t1&lt;'_x"><span class="id" title="notation">&lt;</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#Bounded.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#h:8"><span class="id" title="variable">h</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span>  <a id="nf_m" class="idref" href="#nf_m"><span class="id" title="lemma">nf_m</span></a> : <span class="id" title="keyword">∀</span> <a id="h:11" class="idref" href="#h:11"><span class="id" title="binder">h</span></a>, <a class="idref" href="hydras.Epsilon0.T1.html#nf"><span class="id" title="definition">nf</span></a> (<a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#Bounded.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#h:11"><span class="id" title="variable">h</span></a>).<br/>
+ 
+<br/>
+&nbsp;&nbsp;#[<span class="id" title="var">local</span>] <span class="id" title="keyword">Hint</span> <span class="id" title="keyword">Resolve</span> <span class="id" title="var">Rem0</span> : <span class="id" title="var">hydra</span>.<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="mu_positive" class="idref" href="#mu_positive"><span class="id" title="lemma">mu_positive</span></a> : <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#Bounded.mu"><span class="id" title="variable">mu</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#zero"><span class="id" title="constructor">T1.zero</span></a>.<br/>
+ 
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="m_ge_0" class="idref" href="#m_ge_0"><span class="id" title="lemma">m_ge_0</span></a> <a id="alpha:12" class="idref" href="#alpha:12"><span class="id" title="binder">alpha</span></a>:  <a class="idref" href="hydras.Epsilon0.T1.html#nf"><span class="id" title="definition">nf</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#alpha:12"><span class="id" title="variable">alpha</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#alpha:12"><span class="id" title="variable">alpha</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#f097afe6f86551e3dd19af72feb179da"><span class="id" title="notation">t1</span></a><a class="idref" href="hydras.Epsilon0.T1.html#f097afe6f86551e3dd19af72feb179da"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#Bounded.m"><span class="id" title="variable">m</span></a> (<a class="idref" href="hydras.Hydra.O2H.html#iota"><span class="id" title="definition">iota</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#alpha:12"><span class="id" title="variable">alpha</span></a>).<br/>
+
+<br/>
+
+<br/>
+&nbsp;<span class="id" title="keyword">Definition</span> <a id="big_h" class="idref" href="#big_h"><span class="id" title="definition">big_h</span></a> := <a class="idref" href="hydras.Hydra.O2H.html#iota"><span class="id" title="definition">iota</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#Bounded.mu"><span class="id" title="variable">mu</span></a>.<br/>
+&nbsp;<span class="id" title="keyword">Definition</span> <a id="beta_h" class="idref" href="#beta_h"><span class="id" title="definition">beta_h</span></a> := <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#Bounded.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#big_h"><span class="id" title="definition">big_h</span></a>.<br/>
+&nbsp;<span class="id" title="keyword">Definition</span> <a id="small_h" class="idref" href="#small_h"><span class="id" title="definition">small_h</span></a> := <a class="idref" href="hydras.Hydra.O2H.html#iota"><span class="id" title="definition">iota</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#beta_h"><span class="id" title="definition">beta_h</span></a>.<br/>
+
+<br/>
+&nbsp;<span class="id" title="keyword">Lemma</span> <a id="mu_beta_h" class="idref" href="#mu_beta_h"><span class="id" title="lemma">mu_beta_h</span></a> : <a class="idref" href="hydras.Epsilon0.Paths.html#acc_from"><span class="id" title="definition">acc_from</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#Bounded.mu"><span class="id" title="variable">mu</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#beta_h"><span class="id" title="definition">beta_h</span></a>.<br/>
+ 
+<br/>
+&nbsp;<span class="id" title="keyword">Corollary</span> <a id="m_ge_generic" class="idref" href="#m_ge_generic"><span class="id" title="lemma">m_ge_generic</span></a> : <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#Bounded.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#big_h"><span class="id" title="definition">big_h</span></a> <a class="idref" href="hydras.Epsilon0.T1.html#f097afe6f86551e3dd19af72feb179da"><span class="id" title="notation">t1</span></a><a class="idref" href="hydras.Epsilon0.T1.html#f097afe6f86551e3dd19af72feb179da"><span class="id" title="notation">≤</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#Bounded.m"><span class="id" title="variable">m</span></a> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#small_h"><span class="id" title="definition">small_h</span></a>.<br/>
+ 
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="hydras.Hydra.Epsilon0_Needed_Generic.html#Bounded"><span class="id" title="section">Bounded</span></a>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

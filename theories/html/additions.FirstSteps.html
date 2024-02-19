@@ -1,0 +1,270 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>additions.FirstSteps</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library additions.FirstSteps</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+Polymorphic versions of exponentiation functions 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Arith</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.ZArith.ZArith.html#"><span class="id" title="library">ZArith</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Strings.String.html#"><span class="id" title="library">String</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  Polymorphic exponentiation functions 
+ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Section</span> <a id="Definitions" class="idref" href="#Definitions"><span class="id" title="section">Definitions</span></a>.<br/>
+
+<br/>
+&nbsp;<span class="id" title="keyword">Variables</span> (<a id="Definitions.A" class="idref" href="#Definitions.A"><span class="id" title="variable">A</span></a> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="Definitions.mult" class="idref" href="#Definitions.mult"><span class="id" title="variable">mult</span></a> : <a class="idref" href="additions.FirstSteps.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.FirstSteps.html#A:1"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.FirstSteps.html#A:1"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="Definitions.one" class="idref" href="#Definitions.one"><span class="id" title="variable">one</span></a> : <a class="idref" href="additions.FirstSteps.html#A:1"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+#[<span class="id" title="var">local</span>] <span class="id" title="keyword">Infix</span> "*" := <a class="idref" href="additions.FirstSteps.html#Definitions.mult"><span class="id" title="variable">mult</span></a>.<br/>
+#[<span class="id" title="var">local</span>] <span class="id" title="keyword">Notation</span> "1" := <a class="idref" href="additions.FirstSteps.html#Definitions.one"><span class="id" title="variable">one</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+ Naive (linear) implementation 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="power" class="idref" href="#power"><span class="id" title="definition">power</span></a> (<a id="x:4" class="idref" href="#x:4"><span class="id" title="binder">x</span></a>:<a class="idref" href="additions.FirstSteps.html#Definitions.A"><span class="id" title="variable">A</span></a>)(<a id="n:5" class="idref" href="#n:5"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) : <a class="idref" href="additions.FirstSteps.html#Definitions.A"><span class="id" title="variable">A</span></a> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.FirstSteps.html#n:5"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| 0%<span class="id" title="var">nat</span> ⇒ 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <span class="id" title="var">p</span> ⇒   <a class="idref" href="additions.FirstSteps.html#x:4"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.FirstSteps.html#0f83c338fb6cc901ce3fda5df0657ac3"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.FirstSteps.html#x:4"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.FirstSteps.html#072addf1f952576a9d67e98c63e20939"><span class="id" title="notation">^</span></a> <span class="id" title="var">p</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+<span class="id" title="keyword">where</span> <a id="072addf1f952576a9d67e98c63e20939" class="idref" href="#072addf1f952576a9d67e98c63e20939"><span class="id" title="notation">&quot;</span></a>x ^ n" := (<a class="idref" href="additions.FirstSteps.html#power:6"><span class="id" title="definition">power</span></a> <span class="id" title="var">x</span> <span class="id" title="var">n</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Logarithmic implementation (with exponents in <span class="inlinecode"><span class="id" title="var">N</span></span>)  
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="binary_power_mult" class="idref" href="#binary_power_mult"><span class="id" title="definition">binary_power_mult</span></a> (<a id="x:8" class="idref" href="#x:8"><span class="id" title="binder">x</span></a> <a id="a:9" class="idref" href="#a:9"><span class="id" title="binder">a</span></a>:<a class="idref" href="additions.FirstSteps.html#Definitions.A"><span class="id" title="variable">A</span></a>)(<a id="p:10" class="idref" href="#p:10"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>) : <a class="idref" href="additions.FirstSteps.html#Definitions.A"><span class="id" title="variable">A</span></a> <br/>
+&nbsp;&nbsp;:=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.FirstSteps.html#p:10"><span class="id" title="variable">p</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xH"><span class="id" title="constructor">xH</span></a> ⇒  <a class="idref" href="additions.FirstSteps.html#a:9"><span class="id" title="variable">a</span></a> <a class="idref" href="additions.FirstSteps.html#0f83c338fb6cc901ce3fda5df0657ac3"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.FirstSteps.html#x:8"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> <span class="id" title="var">q</span> ⇒ <a class="idref" href="additions.FirstSteps.html#binary_power_mult:11"><span class="id" title="definition">binary_power_mult</span></a>  (<a class="idref" href="additions.FirstSteps.html#x:8"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.FirstSteps.html#0f83c338fb6cc901ce3fda5df0657ac3"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.FirstSteps.html#x:8"><span class="id" title="variable">x</span></a>) <a class="idref" href="additions.FirstSteps.html#a:9"><span class="id" title="variable">a</span></a> <span class="id" title="var">q</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xI"><span class="id" title="constructor">xI</span></a> <span class="id" title="var">q</span> ⇒  <a class="idref" href="additions.FirstSteps.html#binary_power_mult:11"><span class="id" title="definition">binary_power_mult</span></a>  (<a class="idref" href="additions.FirstSteps.html#x:8"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.FirstSteps.html#0f83c338fb6cc901ce3fda5df0657ac3"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.FirstSteps.html#x:8"><span class="id" title="variable">x</span></a>) (<a class="idref" href="additions.FirstSteps.html#a:9"><span class="id" title="variable">a</span></a> <a class="idref" href="additions.FirstSteps.html#0f83c338fb6cc901ce3fda5df0657ac3"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.FirstSteps.html#x:8"><span class="id" title="variable">x</span></a>) <span class="id" title="var">q</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <a id="Pos_bpow" class="idref" href="#Pos_bpow"><span class="id" title="definition">Pos_bpow</span></a>   (<a id="x:13" class="idref" href="#x:13"><span class="id" title="binder">x</span></a>:<a class="idref" href="additions.FirstSteps.html#Definitions.A"><span class="id" title="variable">A</span></a>)(<a id="p:14" class="idref" href="#p:14"><span class="id" title="binder">p</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#positive"><span class="id" title="inductive">positive</span></a>) :=<br/>
+&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.FirstSteps.html#p:14"><span class="id" title="variable">p</span></a> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xH"><span class="id" title="constructor">xH</span></a> ⇒ <a class="idref" href="additions.FirstSteps.html#x:13"><span class="id" title="variable">x</span></a><br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xO"><span class="id" title="constructor">xO</span></a> <span class="id" title="var">q</span> ⇒ <a class="idref" href="additions.FirstSteps.html#Pos_bpow:15"><span class="id" title="definition">Pos_bpow</span></a>  (<a class="idref" href="additions.FirstSteps.html#x:13"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.FirstSteps.html#0f83c338fb6cc901ce3fda5df0657ac3"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.FirstSteps.html#x:13"><span class="id" title="variable">x</span></a>) <span class="id" title="var">q</span><br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#xI"><span class="id" title="constructor">xI</span></a> <span class="id" title="var">q</span> ⇒ <a class="idref" href="additions.FirstSteps.html#binary_power_mult"><span class="id" title="definition">binary_power_mult</span></a>   (<a class="idref" href="additions.FirstSteps.html#x:13"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.FirstSteps.html#0f83c338fb6cc901ce3fda5df0657ac3"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.FirstSteps.html#x:13"><span class="id" title="variable">x</span></a>) <a class="idref" href="additions.FirstSteps.html#x:13"><span class="id" title="variable">x</span></a> <span class="id" title="var">q</span><br/>
+<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="N_bpow" class="idref" href="#N_bpow"><span class="id" title="definition">N_bpow</span></a>  <a id="x:17" class="idref" href="#x:17"><span class="id" title="binder">x</span></a> (<a id="n:18" class="idref" href="#n:18"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#N"><span class="id" title="inductive">N</span></a>) := <br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <a class="idref" href="additions.FirstSteps.html#n:18"><span class="id" title="variable">n</span></a> <span class="id" title="keyword">with</span> <br/>
+&nbsp;&nbsp;| 0%<span class="id" title="var">N</span> ⇒ 1<br/>
+&nbsp;&nbsp;| <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#Npos"><span class="id" title="constructor">Npos</span></a> <span class="id" title="var">p</span> ⇒ <a class="idref" href="additions.FirstSteps.html#Pos_bpow"><span class="id" title="definition">Pos_bpow</span></a> <a class="idref" href="additions.FirstSteps.html#x:17"><span class="id" title="variable">x</span></a> <span class="id" title="var">p</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="additions.FirstSteps.html#Definitions"><span class="id" title="section">Definitions</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="additions.FirstSteps.html#N_bpow"><span class="id" title="definition">N_bpow</span></a>  {<span class="id" title="var">A</span>}.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="additions.FirstSteps.html#power"><span class="id" title="definition">power</span></a>  {<span class="id" title="var">A</span>}.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab373"></a><h2 class="section">Examples</h2>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Open</span> <span class="id" title="keyword">Scope</span> <span class="id" title="var">string_scope</span>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Exponentiation on 2x2 matrices 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <a id="M2" class="idref" href="#M2"><span class="id" title="module">M2</span></a>.<br/>
+<span class="id" title="keyword">Section</span> <a id="M2.M2_Definitions" class="idref" href="#M2.M2_Definitions"><span class="id" title="section">M2_Definitions</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variables</span> (<a id="M2.M2_Definitions.A" class="idref" href="#M2.M2_Definitions.A"><span class="id" title="variable">A</span></a>: <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="M2.M2_Definitions.zero" class="idref" href="#M2.M2_Definitions.zero"><span class="id" title="variable">zero</span></a> <a id="M2.M2_Definitions.one" class="idref" href="#M2.M2_Definitions.one"><span class="id" title="variable">one</span></a> : <a class="idref" href="additions.FirstSteps.html#A:20"><span class="id" title="variable">A</span></a>) <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="M2.M2_Definitions.plus" class="idref" href="#M2.M2_Definitions.plus"><span class="id" title="variable">plus</span></a> <a id="M2.M2_Definitions.mult" class="idref" href="#M2.M2_Definitions.mult"><span class="id" title="variable">mult</span></a>  : <a class="idref" href="additions.FirstSteps.html#A:20"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.FirstSteps.html#A:20"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.FirstSteps.html#A:20"><span class="id" title="variable">A</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Variable</span> <a id="M2.M2_Definitions.rt" class="idref" href="#M2.M2_Definitions.rt"><span class="id" title="variable">rt</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.setoid_ring.Ring_theory.html#semi_ring_theory"><span class="id" title="record">semi_ring_theory</span></a>  <a class="idref" href="additions.FirstSteps.html#M2.M2_Definitions.zero"><span class="id" title="variable">zero</span></a> <a class="idref" href="additions.FirstSteps.html#M2.M2_Definitions.one"><span class="id" title="variable">one</span></a> <a class="idref" href="additions.FirstSteps.html#M2.M2_Definitions.plus"><span class="id" title="variable">plus</span></a> <a class="idref" href="additions.FirstSteps.html#M2.M2_Definitions.mult"><span class="id" title="variable">mult</span></a>   (@<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#eq"><span class="id" title="inductive">eq</span></a> <a class="idref" href="additions.FirstSteps.html#M2.M2_Definitions.A"><span class="id" title="variable">A</span></a>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Add</span> <span class="id" title="var">Ring</span> <span class="id" title="var">Aring</span> : <a class="idref" href="additions.FirstSteps.html#M2.M2_Definitions.rt"><span class="id" title="variable">rt</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="M2.M2_Definitions.:::'0'" class="idref" href="#M2.M2_Definitions.:::'0'"><span class="id" title="notation">&quot;</span></a>0" := <a class="idref" href="additions.FirstSteps.html#M2.M2_Definitions.zero"><span class="id" title="variable">zero</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="M2.M2_Definitions.:::'1'" class="idref" href="#M2.M2_Definitions.:::'1'"><span class="id" title="notation">&quot;</span></a>1" := <a class="idref" href="additions.FirstSteps.html#M2.M2_Definitions.one"><span class="id" title="variable">one</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="792efe48a5e5591a3ac8904aa574c15c" class="idref" href="#792efe48a5e5591a3ac8904aa574c15c"><span class="id" title="notation">&quot;</span></a>x + y" := (<a class="idref" href="additions.FirstSteps.html#M2.M2_Definitions.plus"><span class="id" title="variable">plus</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span>).<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Notation</span> <a id="e19429236df0008b7680aa787e1bf5a5" class="idref" href="#e19429236df0008b7680aa787e1bf5a5"><span class="id" title="notation">&quot;</span></a>x * y " := (<a class="idref" href="additions.FirstSteps.html#M2.M2_Definitions.mult"><span class="id" title="variable">mult</span></a> <span class="id" title="var">x</span> <span class="id" title="var">y</span>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Structure</span> <a id="M2.t" class="idref" href="#M2.t"><span class="id" title="record">t</span></a> : <span class="id" title="keyword">Type</span> := <a id="M2.mat" class="idref" href="#M2.mat"><span class="id" title="constructor">mat</span></a>{<a id="M2.c00" class="idref" href="#M2.c00"><span class="id" title="projection">c00</span></a> : <a class="idref" href="additions.FirstSteps.html#M2.M2_Definitions.A"><span class="id" title="variable">A</span></a>;  <a id="M2.c01" class="idref" href="#M2.c01"><span class="id" title="projection">c01</span></a> : <a class="idref" href="additions.FirstSteps.html#M2.M2_Definitions.A"><span class="id" title="variable">A</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="M2.c10" class="idref" href="#M2.c10"><span class="id" title="projection">c10</span></a> : <a class="idref" href="additions.FirstSteps.html#M2.M2_Definitions.A"><span class="id" title="variable">A</span></a>;  <a id="M2.c11" class="idref" href="#M2.c11"><span class="id" title="projection">c11</span></a> : <a class="idref" href="additions.FirstSteps.html#M2.M2_Definitions.A"><span class="id" title="variable">A</span></a>}.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="M2.Id2" class="idref" href="#M2.Id2"><span class="id" title="definition">Id2</span></a> : <a class="idref" href="additions.FirstSteps.html#M2.t"><span class="id" title="record">t</span></a> := <a class="idref" href="additions.FirstSteps.html#M2.mat"><span class="id" title="constructor">mat</span></a> 1 0 0 1.<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="M2.M2_mult" class="idref" href="#M2.M2_mult"><span class="id" title="definition">M2_mult</span></a> (<a id="M:31" class="idref" href="#M:31"><span class="id" title="binder">M</span></a> <a id="M':32" class="idref" href="#M':32"><span class="id" title="binder">M'</span></a>:<a class="idref" href="additions.FirstSteps.html#M2.t"><span class="id" title="record">t</span></a>) : <a class="idref" href="additions.FirstSteps.html#M2.t"><span class="id" title="record">t</span></a> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.FirstSteps.html#M2.mat"><span class="id" title="constructor">mat</span></a> (<a class="idref" href="additions.FirstSteps.html#M2.c00"><span class="id" title="projection">c00</span></a> <a class="idref" href="additions.FirstSteps.html#M:31"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.FirstSteps.html#e19429236df0008b7680aa787e1bf5a5"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.FirstSteps.html#M2.c00"><span class="id" title="projection">c00</span></a> <a class="idref" href="additions.FirstSteps.html#M':32"><span class="id" title="variable">M'</span></a> <a class="idref" href="additions.FirstSteps.html#792efe48a5e5591a3ac8904aa574c15c"><span class="id" title="notation">+</span></a> <a class="idref" href="additions.FirstSteps.html#M2.c01"><span class="id" title="projection">c01</span></a> <a class="idref" href="additions.FirstSteps.html#M:31"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.FirstSteps.html#e19429236df0008b7680aa787e1bf5a5"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.FirstSteps.html#M2.c10"><span class="id" title="projection">c10</span></a> <a class="idref" href="additions.FirstSteps.html#M':32"><span class="id" title="variable">M'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="additions.FirstSteps.html#M2.c00"><span class="id" title="projection">c00</span></a> <a class="idref" href="additions.FirstSteps.html#M:31"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.FirstSteps.html#e19429236df0008b7680aa787e1bf5a5"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.FirstSteps.html#M2.c01"><span class="id" title="projection">c01</span></a> <a class="idref" href="additions.FirstSteps.html#M':32"><span class="id" title="variable">M'</span></a> <a class="idref" href="additions.FirstSteps.html#792efe48a5e5591a3ac8904aa574c15c"><span class="id" title="notation">+</span></a> <a class="idref" href="additions.FirstSteps.html#M2.c01"><span class="id" title="projection">c01</span></a> <a class="idref" href="additions.FirstSteps.html#M:31"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.FirstSteps.html#e19429236df0008b7680aa787e1bf5a5"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.FirstSteps.html#M2.c11"><span class="id" title="projection">c11</span></a> <a class="idref" href="additions.FirstSteps.html#M':32"><span class="id" title="variable">M'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="additions.FirstSteps.html#M2.c10"><span class="id" title="projection">c10</span></a> <a class="idref" href="additions.FirstSteps.html#M:31"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.FirstSteps.html#e19429236df0008b7680aa787e1bf5a5"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.FirstSteps.html#M2.c00"><span class="id" title="projection">c00</span></a> <a class="idref" href="additions.FirstSteps.html#M':32"><span class="id" title="variable">M'</span></a> <a class="idref" href="additions.FirstSteps.html#792efe48a5e5591a3ac8904aa574c15c"><span class="id" title="notation">+</span></a> <a class="idref" href="additions.FirstSteps.html#M2.c11"><span class="id" title="projection">c11</span></a> <a class="idref" href="additions.FirstSteps.html#M:31"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.FirstSteps.html#e19429236df0008b7680aa787e1bf5a5"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.FirstSteps.html#M2.c10"><span class="id" title="projection">c10</span></a> <a class="idref" href="additions.FirstSteps.html#M':32"><span class="id" title="variable">M'</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="additions.FirstSteps.html#M2.c10"><span class="id" title="projection">c10</span></a> <a class="idref" href="additions.FirstSteps.html#M:31"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.FirstSteps.html#e19429236df0008b7680aa787e1bf5a5"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.FirstSteps.html#M2.c01"><span class="id" title="projection">c01</span></a> <a class="idref" href="additions.FirstSteps.html#M':32"><span class="id" title="variable">M'</span></a> <a class="idref" href="additions.FirstSteps.html#792efe48a5e5591a3ac8904aa574c15c"><span class="id" title="notation">+</span></a> <a class="idref" href="additions.FirstSteps.html#M2.c11"><span class="id" title="projection">c11</span></a> <a class="idref" href="additions.FirstSteps.html#M:31"><span class="id" title="variable">M</span></a> <a class="idref" href="additions.FirstSteps.html#e19429236df0008b7680aa787e1bf5a5"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.FirstSteps.html#M2.c11"><span class="id" title="projection">c11</span></a> <a class="idref" href="additions.FirstSteps.html#M':32"><span class="id" title="variable">M'</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="additions.FirstSteps.html#M2.M2_Definitions"><span class="id" title="section">M2_Definitions</span></a>.<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="additions.FirstSteps.html#M2"><span class="id" title="module">M2</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Import</span> <a class="idref" href="additions.FirstSteps.html#M2"><span class="id" title="module">M2</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="additions.FirstSteps.html#M2_mult"><span class="id" title="definition">M2_mult</span></a> {<span class="id" title="var">A</span>} <span class="id" title="var">plus</span> <span class="id" title="var">mult</span>  <span class="id" title="var">_</span>  <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="additions.FirstSteps.html#mat"><span class="id" title="constructor">mat</span></a> {<span class="id" title="var">A</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="keyword">Arguments</span> <a class="idref" href="additions.FirstSteps.html#Id2"><span class="id" title="definition">Id2</span></a> {<span class="id" title="var">A</span>}  <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="fibonacci" class="idref" href="#fibonacci"><span class="id" title="definition">fibonacci</span></a> (<a id="n:33" class="idref" href="#n:33"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#N"><span class="id" title="inductive">N</span></a>) :=<br/>
+&nbsp;<a class="idref" href="additions.FirstSteps.html#c00"><span class="id" title="projection">c00</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#N"><span class="id" title="inductive">N</span></a>  (<a class="idref" href="additions.FirstSteps.html#N_bpow"><span class="id" title="definition">N_bpow</span></a>  (<a class="idref" href="additions.FirstSteps.html#M2_mult"><span class="id" title="definition">M2_mult</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.NArith.BinNat.html#Nplus"><span class="id" title="abbreviation">Nplus</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.NArith.BinNat.html#Nmult"><span class="id" title="abbreviation">Nmult</span></a>) (<a class="idref" href="additions.FirstSteps.html#Id2"><span class="id" title="definition">Id2</span></a>  0%<span class="id" title="var">N</span> 1%<span class="id" title="var">N</span>)(<a class="idref" href="additions.FirstSteps.html#mat"><span class="id" title="constructor">mat</span></a>  1 1 1 0)%<span class="id" title="var">N</span> <a class="idref" href="additions.FirstSteps.html#n:33"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <a id="power_t" class="idref" href="#power_t"><span class="id" title="definition">power_t</span></a> := <span class="id" title="keyword">∀</span> (<a id="A:34" class="idref" href="#A:34"><span class="id" title="binder">A</span></a>:<span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="mult:35" class="idref" href="#mult:35"><span class="id" title="binder">mult</span></a> : <a class="idref" href="additions.FirstSteps.html#A:34"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.FirstSteps.html#A:34"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.FirstSteps.html#A:34"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="one:36" class="idref" href="#one:36"><span class="id" title="binder">one</span></a>:<a class="idref" href="additions.FirstSteps.html#A:34"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="x:37" class="idref" href="#x:37"><span class="id" title="binder">x</span></a>:<a class="idref" href="additions.FirstSteps.html#A:34"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="n:38" class="idref" href="#n:38"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#N"><span class="id" title="inductive">N</span></a>), <a class="idref" href="additions.FirstSteps.html#A:34"><span class="id" title="variable">A</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a id="lab374"></a><h1 class="section">A wrong definition of correctness</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <a id="Bad" class="idref" href="#Bad"><span class="id" title="module">Bad</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Definition</span> <a id="Bad.correct_expt_function" class="idref" href="#Bad.correct_expt_function"><span class="id" title="definition">correct_expt_function</span></a> (<a id="f:39" class="idref" href="#f:39"><span class="id" title="binder">f</span></a> : <a class="idref" href="additions.FirstSteps.html#power_t"><span class="id" title="definition">power_t</span></a>) : <span class="id" title="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <a id="A:40" class="idref" href="#A:40"><span class="id" title="binder">A</span></a> (<a id="mult:41" class="idref" href="#mult:41"><span class="id" title="binder">mult</span></a> : <a class="idref" href="additions.FirstSteps.html#A:40"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.FirstSteps.html#A:40"><span class="id" title="variable">A</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'-&gt;'_x"><span class="id" title="notation">→</span></a> <a class="idref" href="additions.FirstSteps.html#A:40"><span class="id" title="variable">A</span></a>) (<a id="one:42" class="idref" href="#one:42"><span class="id" title="binder">one</span></a>:<a class="idref" href="additions.FirstSteps.html#A:40"><span class="id" title="variable">A</span></a>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a id="x:43" class="idref" href="#x:43"><span class="id" title="binder">x</span></a>:<a class="idref" href="additions.FirstSteps.html#A:40"><span class="id" title="variable">A</span></a>) (<a id="n:44" class="idref" href="#n:44"><span class="id" title="binder">n</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Numbers.BinNums.html#N"><span class="id" title="inductive">N</span></a>), <a class="idref" href="additions.FirstSteps.html#power"><span class="id" title="definition">power</span></a> <a class="idref" href="additions.FirstSteps.html#mult:41"><span class="id" title="variable">mult</span></a> <a class="idref" href="additions.FirstSteps.html#one:42"><span class="id" title="variable">one</span></a> <a class="idref" href="additions.FirstSteps.html#x:43"><span class="id" title="variable">x</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.NArith.BinNat.html#N.to_nat"><span class="id" title="definition">N.to_nat</span></a> <a class="idref" href="additions.FirstSteps.html#n:44"><span class="id" title="variable">n</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="additions.FirstSteps.html#f:39"><span class="id" title="variable">f</span></a> <a class="idref" href="additions.FirstSteps.html#A:40"><span class="id" title="variable">A</span></a> <a class="idref" href="additions.FirstSteps.html#mult:41"><span class="id" title="variable">mult</span></a> <a class="idref" href="additions.FirstSteps.html#one:42"><span class="id" title="variable">one</span></a> <a class="idref" href="additions.FirstSteps.html#x:43"><span class="id" title="variable">x</span></a> <a class="idref" href="additions.FirstSteps.html#n:44"><span class="id" title="variable">n</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">Section</span> <a id="Bad.CounterExample" class="idref" href="#Bad.CounterExample"><span class="id" title="section">CounterExample</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Bad.CounterExample.mul" class="idref" href="#Bad.CounterExample.mul"><span class="id" title="variable">mul</span></a> (<a id="n:45" class="idref" href="#n:45"><span class="id" title="binder">n</span></a> <a id="p:46" class="idref" href="#p:46"><span class="id" title="binder">p</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>) := <a class="idref" href="additions.FirstSteps.html#n:45"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#0dacc1786c5ba797d47dd85006231633"><span class="id" title="notation">+</span></a> 2 <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Peano.html#ea2ff3d561159081cea6fb2e8113cc54"><span class="id" title="notation">×</span></a> <a class="idref" href="additions.FirstSteps.html#p:46"><span class="id" title="variable">p</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Let</span> <a id="Bad.CounterExample.one" class="idref" href="#Bad.CounterExample.one"><span class="id" title="variable">one</span></a> := 0.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+With our fake definition, <span class="inlinecode"><span class="id" title="var">N_bpow</span></span> is not correct! 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="Bad.mul_not_associative" class="idref" href="#Bad.mul_not_associative"><span class="id" title="lemma">mul_not_associative</span></a> :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a>  <a id="n:47" class="idref" href="#n:47"><span class="id" title="binder">n</span></a> <a id="p:48" class="idref" href="#p:48"><span class="id" title="binder">p</span></a> <a id="q:49" class="idref" href="#q:49"><span class="id" title="binder">q</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">,</span></a>  <a class="idref" href="additions.FirstSteps.html#Bad.CounterExample.mul"><span class="id" title="variable">mul</span></a> <a class="idref" href="additions.FirstSteps.html#n:47"><span class="id" title="variable">n</span></a> (<a class="idref" href="additions.FirstSteps.html#Bad.CounterExample.mul"><span class="id" title="variable">mul</span></a> <a class="idref" href="additions.FirstSteps.html#p:48"><span class="id" title="variable">p</span></a> <a class="idref" href="additions.FirstSteps.html#q:49"><span class="id" title="variable">q</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="additions.FirstSteps.html#Bad.CounterExample.mul"><span class="id" title="variable">mul</span></a> (<a class="idref" href="additions.FirstSteps.html#Bad.CounterExample.mul"><span class="id" title="variable">mul</span></a> <a class="idref" href="additions.FirstSteps.html#n:47"><span class="id" title="variable">n</span></a> <a class="idref" href="additions.FirstSteps.html#p:48"><span class="id" title="variable">p</span></a>) <a class="idref" href="additions.FirstSteps.html#q:49"><span class="id" title="variable">q</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Remark</span> <a id="Bad.one_not_neutral" class="idref" href="#Bad.one_not_neutral"><span class="id" title="lemma">one_not_neutral</span></a>  :<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">∃</span></a> <a id="n:50" class="idref" href="#n:50"><span class="id" title="binder">n</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#a883bdd010993579f99d60b3775bcf54"><span class="id" title="notation">,</span></a> <a class="idref" href="additions.FirstSteps.html#Bad.CounterExample.mul"><span class="id" title="variable">mul</span></a> <a class="idref" href="additions.FirstSteps.html#Bad.CounterExample.one"><span class="id" title="variable">one</span></a> <a class="idref" href="additions.FirstSteps.html#n:50"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#::type_scope:x_'&lt;&gt;'_x"><span class="id" title="notation">≠</span></a> <a class="idref" href="additions.FirstSteps.html#n:50"><span class="id" title="variable">n</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">Lemma</span> <a id="Bad.correct_exp_too_strong" class="idref" href="#Bad.correct_exp_too_strong"><span class="id" title="lemma">correct_exp_too_strong</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#63a68285c81db8f9bc456233bb9ed181"><span class="id" title="notation">¬</span></a> <a class="idref" href="additions.FirstSteps.html#Bad.correct_expt_function"><span class="id" title="definition">correct_expt_function</span></a> (@<a class="idref" href="additions.FirstSteps.html#N_bpow"><span class="id" title="definition">N_bpow</span></a>).<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">End</span> <a class="idref" href="additions.FirstSteps.html#Bad.CounterExample"><span class="id" title="section">CounterExample</span></a>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <a class="idref" href="additions.FirstSteps.html#Bad"><span class="id" title="module">Bad</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Fibonacci matrices 
+</div>
+<div class="code">
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>

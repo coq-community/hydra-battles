@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>hydras.solutions_exercises.OnCodeList</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library hydras.solutions_exercises.OnCodeList</h1>
+
+<div class="code">
+<span class="id" title="keyword">From</span> <span class="id" title="var">hydras.Ackermann</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="hydras.Ackermann.primRec.html#"><span class="id" title="library">primRec</span></a> <a class="idref" href="hydras.Ackermann.cPair.html#"><span class="id" title="library">cPair</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Arith.Arith.html#"><span class="id" title="library">Arith</span></a>.<br/>
+<span class="id" title="keyword">From</span> <span class="id" title="keyword">Equations</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span>  <span class="id" title="library">Equations</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Equations</span> <a id="members" class="idref" href="#members"><span class="id" title="definition">members</span></a> (<a id="a:1" class="idref" href="#a:1"><span class="id" title="binder">a</span></a>:<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a>): <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#list"><span class="id" title="inductive">list</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#nat"><span class="id" title="inductive">nat</span></a> <span class="id" title="tactic">by</span> <span class="id" title="keyword">wf</span> <span class="id" title="var">a</span>:=<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.solutions_exercises.OnCodeList.html#members:3"><span class="id" title="definition">members</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#O"><span class="id" title="constructor">0</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Lists.List.html#nil"><span class="id" title="abbreviation">List.nil</span></a>;<br/>
+&nbsp;&nbsp;<a class="idref" href="hydras.solutions_exercises.OnCodeList.html#members:5"><span class="id" title="definition">members</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#S"><span class="id" title="constructor">S</span></a> <a class="idref" href="hydras.solutions_exercises.OnCodeList.html#z:4"><span class="id" title="variable">z</span></a>) := <a class="idref" href="hydras.Ackermann.cPair.html#cPairPi1"><span class="id" title="definition">cPairPi1</span></a> <span class="id" title="var">z</span><a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Datatypes.html#::list_scope:x_'::'_x"><span class="id" title="notation">::</span></a> <a class="idref" href="hydras.solutions_exercises.OnCodeList.html#members:2"><span class="id" title="definition">members</span></a> (<a class="idref" href="hydras.Ackermann.cPair.html#cPairPi2"><span class="id" title="definition">cPairPi2</span></a> <span class="id" title="var">z</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="membersOk" class="idref" href="#membersOk"><span class="id" title="lemma">membersOk</span></a> <a id="n:6" class="idref" href="#n:6"><span class="id" title="binder">n</span></a> : <a class="idref" href="hydras.solutions_exercises.OnCodeList.html#n:6"><span class="id" title="variable">n</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.Ackermann.cPair.html#codeList"><span class="id" title="definition">codeList</span></a> (<a class="idref" href="hydras.solutions_exercises.OnCodeList.html#members"><span class="id" title="definition">members</span></a> <a class="idref" href="hydras.solutions_exercises.OnCodeList.html#n:6"><span class="id" title="variable">n</span></a>).<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <a id="membersOk'" class="idref" href="#membersOk'"><span class="id" title="lemma">membersOk'</span></a> <a id="l:7" class="idref" href="#l:7"><span class="id" title="binder">l</span></a> : <a class="idref" href="hydras.solutions_exercises.OnCodeList.html#l:7"><span class="id" title="variable">l</span></a> <a class="idref" href="http://coq.inria.fr/distrib/V8.15.0/stdlib//Coq.Init.Logic.html#6cd0f7b28b6092304087c7049437bb1a"><span class="id" title="notation">=</span></a> <a class="idref" href="hydras.solutions_exercises.OnCodeList.html#members"><span class="id" title="definition">members</span></a> (<a class="idref" href="hydras.Ackermann.cPair.html#codeList"><span class="id" title="definition">codeList</span></a> <a class="idref" href="hydras.solutions_exercises.OnCodeList.html#l:7"><span class="id" title="variable">l</span></a>).<br/>
+
+<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
