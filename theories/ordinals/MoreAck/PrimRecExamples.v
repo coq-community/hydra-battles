@@ -170,18 +170,18 @@ Compute PReval fact 5.
 (* end snippet tests *)
 
 (* begin snippet correctness:: no-out *)
-Lemma cst0_correct : (PReval cst0) =x= (fun _ => 0).
+
+Lemma cst0_correct : PRcorrect cst0 (fun _ => 0). 
 Proof. intros ?; reflexivity. Qed.
 
-Lemma cst_correct (k:nat) : PReval (cst k) =x= (fun _ => k).
+Lemma cst_correct (k:nat) :  PRcorrect (cst k) (fun _ => k).
 Proof.
   induction k as [| k IHk]; simpl; intros p.
   - reflexivity. 
-  - now rewrite IHk. 
+  - cbn; now rewrite IHk. 
 Qed. 
 
-Lemma plus_correct: 
-  PReval plus =x= Nat.add.
+Lemma plus_correct:  PRcorrect plus Nat.add.
 Proof. 
   intros n; induction n as [ | n IHn]. 
   - intro; reflexivity. 
@@ -193,7 +193,7 @@ Remark mult_eqn1 n p:
       PReval plus (PReval mult n p) p.
 Proof. reflexivity. Qed.
 
-Lemma mult_correct: PReval mult =x= Nat.mul.
+Lemma mult_correct: PRcorrect mult Nat.mul.
 Proof. 
  intro n; induction n as [ | n IHn].
  - intro p; reflexivity. 
@@ -201,7 +201,7 @@ Proof.
 Qed.      
 
 
-Lemma fact_correct : PReval fact =x= Coq.Arith.Factorial.fact.
+Lemma fact_correct : PRcorrect fact Coq.Arith.Factorial.fact.
 (* ... *)
 (* end snippet correctness *)
 Proof. 
@@ -222,14 +222,13 @@ Qed.
  These lemmas are trivial and theoretically useless, but they may help to 
    make the construction more   concrete *)
 
-Definition PRcompose1 (g f : PrimRec 1) : PrimRec 1 :=
-  PRcomp g [f]%pr.  
+Definition PRcompose1 (g f : PrimRec 1) : PrimRec 1 := PRcomp g [f]%pr.  
 
 Goal forall f g x, evalPrimRec 1 (PRcompose1 g f) x =
                      evalPrimRec 1 g (evalPrimRec 1 f x).
 Proof. reflexivity. Qed.
 
-Remark compose2_0 (a:nat) (g: nat -> nat)  : compose2 0 a g = g a.
+Remark compose2_0 (a:nat) (g: nat -> nat) : compose2 0 a g = g a.
 Proof.   reflexivity. Qed.
 
 Remark compose2_1 (f: nat -> nat) (g : nat -> nat -> nat) x
@@ -349,15 +348,12 @@ Proof. reflexivity. Qed.
 
 #[export] Instance  const0_NIsPR n : isPR 0 n. (* .no-out *)
 Proof. (* .no-out *)
-  induction n. (* .no-out *)
-   - apply zeroIsPR. (* .no-out *)
-   - destruct IHn as [x Hx].
-     exists (PRcomp succFunc [x])%pr; cbn in *; intros; 
-       now rewrite Hx.
+  induction n as [ | n [x Hx]]. 
+   - (* .no-out *) apply zeroIsPR. 
+   - (* .no-out *)  exists (composeFunc _ _ [x] succFunc)%pr; cbn in *; intros; 
+       now rewrite Hx. (* .no-out *)
 Qed.
 (* end snippet const0NIsPR  *)
-
-
 
 (* begin snippet PRnatRecSearch *)
 Search (isPR 2 (fun _ _ => nat_rec _ _ _ _)).

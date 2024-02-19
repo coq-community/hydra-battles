@@ -231,6 +231,11 @@ Fixpoint evalPrimRec (n : nat) (f : PrimRec n) {struct f} :
 Notation PReval f := (evalPrimRec _ f).
 Notation PRevalN fs := (evalPrimRecs _ _ fs).
 
+(** [p] is a correct implementation of [f] in [PrimRec n] *)
+
+Definition PRcorrect {n:nat}(p:PrimRec n)(f: naryFunc n) := 
+  PReval p =x= f.
+
 (* end snippet evalPrimRecDef *)
 
 Definition extEqualVectorGeneral (n m : nat) (l : Vector.t (naryFunc n) m) :
@@ -331,7 +336,7 @@ Qed.
 Class isPR (n : nat) (f : naryFunc n) : Set :=
   is_pr : {p : PrimRec n | extEqual n (PReval p) f}.
 
-Definition fun2PR {n:nat}(f:  naryFunc n)
+Definition fun2PR {n:nat}(f: naryFunc n)
   {p: isPR _ f}: PrimRec n := proj1_sig p.
 
 Class isPRrel (n : nat) (R : naryRel n) : Set :=

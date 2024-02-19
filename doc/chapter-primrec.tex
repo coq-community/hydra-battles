@@ -413,18 +413,10 @@ This definition is easy to translate into a term of type \texttt{PrimRec 1}.
 
 Let us look at the proof that any constant $n$ of type \texttt{nat} has type (\texttt{PR 0})
 (lemma  \texttt{const0\_NIsPR} of \texttt{primRec}). We carry out a proof by induction on $n$, the base case of which is already proven.
-Now, let us assume $n$ is \texttt{PR $0$}, with $x:\texttt{PrimRec}\,0$ as a ``realizer''.
+Now, let us assume $n$ is \texttt{PR $0$}, and call $(x:\texttt{PrimRec}\,0)$ its ``realizer''.
 Thus we would like to compose this constant function with the unary successor function.
 
-This is exactly the role of the instance \texttt{composeFunc 0 1} of the dependently typed
-function \texttt{composeFunc}, as shown by the following lemma.
-
-\vspace{4pt}
-\input{movies/snippets/PrimRecExamples/compose01}
-
-
-\vspace{4pt}
-Here is a quite simple proof of \texttt{const0\_NIsPR}.
+This is exactly the role of the function \texttt{(composeFunc 0 1)}. Here is a quite simple proof of \texttt{const0\_NIsPR}.
 
 
 \vspace{4pt}
@@ -435,13 +427,13 @@ Here is a quite simple proof of \texttt{const0\_NIsPR}.
 
 \subsubsection{Another proof that \texttt{Nat.add} is primitive recursive}
 
-We have already proven that \texttt{Nat.add} is primitive recursive. The following alternative proof, --- more detalled  ---, 
+We have already proven that \texttt{Nat.add} is primitive recursive. The following alternative proof, --- more detailed  ---, 
 shows how to search and apply lemmas from
 the \texttt{Ackermann} library.
 
 
 
-Let us look for some lemma which could help to prove some 
+Let us look for some lemma which could help to prove a given  
 recursive arithmetic binary function is primitive recursive.
 
 \inputsnippets{PrimRecExamples/PRnatRecSearch}
