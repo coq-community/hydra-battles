@@ -1,13 +1,12 @@
-
 (** *  Addition Chains
 Pierre Casteran, LaBRI, University of Bordeaux
 
 *)
+From elpi Require Import derive param2.
 
 From additions Require Export Monoid_instances Pow.
 From Coq Require Import Relations RelationClasses Lia List.
-From Param Require Import Param.
- 
+
 From additions Require Import More_on_positive.
 Generalizable Variables A op one Aeq.
 Infix "==" := Monoid_def.equiv (at level 70) : type_scope.
@@ -232,7 +231,7 @@ Abort.
 (** Binary trees of multiplications over A *)
 
 Inductive Monoid_Exp (A:Type) : Type :=
- Mul_node (t t' : Monoid_Exp A) | One_node | A_node (a:A).
+ Mul_node (t t' : Monoid_Exp) | One_node | A_node (a:A).
 
 Arguments Mul_node {A} _ _.
 Arguments One_node {A} .
@@ -399,7 +398,7 @@ the corresponding variables of type A  and B are always bound to related
 
 
 (* begin snippet paramDemo *)
-Parametricity computation.
+Elpi derive.param2 computation.
 
 Print computation_R.
 (* end snippet paramDemo *)
@@ -507,7 +506,7 @@ Lemma  power_R_is_a_refinement (a:A) :
              (computation_eval (M:= Natplus) gamma_nat).
 (* end snippet powerRRef *)
 Proof.
-  induction 1;simpl;[auto | ].
+  induction 1 as [|x1 x2 x_R y1 y2 y_R];simpl;[auto | ].
   apply H; destruct x_R, y_R;  split.
   unfold mult_op, nat_plus_op.  
   + lia. 
@@ -560,9 +559,9 @@ Proof.
                 (fun n p => n = Pos.to_nat p) 1 xH
                 (refl_equal 1)).
  unfold the_exponent, the_exponent_nat, chain_execute, chain_apply.
- generalize (c nat 1), (c _ 1%positive); induction 1.
+ generalize (c nat 1), (c _ 1%positive); induction 1 as [|x1 x2 x_R y1 y2 y_R].
  - cbn; assumption. 
- -  apply (H (x₁ + y₁)%nat (x₂ + y₂)%positive); rewrite Pos2Nat.inj_add;
+ -  apply (H (x1 + y1)%nat (x2 + y2)%positive); rewrite Pos2Nat.inj_add;
     now subst.
 Qed.
 

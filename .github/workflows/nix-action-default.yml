@@ -371,9 +371,9 @@ jobs:
       run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
         --argstr job "mathcomp-zify"
     - if: steps.stepCheck.outputs.status == 'built'
-      name: 'Building/fetching previous CI target: paramcoq'
+      name: 'Building/fetching previous CI target: coq-elpi'
       run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
-        --argstr job "paramcoq"
+        --argstr job "coq-elpi"
     - if: steps.stepCheck.outputs.status == 'built'
       name: Building/fetching current CI target
       run: NIXPKGS_ALLOW_UNFREE=1 nix-build --no-out-link --argstr bundle "default"
