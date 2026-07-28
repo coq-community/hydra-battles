@@ -13,7 +13,7 @@ binary method, that takes less than $2\times \log_2(n)$ multiplications.
 
 Set Implicit Arguments.
 
-Require Export ZArith  Div2.
+Require Export ZArith.
 Require Export Recdef.
 Require Import Relations Morphisms.
 
@@ -66,7 +66,7 @@ Proof. reflexivity. Qed.
 
 Lemma power_eq3  `{M: @EMonoid A  E_op E_one E_eq}(x:A) :
  x ^ 1 == x.
-Proof. cbn;  rewrite Eone_right; reflexivity. Qed.
+Proof. cbn; apply Eone_right. Qed.
 (* end snippet powerEqns *)
 
 (** *** The binary exponentiation function (exponents in  [positive])  *)
@@ -162,8 +162,8 @@ Ltac monoid_simpl := repeat monoid_rw.
 (* end snippet powerProper *)
 Proof.
   intros x y Hxy n p Hnp;  subst p; induction n.
-  - reflexivity.
-  - cbn; now rewrite IHn, Hxy.
+  - exact (@Equiv_Refl A E_op E_one E_eq M E_one).
+  - cbn; apply Eop_proper; assumption.
 Qed.
 
 (* begin snippet powerOfPlus:: no-out *)

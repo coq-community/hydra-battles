@@ -11,7 +11,7 @@ the "axioms" of monoid structure.
 
 Set Implicit Arguments.
 
-Require Export ZArith  Div2.
+Require Export ZArith.
 Require Export Recdef.
 Require Import Relations Morphisms.
 
@@ -61,7 +61,7 @@ Proof. reflexivity. Qed.
 
 Lemma power_eq3 {A:Type} `{M: @EMonoid A  E_op E_one E_eq}(x:A) :
  x ^ 1 == x.
-Proof. cbn;  rewrite Eone_right; reflexivity. Qed.
+Proof. cbn; apply Eone_right. Qed.
 
 
 (** *** The binary exponentiation function (exponents in  [positive])  *)
@@ -146,8 +146,8 @@ Section About_power.
 #[global] Instance power_proper : Proper (equiv ==> eq ==> equiv) power.
 Proof.
   intros x y Hxy n p Hnp;  subst p; induction n.
-  - reflexivity.
-  - cbn; now rewrite IHn, Hxy.
+  - exact (@Equiv_Refl A E_op E_one E_eq M E_one).
+  - cbn; apply Eop_proper; assumption.
 Qed.
 
 Lemma power_of_plus : forall x n p, x ^ (n + p) ==  x ^ n *  x ^ p.
