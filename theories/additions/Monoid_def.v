@@ -141,25 +141,25 @@ Class EMonoid (A:Type)(E_op : Mult_op A)(E_one : A)
 
 #[ global ] Instance Equiv_Equiv (A:Type)(E_op : Mult_op A)(E_one : A) 
       (E_eq: Equiv A)(M :EMonoid E_op E_one E_eq) :
-   Equivalence E_eq.
+   Equivalence (@equiv A E_eq).
 destruct M;auto.
 Qed.
 
 #[ global ] Instance Equiv_Refl (A:Type)(E_op : Mult_op A)(E_one : A) 
       (E_eq: Equiv A)(M :EMonoid E_op E_one E_eq) :
-   Reflexive E_eq.
+   Reflexive (@equiv A E_eq).
 destruct (Equiv_Equiv   M);auto.
 Qed.
 
 #[ global ] Instance Equiv_Sym (A:Type)(E_op : Mult_op A)(E_one : A) 
       (E_eq: Equiv A)(M :EMonoid E_op E_one E_eq) :
-   Symmetric E_eq.
+   Symmetric (@equiv A E_eq).
 destruct (Equiv_Equiv   M);auto.
 Qed.
 
 #[ global ] Instance Equiv_Trans (A:Type)(E_op : Mult_op A)(E_one : A) 
       (E_eq: Equiv A)(M :EMonoid E_op E_one E_eq) :
-   Transitive E_eq.
+   Transitive (@equiv A E_eq).
 destruct (Equiv_Equiv   M);auto.
 Qed.
 
@@ -215,4 +215,3 @@ Class Abelian_Monoid `(M:Monoid ):= {
 Ltac add_op_proper M H := 
  let h := fresh H in
    generalize (@Eop_proper _ _ _ _ M); intro h.
-

@@ -1536,7 +1536,7 @@ Definition big_chain := ltac:(compute_chain  (make_chain dicho 45319)).
 
 Print big_chain.
 
-Arguments big_chain _%type_scope.
+Arguments big_chain _%_type_scope.
 
 Remark RM : (1 < 56789)%N. 
 Proof. reflexivity. Qed.
@@ -1644,4 +1644,3 @@ Extraction "bigmod" Examples.exp56789.
 
 Recursive Extraction cpower.
 Recursive Extraction make_chain.
-

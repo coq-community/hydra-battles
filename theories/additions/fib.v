@@ -5,6 +5,8 @@ From Coq Require Import Extraction ZArith Lia.
 
 From mathcomp Require Import all_ssreflect all_algebra.
 
+Set SsrOldRewriteGoalsOrder.
+
 Set Implicit Arguments.
 Unset Strict Implicit.
 Unset Printing Implicit Defensive.
@@ -537,4 +539,3 @@ Definition bigarg := 30000%positive.
 
 Extraction "bigfib" Z.ltb Z.div_eucl Pos.iter Z.log2 fastexp4
   my_pow m4lmul m3lmul m2lmul m4lfib m3lfib m2lfib bigarg.
-
